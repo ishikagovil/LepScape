@@ -11,16 +11,16 @@ public class Conditions {
 		
 	//setters for the attributes
 	//soil type, moisture level and sunlight range from 0-10
-	public void setMoistureLevel(int range) {} 
-	public void setSoilType(int range) {}
-	public void setSunlight(int range) {}
-	public void setSectionsOutlines(ArrayList<float[]> sections) {}
+	public void setMoistureLevel(int range) {this.moistureLevel=range;} 
+	public void setSoilType(int range) {this.soilType=range;}
+	public void setSunlight(int range) {this.sunlight=range;}
+	public void setSectionsOutlines(ArrayList<float[]> section) {this.sectionOutline=section;}
 	
 	//getters for attributes
-	public int getSoilType() {}
-	public int getMoistureLevel() {}
-	public int getSunlight() {}
-	public ArrayList<float[]> getSections() {}
+	public int getSoilType() {return this.soilType;}
+	public int getMoistureLevel() {return this.moistureLevel;}
+	public int getSunlight() {return this.sunlight;}
+	public ArrayList<float[]> getSections() {return this.sectionOutline;}
 
 }
 

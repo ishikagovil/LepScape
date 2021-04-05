@@ -13,10 +13,10 @@ public class Lep {
 	
 	public Lep(String speciesName, String genusName, String commonName, String description, ArrayList<PlantSpecies> thrivesIn) {}
 	
-	public String getSpeciesName() {}
-	public String getGenusName() {}
-	public String getCommonName() {}
-	public String getDescription() {}
-	public ArrayList<PlantSpecies> getThrivesIn(){}
+	public String getSpeciesName() {return this.speciesName;}
+	public String getGenusName() {return this.genusName;}
+	public String getCommonName() {return this.commonName;}
+	public String getDescription() {return this.description;}
+	public ArrayList<PlantSpecies> getThrivesIn(){return this.getThrivesIn();}
 	
 }
