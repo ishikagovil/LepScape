@@ -9,62 +9,81 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	private int cost;
 	private int bloomTime;
 	private boolean isWoody;
-	
+
 	public int compareTo(PlantSpecies other) {
 		return 0;
 	}
-
+	
 	public String getSpeciesName() {
-		return null;
+		return speciesName;
 	}
 
-	public void setSpeciesName(String speciesName) { }
+	public void setSpeciesName(String speciesName) {
+		this.speciesName = speciesName;
+	}
 
 	public String getGenusName() {
-		return null;
+		return genusName;
 	}
 
-	public void setGenusName(String genusName) { }
+	public void setGenusName(String genusName) {
+		this.genusName = genusName;
+	}
 
 	public String getCommonName() {
-		return null;
+		return commonName;
 	}
 
-	public void setCommonName(String commonName) { }
+	public void setCommonName(String commonName) {
+		this.commonName = commonName;
+	}
 
 	public String getDescription() {
-		return null;
+		return description;
 	}
 
-	public void setDescription(String description) { }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public float getSpreadRadius() {
-		return 0.0f;
+		return spreadRadius;
 	}
 
-	public void setSpreadRadius(float spreadRadius) { }
+	public void setSpreadRadius(float spreadRadius) {
+		this.spreadRadius = spreadRadius;
+	}
 
 	public int getLepsSupported() {
-		return 0;
+		return lepsSupported;
 	}
 
-	public void setLepsSupported(int lepsSupported) { }
+	public void setLepsSupported(int lepsSupported) {
+		this.lepsSupported = lepsSupported;
+	}
 
 	public int getCost() {
-		return 0;
+		return cost;
 	}
 
-	public void setCost(int cost) { }
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
 
 	public int getBloomTime() {
-		return 0;
+		return bloomTime;
 	}
 
-	public void setBloomTime(int bloomTime) { }
+	public void setBloomTime(int bloomTime) {
+		this.bloomTime = bloomTime;
+	}
 
 	public boolean isWoody() {
-		return false;
+		return isWoody;
 	}
 
-	public void setWoody(boolean isWoody) { }
+	public void setWoody(boolean isWoody) {
+		this.isWoody = isWoody;
+	}
+
 }
