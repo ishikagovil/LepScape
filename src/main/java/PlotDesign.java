@@ -10,6 +10,5 @@ public class PlotDesign {
 	public Button next;
 	public Button clear;
 	
-	public void render() {}
-	
+	public void render() {}	
 }
