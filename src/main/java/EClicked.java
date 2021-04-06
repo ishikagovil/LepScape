@@ -14,8 +14,7 @@ public enum EClicked {
 	PLANT("plant"),
 	COMPOST("compost"), 
 	DOWNLOAD("download"),
-	SECTIONING("sectioning"),
-	PLOTTING("plotting");
+	SECTIONING("sectioning");
 	private String nextName = null;
 	private EClicked(String nextName) {this.nextName = nextName;}
 	public String getPage() {return nextName;}

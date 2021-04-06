@@ -1,6 +1,7 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,4 +34,10 @@ public class View{
 		b.setOnAction(controller.getHandlerforClicked(next));
 		return b;
 	}
+	public void setX(double x, Node n) {
+		n.setTranslateX(n.getLayoutX() + x);
+	};
+	public void setY(double y, Node n) {
+		n.setTranslateY(n.getLayoutY() + y);
+	};
 }

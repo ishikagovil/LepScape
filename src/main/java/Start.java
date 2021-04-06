@@ -29,5 +29,6 @@ public class Start extends View {
 			root.getChildren().add(b);
 		}
         gc = canvas.getGraphicsContext2D();	
+        stage.show();
 	}
 }

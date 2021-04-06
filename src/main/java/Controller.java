@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import javafx.application.Application;
 
 public class Controller extends Application {
+	private final boolean DEBUG = true;
 	View view;
 	//Model model;
 	Stage stage;
@@ -28,7 +29,6 @@ public class Controller extends Application {
 	     this.stage = stage;
 	     this.stage.setScene(scene);
 	     this.view = new Start(stage, scene, root, this);
-	     this.stage.show();
 	}
 	public static void main(String[] args) {
 		launch(args);
@@ -52,12 +52,33 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforReleased() {
 		return (e) -> { release(e);  };
 	}
+	public EventHandler<MouseEvent> getHandlerforDrawing(boolean isPressed) {
+		return (e) -> {  draw(e, isPressed); };
+	}
 	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
 		return null;
 	}
 
-	public void drag(MouseEvent event) {}
-	public void release(MouseEvent event) {}
+	public void drag(MouseEvent event) {
+		Node n = (Node)event.getSource();
+		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
+		
+		//TODO: implement when Model is created
+		//model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
+		//model.setY(model.getY() + event.getY());
+		//view.setX( model.getX(),n);
+		//view.setY( model.getY(),n);
+	}
+	public void release(MouseEvent event) {
+		
+	}
+	public void draw(MouseEvent event, boolean isPressed) {
+		//TODO: call Model's method to update garden boundaries
+		if(isPressed)
+			view.gc.beginPath();
+		view.gc.lineTo(event.getSceneX(), event.getSceneY());
+		view.gc.stroke();
+	}
 	public void changeCursor(MouseEvent event, boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
 		if(hand)
 			this.stage.getScene().setCursor(Cursor.HAND);
