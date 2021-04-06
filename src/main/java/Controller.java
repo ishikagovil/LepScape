@@ -2,7 +2,9 @@ import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -15,32 +17,39 @@ import javafx.application.Application;
 
 public class Controller extends Application {
 	View view;
-	Model model;
+	//Model model;
 	Stage stage;
 	
 	@Override
-	public void start(Stage stage) throws Exception {}
-	
+	public void start(Stage stage) throws Exception {
+		 Group root = new Group();
+	     Scene scene = new Scene(root);
+	     this.stage = stage;
+	     this.stage.setScene(scene);
+	     this.view = new Start(stage, scene, root, this);
+	     this.stage.show();
+	}
+	public static void main(String[] args) {
+		launch(args);
+	}
 	//Page switching
-	public EventHandler<ActionEvent> onPageSwitchedHandler(EPages page) { //Also calls relevant methods in Model/View based on which page is created
+	public EventHandler<ActionEvent> getHandlerforClicked(EClicked next) { //Changes view and calls relevant methods in Model/View based on which page is created
 		return (e) -> {
-			view.switchPage(page);
+			view.switchPage(next);
 		};
 	}
 	//Handlers 
 	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
-		return (e) -> {   };
+		System.out.println("Mouse entered");
+		return (e) -> {this.changeCursor(e, true);};
 	}
 	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor wtih false)
-		return (e) -> {   };
+		return (e) -> { this.changeCursor(e, false);  };
 	}
 	public EventHandler<MouseEvent> getHandlerforDrag() {
 		return (e) -> {   };
 	}
 	public EventHandler<MouseEvent> getHandlerforReleased() {
-		return (e) -> {   };
-	}
-	public EventHandler<MouseEvent> getHandlerforClicked(EButtons button) { //Calls the clicked methods in Controller depending on which button is pressed
 		return (e) -> {   };
 	}
 	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
@@ -49,7 +58,12 @@ public class Controller extends Application {
 
 	public void drag(MouseEvent event) {}
 	public void release(MouseEvent event) {}
-	public void changeCursor(MouseEvent event, boolean hand) {} //Changes cursor to either a hand if true is passed, or pointer if false
+	public void changeCursor(MouseEvent event, boolean hand) {
+		if(hand)
+			this.stage.getScene().setCursor(Cursor.HAND);
+		else
+			this.stage.getScene().setCursor(Cursor.DEFAULT);
+	} //Changes cursor to either a hand if true is passed, or pointer if false
 
 	
 	//Methods used when user is designing new plot and inputting conditions
@@ -72,10 +86,6 @@ public class Controller extends Application {
 	public void loadGarden() {} // takes garden information stored in Model and renders GardenDesign 
 
 	
-	public double getStartingX() {return model.getX();}
-	public double getStartingY() {return model.getY();}	
-	
-	public static void main(String[] args) {
-		launch();
-	}
+	//public double getStartingX() {return model.getX();}
+	//public double getStartingY() {return model.getY();}	
 }
