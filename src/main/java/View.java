@@ -16,23 +16,21 @@ public class View{
 	GraphicsContext gc;
 	Controller controller;
 	
-	public View(Stage stage, Controller c) { 
+	public View(Stage stage, Group root, Controller c) { 
+		root.getChildren().clear();
 		stage.setTitle("Lepscape");
         importImages();
         controller = c;
 	}	
 	public void importImages() {}
-	public void switchPage(EClicked page) { //renders the correct view
-		
-	} 
-	public Button addButton(double transX, double transY, String text) {
+	public Button addButton(double transX, double transY, String text, EClicked next) {
 		Button b = new Button();
 		b.setText(text);
 		b.setTranslateX(transX);
 		b.setTranslateY(transY);
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
 		b.setOnMouseExited(controller.getHandlerforMouseExited());
-		//b.setOnMousePressed();
+		b.setOnAction(controller.getHandlerforClicked(next));
 		return b;
 	}
 }

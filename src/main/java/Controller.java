@@ -19,10 +19,11 @@ public class Controller extends Application {
 	View view;
 	//Model model;
 	Stage stage;
+	Group root;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		 Group root = new Group();
+		 this.root = new Group();
 	     Scene scene = new Scene(root);
 	     this.stage = stage;
 	     this.stage.setScene(scene);
@@ -35,22 +36,21 @@ public class Controller extends Application {
 	//Page switching
 	public EventHandler<ActionEvent> getHandlerforClicked(EClicked next) { //Changes view and calls relevant methods in Model/View based on which page is created
 		return (e) -> {
-			view.switchPage(next);
+			switchViews(next);
 		};
 	}
 	//Handlers 
 	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
-		System.out.println("Mouse entered");
 		return (e) -> {this.changeCursor(e, true);};
 	}
 	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor wtih false)
 		return (e) -> { this.changeCursor(e, false);  };
 	}
 	public EventHandler<MouseEvent> getHandlerforDrag() {
-		return (e) -> {   };
+		return (e) -> {  drag(e); };
 	}
 	public EventHandler<MouseEvent> getHandlerforReleased() {
-		return (e) -> {   };
+		return (e) -> { release(e);  };
 	}
 	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
 		return null;
@@ -58,13 +58,36 @@ public class Controller extends Application {
 
 	public void drag(MouseEvent event) {}
 	public void release(MouseEvent event) {}
-	public void changeCursor(MouseEvent event, boolean hand) {
+	public void changeCursor(MouseEvent event, boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
 		if(hand)
 			this.stage.getScene().setCursor(Cursor.HAND);
 		else
 			this.stage.getScene().setCursor(Cursor.DEFAULT);
-	} //Changes cursor to either a hand if true is passed, or pointer if false
-
+	} 
+	public void switchViews(EClicked next) {
+		switch(next) {
+		case GALLERY: 
+			this.view = new Gallery(stage, stage.getScene(), root,this);
+			break;
+		case PLOTDESIGN:
+			this.view = new PlotDesign(stage, stage.getScene(), root, this);
+			break;
+		case START:
+			this.view = new Start(stage, stage.getScene(), root, this);
+			break;
+			
+//		case CONDITIONSCREEN:
+//		     this.view = new Start(stage, stage.getScene(), stage.getScene().getRoot(),this);
+//		     break;
+//		case GARDENDESIGN:
+//			getRecommendedPlants();
+//			this.view = new GardenDesign(stage, stage.getScene(), stage.getScene().getRoot(),this);
+//			break;
+//			
+//		case NAVIGATION: 
+			
+		}
+	}
 	
 	//Methods used when user is designing new plot and inputting conditions
 	public void onFinishPlot() {} //Called in release(), boundary is created and updates Garden's outline field in Model (changeCursor called with false)
