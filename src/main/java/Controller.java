@@ -1,47 +1,75 @@
 import javafx.event.EventHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
+import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import javafx.scene.input.KeyEvent;
+import java.util.ArrayList;
+import javafx.application.Application;
 
-public class Controller {
-	public View view;
-	public Model model;
+public class Controller extends Application {
+	View view;
+	Model model;
+	Stage stage;
+	Group root;
 	
-	public Controller(View view) {this.view = view;}
-	
-	//Methods that render different Views depending on which buttons are pressed
-	public void designNewPlot() {} //renders PlotDesign when initialize button is pressed on Start
-	public void conditionsDesignate() {} //renders ConditionScreen
-	public void goToGallery() {} //renders Gallery and shows all saved gardens from Model
-	public void designGarden() {} //renders GardenDesign
-	public void summaryScreen() {} //renders Summary 
-	public void openLepedia() {} //renders Lepedia and shows current leps in garden from Model
+	@Override
+	public void start(Stage stage) throws Exception {}
+	public static void main(String[] args) {
+		launch(args);
+	}
+	//Page switching
+	public EventHandler<ActionEvent> getHandlerforClicked(EClicked next) { //Changes view and calls relevant methods in Model/View based on which page is created
+		return (e) -> {  };
+	}
+	//Handlers 
+	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
+		return (e) -> {  };
+	}
+	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor wtih false)
+		return (e) -> {  };
+	}
+	public EventHandler<MouseEvent> getHandlerforDrag() {
+		return (e) -> {  };
+	}
+	public EventHandler<MouseEvent> getHandlerforReleased() {
+		return (e) -> {  };
+	}
+	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
+		return null;
+	}
+
+	public void drag(MouseEvent event) {}
+	public void release(MouseEvent event) {}
+	public void changeCursor(MouseEvent event, boolean hand) {} //Changes cursor to either a hand if true is passed, or pointer if false
+	public void switchViews(EClicked next) {}
 	
 	//Methods used when user is designing new plot and inputting conditions
-	public void readyToDraw(String shape) {} //method takes a string to show which shape (or freehand) will be drawn by user
-	public void onDrawingPlot() {} //User is dragging mouse to create boundary, this method updates view
-	public void onFinishPlot() {} //User releases mouse, boundary is created and updates Garden's outline field
-	public void getBoundaries() {} //Gets boundaries of garden and sends to View when rendering the ConditionScreen
-	public void readyToSection() {} //User has clicked on sectioning tool, controller updates view and model creates new Condition object
-	public void onSectioning() {} //User begins to paint boundary, model calls updateOutlineSection and view is updated 
-	public void onFinishSection() {} //User lifts mouse, controller calls displayConditionsOptions
-	public void displayConditionsOptions() {} //Renders the view to display condition options
-	public void onSetConditions() {} //After conditions are set with the slider, then user hits save and conditions are updated in Model
+	public void onFinishPlot() {} //Called in release(), boundary is created and updates Garden's outline field in Model (changeCursor called with false)
+	public void onSectioning() {} //Called in drag(), model calls updateOutlineSection and view is updated 
+	public void displayConditionsOptions() {} //Called in release() to update the view with conditions (changeCursor called with false)
 	
 	//Methods used when user is designing their garden
-	public void onPlantClicked() {} //Gets plant info from model and passes information to view
-	public void onPlantDragged() {} //Handlers for dragging and dropping plant in view
-	public void displayValidPlantLocation() {} //Called when user is dropping a plant, if it is not valid, it tells the view and colors plant red. Otherwise plant is green
-	public void onPlantRelease() {} //placePlant() is called in model and updated cost/leps are returned. Calls displayNewGarden()
-	public void displayNewGarden() {} //Called after a plant is dropped and view is created to show that plant and updates Basket
-	public void getCompostInfo() {} //Called when user clicks on the compost bin, which gets info about deleted plants and sends to View
-	
+	public void displayValidPlantLocation() {} ///Called in drag(), if it is not validated in Model, it tells the view and colors plant red. Otherwise plant is green
+	public void onPlantRelease() {} //placePlant() is called in model and updated cost/leps are returned. view is created to show that plant and updates Basket		
 	
 	//Methods that provide other feedback when buttons are pressed
+	public void downloadGarden() {} //Called in getHandlerforClicked if download is pressed. gets info from model, puts it in a pdf, downloads it to computer
+	public void toolClicked(MouseEvent event, Image img) {} //Called in getHandlerforClicked if a tool is clicked. changes cursor to image
+	public void getCompostInfo() {} //Called in getHandlerforClicked if compost bin clicked, which gets info about deleted plants and sends to View
+
+	//Helpers
+	public ArrayList<float[]> getBoundaries() {return null;} //Gets boundaries of garden and sends to View when rendering the ConditionScreen
+	public void getRecommendedPlants() {} //when designGarden is called, this method is also called to initialize the optimal garden (calls createDefault in model)
 	public void loadGarden() {} // takes garden information stored in Model and renders GardenDesign 
-	public void downloadGarden() {} //gets info from model, puts it in a pdf, downloads it to computer
-	public void navigationDisplay() {} //displays navigation pane on the displays that need it (GardenDesign, Summary screens)
+
 	
-	//Helper methods 
-	public void getRecommendedPlants() {} //when designGarden is called, this method is also called to intialize the optimal garden	
+	public double getStartingX() {return model.getX();}
+	public double getStartingY() {return model.getY();}	
 }

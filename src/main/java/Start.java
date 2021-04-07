@@ -1,9 +1,14 @@
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import java.util.*;
 
 public class Start extends View {
-	public Button initialize;
-	public Button gallery;
-	public Button previousSession; //loads a previous session that user was working on
+	public ArrayList<Button> buttons;
 	
-	public void render() {}
+	public Start(Stage stage, Scene scene, Group root, Controller c) {
+		super(stage, root, c);
+	}
 }
