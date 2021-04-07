@@ -10,9 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
-
 import java.util.ArrayList;
-
+import java.util.*;
 import javafx.application.Application;
 
 public class Controller extends Application {
@@ -20,31 +19,42 @@ public class Controller extends Application {
 	View view;
 	//Model model;
 	Stage stage;
-	Group root;
+	Map<String,View> views;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		 this.root = new Group();
-	     Scene scene = new Scene(root);
-	     this.stage = stage;
-	     this.stage.setScene(scene);
-	     this.view = new Start(stage, scene, root, this);
+		//Load hashmap
+	    views = new HashMap<>();
+	    views.put("Start", new Start(stage, this));
+	    views.put("Gallery", new Gallery(stage,this));  
+	    views.put("PlotDesign", new PlotDesign(stage, this));
+	    views.put("ConditionScreen", new ConditionScreen(stage,this));
+	    views.put("Navigation", new Navigation(stage, this));	     
+	    views.put("Summary", new Summary(stage,this));
+	    
+	    this.view = this.views.get("Start"); 
+	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
+	    stage.setScene(scene);
+	    this.stage = stage;
+	    stage.show();
+
 	}
 	public static void main(String[] args) {
 		launch(args);
 	}
 	//Page switching
-	public EventHandler<ActionEvent> getHandlerforClicked(EClicked next) { //Changes view and calls relevant methods in Model/View based on which page is created
+	public EventHandler<ActionEvent> getHandlerforClicked(String next) { //Changes view and calls relevant methods in Model/View based on which page is created
 		return (e) -> {
 			switchViews(next);
 		};
 	}
+	
 	//Handlers 
 	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
-		return (e) -> {this.changeCursor(e, true);};
+		return (e) -> {view.changeCursor(true);};
 	}
-	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor wtih false)
-		return (e) -> { this.changeCursor(e, false);  };
+	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
+		return (e) -> { view.changeCursor(false);  };
 	}
 	public EventHandler<MouseEvent> getHandlerforDrag() {
 		return (e) -> {  drag(e); };
@@ -58,7 +68,7 @@ public class Controller extends Application {
 	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
 		return null;
 	}
-
+	
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
 		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
@@ -72,46 +82,22 @@ public class Controller extends Application {
 	public void release(MouseEvent event) {
 		
 	}
-	public void draw(MouseEvent event, boolean isPressed) {
+	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
 		//TODO: call Model's method to update garden boundaries
 		if(isPressed)
 			view.gc.beginPath();
 		view.gc.lineTo(event.getSceneX(), event.getSceneY());
 		view.gc.stroke();
 	}
-	public void changeCursor(MouseEvent event, boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
-		if(hand)
-			this.stage.getScene().setCursor(Cursor.HAND);
+	
+	public void switchViews(String next) {
+		if(next.equals("Drawing"))
+			((PlotDesign) this.view).onDrawing();
 		else
-			this.stage.getScene().setCursor(Cursor.DEFAULT);
-	} 
-	public void switchViews(EClicked next) {
-		switch(next) {
-		case GALLERY: 
-			this.view = new Gallery(stage, stage.getScene(), root,this);
-			break;
-		case PLOTDESIGN:
-			this.view = new PlotDesign(stage, stage.getScene(), root, this);
-			break;
-		case START:
-			this.view = new Start(stage, stage.getScene(), root, this);
-			break;
-			
-//		case CONDITIONSCREEN:
-//		     this.view = new Start(stage, stage.getScene(), stage.getScene().getRoot(),this);
-//		     break;
-//		case GARDENDESIGN:
-//			getRecommendedPlants();
-//			this.view = new GardenDesign(stage, stage.getScene(), stage.getScene().getRoot(),this);
-//			break;
-//			
-//		case NAVIGATION: 
-			
-		}
+			this.view = this.views.get(next);
 	}
 	
 	//Methods used when user is designing new plot and inputting conditions
-	public void onFinishPlot() {} //Called in release(), boundary is created and updates Garden's outline field in Model (changeCursor called with false)
 	public void onSectioning() {} //Called in drag(), model calls updateOutlineSection and view is updated 
 	public void displayConditionsOptions() {} //Called in release() to update the view with conditions (changeCursor called with false)
 	
