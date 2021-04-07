@@ -9,7 +9,7 @@ public class PlacedPlant {
 		this.species = null;
 	}
 	
-	public PlacedPlant(int x, int y, PlantSpecies species) {
+	public PlacedPlant(float x, float y, PlantSpecies species) {
 		this.x = x;
 		this.y = y;
 		this.species = species;
@@ -19,7 +19,7 @@ public class PlacedPlant {
 		return this.x;
 	}
 	
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 	
@@ -27,7 +27,7 @@ public class PlacedPlant {
 		return this.y;
 	}
 	
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 	

@@ -5,14 +5,14 @@ public class Garden {
 	private int numLeps;
 	private int cost;
 	public ArrayList<PlacedPlant> plants;
-	public ArrayList<double[]> outline;
+	public ArrayList<float[]> outline;
 	public ArrayList<Conditions> sections;
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
 	
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
-		this.outline = new ArrayList<double[]>();
+		this.outline = new ArrayList<float[]>();
 		this.sections = new ArrayList<Conditions>();
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();

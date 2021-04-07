@@ -10,6 +10,25 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	private int bloomTime;
 	private boolean isWoody;
 	
+	public PlantSpecies() {
+		this.speciesName = "";
+		this.genusName = "";
+		this.commonName = "";
+		this.description = "";
+	}
+	
+	public PlantSpecies(String speciesName, String genusName, String commonName, String description, float spreadRadius, int lepsSupported, int cost, int bloomTime, boolean isWoody) {
+		this.speciesName = speciesName;
+		this.genusName = genusName;
+		this.commonName = commonName;
+		this.description = description;
+		this.spreadRadius = spreadRadius;
+		this.lepsSupported = lepsSupported;
+		this.cost = cost;
+		this.bloomTime = bloomTime;
+		this.isWoody = isWoody;
+	}
+	
 	public int compareTo(PlantSpecies other) {
 		return 0;
 	}
