@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 
 class PlacedPlantTest {
 	
-	private PlantSpecies ps = new PlantSpecies("a", "a", "a", "a", (float)12.3, 5, 10, 5, true);
-	double epsilon = 0.00000001;
+	private double epsilon = 0.00000001;
+	private float x = (float) 3.5;
+	private float y = (float) 4.5;
 	
 	private PlacedPlant p1 = new PlacedPlant();
-	private PlacedPlant p2 = new PlacedPlant((float)3.5, (float)4.5, ps);
+	//private PlacedPlant p2 = new PlacedPlant((float)3.5, (float)4.5, new PlantSpecies());
+	private PlacedPlant p2 = new PlacedPlant(x, y, new PlantSpecies());
 
 	@Test
 	void testGetX() {
