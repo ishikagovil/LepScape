@@ -10,12 +10,10 @@ import java.util.*;
 public class PlotDesign extends View{
 	public ArrayList<Button> drawingShapes;
 	public ArrayList<Button> editingTools;
-	public TextField search;
-	public Button back;
-	public Button next;
-	public Button clear;
+	public ArrayList<Button> pageSwitch; //back, done, clear
 	
 	public PlotDesign(Stage stage, Scene scene, Group root, Controller c) {
-		super(stage, root, c);
+		super(stage, c);
 	}
+	public void onDrawing() {} //calls controller handlers when user is drawing
 }
