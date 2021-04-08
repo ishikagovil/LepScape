@@ -49,6 +49,7 @@ class PlantSpeciesTest {
 
 	@Test
 	void testSetGenusName() {
+		ps.setGenusName(null);
 		fail("Not yet implemented");
 	}
 
@@ -59,66 +60,73 @@ class PlantSpeciesTest {
 
 	@Test
 	void testSetCommonName() {
+		ps.setCommonName(null);
 		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetDescription() {
-		fail("Not yet implemented");
+		assertEquals(ps.getDescription(), "fail");
 	}
 
 	@Test
 	void testSetDescription() {
+		ps.setDescription(null);
 		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetSpreadRadius() {
-		fail("Not yet implemented");
+		assertEquals(ps.getSpreadRadius(), -1);
 	}
 
 	@Test
 	void testSetSpreadRadius() {
+		ps.setSpreadRadius(0);
 		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetLepsSupported() {
-		fail("Not yet implemented");
+		assertEquals(ps.getLepsSupported(), -1);
 	}
 
 	@Test
 	void testSetLepsSupported() {
+		ps.setLepsSupported(0);
 		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetCost() {
-		fail("Not yet implemented");
+		assertEquals(ps.getCost(), -1);
 	}
 
 	@Test
 	void testSetCost() {
+		ps.setCost(0);
 		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetBloomTime() {
-		fail("Not yet implemented");
+		assertEquals(ps.getBloomTime(), -1);
 	}
 
 	@Test
 	void testSetBloomTime() {
+		ps.setBloomTime(0);
 		fail("Not yet implemented");
 	}
 
 	@Test
 	void testIsWoody() {
-		fail("Not yet implemented");
+		assertEquals(ps.isWoody(), false);
 	}
 
 	@Test
 	void testSetWoody() {
+		ps.setWoody(true);
 		fail("Not yet implemented");
 	}
 
