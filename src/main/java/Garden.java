@@ -32,12 +32,20 @@ public class Garden {
 		this.numLeps = x;
 	}
 	
+	public void addNumLeps(int x) {
+		this.numLeps += x;
+	}
+	
 	public int getCost() {
 		return this.cost;
 	}
 	
 	public void setCost(int x) {
 		this.cost = x;
+	}
+	
+	public void addCost(int x) {
+		this.cost += x;
 	}
 	
 	public ArrayList<float[]> getOutline() {

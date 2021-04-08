@@ -1,9 +1,14 @@
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
-public class Summary {
+public class Summary extends View{
 	public Navigation navi;
 	public Button openLepedia;
 	public Button download;
 	
-	public void render() {}
+	public Summary(Stage stage, Scene scene, Group root, Controller c) {
+		super(stage, c);
+	}
 }
