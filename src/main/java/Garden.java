@@ -48,7 +48,7 @@ public class Garden {
 		this.cost += x;
 	}
 	
-	public ArrayList<double[]> getOutline() {
+	public ArrayList<float[]> getOutline() {
 		return this.outline;
 	}
 	
