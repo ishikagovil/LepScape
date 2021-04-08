@@ -1,14 +1,8 @@
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.util.*;
@@ -53,10 +47,8 @@ public abstract class View{
 		else
 			stage.getScene().setCursor(Cursor.DEFAULT);
 	} 
-	public Button addNextButton(double transX, double transY, String text, String next) {
+	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
-		b.setTranslateX(transX);
-		b.setTranslateY(transY);
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
 		b.setOnMouseExited(controller.getHandlerforMouseExited());
 		b.setOnAction(controller.getHandlerforClicked(next));

@@ -1,13 +1,11 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.*;
@@ -21,7 +19,7 @@ public class PlotDesign extends View{
 		super(stage, c);
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		//Set canvas for drawing
-		BorderPane border = new BorderPane();
+		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
         gc.setStroke(Color.BLACK);
@@ -34,19 +32,47 @@ public class PlotDesign extends View{
         freehand.setOnAction(controller.getHandlerforClicked("Drawing"));
         ToolBar toolbar = new ToolBar();
         toolbar.getItems().add(freehand);
-              
         
         //Adding page buttons 
+        HBox box = new HBox();
+        box.setSpacing(10);
         pageSwitch = new ArrayList<Button>();
-        pageSwitch.add(addNextButton(screenWidth/2 -175, screenHeight/4*3, "Back", "Start"));
-        pageSwitch.add(addNextButton(screenWidth/2-85,screenHeight/4*3, "Clear", "PlotDesign"));
-        pageSwitch.add(addNextButton(screenWidth/2, screenHeight/4*3, "Done", "GardenDesign"));
+        pageSwitch.add(addButton("Back", "Start"));
         
-        border.getChildren().add(toolbar);
-        border.getChildren().addAll(pageSwitch);
+        //Adding Clear button
+        Button clear = new Button("Clear");
+        clear.setOnMouseEntered(controller.getHandlerforMouseEntered());
+        clear.setOnMouseExited(controller.getHandlerforMouseExited());
+        clear.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+            	gc.clearRect(0, 0,screenWidth, screenHeight);
+            }
+        });
+        pageSwitch.add(clear);
+        
+        //Adding Done button
+        
+        pageSwitch.add(addButton("Done", "GardenDesign"));
+        
+        border.setTop(toolbar);
+        box.getChildren().addAll(pageSwitch);
+        box.setAlignment(Pos.TOP_CENTER);
+        border.setBottom(box);
 	}
 	public void onDrawing() {
 		border.setOnMousePressed(controller.getHandlerforDrawing(true));
         border.setOnMouseDragged(controller.getHandlerforDrawing(false));
+	}
+	public Button addButton(String text, String next) {
+		Button b = new Button(text);
+        b.setOnMouseEntered(controller.getHandlerforMouseEntered());
+        b.setOnMouseExited(controller.getHandlerforMouseExited());
+        b.setOnAction(controller.getHandlerforClicked(next));
+        b.addEventHandler(ActionEvent.ACTION, (e)-> {
+            border.setOnMousePressed(null);
+            border.setOnMouseDragged(null);
+        });
+        return b;
 	}
 }

@@ -1,15 +1,11 @@
 import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
-import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
 import java.util.*;
 import javafx.application.Application;
@@ -23,6 +19,7 @@ public class Controller extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		this.stage = stage;
 		//Load hashmap
 	    views = new HashMap<>();
 	    views.put("Start", new Start(stage, this));
@@ -31,13 +28,15 @@ public class Controller extends Application {
 	    views.put("ConditionScreen", new ConditionScreen(stage,this));
 	    views.put("Navigation", new Navigation(stage, this));	     
 	    views.put("Summary", new Summary(stage,this));
-	    
-	    this.view = this.views.get("Start"); 
+	    //Initialize first screen
+	    this.view = this.views.get("Start");
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
-	    stage.setScene(scene);
-	    this.stage = stage;
-	    stage.show();
-
+	    this.stage.setScene(scene);
+	    setTheStage();
+	}
+	public void setTheStage() {
+		this.stage.getScene().setRoot(this.view.getBorderPane());
+		this.stage.show();
 	}
 	public static void main(String[] args) {
 		launch(args);
@@ -93,8 +92,11 @@ public class Controller extends Application {
 	public void switchViews(String next) {
 		if(next.equals("Drawing"))
 			((PlotDesign) this.view).onDrawing();
-		else
+		else {
 			this.view = this.views.get(next);
+        	System.out.println(next);
+			setTheStage();
+		}
 	}
 	
 	//Methods used when user is designing new plot and inputting conditions

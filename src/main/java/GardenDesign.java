@@ -12,10 +12,10 @@ public class GardenDesign extends View{
 
 	public GardenDesign(Stage stage, Scene scene, Group root, Controller c) {
 		super(stage,c);
-//		Canvas canvas = new Canvas(screenWidth, screenHeight);
-//        root.getChildren().add(canvas);
-//        gc = canvas.getGraphicsContext2D();	
-//        stage.show();
+		Canvas canvas = new Canvas(screenWidth, screenHeight);
+		border = new BorderPane();
+		border.getChildren().add(canvas); 
+        gc = canvas.getGraphicsContext2D();	
 	}
 	public void showPlantInfo(String plantInfo) {} //Shows plant information when clicked
 	public void showPlantGallery() {} //Shows plants based on conditions
