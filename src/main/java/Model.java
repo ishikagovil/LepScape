@@ -21,33 +21,39 @@ import java.util.*;
 
 public class Model extends Application {
 	public int budget;
-	public Garden gardenMap;
+	public Garden garden;
 	public Map<String, PlantSpecies> plantDirectory;
-	private float x;
-	private float y;
+	public float x;
+	public float y;
 	public PlantSpecies plant1;
 	public PlantSpecies plant2;
 	public int cost;
 		
 	// Methods for the user to draw the garden and put in desired conditions
 	// create a default optimized garden based on number of leps
-	public void createDefault() {}
+	public void createDefault(Conditions condition) {}
 	// get the boundaries of the garden
 	public void getBoundaries(Garden garden) {}
 	// create a new condition for the garden
-	public void createNewConditions(Conditions conditon) {
+	public void createNewConditions(Garden sections) {
 		// new condition for different areas of the garden
 	}
 	// update the outline whenever the user puts down another point to connect
-	public void updateOutlineSection(Garden garden) {
-		// not sure what should be the parameter
-	}
+	public void updateOutlineSection(Garden outlines) {}
 	// update the outline to the condition that user wants
-	public void updateConditions(Garden garden) {
+	public void updateConditions(Garden sections) {
 		// update conditions using garden outline
 	}
 	// find dimension of the garden
-	public void findDimensions() {}
+	public void findDimensions(Garden garden) {}
+	// get x coordinate of garden design
+	public float getX() {
+		return this.x;
+	}
+	// get y coordinate of garden design
+	public float getY() {
+		return this.y;
+	}
 	
 	// Methods to use in order to place down plants
 	//choose 2 plants to compare the number of leps they support
@@ -77,10 +83,5 @@ public class Model extends Application {
 	public void start(Stage primaryStage) {
 		
 	}
-	public float getX() {
-		return this.x;
-	}
-	public float getY() {
-		return this.y;
-	}
+	
 }

@@ -1,9 +1,19 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 class ModelTest {
-
+	public int budget = 10;
+	public Garden garden = new Garden();
+	public Map<String, PlantSpecies> plantDirectory ;
+	public float x = (float) 10.0;
+	public float y = (float) 5.0;
+	public PlantSpecies plant1 = new PlantSpecies();
+	public PlantSpecies plant2 = new PlantSpecies();
+	public int cost = 0;
+	
 	@Test
 	void testCreateDefault() {
 		fail("Not yet implemented");
