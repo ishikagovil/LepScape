@@ -14,6 +14,6 @@ public class Gallery extends View{
 	public TextField search;
 	
 	public Gallery(Stage stage, Scene scene, Group root, Controller c) {
-		super(stage, root, c);
+		super(stage, c);
 	}
 }

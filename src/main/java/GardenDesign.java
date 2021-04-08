@@ -9,7 +9,7 @@ public class GardenDesign extends View {
 	public Button save;
 	
 	public GardenDesign(Stage stage, Scene scene, Group root, Controller c) {
-		super(stage, root, c);
+		super(stage, c);
 	}
 	public void showPlantInfo(String plantInfo) {} //Shows plant information when clicked
 	public void showPlantGallery() {} //Shows plants based on conditions

@@ -9,6 +9,6 @@ public class Summary extends View{
 	public Button download;
 	
 	public Summary(Stage stage, Scene scene, Group root, Controller c) {
-		super(stage, root, c);
+		super(stage, c);
 	}
 }

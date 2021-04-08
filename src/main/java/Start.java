@@ -9,6 +9,6 @@ public class Start extends View {
 	public ArrayList<Button> buttons;
 	
 	public Start(Stage stage, Scene scene, Group root, Controller c) {
-		super(stage, root, c);
+		super(stage, c);
 	}
 }
