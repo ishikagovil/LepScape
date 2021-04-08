@@ -11,6 +11,17 @@ javafx {
     version = "12"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
 
 //uncomment this and point to your main class
 //mainClassName = '' 
