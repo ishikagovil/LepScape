@@ -5,14 +5,14 @@ public class Garden {
 	private int numLeps;
 	private int cost;
 	public ArrayList<PlacedPlant> plants;
-	public ArrayList<float[]> outline;
+	public ArrayList<double[]> outline;
 	public ArrayList<Conditions> sections;
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
 	
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
-		this.outline = new ArrayList<float[]>();
+		this.outline = new ArrayList<double[]>();
 		this.sections = new ArrayList<Conditions>();
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();
@@ -48,7 +48,7 @@ public class Garden {
 		this.cost += x;
 	}
 	
-	public ArrayList<float[]> getOutline() {
+	public ArrayList<double[]> getOutline() {
 		return this.outline;
 	}
 	
@@ -68,6 +68,12 @@ public class Garden {
 		return this.compostBin;
 	}
 	
-	
+	public void updateOutline(double x, double y) { //called to update the outline when user is drawing
+		double[] arr = {x,y};
+		this.outline.add(arr);
+	}
+	public void clearOutline() { //called if user clears their drawing
+		this.outline = new ArrayList<double[]>(); 
+	}
 
 }

@@ -19,6 +19,7 @@ public class Controller extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		this.model = new Model();
 		this.stage = stage;
 		//Load hashmap
 	    
@@ -91,11 +92,14 @@ public class Controller extends Application {
 			view.gc.beginPath();
 		view.gc.lineTo(event.getSceneX(), event.getSceneY());
 		view.gc.stroke();
+		model.updateOutlineSection(event.getSceneX(), event.getSceneY());
 	}
 	
 	public void switchViews(String next) {
 		if(next.equals("Drawing"))
 			((PlotDesign) this.view).onDrawing();
+		else if(next.equals("Clear"))
+			this.model.getGarden().clearOutline();
 		else {
 			this.view = this.views.get(next);
 			setTheStage();

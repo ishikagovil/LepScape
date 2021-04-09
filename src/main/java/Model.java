@@ -1,22 +1,3 @@
-import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import java.util.*;
 
 public class Model {
@@ -24,17 +5,28 @@ public class Model {
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
-		
+	
+	public Model() {
+		this.gardenMap = new Garden();
+		this.plantDirectory = new HashMap<>();
+		this.lepDirectory = new HashMap<>();
+	}
 	// Methods for the user to draw the garden and put in desired conditions
-	// create a default shape of garden
+	// create the optimal garden based on leps and conditions provided
 	public void createDefault() {}
 	// get the boundaries of the garden
-	public Garden getBoundaries() {
-		return gardenMap;}
+	public ArrayList<double[]> getBoundaries() {
+		return this.gardenMap.getOutline();
+	}
+	public Garden getGarden() {
+		return this.gardenMap;
+	}
 	// create a new condition for the garden
 	public void createNewConditions() {}
 	// update the outline whenever the user puts down another point to connect
-	public void updateOutlineSection() {}
+	public void updateOutlineSection(double x, double y) {
+		this.gardenMap.updateOutline(x, y);
+	}
 	// update the outline to the condition that user wants
 	public void updateConditions() {}
 	// find dimension of the garden
@@ -58,11 +50,9 @@ public class Model {
 		
 	}*/
 	public double getX() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	public double getY() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }

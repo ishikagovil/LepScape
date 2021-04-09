@@ -44,11 +44,9 @@ public class PlotDesign extends View{
         Button clear = new Button("Clear");
         clear.setOnMouseEntered(controller.getHandlerforMouseEntered());
         clear.setOnMouseExited(controller.getHandlerforMouseExited());
-        clear.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e)
-            {
-            	gc.clearRect(0, 0,screenWidth, screenHeight);
-            }
+        clear.setOnAction(controller.getHandlerforClicked("Clear"));
+        clear.addEventHandler(ActionEvent.ACTION, (e)-> {
+            gc.clearRect(0, 0,screenWidth, screenHeight);
         });
         pageSwitch.add(clear);
         
