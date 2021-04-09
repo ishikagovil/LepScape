@@ -29,7 +29,8 @@ public class Model extends Application {
 	// create a default shape of garden
 	public void createDefault() {}
 	// get the boundaries of the garden
-	public void getBoundaries() {}
+	public Garden getBoundaries() {
+		return gardenMap;}
 	// create a new condition for the garden
 	public void createNewConditions() {}
 	// update the outline whenever the user puts down another point to connect
@@ -51,11 +52,11 @@ public class Model extends Application {
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
 	
-	@Override
+	/*@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 	public double getX() {
 		// TODO Auto-generated method stub
 		return 0;
