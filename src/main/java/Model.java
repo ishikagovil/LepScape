@@ -19,7 +19,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.util.*;
 
-public class Model extends Application {
+public class Model {
 	public int budget;
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;

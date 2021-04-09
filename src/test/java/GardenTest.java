@@ -1,6 +1,5 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class GardenTest {
@@ -55,20 +54,17 @@ class GardenTest {
 
 	@Test
 	void testGetOutline() {
-		assertNull(g1.getOutline().get(0));
-		assertNull(g2.getOutline().get(0));
+		assertNull(g1.getOutline());
 	}
 
 	@Test
 	void testGetPlants() {
-		assertNull(g1.getPlants().get(0));
-		assertNull(g2.getPlants().get(0));
+		assertNull(g1.getPlants());
 	}
 
 	@Test
 	void testGetSections() {
-		assertNull(g1.getSections().get(0));
-		assertNull(g2.getSections().get(0));
+		assertNull(g1.getSections());
 	}
 
 	@Test
