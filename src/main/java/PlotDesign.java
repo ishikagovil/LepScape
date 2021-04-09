@@ -14,6 +14,7 @@ public class PlotDesign extends View{
 	public ArrayList<Button> pageSwitch; //back, next, done, clear
 	public Button freehand;
 	public TextField search;
+	public FlowPane flow;
 
 	public PlotDesign(Stage stage, Controller c) {
 		super(stage, c);
@@ -51,10 +52,10 @@ public class PlotDesign extends View{
         });
         pageSwitch.add(clear);
         
-        //Adding Done button
+        //Adding Done button 
+        pageSwitch.add(addButton("Done", "ConditionScreen"));
         
-        pageSwitch.add(addButton("Done", "GardenDesign"));
-        
+        //Adding to border
         border.setTop(toolbar);
         box.getChildren().addAll(pageSwitch);
         box.setAlignment(Pos.TOP_CENTER);
@@ -72,6 +73,7 @@ public class PlotDesign extends View{
         b.addEventHandler(ActionEvent.ACTION, (e)-> {
             border.setOnMousePressed(null);
             border.setOnMouseDragged(null);
+            gc.save();
         });
         return b;
 	}

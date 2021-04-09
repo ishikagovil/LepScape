@@ -9,8 +9,8 @@ import java.util.*;
 
 public abstract class View{
 	public Map<String, Image> plantImages;
-	public int screenWidth = 1380;
-	public int screenHeight = 940;
+	public int screenWidth = 1270;
+	public int screenHeight = 760;
 	public BorderPane border;
 	Stage stage;
 	Controller controller;

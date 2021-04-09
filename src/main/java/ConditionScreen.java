@@ -18,9 +18,11 @@ public class ConditionScreen extends View {
 
 	public ConditionScreen(Stage stage, Controller c) {
 		super(stage,c);
-//		Canvas canvas = new Canvas(screenWidth, screenHeight);
-//        root.getChildren().add(canvas);
-//        gc = canvas.getGraphicsContext2D();	
-//        stage.show();
+		//Canvas canvas = new Canvas(screenWidth, screenHeight);
+		border = new BorderPane();
+
+		//border.getChildren().add(gc.getCanvas()); 
+		border.setStyle("-fx-background-color: #F3B5D7");
+        //gc.restore();
 	}
 }

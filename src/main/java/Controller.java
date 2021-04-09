@@ -21,18 +21,22 @@ public class Controller extends Application {
 	public void start(Stage stage) throws Exception {
 		this.stage = stage;
 		//Load hashmap
-	    views = new HashMap<>();
-	    views.put("Start", new Start(stage, this));
-	    views.put("Gallery", new Gallery(stage,this));  
-	    views.put("PlotDesign", new PlotDesign(stage, this));
-	    views.put("ConditionScreen", new ConditionScreen(stage,this));
-	    views.put("Navigation", new Navigation(stage, this));	     
-	    views.put("Summary", new Summary(stage,this));
+	    
+	    initializeViews();
 	    //Initialize first screen
 	    this.view = this.views.get("Start");
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
+	}
+	public void initializeViews() {
+		views = new HashMap<>();
+		views.put("Start", new Start(stage, this));
+	    views.put("Gallery", new Gallery(stage,this));  
+	    views.put("PlotDesign", new PlotDesign(stage, this));
+	    views.put("ConditionScreen", new ConditionScreen(stage,this));
+	    views.put("Navigation", new Navigation(stage, this));	     
+	    views.put("Summary", new Summary(stage,this));
 	}
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
@@ -94,7 +98,6 @@ public class Controller extends Application {
 			((PlotDesign) this.view).onDrawing();
 		else {
 			this.view = this.views.get(next);
-        	System.out.println(next);
 			setTheStage();
 		}
 	}
