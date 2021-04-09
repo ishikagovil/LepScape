@@ -24,4 +24,4 @@ test {
 }
 
 //uncomment this and point to your main class
-//mainClassName = '' 
+mainClassName = 'Controller'

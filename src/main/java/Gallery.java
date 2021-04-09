@@ -1,8 +1,6 @@
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -13,7 +11,9 @@ public class Gallery extends View{
 	public Button sort;
 	public TextField search;
 	
-	public Gallery(Stage stage, Scene scene, Group root, Controller c) {
+	public Gallery(Stage stage, Controller c) {
 		super(stage, c);
+		border = new BorderPane();
+		border.setStyle("-fx-background-color: #F3B5D7");
 	}
 }
