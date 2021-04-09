@@ -43,11 +43,13 @@ class PlacedPlantTest {
 
 	@Test
 	void testGetSpecies() {
+		assertNull(p1.getSpecies());
 		fail("Not yet implemented");
 	}
 
 	@Test
 	void testSetSpecies() {
+		p1.setSpecies(null);
 		fail("Not yet implemented");
 	}
 

@@ -21,67 +21,47 @@ import java.util.*;
 
 public class Model extends Application {
 	public int budget;
-	public Garden garden;
+	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
-	public float x;
-	public float y;
-	public PlantSpecies plant1;
-	public PlantSpecies plant2;
-	public int cost;
+	public Map<String, Lep> lepDirectory;
 		
 	// Methods for the user to draw the garden and put in desired conditions
-	// create a default optimized garden based on number of leps
-	public void createDefault(Conditions condition) {}
+	// create a default shape of garden
+	public void createDefault() {}
 	// get the boundaries of the garden
-	public void getBoundaries(Garden garden) {}
+	public void getBoundaries() {}
 	// create a new condition for the garden
-	public void createNewConditions(Garden sections) {
-		// new condition for different areas of the garden
-	}
+	public void createNewConditions() {}
 	// update the outline whenever the user puts down another point to connect
-	public void updateOutlineSection(Garden outlines) {}
+	public void updateOutlineSection() {}
 	// update the outline to the condition that user wants
-	public void updateConditions(Garden sections) {
-		// update conditions using garden outline
-	}
+	public void updateConditions() {}
 	// find dimension of the garden
-	public void findDimensions(Garden garden) {}
-	// get x coordinate of garden design
-	public float getX() {
-		return this.x;
-	}
-	// get y coordinate of garden design
-	public float getY() {
-		return this.y;
-	}
+	public void findDimensions() {}
 	
 	// Methods to use in order to place down plants
 	//choose 2 plants to compare the number of leps they support
-	public void comparePlant(PlantSpecies plant1, PlantSpecies plant2) {
-		this.plant1 = plant1;
-		this.plant2 = plant2;
-		// display the 2 plant info here
-	}
-	// get the information about the plant to compare
-	public int getPlantInfo(PlantSpecies plant) {
-		return plant.getLepsSupported();
-	}
-	// check if plant is okay to be placed by checking with spreadRadius
-	public boolean validatePlacement(PlantSpecies plant) {
-		return true;
-	}
+	public void comparePlant() {}
+	// get plant's sphere
+	public void getPlantInfo() {}
+	// check if plant is okay to be placed
+	public void validatePlacement() {}
 	// place down plants
-	public boolean placePlant(PlantSpecies plant) {
-		return true;
-	}
+	public void placePlant() {}
 	// update the cost every time a plant is placed
-	public int costUpdate() {
-		return cost;
-	}
+	public void costUpdate() {}
 	
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws Exception {
+		// TODO Auto-generated method stub
 		
 	}
-	
+	public double getX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public double getY() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

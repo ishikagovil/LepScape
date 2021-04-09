@@ -73,6 +73,7 @@ class GardenTest {
 
 	@Test
 	void testGetLeps() {
+		assertNull(g1.getLeps());
 		fail("Not yet implemented");
 	}
 
