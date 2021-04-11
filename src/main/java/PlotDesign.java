@@ -2,7 +2,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
@@ -27,7 +26,6 @@ public class PlotDesign extends View{
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
-        gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
 
         //Add editing button and functionality
@@ -63,10 +61,11 @@ public class PlotDesign extends View{
             @Override 
             public void handle(ActionEvent e) {
             	gc.drawImage(img,0,0);
-            	onLength();
+            	onSettingDimensions();
             }
         });
-        //Adding Done buttons
+        
+        //Adding Save button
         drawSwitch.add(new Button("Save"));
         setOnMouse(drawSwitch.get(2));
         drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
@@ -74,7 +73,6 @@ public class PlotDesign extends View{
             public void handle(ActionEvent e) {
             	img = canvas.snapshot(null, null);
             	manageView.setImage(img);
-            	onLength();
             	onSettingDimensions();
             }
         });
@@ -84,6 +82,8 @@ public class PlotDesign extends View{
         border.setTop(toolbar);
 	}
 	public void onSettingDimensions() {
+		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
+        border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
 		createHBox(dimSwitch);
 		label = new Label(" Setting Dimensions! \n Draw a line from any two points in your plot and input its dimension");
 	    label.setStyle("-fx-font: 18 arial;");
@@ -117,10 +117,6 @@ public class PlotDesign extends View{
 	public void onDrawing() {
 		border.setOnMousePressed(controller.getHandlerforDrawing(true));
         border.setOnMouseDragged(controller.getHandlerforDrawing(false));
-	}
-	public void onLength() {
-		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
-        border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
 	}
 	public void disableDrawing(Button b) {
 		b.addEventHandler(ActionEvent.ACTION, (e)-> {

@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import java.util.ArrayList;
-import java.util.*;
 import javafx.application.Application;
 
 public class Controller extends Application {
@@ -95,7 +94,6 @@ public class Controller extends Application {
 	}
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
-		 System.out.println(length/view.dimPixel);
 	}
 	public void switchViews(String next) {
 		 if(next.equals("Clear")) {
@@ -108,7 +106,6 @@ public class Controller extends Application {
 		 }
 		 else {
 			 this.view.switchViews(next);
-			 System.out.println(next);
 			 setTheStage();
 		 }
 	}
