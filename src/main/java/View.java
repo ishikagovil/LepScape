@@ -60,4 +60,8 @@ public abstract class View{
 		System.out.println("in the outer ImageView");
 		
 	}
+	
+	public void makeInfoPane(String name, String info) {
+		
+	}
 }

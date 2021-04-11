@@ -80,6 +80,8 @@ public class Controller extends Application {
 	public void pressed(MouseEvent event) {
 		System.out.println("Clicked");
 		
+		view.makeInfoPane("Milkweed","wqwerftguiop;asdfghjklZxcvbnmqwertuioasdfghj");
+		
 	}
 	
 	public void drag(MouseEvent event) {
