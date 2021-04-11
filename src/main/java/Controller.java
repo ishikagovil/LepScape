@@ -43,6 +43,7 @@ public class Controller extends Application {
 	    views.put("Navigation", new Navigation(stage, this));	     
 	    views.put("Summary", new Summary(stage,this));
 	    views.put("GardenDesign", new GardenDesign(stage,this));
+	    views.put("LearnMore", new LearnMore(stage, this));
 	}
 >>>>>>> feat: drag
 	public void setTheStage() {
