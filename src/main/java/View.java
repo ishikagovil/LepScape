@@ -36,10 +36,10 @@ public abstract class View{
 	}
 	public void setX(double x, Node n) {
 		n.setTranslateX(n.getLayoutX() + x);
-	};
+	}
 	public void setY(double y, Node n) {
 		n.setTranslateY(n.getLayoutY() + y);
-	};
+	}
 	
 	public void importImages() {}
 	public void changeCursor(boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
