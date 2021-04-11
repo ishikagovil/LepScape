@@ -69,13 +69,18 @@ public class GardenDesign extends View{
 //		innerPane.setMinWidth(screenWidth);
 //		stack.setStyle("-fx-background-color: BLUE");
 //		border.setCenter(stack);
+		
+		
 		tile = addTilePane();
 		border.setBottom(tile);
 		comparePane = addBorderPane();
-		border.setLeft(comparePane);
-		border.setAlignment(comparePane, Pos.BOTTOM_LEFT);
-		border.setTop(vb);
-		border.setAlignment(vb, Pos.TOP_LEFT);
+		BorderPane bd2= new BorderPane();
+		bd2.setTop(vb);
+		bd2.setAlignment(bd2, Pos.TOP_LEFT);
+		bd2.setBottom(comparePane);
+		bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
+		border.setLeft(bd2);
+		
 //		border.getChildren().add(canvas); 
 		
 //        gc = canvas.getGraphicsContext2D();	
@@ -120,13 +125,38 @@ public class GardenDesign extends View{
 		border.getChildren().add(iv2);
 	}
 	
-	public StackPane makeInfoPane(String name,String info) {
-		StackPane info1 = new StackPane();
-		info1.setMinWidth(screenWidth/4);
+	public void makeInfoPane(String name,String info) {
+		BorderPane info1 = new BorderPane();
+		info1.setMaxWidth(screenWidth/4);
+		info1.setMinHeight(screenHeight-300);
+		info1.setStyle("-fx-background-color: LIGHTBLUE");
 		Character.toUpperCase(name.charAt(0));
+		
 		Label title = new Label(name);
 		
-		return info1;
+		Button toggle = new Button();
+		Image toggleIM = new Image(getClass().getResourceAsStream("/toggle.png"));
+		ImageView toggleIV = new ImageView(toggleIM);
+		toggleIV.setPreserveRatio(true);
+		toggleIV.setFitHeight(10);
+		toggle.setGraphic(toggleIV);
+		toggle.setOnAction(event->{
+			border.getChildren().remove(border.getRight());
+		});
+		
+		HBox top = new HBox();
+		top.getChildren().add(toggle);
+		toggle.setAlignment(Pos.TOP_LEFT);
+		top.getChildren().add(title);
+		title.setAlignment(Pos.CENTER);
+		
+		Text information = new Text(info);
+		
+		info1.setTop(top);
+		info1.setCenter(information);
+		info1.setAlignment(information, Pos.CENTER);
+		
+		border.setRight(info1);
 	}
 	
 	public VBox addVBox() {
@@ -147,7 +177,7 @@ public class GardenDesign extends View{
 	public BorderPane addBorderPane() {
 		BorderPane border = new BorderPane();
 		border.setStyle("-fx-background-color: LIGHTBLUE");
-		border.setMaxHeight(screenHeight/3);
+		border.setMinHeight(screenHeight/3);
 		border.setMaxWidth(screenHeight/4);
 		StackPane s1 = addStackPane("-fx-background-color: ALICEBLUE");
 		StackPane s2 = addStackPane("-fx-background-color: LAVENDER");
@@ -217,14 +247,14 @@ public class GardenDesign extends View{
 		Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 		ImageView c = new ImageView(compost);
 		c.setPreserveRatio(true);
-		c.setFitHeight(100);
-		c.setTranslateX(screenHeight/12.5);
+		c.setFitHeight(75);
+		c.setTranslateX(screenWidth/6);
 		c.setTranslateY((screenHeight-200)/2);
 		c.setOnMouseExited(event->{
-			c.setFitHeight(100);
+			c.setFitHeight(75);
 		});
 		c.setOnMouseEntered(event->{
-			c.setFitHeight(120);
+			c.setFitHeight(85);
 		});
 		border.getChildren().add(c);
 	}

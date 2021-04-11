@@ -58,4 +58,8 @@ public abstract class View{
 		
 >>>>>>> feat: drag
 	}
+	
+	public void makeInfoPane(String name, String info) {
+		
+	}
 }
