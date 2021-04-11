@@ -87,7 +87,6 @@ public class Controller extends Application {
 		
 	}
 	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
-		//TODO: call Model's method to update garden boundaries
 		if(isPressed)
 			view.gc.beginPath();
 		view.gc.lineTo(event.getSceneX(), event.getSceneY());

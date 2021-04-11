@@ -49,9 +49,12 @@ public abstract class View{
 	} 
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
-		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
-		b.setOnMouseExited(controller.getHandlerforMouseExited());
+		setOnMouse(b);
 		b.setOnAction(controller.getHandlerforClicked(next));
 		return b;
 	}	
+	public void setOnMouse(Button b) {
+		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
+		b.setOnMouseExited(controller.getHandlerforMouseExited());
+	}
 }
