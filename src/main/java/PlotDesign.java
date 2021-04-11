@@ -2,21 +2,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.*;
 
 public class PlotDesign extends View{
-	public ArrayList<Button> drawSwitch; 
-	public ArrayList<Button> dimSwitch;
-	public Button freehand;
-	public FlowPane flow;
-	public Label label;
-	public HBox box;
-	public WritableImage img;
+	ArrayList<Button> drawSwitch; 
+	ArrayList<Button> dimSwitch;
+	Label label;
+	HBox box;
+	WritableImage img;
+	GridPane grid;
+
 
 	public PlotDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
@@ -29,11 +31,8 @@ public class PlotDesign extends View{
         gc.setLineWidth(2);
 
         //Add editing button and functionality
-        freehand = new Button("Freehand");
-        setOnMouse(freehand);
-        freehand.setOnAction(controller.getHandlerforClicked("Drawing"));
         ToolBar toolbar = new ToolBar();
-        toolbar.getItems().add(freehand);
+        toolbar.getItems().add(addNextButton("Freehand","Drawing"));
         
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
         drawSwitch = new ArrayList<Button>();
@@ -41,38 +40,32 @@ public class PlotDesign extends View{
         
         //Adding Back buttons
         drawSwitch.add(addNextButton("Back", "Start"));
-        disableDrawing(0, drawSwitch);
+        disableDrawing(drawSwitch.get(0));
         dimSwitch.add(new Button("Back"));
         setOnMouse(dimSwitch.get(0));
-        disableDrawing(0, dimSwitch);
+        disableDrawing(dimSwitch.get(0));
         dimSwitch.get(0).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
             	gc.drawImage(img,0,0);
             	border.getChildren().remove(label);
+            	border.getChildren().remove(grid);
             	createHBox(drawSwitch);	
             }
         });
         
         //Adding Clear buttons
-        Button clear = new Button("Clear");
-        setOnMouse(clear);
-        clear.setOnAction(controller.getHandlerforClicked("Clear"));
-        clear.addEventHandler(ActionEvent.ACTION, (e)-> {
-            gc.clearRect(0, 0,screenWidth, screenHeight);
-        });
-        drawSwitch.add(clear);
-        
+        drawSwitch.add(addNextButton("Clear", "Clear"));
         Button undo = new Button("Undo");
-        setOnMouse(undo);
-        undo.setOnAction(new EventHandler<ActionEvent>() {
+        addNextButton("Undo", "ClearDim");
+        dimSwitch.add(undo);
+        dimSwitch.get(1).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	gc.drawImage(img, 0, 0);            	
+            	gc.drawImage(img,0,0);
+            	onLength();
             }
         });
-        dimSwitch.add(undo);
-        
         //Adding Done buttons
         drawSwitch.add(new Button("Save"));
         setOnMouse(drawSwitch.get(2));
@@ -81,28 +74,36 @@ public class PlotDesign extends View{
             public void handle(ActionEvent e) {
             	img = canvas.snapshot(null, null);
             	manageView.setImage(img);
+            	onLength();
             	onSettingDimensions();
             }
         });
-        dimSwitch.add(addNextButton("Done", "ConditionScreen"));
-        disableDrawing(2, dimSwitch);
         
         //Adding to border
         createHBox(drawSwitch);	
         border.setTop(toolbar);
 	}
-	public void onDrawing() {
-		border.setOnMousePressed(controller.getHandlerforDrawing(true));
-        border.setOnMouseDragged(controller.getHandlerforDrawing(false));
-	}
 	public void onSettingDimensions() {
-		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
-        border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
 		createHBox(dimSwitch);
 		label = new Label(" Setting Dimensions! \n Draw a line from any two points in your plot and input its dimension");
 	    label.setStyle("-fx-font: 18 arial;");
 	    border.setLeft(label);
+	    
 	    //Input value box
+	    TextField dimension = new TextField();
+	    dimension.setPromptText("Enter dimension (ft)");
+	    dimension.setOnKeyReleased(event -> {
+	    	  if (event.getCode() == KeyCode.ENTER){
+	            controller.settingLength(Double.parseDouble(dimension.getText()));
+	            dimension.setPromptText("Enter dimension (ft)");
+	            border.setOnMousePressed(null);
+	            border.setOnMouseDragged(null);
+	            controller.switchViews("ConditionScreen");
+	          }
+	    });	
+	    grid = new GridPane();
+	    grid.getChildren().add(dimension);
+	    border.setRight(grid);
 	}
 	public void createHBox(ArrayList<Button> list) {
 		if(border.getChildren().contains(box))
@@ -113,8 +114,16 @@ public class PlotDesign extends View{
 		box.getChildren().addAll(list);
 		border.setBottom(box);
 	}
-	public void disableDrawing(int index, ArrayList<Button> list) {
-		list.get(index).addEventHandler(ActionEvent.ACTION, (e)-> {
+	public void onDrawing() {
+		border.setOnMousePressed(controller.getHandlerforDrawing(true));
+        border.setOnMouseDragged(controller.getHandlerforDrawing(false));
+	}
+	public void onLength() {
+		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
+        border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
+	}
+	public void disableDrawing(Button b) {
+		b.addEventHandler(ActionEvent.ACTION, (e)-> {
             border.setOnMousePressed(null);
             border.setOnMouseDragged(null);
         });

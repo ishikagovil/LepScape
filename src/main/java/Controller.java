@@ -33,14 +33,14 @@ public class Controller extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	//Page switching
+	//Action event handlers
 	public EventHandler<ActionEvent> getHandlerforClicked(String next) { //Changes view and calls relevant methods in Model/View based on which page is created
 		return (e) -> {
 			switchViews(next);
 		};
 	}
 	
-	//Handlers 
+	//Mouse event handlers 
 	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
 		return (e) -> {view.onChangeCursor(true);};
 	}
@@ -57,7 +57,7 @@ public class Controller extends Application {
 		return (e) -> {  draw(e, isPressed); };
 	}
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
-		return (e) -> {  settingDimension(e, isPressed); };
+		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
 	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
 		return null;
@@ -77,30 +77,40 @@ public class Controller extends Application {
 	}
 	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
 		if(isPressed)
-			view.getGC().beginPath();
-		view.getGC().lineTo(event.getSceneX(), event.getSceneY());
-		view.getGC().stroke();
-		model.updateOutlineSection(event.getSceneX(), event.getSceneY());
+			 this.view.getGC().beginPath();
+		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
+		 this.view.getGC().stroke();
+		 this.model.updateOutlineSection(event.getSceneX(), event.getSceneY());
 	}
-	public void settingDimension(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
+	public void settingDimensionLine(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
 		if(isPressed)
 			view.getGC().beginPath();
-		view.getGC().lineTo(event.getSceneX(), event.getSceneY());
-		view.getGC().stroke();
+		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
+		 this.view.getGC().stroke();
 		
 		//Get pixel information
 		double[] arr = {event.getSceneX(),event.getSceneY()};
-		view.dimLen.add(arr);
-		view.dimPixel = Math.sqrt(Math.pow((view.dimLen.get(view.dimLen.size()-1)[1] - view.dimLen.get(0)[1] ),2) + Math.pow((view.dimLen.get(view.dimLen.size()-1)[0]  - view.dimLen.get(0)[0] ),2) );
+		 this.view.dimLen.add(arr);
+		 this.view.dimPixel = Math.sqrt(Math.pow((view.dimLen.get(view.dimLen.size()-1)[1] - view.dimLen.get(0)[1] ),2) + Math.pow((view.dimLen.get(view.dimLen.size()-1)[0]  - view.dimLen.get(0)[0] ),2) );
 	}
-	
+	public void settingLength(double length) {
+		 this.model.setLengthPerPixel(length/view.dimPixel);
+		 System.out.println(length/view.dimPixel);
+	}
 	public void switchViews(String next) {
-		 if(next.equals("Clear"))
-			this.model.getGarden().clearOutline();
-		else {
-			this.view.switchViews(next);
-			setTheStage();
-		}
+		 if(next.equals("Clear")) {
+			 this.view.getGC().clearRect(0, 0,this.view.getScreenWidth(), this.view.getScreenHeight());
+			 this.model.getGarden().outline = new ArrayList<double[]>(); 
+		 }
+		 else if(next.equals("ClearDim")) {
+			 this.view.getGC().drawImage(this.view.img, 0, 0);  
+			 this.view.dimLen = new ArrayList<>();
+		 }
+		 else {
+			 this.view.switchViews(next);
+			 System.out.println(next);
+			 setTheStage();
+		 }
 	}
 	
 	//Methods used when user is designing new plot and inputting conditions

@@ -14,8 +14,8 @@ public abstract class View{
 	BorderPane border;
 	Stage stage;
 	Controller controller;
-	GraphicsContext gc;
 	ManageViews manageView;
+	GraphicsContext gc;
 
 	public View(Stage stage, Controller c, ManageViews manageView) { 
 		this.manageView = manageView;

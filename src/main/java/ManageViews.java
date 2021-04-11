@@ -13,7 +13,6 @@ public class ManageViews {
 	Controller controller;
 	Stage stage;
 	
-	
 	public ManageViews(Stage stage, Controller c) {
 		dimLen = new ArrayList<>();
 		this.controller = c;
