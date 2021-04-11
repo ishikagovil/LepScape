@@ -36,8 +36,6 @@ public class GardenDesign extends View{
 	public TilePane tile = new TilePane();
 	public BorderPane comparePane = new BorderPane();
 	public StackPane info = new StackPane();
-	
-	
 	Image im = new Image(getClass().getResourceAsStream("/commonMilkweed.png"));
 	ObservableMap<String,ImageView> oblist;
 	
@@ -106,6 +104,15 @@ public class GardenDesign extends View{
 		border.getChildren().add(iv2);
 	}
 	
+	public StackPane makeInfoPane(String name,String info) {
+		StackPane info1 = new StackPane();
+		info1.setMinWidth(screenWidth/4);
+		Character.toUpperCase(name.charAt(0));
+		Label title = new Label(name);
+		
+		return info1;
+	}
+	
 	public VBox addVBox() {
 		VBox vb = new VBox();
 		vb.setStyle("-fx-background-color: GAINSBORO");
@@ -114,7 +121,7 @@ public class GardenDesign extends View{
 		vb.setMaxWidth(screenHeight/9);
 		vb.setAlignment(Pos.CENTER);;
 		Button[] buttons = new Button[] {
-			new Button("Settings"), new Button("Learn More"), new Button("Save"), new Button("Clear"),addNextButton("Next","Summary")
+			new Button("Settings"), addNextButton("Learn More", "LearnMore"), new Button("Save"), new Button("Clear"),addNextButton("Next","Summary")
 		};
 		vb.getChildren().addAll(buttons);
 		return vb;
