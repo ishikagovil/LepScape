@@ -5,7 +5,12 @@ public class Model {
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
+<<<<<<< HEAD
 	public double lengthPerPixel;
+=======
+	public double x;
+	public double y;
+>>>>>>> feat: drag
 	
 	public Model() {
 		this.gardenMap = new Garden();
@@ -50,16 +55,27 @@ public class Model {
 		// TODO Auto-generated method stub
 		
 	}*/
+	
+	public void setX(double x) {
+		this.x = x;
+	}
+	public void setY(double y) {
+		this.y = y;
+	}
 	public double getX() {
-		return 0;
+		return this.x;
 	}
 	public double getY() {
-		return 0;
+		return this.y;
 	}
+<<<<<<< HEAD
 	public double getLengthPerPixel() {
 		return this.lengthPerPixel;
 	}
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
 	}
+=======
+	
+>>>>>>> feat: drag
 }
