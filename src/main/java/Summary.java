@@ -5,8 +5,8 @@ public class Summary extends View{
 	public Navigation navi;
 	public Button openLepedia;
 	public Button download;
-	public Summary(Stage stage, Controller c) {
-		super(stage, c);
+	public Summary(Stage stage, Controller c, ManageViews manageView) {
+		super(stage, c, manageView);
 
 	}
 	public void render() {}

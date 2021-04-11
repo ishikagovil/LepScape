@@ -10,8 +10,8 @@ public class GardenDesign extends View{
 	public Button compare;
 	public Button save;
 
-	public GardenDesign(Stage stage, Scene scene, Group root, Controller c) {
-		super(stage,c);
+	public GardenDesign(Stage stage, Controller c, ManageViews manageView) {
+		super(stage, c, manageView);
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
 		border.getChildren().add(canvas); 

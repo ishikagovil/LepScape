@@ -8,8 +8,8 @@ import java.util.*;
 public class Start extends View {
 	public ArrayList<Button> buttons;
 	
-	public Start(Stage stage, Controller c) {
-		super(stage, c);        
+	public Start(Stage stage, Controller c, ManageViews manageView) {
+		super(stage, c, manageView);     
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
 		border.getChildren().add(canvas);

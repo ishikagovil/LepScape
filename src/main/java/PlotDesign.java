@@ -18,8 +18,8 @@ public class PlotDesign extends View{
 	public HBox box;
 	public WritableImage img;
 
-	public PlotDesign(Stage stage, Controller c) {
-		super(stage, c);
+	public PlotDesign(Stage stage, Controller c, ManageViews manageView) {
+		super(stage, c, manageView);
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		//Set canvas for drawing
 		border = new BorderPane();
@@ -48,7 +48,6 @@ public class PlotDesign extends View{
         dimSwitch.get(0).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	//gc.restore();
             	gc.drawImage(img,0,0);
             	border.getChildren().remove(label);
             	createHBox(drawSwitch);	
@@ -80,7 +79,6 @@ public class PlotDesign extends View{
         drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	//gc.save();
             	img = canvas.snapshot(null, null);
             	onSettingDimensions();
             }
@@ -97,6 +95,8 @@ public class PlotDesign extends View{
         border.setOnMouseDragged(controller.getHandlerforDrawing(false));
 	}
 	public void onSettingDimensions() {
+		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
+        border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
 		createHBox(dimSwitch);
 		label = new Label(" Setting Dimensions! \n Draw a line from any two points in your plot and input its dimension");
 	    label.setStyle("-fx-font: 18 arial;");

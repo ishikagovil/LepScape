@@ -12,33 +12,20 @@ import javafx.application.Application;
 
 public class Controller extends Application {
 	private final boolean DEBUG = true;
-	View view;
+	ManageViews view;
 	Model model;
 	Stage stage;
-	Map<String,View> views;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
 		this.stage = stage;
-		//Load hashmap
-	    
-	    initializeViews();
-	    //Initialize first screen
-	    this.view = this.views.get("Start");
+	    view = new ManageViews(stage,this);
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
 	}
-	public void initializeViews() {
-		views = new HashMap<>();
-		views.put("Start", new Start(stage, this));
-	    views.put("Gallery", new Gallery(stage,this));  
-	    views.put("PlotDesign", new PlotDesign(stage, this));
-	    views.put("ConditionScreen", new ConditionScreen(stage,this));
-	    views.put("Navigation", new Navigation(stage, this));	     
-	    views.put("Summary", new Summary(stage,this));
-	}
+	
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.show();
@@ -55,10 +42,10 @@ public class Controller extends Application {
 	
 	//Handlers 
 	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
-		return (e) -> {view.changeCursor(true);};
+		return (e) -> {view.onChangeCursor(true);};
 	}
 	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
-		return (e) -> { view.changeCursor(false);  };
+		return (e) -> { view.onChangeCursor(false);  };
 	}
 	public EventHandler<MouseEvent> getHandlerforDrag() {
 		return (e) -> {  drag(e); };
@@ -69,6 +56,9 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforDrawing(boolean isPressed) {
 		return (e) -> {  draw(e, isPressed); };
 	}
+	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
+		return (e) -> {  settingDimension(e, isPressed); };
+	}
 	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
 		return null;
 	}
@@ -77,7 +67,6 @@ public class Controller extends Application {
 		Node n = (Node)event.getSource();
 		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
 		
-		//TODO: implement when Model is created
 		//model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
 		//model.setY(model.getY() + event.getY());
 		//view.setX( model.getX(),n);
@@ -88,19 +77,28 @@ public class Controller extends Application {
 	}
 	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
 		if(isPressed)
-			view.gc.beginPath();
-		view.gc.lineTo(event.getSceneX(), event.getSceneY());
-		view.gc.stroke();
+			view.getGC().beginPath();
+		view.getGC().lineTo(event.getSceneX(), event.getSceneY());
+		view.getGC().stroke();
 		model.updateOutlineSection(event.getSceneX(), event.getSceneY());
+	}
+	public void settingDimension(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
+		if(isPressed)
+			view.getGC().beginPath();
+		view.getGC().lineTo(event.getSceneX(), event.getSceneY());
+		view.getGC().stroke();
+		
+		//Get pixel information
+		double[] arr = {event.getSceneX(),event.getSceneY()};
+		view.dimLen.add(arr);
+		view.dimPixel = Math.sqrt(Math.pow((view.dimLen.get(view.dimLen.size()-1)[1] - view.dimLen.get(0)[1] ),2) + Math.pow((view.dimLen.get(view.dimLen.size()-1)[0]  - view.dimLen.get(0)[0] ),2) );
 	}
 	
 	public void switchViews(String next) {
-		if(next.equals("Drawing"))
-			((PlotDesign) this.view).onDrawing();
-		else if(next.equals("Clear"))
+		 if(next.equals("Clear"))
 			this.model.getGarden().clearOutline();
 		else {
-			this.view = this.views.get(next);
+			this.view.switchViews(next);
 			setTheStage();
 		}
 	}

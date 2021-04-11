@@ -11,28 +11,21 @@ public abstract class View{
 	public Map<String, Image> plantImages;
 	public int screenWidth = 1270;
 	public int screenHeight = 760;
-	public BorderPane border;
+	BorderPane border;
 	Stage stage;
 	Controller controller;
 	GraphicsContext gc;
+	ManageViews manageView;
 
-
-	public View(Stage stage, Controller c) { 
+	public View(Stage stage, Controller c, ManageViews manageView) { 
+		this.manageView = manageView;
 		this.stage = stage;
         controller = c;
 		this.stage.setTitle("Lepscape");
         importImages();
 	}	
 	
-	public BorderPane getBorderPane() {
-		return border;
-	}
-	public int getScreenWidth() {
-		return screenWidth;
-	}
-	public int getScreenHeight() {
-		return screenHeight;
-	}
+	
 	public void setX(double x, Node n) {
 		n.setTranslateX(n.getLayoutX() + x);
 	};

@@ -5,6 +5,7 @@ public class Model {
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
+	public double lengthPerPixel;
 	
 	public Model() {
 		this.gardenMap = new Garden();
@@ -54,5 +55,11 @@ public class Model {
 	}
 	public double getY() {
 		return 0;
+	}
+	public double getLengthPerPixel() {
+		return this.lengthPerPixel;
+	}
+	public void setLengthPerPixel(double pix) {
+		this.lengthPerPixel = pix;
 	}
 }

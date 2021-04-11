@@ -11,8 +11,8 @@ public class Gallery extends View{
 	public Button sort;
 	public TextField search;
 	
-	public Gallery(Stage stage, Controller c) {
-		super(stage, c);
+	public Gallery(Stage stage, Controller c, ManageViews manageView) {
+		super(stage, c, manageView);
 		border = new BorderPane();
 		border.setStyle("-fx-background-color: #F3B5D7");
 	}

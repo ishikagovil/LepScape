@@ -12,8 +12,8 @@ public class ConditionScreen extends View {
 	public Slider sunlight;
 	public TextField budget;
 
-	public ConditionScreen(Stage stage, Controller c) {
-		super(stage,c);
+	public ConditionScreen(Stage stage, Controller c, ManageViews manageView) {
+		super(stage, c, manageView);
 		border = new BorderPane();
 
 		border.setStyle("-fx-background-color: #F3B5D7");
