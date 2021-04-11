@@ -68,7 +68,7 @@ public class PlotDesign extends View{
         undo.setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	gc.drawImage(img, 0, 0);
+            	gc.drawImage(img, 0, 0);            	
             }
         });
         dimSwitch.add(undo);
@@ -80,6 +80,7 @@ public class PlotDesign extends View{
             @Override 
             public void handle(ActionEvent e) {
             	img = canvas.snapshot(null, null);
+            	manageView.setImage(img);
             	onSettingDimensions();
             }
         });
