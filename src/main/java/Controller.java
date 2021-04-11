@@ -22,10 +22,9 @@ public class Controller extends Application {
 		this.model = new Model();
 		this.stage = stage;
 		//Load hashmap
-	    
 	    initializeViews();
 	    //Initialize first screen
-	    this.view = this.views.get("Start");
+	    this.view = this.views.get("GardenDesign");
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
@@ -38,6 +37,7 @@ public class Controller extends Application {
 	    views.put("ConditionScreen", new ConditionScreen(stage,this));
 	    views.put("Navigation", new Navigation(stage, this));	     
 	    views.put("Summary", new Summary(stage,this));
+	    views.put("GardenDesign", new GardenDesign(stage,this));
 	}
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
@@ -73,26 +73,39 @@ public class Controller extends Application {
 		return null;
 	}
 	
+	public void pressed(MouseEvent event) {
+		System.out.println("Clicked");
+		
+	}
+	
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
 		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
-		
-		//TODO: implement when Model is created
-		//model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
-		//model.setY(model.getY() + event.getY());
-		//view.setX( model.getX(),n);
-		//view.setY( model.getY(),n);
+//		n.setTranslateX(n.getTranslateX() + event.getX());
+//		n.setTranslateY(n.getTranslateY() + event.getY());
+		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
+		model.setY(model.getY() + event.getY());
+		view.setX(model.getX(),n);
+		view.setY(model.getY(),n);
 	}
+	
+	//TODO: check if it has left the upperBound of the tilePane so then it can be placed
+	//Also check if it has entered compared then do the compare. 
+	//TODO: Add String param so a placedPlant can be created if in the garden if in compare then get plant info
+	//TODO: Add String param for addImageView so view knows which image to use for making the ImageView
 	public void release(MouseEvent event) {
-		
+		System.out.println("released");
+		Node n = (Node)event.getSource();
+		view.setX(n.getLayoutX(),n);
+		view.setY(n.getLayoutY(),n);
+		view.addImageView(model.getX(),model.getY());
 	}
-	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
-		//TODO: call Model's method to update garden boundaries
+	public void draw(MouseEvent event, boolean isPressed) { 
 		if(isPressed)
 			view.gc.beginPath();
-		view.gc.lineTo(event.getSceneX(), event.getSceneY());
-		view.gc.stroke();
-		model.updateOutlineSection(event.getSceneX(), event.getSceneY());
+			view.gc.lineTo(event.getSceneX(), event.getSceneY());
+			view.gc.stroke();
+			model.updateOutlineSection(event.getSceneX(), event.getSceneY());
 	}
 	
 	public void switchViews(String next) {

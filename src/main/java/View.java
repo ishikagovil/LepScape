@@ -3,6 +3,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.util.*;
@@ -54,4 +55,9 @@ public abstract class View{
 		b.setOnAction(controller.getHandlerforClicked(next));
 		return b;
 	}	
+	
+	public void addImageView(double x, double y) {
+		System.out.println("in the outer ImageView");
+		
+	}
 }
