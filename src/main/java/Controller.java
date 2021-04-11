@@ -66,6 +66,9 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
 		return (e) -> { view.onChangeCursor(false);  };
 	}
+	public EventHandler<MouseEvent> getHandlerforPressed(){
+		return (e) -> { pressed(e); };
+	}
 	public EventHandler<MouseEvent> getHandlerforDrag() {
 		return (e) -> {  drag(e); };
 	}
