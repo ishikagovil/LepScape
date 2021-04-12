@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import java.util.ArrayList;
-import java.util.*;
 import javafx.application.Application;
 
 public class Controller extends Application {
@@ -18,6 +17,7 @@ public class Controller extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		
 		this.model = new Model();
 		this.stage = stage;
 	    view = new ManageViews(stage,this);
