@@ -72,5 +72,16 @@ public class Garden {
 		double[] arr = {x,y};
 		this.outline.add(arr);
 	}
+<<<<<<< HEAD
+=======
+	public void clearOutline() { //called if user clears their drawing
+		this.outline = new ArrayList<double[]>(); 
+	}
+	
+	public void addToGarden(PlacedPlant plant) {
+		plants.add(plant);
+	}
+	
+>>>>>>> before rebase
 
 }

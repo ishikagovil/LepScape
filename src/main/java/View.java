@@ -26,9 +26,23 @@ public abstract class View{
         importImages();
 	}	
 	
+<<<<<<< HEAD
 	
 	public void setX(double x, Node n) {
 		n.setTranslateX(n.getLayoutX() + x);
+=======
+	public BorderPane getBorderPane() {
+		return border;
+	}
+	public int getScreenWidth() {
+		return screenWidth;
+	}
+	public int getScreenHeight() {
+		return screenHeight;
+	}
+	public void setX(double d, Node n) {
+		n.setTranslateX(n.getLayoutX() + d);
+>>>>>>> before rebase
 	}
 	public void setY(double y, Node n) {
 		n.setTranslateY(n.getLayoutY() + y);
@@ -57,6 +71,10 @@ public abstract class View{
 		System.out.println("in the outer ImageView");
 		
 >>>>>>> feat: drag
+	}
+	
+	public void removePlant(Node n) {
+		
 	}
 	
 	public void makeInfoPane(String name, String info) {

@@ -46,9 +46,17 @@ public class Model {
 	// check if plant is okay to be placed
 	public void validatePlacement() {}
 	// place down plants
-	public void placePlant() {}
+	public void placePlant(double x, double y, String key) {
+		PlantSpecies specie = plantDirectory.get(key);
+		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
+	}
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
+	
+	public void initializePlantDirectory() {
+		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers arranged \nin drooping clusters.",5,7,13,40, false));
+		plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
+	}
 	
 	/*@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -77,5 +85,10 @@ public class Model {
 	}
 =======
 	
+<<<<<<< HEAD
 >>>>>>> feat: drag
+=======
+	
+	
+>>>>>>> before rebase
 }
