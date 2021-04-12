@@ -7,6 +7,8 @@ public class Navigation  {
 	public Button suggested;
 	public Button gardenPlants;
 	public Button learnMore;
+	public Button saved;
+	public Button settings;
 	
 	public Navigation(Stage stage, Controller c) {
 //		Canvas canvas = new Canvas(screenWidth, screenHeight);
