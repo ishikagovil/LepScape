@@ -1,4 +1,3 @@
-
 public class PlantSpecies implements Comparable<PlantSpecies> {
 	private String speciesName;
 	private String genusName;

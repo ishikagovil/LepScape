@@ -47,7 +47,7 @@ public class CSVtoPlants {
 	}
     
     // debugging; guaranteeing working
-    /*
+    
     public static void main(String[] args) {
         Map<String, PlantSpecies> plantDir = readFile("testdata.csv");
 
@@ -57,6 +57,6 @@ public class CSVtoPlants {
             System.out.println(key + " " + plant);
         }
     }
-    */
+    
 
 }
