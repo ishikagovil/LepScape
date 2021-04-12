@@ -34,8 +34,8 @@ public class CSVtoPlants {
                     cost = 20;
                     isWoody = true;
                 }
-                PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, description, 0, 0, cost, 0, isWoody); //create object
-                listPlants.put(commonName, newData);
+                PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, description, 5, 5, cost, 0, isWoody); //create object
+                listPlants.put(genusName + " " + speciesName, newData);
             }            
             reader.close();   
 		}
@@ -49,7 +49,7 @@ public class CSVtoPlants {
     // debugging; guaranteeing working
     
     public static void main(String[] args) {
-        Map<String, PlantSpecies> plantDir = readFile("testdata.csv");
+        Map<String, PlantSpecies> plantDir = readFile("../resources/testdata.csv");
 
         for (String p : plantDir.keySet()) {
             String key = p;
