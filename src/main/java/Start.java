@@ -8,6 +8,16 @@ import java.util.*;
 public class Start extends View {
 	public ArrayList<Button> buttons;
 	
+	/**
+	 * @author Ishika Govil 
+	 */
+	
+	/**
+	 * Creates a simple introductory screen with two buttons, new plot and gallery of saved plots
+	 * @param Stage
+	 * @param Controller
+	 * @param ManageViews
+	 */
 	public Start(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);     
 		Canvas canvas = new Canvas(screenWidth, screenHeight);

@@ -55,8 +55,8 @@ public class Summary extends View{
 		buttons = new ArrayList<Button>();
 		buttons.add(navi.learnMore);
 		buttons.add(navi.suggested);
-		buttons.add(navi.saved);
-		buttons.add(navi.settings);
+	//	buttons.add(navi.saved);
+	//	buttons.add(navi.settings);
 		
 		flow1.getChildren().addAll(buttons);
 		
