@@ -34,8 +34,8 @@ public abstract class View{
 	public int getScreenHeight() {
 		return screenHeight;
 	}
-	public void setX(double x, Node n) {
-		n.setTranslateX(n.getLayoutX() + x);
+	public void setX(double d, Node n) {
+		n.setTranslateX(n.getLayoutX() + d);
 	}
 	public void setY(double y, Node n) {
 		n.setTranslateY(n.getLayoutY() + y);
@@ -58,6 +58,10 @@ public abstract class View{
 	
 	public void addImageView(double x, double y) {
 		System.out.println("in the outer ImageView");
+		
+	}
+	
+	public void removePlant(Node n) {
 		
 	}
 	

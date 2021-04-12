@@ -21,6 +21,7 @@ public class Controller extends Application {
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
 		this.stage = stage;
+		model.initializePlantDirectory();
 		//Load hashmap
 	    initializeViews();
 	    //Initialize first screen
@@ -61,15 +62,6 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
 		return (e) -> { view.changeCursor(false);  };
 	}
-	public EventHandler<MouseEvent> getHandlerforPressed(){
-		return (e) -> { pressed(e); };
-	}
-	public EventHandler<MouseEvent> getHandlerforDrag() {
-		return (e) -> {  drag(e); };
-	}
-	public EventHandler<MouseEvent> getHandlerforReleased() {
-		return (e) -> { release(e);  };
-	}
 	public EventHandler<MouseEvent> getHandlerforDrawing(boolean isPressed) {
 		return (e) -> {  draw(e, isPressed); };
 	}
@@ -77,35 +69,67 @@ public class Controller extends Application {
 		return null;
 	}
 	
-	public void pressed(MouseEvent event) {
+	public EventHandler<MouseEvent> getHandlerforPressed(String key){
+		return (e) -> { pressed(e,key); };
+	}
+	
+	public EventHandler<MouseEvent> getHandlerforDrag() {
+		return (e) -> {  drag(e); };
+	}
+	
+	public EventHandler<MouseEvent> getHandlerforReleased(String key, Boolean startingInTile) {
+		return (e) -> { release(e,key,startingInTile);  };
+	}
+	
+	public EventHandler<MouseEvent> getHandlerForDragReleasedOver(Boolean startedInTile){
+		return event -> {draggedOver(event, startedInTile);};
+	}
+	
+	public void draggedOver(MouseEvent event, Boolean startedInTile) {
+		Node n = (Node) event.getSource();
+		System.out.println("in thr draggedOver method");
+		if(!startedInTile) {
+			view.removePlant(n);
+		}
+	}
+	
+	public void pressed(MouseEvent event, String key) {
+		Node n = (Node) event.getSource();
+		n.setMouseTransparent(true);
 		System.out.println("Clicked");
-		
-		view.makeInfoPane("Milkweed","wqwerftguiop;asdfghjklZxcvbnmqwertuioasdfghj");
+		String name = model.plantDirectory.get(key).getCommonName();
+		String description = model.plantDirectory.get(key).getDescription();
+		view.makeInfoPane(name,description);
+		event.setDragDetect(true);
 		
 	}
 	
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
-		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
-//		n.setTranslateX(n.getTranslateX() + event.getX());
-//		n.setTranslateY(n.getTranslateY() + event.getY());
+//		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
 		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
 		model.setY(model.getY() + event.getY());
 		view.setX(model.getX(),n);
 		view.setY(model.getY(),n);
+		event.setDragDetect(false);
 	}
 	
 	//TODO: check if it has left the upperBound of the tilePane so then it can be placed
 	//Also check if it has entered compared then do the compare. 
 	//TODO: Add String param so a placedPlant can be created if in the garden if in compare then get plant info
 	//TODO: Add String param for addImageView so view knows which image to use for making the ImageView
-	public void release(MouseEvent event) {
+	public void release(MouseEvent event, String name, Boolean startingInTile) {
 		System.out.println("released");
 		Node n = (Node)event.getSource();
+		n.setMouseTransparent(false);
 		view.setX(n.getLayoutX(),n);
 		view.setY(n.getLayoutY(),n);
 		view.addImageView(model.getX(),model.getY());
+		if(startingInTile) {
+			model.placePlant(model.getX(), model.getY(), name);
+		}
 	}
+	
 	public void draw(MouseEvent event, boolean isPressed) { 
 		if(isPressed)
 			view.gc.beginPath();

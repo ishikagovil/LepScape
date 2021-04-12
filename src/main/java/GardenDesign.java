@@ -1,3 +1,5 @@
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -5,7 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import java.util.*;
 import java.util.Map.Entry;
-
+import javax.swing.event.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -38,6 +40,8 @@ public class GardenDesign extends View{
 	public StackPane info = new StackPane();
 	Image im = new Image(getClass().getResourceAsStream("/commonMilkweed.png"));
 	ObservableMap<String,ImageView> oblist;
+	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
+	ImageView c = new ImageView(compost);
 	
 	
 	public GardenDesign(Stage stage, Controller c) {
@@ -73,48 +77,62 @@ public class GardenDesign extends View{
 	public TilePane addTilePane() {
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
-		for(int i = 0; i<4; i++) {
-			oblist.get("Image"+i).setOnMousePressed(ic.getHandlerforPressed());
-			oblist.get("Image"+i).setOnMouseDragged(ic.getHandlerforDrag());
-			oblist.get("Image"+i).setOnMouseReleased(ic.getHandlerforReleased());
-			tile.getChildren().add(oblist.get("Image"+i));
-		}
-//		ImageView iv = new ImageView(im);
-//		iv.setPreserveRatio(true);
-//		iv.setFitHeight(100);
-//		
-//		iv.setOnMousePressed(ic.getHandlerforPressed());
-//		iv.setOnMouseDragged(ic.getHandlerforDrag());
-//		iv.setOnMouseReleased(ic.getHandlerforReleased());
-////		iv.setOnMouseReleased(event -> tile.setOnDragExited(event2 -> ic.release(event)));
-//		
-//		oblist.put("thisOne", iv);
-//		tile.getChildren().add(iv);
+		oblist.forEach((k,v)->{
+			v.setOnMousePressed(ic.getHandlerforPressed(k));
+			v.setOnMouseDragged(ic.getHandlerforDrag());
+			v.setOnMouseReleased(ic.getHandlerforReleased(k,true));
+			v.setOnDragDetected(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent event) {
+					v.startFullDrag();
+					System.out.println("drag detected");
+					
+				}
+			});
+			tile.getChildren().add(v);
+		});
 		
 		return tile;
 	}
 	
-	public void addImageView(double x, double y) {
+	public HBox addBudgetLepPane() {
+		HBox hb = new HBox();
+		
+		Image lep = new Image(getClass().getResourceAsStream("/butterfly.png"));
+		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+		
+		
+		
+		return hb;
+	}
+	
+	public void addImageView(double x, double y, Boolean startingInTile) {
 		System.out.println("in the inner addImageView");
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
 		iv2.setFitHeight(100);
 //		iv2.setTranslateX(iv2.getLayoutX()+x);
 //		iv2.setTranslateY(iv2.getLayoutY()+y);
-		setX(x,iv2);
-		setY(y,iv2);
-//		iv2.setTranslateX(x);
-//		iv2.setTranslateY(y);
+//		setX(x,iv2);
+//		setY(y,iv2);
+		iv2.setTranslateX(x);
+		iv2.setTranslateY(y);
 		iv2.setOnMouseDragged(ic.getHandlerforDrag());
+		c.setOnMouseDragReleased(ic.getHandlerForDragReleasedOver(false));
+//		iv2.setOnMouseReleased(event->{
+//			c.setOnMouseDragEntered(event2-> {
+//				c.setFitHeight(85);
+//				removePlant(iv2);
+//			});
+//		});
 		border.getChildren().add(iv2);
 	}
 	
 	public void makeInfoPane(String name,String info) {
 		BorderPane info1 = new BorderPane();
-		info1.setMaxWidth(screenWidth/4);
+		info1.setPrefWidth(screenWidth/4);
 		info1.setMinHeight(screenHeight-300);
 		info1.setStyle("-fx-background-color: LIGHTBLUE");
-		Character.toUpperCase(name.charAt(0));
 		
 		Label title = new Label(name);
 		
@@ -129,16 +147,18 @@ public class GardenDesign extends View{
 		});
 		
 		HBox top = new HBox();
+//		top.setSpacing(80);
 		top.getChildren().add(toggle);
 		toggle.setAlignment(Pos.TOP_LEFT);
 		top.getChildren().add(title);
 		title.setAlignment(Pos.CENTER);
 		
-		Text information = new Text(info);
+		Text tf = new Text();
+		tf.setText(info);
 		
 		info1.setTop(top);
-		info1.setCenter(information);
-		info1.setAlignment(information, Pos.CENTER);
+		info1.setCenter(tf);
+		info1.setAlignment(tf, Pos.CENTER);
 		
 		border.setRight(info1);
 	}
@@ -208,28 +228,27 @@ public class GardenDesign extends View{
 		ImageView iv1 = new ImageView(im);
 		iv1.setPreserveRatio(true);
 		iv1.setFitHeight(100);
-		oblist.put("Image0", iv1);
+		oblist.put("commonMilkweed", iv1);
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
 		iv2.setFitHeight(100);
-		oblist.put("Image1", iv2);
-		ImageView iv3 = new ImageView(im);
-		iv3.setPreserveRatio(true);
-		iv3.setFitHeight(100);
-		oblist.put("Image2", iv3);
-		ImageView iv4 = new ImageView(im);
-		iv4.setPreserveRatio(true);
-		iv4.setFitHeight(100);
-		oblist.put("Image3", iv4);
+		oblist.put("pine", iv2);
 		
 		return oblist;
 	}
 	
+	public void removePlant(Node n) {
+		border.getChildren().remove(n);
+	}
+	
 	public void showPlantInfo(String plantInfo) {} //Shows plant information when clicked
 	public void showPlantGallery() {} //Shows plants based on conditions
+	public Node compost() {
+		return this.compost();
+	}
 	public void showCompostBin() {
-		Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
-		ImageView c = new ImageView(compost);
+//		Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
+//		ImageView c = new ImageView(compost);
 		c.setPreserveRatio(true);
 		c.setFitHeight(75);
 		c.setTranslateX(screenWidth/6);
@@ -239,6 +258,7 @@ public class GardenDesign extends View{
 		});
 		c.setOnMouseEntered(event->{
 			c.setFitHeight(85);
+			
 		});
 		border.getChildren().add(c);
 	}
