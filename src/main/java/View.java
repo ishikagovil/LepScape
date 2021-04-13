@@ -56,16 +56,9 @@ public abstract class View{
 		return b;
 	}	
 	
-	public void addImageView(double x, double y) {
-		System.out.println("in the outer ImageView");
-		
-	}
-	
-	public void removePlant(Node n) {
-		
-	}
-	
-	public void makeInfoPane(String name, String info) {
-		
-	}
+	//Used only in gardenDesig. In here because need to called by controller
+	public void addImageView(double x, double y) {}
+	public void removePlant(Node n) {}
+	public void makeInfoPane(String name, String info) {}
+	public void updateBudgetandLep(int cost, int lepCount) {}
 }
