@@ -161,6 +161,7 @@ public class Controller extends Application {
 		view.addImageView(model.getX(),model.getY());
 		if(startingInTile) {
 			model.placePlant(model.getX(), model.getY(), name);
+			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
 	}
 <<<<<<< HEAD
@@ -210,6 +211,11 @@ public class Controller extends Application {
 			 this.view.switchViews(next);
 			 setTheStage();
 		 }
+	}
+	
+	//Used to set the initial budget in the garden design screen
+	public int getBudget() {
+		return model.getBudget();
 	}
 	
 	//Methods used when user is designing new plot and inputting conditions

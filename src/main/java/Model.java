@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Model {
-	public int budget;
+	public int budget = 100;
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
@@ -10,7 +10,11 @@ public class Model {
 =======
 	public double x;
 	public double y;
+<<<<<<< HEAD
 >>>>>>> feat: drag
+=======
+	public int lepCount;
+>>>>>>> feat: Add budget and lep counter
 	
 	public Model() {
 		this.gardenMap = new Garden();
@@ -45,10 +49,12 @@ public class Model {
 	public void getPlantInfo() {}
 	// check if plant is okay to be placed
 	public void validatePlacement() {}
-	// place down plants
+	// place down plants and updates budget and lep count
 	public void placePlant(double x, double y, String key) {
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
+		this.budget = budget - specie.getCost();
+		this.lepCount = lepCount + specie.getLepsSupported();
 	}
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
@@ -56,6 +62,14 @@ public class Model {
 	public void initializePlantDirectory() {
 		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers arranged \nin drooping clusters.",5,7,13,40, false));
 		plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
+	}
+	
+	public int getBudget() {
+		return this.budget;
+	}
+	
+	public int getLepCount() {
+		return this.lepCount;
 	}
 	
 	/*@Override

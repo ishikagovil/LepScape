@@ -67,6 +67,7 @@ public abstract class View{
 		b.setOnMouseExited(controller.getHandlerforMouseExited());
 =======
 	
+<<<<<<< HEAD
 	public void addImageView(double x, double y) {
 		System.out.println("in the outer ImageView");
 		
@@ -80,4 +81,11 @@ public abstract class View{
 	public void makeInfoPane(String name, String info) {
 		
 	}
+=======
+	//Used only in gardenDesig. In here because need to called by controller
+	public void addImageView(double x, double y) {}
+	public void removePlant(Node n) {}
+	public void makeInfoPane(String name, String info) {}
+	public void updateBudgetandLep(int cost, int lepCount) {}
+>>>>>>> feat: Add budget and lep counter
 }

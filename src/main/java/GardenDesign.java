@@ -22,6 +22,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.*;
@@ -57,7 +58,8 @@ public class GardenDesign extends View{
 	ObservableMap<String,ImageView> oblist;
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 	ImageView c = new ImageView(compost);
-	
+	Image lep = new Image(getClass().getResourceAsStream("/butterfly.png"));
+	Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
 	
 	public GardenDesign(Stage stage, Controller c) {
 		super(stage,c);
@@ -78,11 +80,17 @@ public class GardenDesign extends View{
 		tile = addTilePane();
 		border.setBottom(tile);
 		comparePane = addBorderPane();
+		
+		HBox blPane = addBudgetLepPane();
+		blPane.setAlignment(Pos.CENTER);
+		border.setTop(blPane);
+		border.setAlignment(blPane, Pos.CENTER);
 		BorderPane bd2= new BorderPane();
 		bd2.setTop(vb);
 		bd2.setAlignment(bd2, Pos.TOP_LEFT);
 		bd2.setBottom(comparePane);
 		bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
+		
 		border.setLeft(bd2);
 		
 //		border.getChildren().add(canvas); 
@@ -111,15 +119,55 @@ public class GardenDesign extends View{
 		return tile;
 	}
 	
-	public HBox addBudgetLepPane() {
-		HBox hb = new HBox();
+	public HBox  addBudgetLepPane() {
+		HBox budgetLepPane = new HBox();
+		budgetLepPane.setSpacing(20);
 		
-		Image lep = new Image(getClass().getResourceAsStream("/butterfly.png"));
-		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+		ImageView lepIv= new ImageView(lep);
+		lepIv.setPreserveRatio(true);
+		lepIv.setFitHeight(50);
+		ImageView budget = new ImageView(dollar);
+		budget.setPreserveRatio(true);
+		budget.setFitHeight(50);
+		Label lepCount = new Label("0");
+		lepCount.setFont(new Font("Arial", 16));
+		Label budgetCount = new Label(""+ic.getBudget());
+		budgetCount.setFont(new Font("Arial", 16));
+		lepCount.setGraphic(lepIv);
+		budgetCount.setGraphic(budget);
 		
+		budgetLepPane.getChildren().add(lepCount);
+		budgetLepPane.getChildren().add(budgetCount);
 		
+		return budgetLepPane;
 		
-		return hb;
+	}
+	
+	
+	
+	public void updateBudgetandLep(int cost, int lepCount) {
+		border.getChildren().remove(border.getTop());
+		
+		HBox budgetLepPane = new HBox();
+		budgetLepPane.setSpacing(20);
+		ImageView lepIv= new ImageView(lep);
+		lepIv.setPreserveRatio(true);
+		lepIv.setFitHeight(50);
+		ImageView budget = new ImageView(dollar);
+		budget.setPreserveRatio(true);
+		budget.setFitHeight(50);
+		Label leps = new Label(""+lepCount);
+		leps.setFont(new Font("Arial", 16));
+		Label budgetCount = new Label(""+cost);
+		budgetCount.setFont(new Font("Arial", 16));
+		leps.setGraphic(lepIv);
+		budgetCount.setGraphic(budget);
+		budgetLepPane.getChildren().add(leps);
+		budgetLepPane.getChildren().add(budgetCount);
+		
+		budgetLepPane.setAlignment(Pos.CENTER);
+		border.setTop(budgetLepPane);
+		
 	}
 	
 	public void addImageView(double x, double y, Boolean startingInTile) {
