@@ -1,16 +1,12 @@
-import java.util.*;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ConditionScreen extends View {
@@ -86,5 +82,8 @@ public class ConditionScreen extends View {
 		return wrapperPane;
 	}
 	
+	public void saveImage() {
+		this.manageView.setImage(canvas.snapshot(null, null));
+	}
 	
 }

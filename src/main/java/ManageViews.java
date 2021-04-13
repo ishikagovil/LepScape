@@ -72,7 +72,7 @@ public class ManageViews {
 	public void onChangeCursor(boolean hand) {
 		this.currView.changeCursor(hand);
 	}
-	public void fillRegion(int startX, int startY) {
+	public void fillRegion(int startX, int startY, Color fillColor) {
 		// Inspired by the flood fill example https://stackoverflow.com/questions/23983465/is-there-a-fill-function-for-arbitrary-shapes-in-javafx
 		PixelReader pr = this.img.getPixelReader();
 		PixelWriter pw = this.img.getPixelWriter();
@@ -83,18 +83,19 @@ public class ManageViews {
 		
 		while(!fillStack.empty()) {
 			Point2D curr = fillStack.pop();
+
 			int x = (int) curr.getX();
 			int y = (int) curr.getY();
 
-			if(pr.getColor(x, y).getBrightness() < 0.95) return;
+			if(pr.getColor(x, y).grayscale().getBrightness() < 0.95) continue;
 			
-			pw.setColor(x, y, Color.BLUE);
+			pw.setColor(x, y, fillColor);
 
 			if(x > 0) {
 				fillStack.push(new Point2D(x-1, y));
 			}
 			
-			if(x < this.img.getWidth()) {
+			if(x < this.img.getWidth() - 1) {
 				fillStack.push(new Point2D(x+1, y));
 			}
 
@@ -102,8 +103,8 @@ public class ManageViews {
 				fillStack.push(new Point2D(x, y-1));
 			}
 
-			if(y < this.img.getHeight()) {
-				fillStack.push(new Point2D(x, y-1));
+			if(y < this.img.getHeight() - 1) {
+				fillStack.push(new Point2D(x, y+1));
 			}
 				
 		}

@@ -4,8 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -61,7 +61,6 @@ public class Controller extends Application {
 	}
 	public EventHandler<ActionEvent> getHandlerforModeSetter(UserMode mode) {
 		return (e) -> { 
-			System.out.println("Changing mode to " + mode);
 			this.model.setMode(mode); 
 		};
 
@@ -70,9 +69,12 @@ public class Controller extends Application {
 		return (e) -> {
 			UserMode mode = this.model.getMode();
 			if(mode == UserMode.SETTING_CONDITIONS) {
+				ConditionScreen screen = (ConditionScreen) this.view.getView("ConditionScreen");
+				screen.saveImage();
 				fillRegion(e);
 			} else if(mode == UserMode.PARTITIONING) {
 				draw(e, true);
+				
 			}
 		};
 	}
@@ -134,7 +136,7 @@ public class Controller extends Application {
 		int x = (int) e.getSceneX();
 		int y = (int) e.getSceneY();
 		
-		this.view.fillRegion(x, y);
+		this.view.fillRegion(x, y, Color.BLUE);
 		this.view.redrawImage();
 	}
 	
