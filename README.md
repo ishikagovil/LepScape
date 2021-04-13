@@ -1,34 +1,30 @@
-# CISC275-project-template
+# CISC275-Project-Team-11-1-Lepscape
 
-Note: to run with gradle you must use the directory structure `src/main/java/` and `src/main/resources/`. So you can have multiple projects in this repo. So it could look like `project1/src/main/java` and `project2/src/main/java`. Just make sure to place a `build.gradle` file inside each of the projects root under `project1/` and `project2`.
+# Authors
+- Ishika Govil
+- Dea Harjianto 
+- Arunima Dey 
+- Jinay Jain 
+- Kimmy Huynh
 
-# Things to place in README and repo
-- UMLs
-- everything related to your project
-- rename this README file and create another one named `README.md` that describes your project in detail. Update it as your project progresses
+# Current progress
+- Draw plot boundaries
+- Set dimensions
+- Add condition boundaries
+- Select conditions
+- Drag and drop plants
+- Compost plants no longer needed
+- Import plant information and populate images
 
-### Github Actions (Optional but good thing to have)
+# Future implementations
+- Save gardens
+- View summary of garden and leps 
+- Completed Lepedia and Learn More pages
 
-This is a great feature that will allow us to compile and run our code on Github.com. We could even run unit tests -- see lab1 `build.gradle`
+# UML Diagrams
+![alt text](https://github.com/CISC275-S2021/project-team-11-1/src/main/resources/classUML.png?raw=true)
 
-Note: We only compile JavaFX code because it needs a display to run which servers don't have
+![alt text](https://github.com/CISC275-S2021/project-team-11-1/src/main/resources/dragNDropSeqUML.png?raw=true)
 
-The `yml` or yaml file in `.github/workflows/gradle.yml` specifies when, where, and how to compile/run. Github looks for a yml file in `.github/workflows` so it can be named anything you want.
+![alt text](https://github.com/CISC275-S2021/project-team-11-1/src/main/resources/sectioningGardenSeqUML.png?raw=true)
 
-In `gradle.yaml`, we specify the OS of the server and what Java version we want. We also specify the command we want the server to run once all the required software is installed.
-
-To run JavaFx, we use Gradle(build automation tool). Gradle needs `build.gradle` where we specify the JavaFX version, the modules we need, and our main class.
-
-#### Note: gradle needs our main class to be located at `src/main/java/` and all the classes main needs relative to that path. And we put any resources we use at `src/main/resources/`
-
-Note that this is how we will setup all projects going forward. Especially your main projects.
-
-Even with all these changes, you should still be able to import your projects into Eclipse like you normally do.
-
-#### Why run code on Github actions?
-
-You can configure it to automatically compile/run your code on every push. It should make it easy to see when/where your project breaks
-
-Once you do this you can see your code compiling under the Actions tab after each push. Some you may have to enable Actions and then make a push.  
-
-See [documentation](https://docs.github.com/en/free-pro-team@latest/actions) on Github actions
