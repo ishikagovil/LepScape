@@ -41,13 +41,12 @@ public class CSVtoLeps {
 	}
     
     // debugging; guaranteeing working
-    
     public static void main(String[] args) {
         Map<String, Lep> lepDir = readFile("../resources/testleps.csv");
 
         for (String p : lepDir.keySet()) {
             String key = p;
-            String lep = lepDir.get(p).toString();
+            String lep = lepDir.get(p).getDescription();
             System.out.println(key + " " + lep);
         }
     }
