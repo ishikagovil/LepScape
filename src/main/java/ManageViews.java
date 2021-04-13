@@ -1,7 +1,12 @@
 import java.util.*;
+
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ManageViews {
@@ -27,7 +32,7 @@ public class ManageViews {
 	    views.put("Gallery", new Gallery(stage,controller,this));  
 	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
 	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
-	    views.put("Summary", new Summary(stage,controller,this));
+//	    views.put("Summary", new Summary(stage,controller,this));
 	}
 	public void switchViews(String next) {
 		if(next.equals("Drawing"))
@@ -51,8 +56,14 @@ public class ManageViews {
 	public View getView(String key) {
 		return views.get(key);
 	}
+	public WritableImage getImage() {
+		return img;
+	}
 	public void setImage(WritableImage img) {
 		this.img = img;
+	}
+	public void redrawImage() {
+		this.getGC().drawImage(img, 0, 0);
 	}
 	public void setView(String key) {
 		this.currView = this.views.get(key);
@@ -60,5 +71,42 @@ public class ManageViews {
 	
 	public void onChangeCursor(boolean hand) {
 		this.currView.changeCursor(hand);
+	}
+	public void fillRegion(int startX, int startY) {
+		// Inspired by the flood fill example https://stackoverflow.com/questions/23983465/is-there-a-fill-function-for-arbitrary-shapes-in-javafx
+		PixelReader pr = this.img.getPixelReader();
+		PixelWriter pw = this.img.getPixelWriter();
+		
+		Stack<Point2D> fillStack = new Stack<>();
+		
+		fillStack.push(new Point2D(startX, startY));
+		
+		while(!fillStack.empty()) {
+			Point2D curr = fillStack.pop();
+			int x = (int) curr.getX();
+			int y = (int) curr.getY();
+
+			if(pr.getColor(x, y).getBrightness() < 0.95) return;
+			
+			pw.setColor(x, y, Color.BLUE);
+
+			if(x > 0) {
+				fillStack.push(new Point2D(x-1, y));
+			}
+			
+			if(x < this.img.getWidth()) {
+				fillStack.push(new Point2D(x+1, y));
+			}
+
+			if(y > 0) {
+				fillStack.push(new Point2D(x, y-1));
+			}
+
+			if(y < this.img.getHeight()) {
+				fillStack.push(new Point2D(x, y-1));
+			}
+				
+		}
+		
 	}
 }

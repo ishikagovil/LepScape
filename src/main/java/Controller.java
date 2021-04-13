@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import java.util.ArrayList;
@@ -58,6 +59,26 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
+	public EventHandler<ActionEvent> getHandlerforModeSetter(UserMode mode) {
+		return (e) -> { 
+			System.out.println("Changing mode to " + mode);
+			this.model.setMode(mode); 
+		};
+
+	}
+	public EventHandler<MouseEvent> getConditionsClickHandler() {
+		return (e) -> {
+			UserMode mode = this.model.getMode();
+			if(mode == UserMode.SETTING_CONDITIONS) {
+				fillRegion(e);
+			} else if(mode == UserMode.PARTITIONING) {
+				draw(e, true);
+			}
+		};
+	}
+	public EventHandler<MouseEvent> getConditionsDragHandler() {
+		return (e) -> { draw(e, false); };
+	}
 	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
 		return null;
 	}
@@ -103,11 +124,18 @@ public class Controller extends Application {
 		 else if(next.equals("ClearDim")) {
 			 this.view.getGC().drawImage(this.view.img, 0, 0);  
 			 this.view.dimLen = new ArrayList<>();
-		 }
-		 else {
+		 } else {
 			 this.view.switchViews(next);
 			 setTheStage();
 		 }
+	}
+	
+	private void fillRegion(MouseEvent e) {
+		int x = (int) e.getSceneX();
+		int y = (int) e.getSceneY();
+		
+		this.view.fillRegion(x, y);
+		this.view.redrawImage();
 	}
 	
 	//Methods used when user is designing new plot and inputting conditions

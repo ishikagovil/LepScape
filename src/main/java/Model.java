@@ -7,6 +7,8 @@ public class Model {
 	public Map<String, Lep> lepDirectory;
 	public double lengthPerPixel;
 	
+	private UserMode mode;
+	
 	public Model() {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
@@ -45,11 +47,6 @@ public class Model {
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
 	
-	/*@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}*/
 	public double getX() {
 		return 0;
 	}
@@ -61,5 +58,17 @@ public class Model {
 	}
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
+	}
+	public int getBudget() {
+		return this.budget;
+	}
+	public void setBudget(int budget) {
+		this.budget = budget;
+	}
+	public UserMode getMode() {
+		return this.mode;
+	}
+	public void setMode(UserMode mode) {
+		this.mode = mode;
 	}
 }
