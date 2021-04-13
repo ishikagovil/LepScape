@@ -18,7 +18,17 @@ public class PlotDesign extends View{
 	WritableImage img;
 	GridPane grid;
 
-
+	/**
+	 * @author Ishika Govil 
+	 */
+	
+	/**
+	 * Adds the drawing functionality with the Freedraw button
+	 * Creates the screen flow by adding clear, back, save, done buttons
+	 * @param Stage
+	 * @param Controller
+	 * @param ManageViews
+	 */
 	public PlotDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
@@ -81,6 +91,11 @@ public class PlotDesign extends View{
         createHBox(drawSwitch);	
         border.setTop(toolbar);
 	}
+	
+	/**
+	 * Called when user hits "save" on their plot. Allows users to select any linear length and input its dimension.
+	 * Saves the inputted value and calls settingLength in controller to calculate length per pixel
+	 */
 	public void onSettingDimensions() {
 		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
         border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
@@ -105,6 +120,12 @@ public class PlotDesign extends View{
 	    grid.getChildren().add(dimension);
 	    border.setRight(grid);
 	}
+	
+	/**
+	 * Creates an HBox using the ArrayList of Buttons provided
+	 * Allows for transition of buttons between two screens (plotting and setting dimensions)
+	 * @param ArrayList<Button> representing which buttons to add to the HBox
+	 */
 	public void createHBox(ArrayList<Button> list) {
 		if(border.getChildren().contains(box))
 			border.getChildren().remove(box);
@@ -114,10 +135,19 @@ public class PlotDesign extends View{
 		box.getChildren().addAll(list);
 		border.setBottom(box);
 	}
+	
+	/**
+	 * Calls handlers in controller when user is drawing
+	 */
 	public void onDrawing() {
 		border.setOnMousePressed(controller.getHandlerforDrawing(true));
         border.setOnMouseDragged(controller.getHandlerforDrawing(false));
 	}
+	
+	/**
+	 * Disables the drawing handlers when user presses the Button passed
+	 * @param Button that disables drawing when pressed
+	 */
 	public void disableDrawing(Button b) {
 		b.addEventHandler(ActionEvent.ACTION, (e)-> {
             border.setOnMousePressed(null);

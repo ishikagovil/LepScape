@@ -9,12 +9,20 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.application.Application;
 
+/**
+ * @author Ishika Govil, Arunima Dey, Dea Harjianto, Jinay Jain, Kimmy Huynh
+ */
 public class Controller extends Application {
 	private final boolean DEBUG = true;
 	ManageViews view;
 	Model model;
 	Stage stage;
 	
+	/** 
+	 * Override for the Application start method. Instantiates all fields
+	 * @param Stage
+	 * @author Ishika Govil 
+	 */
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
@@ -24,7 +32,10 @@ public class Controller extends Application {
 	    this.stage.setScene(scene);
 	    setTheStage();
 	}
-	
+	/** 
+	 * Sets the border pane to the scene and shows the stage
+	 * @author Ishika Govil 
+	 */
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.show();
@@ -32,29 +43,71 @@ public class Controller extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	//Action event handlers
-	public EventHandler<ActionEvent> getHandlerforClicked(String next) { //Changes view and calls relevant methods in Model/View based on which page is created
+
+	/** 
+	 * Calls switchViews when a button is clicked
+	 * @param String describing the next action to be shown
+	 * @return EventHandler<ActionEvent>
+	 * @author Ishika Govil 
+	 */
+	public EventHandler<ActionEvent> getHandlerforClicked(String next) { 
 		return (e) -> {
 			switchViews(next);
 		};
 	}
 	
-	//Mouse event handlers 
+	/** 
+	 * Calls onChangeCursor in view when mouse enters the button frame
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
 		return (e) -> {view.onChangeCursor(true);};
 	}
+	
+	/** 
+	 * Calls onChangeCursor in view when mouse exits the button frame
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
 		return (e) -> { view.onChangeCursor(false);  };
 	}
+	
+	/** 
+	 * Calls drag when mouse is dragged
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforDrag() {
 		return (e) -> {  drag(e); };
 	}
+	
+	/** 
+	 * Calls drag when mouse is released
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforReleased() {
 		return (e) -> { release(e);  };
 	}
+	
+	/** 
+	 * Calls drag when mouse is dragged, specifically when user is drawing
+	 * @param boolean describing whether mouse is pressed for the first time
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforDrawing(boolean isPressed) {
 		return (e) -> {  draw(e, isPressed); };
 	}
+	
+	/** 
+	 * Calls drag when mouse is dragged, specifically when user is setting dimensions
+	 * @param boolean describing whether mouse is pressed for the first time
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
@@ -74,14 +127,30 @@ public class Controller extends Application {
 	public void release(MouseEvent event) {
 		
 	}
-	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
+	
+	/** 
+	 * Called when user is drawing. 
+	 * Updates the canvas of the relevant view and calls updateOutlineSection in model to pass boundary coordinates
+	 * @param MouseEvent
+	 * @param Boolean describing whether mouse is pressed for the first time
+	 * @author Ishika Govil 
+	 */
+	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false) -- in beta
 		if(isPressed)
 			 this.view.getGC().beginPath();
 		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
 		 this.view.getGC().stroke();
 		 this.model.updateOutlineSection(event.getSceneX(), event.getSceneY());
 	}
-	public void settingDimensionLine(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
+	
+	/** 
+	 * Called when user is drawing. 
+	 * Updates the canvas of the relevant view and calculates the number of pixels from the starting and ending point of line
+	 * @param MouseEvent
+	 * @param Boolean describing whether mouse is pressed for the first time
+	 * @author Ishika Govil 
+	 */
+	public void settingDimensionLine(MouseEvent event, boolean isPressed) { // (changeCursor called with false) -- in beta
 		if(isPressed)
 			view.getGC().beginPath();
 		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
@@ -89,17 +158,33 @@ public class Controller extends Application {
 		
 		//Get pixel information
 		double[] arr = {event.getSceneX(),event.getSceneY()};
-		 this.view.dimLen.add(arr);
-		 this.view.dimPixel = Math.sqrt(Math.pow((view.dimLen.get(view.dimLen.size()-1)[1] - view.dimLen.get(0)[1] ),2) + Math.pow((view.dimLen.get(view.dimLen.size()-1)[0]  - view.dimLen.get(0)[0] ),2) );
+		this.view.dimLen.add(arr);
+		this.view.dimPixel = Math.sqrt(Math.pow((view.dimLen.get(view.dimLen.size()-1)[1] - view.dimLen.get(0)[1] ),2) + Math.pow((view.dimLen.get(view.dimLen.size()-1)[0]  - view.dimLen.get(0)[0] ),2) );
 	}
+	
+	/** 
+	 * Called after user hits enter after inputting the dimension of their line, in feet.
+	 * Sets the length per pixel in model by dividing user inputted value by the number of pixels in the line
+	 * @param double representing the user inputted line dimension
+	 * @author Ishika Govil 
+	 */
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
 	}
+	
+	/** 
+	 * Called when a button is pressed in order to determine the next screen
+	 * The next action is determined by the string passed to the function
+	 * @param String describing the next action to be shown
+	 * @author Ishika Govil 
+	 */
 	public void switchViews(String next) {
+		 //Clears the canvas the user was drawing on. Also clears the ArrayList corresponding to the coordinates of the plot boundary
 		 if(next.equals("Clear")) {
 			 this.view.getGC().clearRect(0, 0,this.view.getScreenWidth(), this.view.getScreenHeight());
 			 this.model.getGarden().outline = new ArrayList<double[]>(); 
 		 }
+		 //Clears only the lines drawn after setting dimension. Also clears the ArrayList corresponding to the coordinates of the line
 		 else if(next.equals("ClearDim")) {
 			 this.view.getGC().drawImage(this.view.img, 0, 0);  
 			 this.view.dimLen = new ArrayList<>();

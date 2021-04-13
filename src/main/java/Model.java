@@ -7,6 +7,10 @@ public class Model {
 	public Map<String, Lep> lepDirectory;
 	public double lengthPerPixel;
 	
+	/**
+	 * @author Ishika Govil, Kimmy Huynh
+	 */
+	
 	public Model() {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
@@ -24,7 +28,12 @@ public class Model {
 	}
 	// create a new condition for the garden
 	public void createNewConditions() {}
-	// update the outline whenever the user puts down another point to connect
+	
+	/**
+	 * Update the outline while user is drawing their plot
+	 * @param double x coordinate
+	 * @param double y coordinate
+	 */
 	public void updateOutlineSection(double x, double y) {
 		this.gardenMap.updateOutline(x, y);
 	}
@@ -56,9 +65,19 @@ public class Model {
 	public double getY() {
 		return 0;
 	}
+	
+	/**
+	 * Returns the length per pixel
+	 * @return double representing length (ft) per pixel
+	 */
 	public double getLengthPerPixel() {
 		return this.lengthPerPixel;
 	}
+	
+	/**
+	 * Sets the length per pixel from Controller
+	 * @param double representing length (ft) per pixel
+	 */
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
 	}
