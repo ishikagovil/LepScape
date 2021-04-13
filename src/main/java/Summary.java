@@ -107,54 +107,7 @@ public class Summary extends View {
        //Image butterfly = new Image(getClass().getResourceAsStream(""));
        v1.setImage(butterfly);
        */
-=======
-		border.setStyle("-fx-background-color: white");
-		HBox hb1 = new HBox();
-		hb1.setPadding(new Insets(20, 10, 20, 10));
-		
-		// make & add Lepedia and Download buttons
-		openLepedia = new Button("Lepedia");	
-		download = new Button("Download)"); 
-		startNew = new Button("Start New Garden");
-		hb1.getChildren().addAll(openLepedia, download, startNew);
-		
-		// add the Lepedia and Download buttons to the bottom right corner of the anchor pane
-		ap1.getChildren().add(hb1);
-		AnchorPane.setBottomAnchor(hb1, 8.0);
-		AnchorPane.setRightAnchor(hb1, 5.0);
-		AnchorPane.setTopAnchor(hb1, 10.0);
-		border.setBottom(ap1);
-		
-		// flow pane created to hold the navigation bar
-		FlowPane flow1 = new FlowPane();
-		flow1.setStyle("-fx-border-color: black; -fx-border-width: 5px' -fx-background-color: lavender");
-		border.setLeft(flow1);
-		
-		// make the button navigation buttons on the upper left corner of the screen
-		navi = new Navigation(stage, c);
-		
-		// add the buttons to the navigation bar
-		buttons = new ArrayList<Button>();
-		buttons.add(navi.learnMore);
-		buttons.add(navi.suggested);
-	//	buttons.add(navi.saved);
-	//	buttons.add(navi.settings);
-		
-		flow1.getChildren().addAll(buttons);
-		
-		VBox vb1 = new VBox();
-		vb1.setStyle("-fx-border-color: black; -fx-border-width: 5px; -fx-background-color: aliceblue");
-		Text title = new Text("Summary");
-		title.setFont(Font.font(20));
-		vb1.getChildren().add(title);
-		Garden garden = new Garden();
-		Text lepCount = new Text("Number of leps supported: " + garden.getNumLeps());
-		Text totalCost = new Text("The total cost: " + garden.getCost());
-		vb1.getChildren().addAll(lepCount, totalCost);
-		border.setRight(vb1);
-		
-		
->>>>>>> fa288b6e8d06b153e82aac951d253ea2b912e2f1
+
 	}
 	public void render() {}
 }
