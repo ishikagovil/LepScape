@@ -22,6 +22,10 @@ public class Model {
 	public Garden getGarden() {
 		return this.gardenMap;
 	}
+	
+	public void setPlantDirectory(Map<String, PlantSpecies> plantdir) {
+		this.plantDirectory = plantdir;
+	}
 	// create a new condition for the garden
 	public void createNewConditions() {}
 	// update the outline whenever the user puts down another point to connect

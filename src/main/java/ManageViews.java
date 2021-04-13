@@ -13,12 +13,17 @@ public class ManageViews {
 	Controller controller;
 	Stage stage;
 	
-	public ManageViews(Stage stage, Controller c) {
+	public ManageViews(Stage stage, Controller c, String fileName) {
 		dimLen = new ArrayList<>();
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
 	    this.currView = this.getView("Start");
+		importImages(fileName);
+	}
+
+	public void importImages(String fileName) {
+		
 	}
 	
 	public void initializeViews() {

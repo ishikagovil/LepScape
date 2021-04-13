@@ -5,11 +5,8 @@ import java.util.Map;
 
 public class CSVtoPlants {
 
-    private static Map<String, String> plantImg;
-
     public static Map<String, PlantSpecies> readFile(String fileName) {
 		Map<String, PlantSpecies> listPlants = new HashMap<>();
-        Map<String, String> imgURLS = new HashMap<>();
 
         String speciesName;
         String genusName;
@@ -40,8 +37,7 @@ public class CSVtoPlants {
                     isWoody = true;
                 }
                 PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, description, 5, 5, cost, 0, isWoody); //create object
-                listPlants.put(genusName + " " + speciesName, newData);
-                imgURLS.put(genusName + " " + speciesName, imgUrl);
+                listPlants.put(genusName + " " + speciesName, newData);     // key by genus + species
             }            
             reader.close();   
 		}
@@ -49,18 +45,40 @@ public class CSVtoPlants {
             System.err.format("Exception occurred trying to read '%s'.", fileName);            
             e.printStackTrace();        
         }
-        plantImg = imgURLS;
 		return listPlants;
 	}
 
-    public Map<String, String> getPlantImages() {
-        return plantImg;
-    }
+    public static Map<String, String> readFileForImg(String fileName) {
+		Map<String, String> plantImg = new HashMap<>();
+        
+        String genusName, speciesName, commonName;
+        String imgUrl;
+		
+		try {
+		    BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		    String line; 
+		    reader.readLine();
+            while ((line = reader.readLine()) != null) {    
+                String[] parts = line.split(","); // separate the line by comma
+                genusName = parts[0];
+                speciesName = parts[1];
+                commonName = parts[2];
+                imgUrl = parts[4];
+                plantImg.put(genusName + " " + speciesName, imgUrl);                // key by genus + species
+            }            
+            reader.close();   
+		}
+		catch (Exception e) {            
+            System.err.format("Exception occurred trying to read '%s'.", fileName);            
+            e.printStackTrace();        
+        }
+		return plantImg;
+	}
     
     // debugging; guaranteeing working
     
     public static void main(String[] args) {
-        Map<String, PlantSpecies> plantDir = readFile("../resources/testdata.csv");
+        Map<String, String> plantImg = readFileForImg("../resources/testdata.csv");
 
         /*for (String p : plantDir.keySet()) {
             String key = p;
@@ -73,6 +91,4 @@ public class CSVtoPlants {
             System.out.println(key + " " + img);
         }
     }
-    
-
 }
