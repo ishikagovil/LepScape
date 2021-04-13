@@ -12,6 +12,7 @@ public class ManageViews {
 	View currView;
 	Controller controller;
 	Stage stage;
+	public Map<String, String> plantImages;
 	
 	/**
 	 * @author Ishika Govil
@@ -34,7 +35,8 @@ public class ManageViews {
 	}
 
 	public void importImages(String fileName) {
-		
+		plantImages = new HashMap<>();
+		plantImages = CSVtoPlants.readFileForImg(fileName);
 	}
 	
 	/**
