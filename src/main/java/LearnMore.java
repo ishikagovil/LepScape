@@ -7,8 +7,8 @@ import javafx.stage.Stage;
 
 public class LearnMore extends View{
 
-	public LearnMore(Stage stage, Controller c) {
-		super(stage, c);
+	public LearnMore(Stage stage, Controller c,ManageViews manageView) {
+		super(stage, c,manageView);
 		border = new BorderPane();
 		Label title = new Label("Learn More");
 		title.setFont(new Font("Arial", 24));

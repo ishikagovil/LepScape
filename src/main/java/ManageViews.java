@@ -1,4 +1,6 @@
 import java.util.*;
+
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
@@ -18,7 +20,7 @@ public class ManageViews {
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-	    this.currView = this.getView("Start");
+	    this.currView = this.getView("GardenDesign");
 	}
 	
 	public void initializeViews() {
@@ -27,7 +29,9 @@ public class ManageViews {
 	    views.put("Gallery", new Gallery(stage,controller,this));  
 	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
 	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
-	    views.put("Summary", new Summary(stage,controller,this));
+	    //views.put("Summary", new Summary(stage,controller,this));
+	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
+	    views.put("LearnMore", new LearnMore(stage,controller,this));
 	}
 	public void switchViews(String next) {
 		if(next.equals("Drawing"))
@@ -52,6 +56,7 @@ public class ManageViews {
 		return views.get(key);
 	}
 	public void setImage(WritableImage img) {
+		this.img = new WritableImage(200,200);
 		this.img = img;
 	}
 	public void setView(String key) {
@@ -61,4 +66,12 @@ public class ManageViews {
 	public void onChangeCursor(boolean hand) {
 		this.currView.changeCursor(hand);
 	}
+	
+	public void setY(double y, Node n){currView.setY(y, n);}
+	public void setX(double x, Node n){currView.setX(x, n);}
+	//Used only in gardenDesig. In here because need to called by controller
+	public void addImageView(double x, double y) {currView.addImageView(x, y);}
+	public void removePlant(Node n) {currView.removePlant(n);}
+	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
+	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
 }

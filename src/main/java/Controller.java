@@ -19,37 +19,12 @@ public class Controller extends Application {
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
 		this.stage = stage;
-<<<<<<< HEAD
-<<<<<<< HEAD
 	    view = new ManageViews(stage,this);
-=======
-=======
-		model.initializePlantDirectory();
->>>>>>> before rebase
-		//Load hashmap
-	    initializeViews();
-	    //Initialize first screen
-	    this.view = this.views.get("GardenDesign");
->>>>>>> feat: drag
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
 	}
-<<<<<<< HEAD
-	
-=======
-	public void initializeViews() {
-		views = new HashMap<>();
-		views.put("Start", new Start(stage, this));
-	    views.put("Gallery", new Gallery(stage,this));  
-	    views.put("PlotDesign", new PlotDesign(stage, this));
-	    views.put("ConditionScreen", new ConditionScreen(stage,this));
-	    views.put("Navigation", new Navigation(stage, this));	     
-	    views.put("Summary", new Summary(stage,this));
-	    views.put("GardenDesign", new GardenDesign(stage,this));
-	    views.put("LearnMore", new LearnMore(stage, this));
-	}
->>>>>>> feat: drag
+
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.show();
@@ -93,13 +68,11 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerForDragReleasedOver(Boolean startedInTile){
 		return event -> {draggedOver(event, startedInTile);};
 	}
-<<<<<<< HEAD
+
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
-	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
-		return null;
-=======
+
 	
 	public void draggedOver(MouseEvent event, Boolean startedInTile) {
 		Node n = (Node) event.getSource();
@@ -107,7 +80,7 @@ public class Controller extends Application {
 		if(!startedInTile) {
 			view.removePlant(n);
 		}
->>>>>>> before rebase
+
 	}
 	
 	public void pressed(MouseEvent event, String key) {
@@ -123,29 +96,13 @@ public class Controller extends Application {
 	
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
-<<<<<<< HEAD
-		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
-<<<<<<< HEAD
-		
-		//model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
-		//model.setY(model.getY() + event.getY());
-		//view.setX( model.getX(),n);
-		//view.setY( model.getY(),n);
-=======
-//		n.setTranslateX(n.getTranslateX() + event.getX());
-//		n.setTranslateY(n.getTranslateY() + event.getY());
-=======
-//		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
->>>>>>> before rebase
+
 		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
 		model.setY(model.getY() + event.getY());
 		view.setX(model.getX(),n);
 		view.setY(model.getY(),n);
-<<<<<<< HEAD
->>>>>>> feat: drag
-=======
 		event.setDragDetect(false);
->>>>>>> before rebase
+
 	}
 	
 	//TODO: check if it has left the upperBound of the tilePane so then it can be placed
@@ -164,8 +121,7 @@ public class Controller extends Application {
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
 		if(isPressed)
 			 this.view.getGC().beginPath();
@@ -186,17 +142,6 @@ public class Controller extends Application {
 	}
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
-=======
-=======
-	
->>>>>>> before rebase
-	public void draw(MouseEvent event, boolean isPressed) { 
-		if(isPressed)
-			view.gc.beginPath();
-			view.gc.lineTo(event.getSceneX(), event.getSceneY());
-			view.gc.stroke();
-			model.updateOutlineSection(event.getSceneX(), event.getSceneY());
->>>>>>> feat: drag
 	}
 	public void switchViews(String next) {
 		 if(next.equals("Clear")) {

@@ -5,21 +5,16 @@ public class Model {
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
-<<<<<<< HEAD
 	public double lengthPerPixel;
-=======
 	public double x;
 	public double y;
-<<<<<<< HEAD
->>>>>>> feat: drag
-=======
 	public int lepCount;
->>>>>>> feat: Add budget and lep counter
-	
+
 	public Model() {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
+		initializePlantDirectory();
 	}
 	// Methods for the user to draw the garden and put in desired conditions
 	// create the optimal garden based on leps and conditions provided
@@ -60,7 +55,7 @@ public class Model {
 	public void costUpdate() {}
 	
 	public void initializePlantDirectory() {
-		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers arranged \nin drooping clusters.",5,7,13,40, false));
+		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
 		plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
 	}
 	
@@ -90,19 +85,12 @@ public class Model {
 	public double getY() {
 		return this.y;
 	}
-<<<<<<< HEAD
+
 	public double getLengthPerPixel() {
 		return this.lengthPerPixel;
 	}
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
 	}
-=======
-	
-<<<<<<< HEAD
->>>>>>> feat: drag
-=======
-	
-	
->>>>>>> before rebase
+
 }

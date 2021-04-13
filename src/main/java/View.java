@@ -26,11 +26,11 @@ public abstract class View{
         importImages();
 	}	
 	
-<<<<<<< HEAD
+
 	
 	public void setX(double x, Node n) {
 		n.setTranslateX(n.getLayoutX() + x);
-=======
+	}
 	public BorderPane getBorderPane() {
 		return border;
 	}
@@ -39,10 +39,6 @@ public abstract class View{
 	}
 	public int getScreenHeight() {
 		return screenHeight;
-	}
-	public void setX(double d, Node n) {
-		n.setTranslateX(n.getLayoutX() + d);
->>>>>>> before rebase
 	}
 	public void setY(double y, Node n) {
 		n.setTranslateY(n.getLayoutY() + y);
@@ -61,31 +57,17 @@ public abstract class View{
 		b.setOnAction(controller.getHandlerforClicked(next));
 		return b;
 	}	
-<<<<<<< HEAD
+
 	public void setOnMouse(Button b) {
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
 		b.setOnMouseExited(controller.getHandlerforMouseExited());
-=======
-	
-<<<<<<< HEAD
-	public void addImageView(double x, double y) {
-		System.out.println("in the outer ImageView");
-		
->>>>>>> feat: drag
+
 	}
-	
-	public void removePlant(Node n) {
-		
-	}
-	
-	public void makeInfoPane(String name, String info) {
-		
-	}
-=======
+
 	//Used only in gardenDesig. In here because need to called by controller
 	public void addImageView(double x, double y) {}
 	public void removePlant(Node n) {}
 	public void makeInfoPane(String name, String info) {}
 	public void updateBudgetandLep(int cost, int lepCount) {}
->>>>>>> feat: Add budget and lep counter
+
 }

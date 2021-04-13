@@ -10,6 +10,13 @@ public class Garden {
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
 	
+	/**
+	 * @author Ishika Govil, Kimmy Huynh,
+	 */
+	
+	/**
+	 * 
+	 */
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
 		this.outline = new ArrayList<double[]>();
@@ -48,6 +55,10 @@ public class Garden {
 		this.cost += x;
 	}
 	
+	/**
+	 * Returns the list of coordinates of a plot's boundary set by user
+	 * @return ArrayList<double[]> representing list of all plot boundary coordinates
+	 */
 	public ArrayList<double[]> getOutline() {
 		return this.outline;
 	}
@@ -68,20 +79,18 @@ public class Garden {
 		return this.compostBin;
 	}
 	
-	public void updateOutline(double x, double y) { //called to update the outline when user is drawing
-		double[] arr = {x,y};
-		this.outline.add(arr);
-	}
-<<<<<<< HEAD
-=======
-	public void clearOutline() { //called if user clears their drawing
-		this.outline = new ArrayList<double[]>(); 
-	}
-	
 	public void addToGarden(PlacedPlant plant) {
 		plants.add(plant);
 	}
 	
->>>>>>> before rebase
+	/**
+	 * Called when user is drawing to update the boundary outline ArrayList
+	 * @param double x representing x coordinate
+	 * @param double y representing y coordinate
+	 */
+	public void updateOutline(double x, double y) { 
+		double[] arr = {x,y};
+		this.outline.add(arr);
+	}
 
 }
