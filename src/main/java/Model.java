@@ -26,6 +26,10 @@ public class Model {
 	public Garden getGarden() {
 		return this.gardenMap;
 	}
+	
+	public void setPlantDirectory(Map<String, PlantSpecies> plantdir) {
+		this.plantDirectory = plantdir;
+	}
 	// create a new condition for the garden
 	public void createNewConditions() {}
 	

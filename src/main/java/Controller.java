@@ -15,6 +15,7 @@ import javafx.application.Application;
 public class Controller extends Application {
 	private final boolean DEBUG = true;
 	ManageViews view;
+	String fileName = "../resources/testdata.csv";
 	Model model;
 	Stage stage;
 	
@@ -26,8 +27,9 @@ public class Controller extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
+		this.model.setPlantDirectory(CSVtoPlants.readFile(fileName));
 		this.stage = stage;
-	    view = new ManageViews(stage,this);
+	    view = new ManageViews(stage,this, fileName);
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();

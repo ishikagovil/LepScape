@@ -22,7 +22,6 @@ public abstract class View{
 		this.stage = stage;
         controller = c;
 		this.stage.setTitle("Lepscape");
-        importImages();
 	}	
 	
 	
@@ -32,8 +31,7 @@ public abstract class View{
 	public void setY(double y, Node n) {
 		n.setTranslateY(n.getLayoutY() + y);
 	};
-	
-	public void importImages() {}
+
 	public void changeCursor(boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
 		//https://blog.idrsolutions.com/2014/05/tutorial-change-default-cursor-javafx/ 
 		if(hand)

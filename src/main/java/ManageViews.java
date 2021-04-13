@@ -24,12 +24,17 @@ public class ManageViews {
 	 * @param Controller
 	 * @author Ishika Govil
 	 */
-	public ManageViews(Stage stage, Controller c) {
+	public ManageViews(Stage stage, Controller c, String fileName) {
 		dimLen = new ArrayList<>();
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-	    this.currView = this.getView("Summary");
+	    this.currView = this.getView("Start");
+		importImages(fileName);
+	}
+
+	public void importImages(String fileName) {
+		
 	}
 	
 	/**
