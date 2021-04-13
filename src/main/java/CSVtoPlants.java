@@ -5,8 +5,11 @@ import java.util.Map;
 
 public class CSVtoPlants {
 
+    private static Map<String, String> plantImg;
+
     public static Map<String, PlantSpecies> readFile(String fileName) {
 		Map<String, PlantSpecies> listPlants = new HashMap<>();
+        Map<String, String> imgURLS = new HashMap<>();
 
         String speciesName;
         String genusName;
@@ -15,6 +18,7 @@ public class CSVtoPlants {
         String tempWoody;
         int cost;
         boolean isWoody;
+        String imgUrl;
 		
 		try {
 		    BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -26,6 +30,7 @@ public class CSVtoPlants {
                 speciesName = parts[1];
                 commonName = parts[2];
                 description = parts[3];
+                imgUrl = parts[4];
                 tempWoody = parts[7];
                 if (tempWoody.equals("h")) {
                     cost = 6;
@@ -36,6 +41,7 @@ public class CSVtoPlants {
                 }
                 PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, description, 5, 5, cost, 0, isWoody); //create object
                 listPlants.put(genusName + " " + speciesName, newData);
+                imgURLS.put(genusName + " " + speciesName, imgUrl);
             }            
             reader.close();   
 		}
@@ -43,18 +49,28 @@ public class CSVtoPlants {
             System.err.format("Exception occurred trying to read '%s'.", fileName);            
             e.printStackTrace();        
         }
+        plantImg = imgURLS;
 		return listPlants;
 	}
+
+    public Map<String, String> getPlantImages() {
+        return plantImg;
+    }
     
     // debugging; guaranteeing working
     
     public static void main(String[] args) {
         Map<String, PlantSpecies> plantDir = readFile("../resources/testdata.csv");
 
-        for (String p : plantDir.keySet()) {
+        /*for (String p : plantDir.keySet()) {
             String key = p;
             String plant = plantDir.get(p).toString();
             System.out.println(key + " " + plant);
+        }*/
+        for (String p : plantImg.keySet()) {
+            String key = p;
+            String img = plantImg.get(p);
+            System.out.println(key + " " + img);
         }
     }
     

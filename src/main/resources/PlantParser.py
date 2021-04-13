@@ -17,14 +17,17 @@ def printAsFormattedJSON(jsonObject):
 # Go to https://trefle.io/users/sign_up and create an account.
 # If you then go to your Account page, you will find your key.
 # Copy the key into the variable below.
-key = "YOUR API KEY HERE"
+key = "PklZD7nSq3xQVGWKD7H6WQdyWdny23lU8sgjZAVuZ28"
 
 # The plant name follows the convention "genus-species".
 # In other words, it is the scientific name with a hyphen in the middle.
 # Unfortunately, the excel spreadsheet that we provided to you does not include the species name.
 # The only manual job that you must perform is recording the scientific name for all of the
 # plants from the excel spreadsheet that you want to use.
-plantName = "Achillea-millefolium"
+
+plantNameSplit = ["Achillea", "millefolium"]
+
+plantName = plantNameSplit[0] + "-" + plantNameSplit[1]
 
 # This is called an HTTP Request. You will learn more about it if you take Advanced Web Development.
 r = requests.get("https://trefle.io/api/v1/species/" + plantName + "?token=" + key)
