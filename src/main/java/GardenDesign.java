@@ -16,7 +16,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+<<<<<<< HEAD
 import javafx.scene.image.WritableImage;
+=======
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -46,6 +49,7 @@ public class GardenDesign extends View{
 	ImageView c = new ImageView(compost);
 	Image lep = new Image(getClass().getResourceAsStream("/butterfly.png"));
 	Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+<<<<<<< HEAD
 	Pane main;
 	
 	public GardenDesign(Stage stage, Controller c, ManageViews manageView) {
@@ -64,6 +68,24 @@ public class GardenDesign extends View{
 //		center.getChildren().add(gardenShape);
 		border.setCenter(main);
 		
+=======
+	
+	public GardenDesign(Stage stage, Controller c) {
+		super(stage,c);
+		this.ic=c;
+		oblist = initializeHashMap();
+
+		vb = addVBox();
+//		Canvas canvas = new Canvas(screenWidth, screenHeight);
+		border = new BorderPane();
+		showCompostBin();
+//		innerPane.setMinHeight(screenHeight);
+//		innerPane.setMinWidth(screenWidth);
+//		stack.setStyle("-fx-background-color: BLUE");
+//		border.setCenter(stack);
+		
+		
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 		tile = addTilePane();
 		border.setBottom(tile);
 		comparePane = addBorderPane();
@@ -79,7 +101,11 @@ public class GardenDesign extends View{
 		bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
 		
 		border.setLeft(bd2);
+<<<<<<< HEAD
 		showCompostBin();
+=======
+		
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 //		border.getChildren().add(canvas); 
 		
 //        gc = canvas.getGraphicsContext2D();	
@@ -129,7 +155,13 @@ public class GardenDesign extends View{
 		return budgetLepPane;
 		
 	}
+<<<<<<< HEAD
 
+=======
+	
+	
+	
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 	public void updateBudgetandLep(int cost, int lepCount) {
 		border.getChildren().remove(border.getTop());
 		
@@ -164,22 +196,37 @@ public class GardenDesign extends View{
 //		iv2.setTranslateY(iv2.getLayoutY()+y);
 //		setX(x,iv2);
 //		setY(y,iv2);
+<<<<<<< HEAD
 		iv2.setOnMouseDragged(ic.getHandlerforDrag());
 //		c.setOnMouseDragReleased(ic.getHandlerForDragReleasedOver(false));
+=======
+		iv2.setTranslateX(x);
+		iv2.setTranslateY(y);
+		iv2.setOnMouseDragged(ic.getHandlerforDrag());
+		c.setOnMouseDragReleased(ic.getHandlerForDragReleasedOver(false));
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 //		iv2.setOnMouseReleased(event->{
 //			c.setOnMouseDragEntered(event2-> {
 //				c.setFitHeight(85);
 //				removePlant(iv2);
 //			});
 //		});
+<<<<<<< HEAD
 		main.getChildren().add(iv2);
 		iv2.setTranslateX(x);
 		iv2.setTranslateY(y);
+=======
+		border.getChildren().add(iv2);
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 	}
 	
 	public void makeInfoPane(String name,String info) {
 		BorderPane info1 = new BorderPane();
+<<<<<<< HEAD
 		info1.setPrefWidth(screenWidth/6);
+=======
+		info1.setPrefWidth(screenWidth/4);
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 		info1.setMinHeight(screenHeight-300);
 		info1.setStyle("-fx-background-color: LIGHTBLUE");
 		
@@ -293,14 +340,22 @@ public class GardenDesign extends View{
 	public void showPlantInfo(String plantInfo) {} //Shows plant information when clicked
 	public void showPlantGallery() {} //Shows plants based on conditions
 	public Node compost() {
+<<<<<<< HEAD
 		return this.c;
+=======
+		return this.compost();
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 	}
 	public void showCompostBin() {
 //		Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 //		ImageView c = new ImageView(compost);
 		c.setPreserveRatio(true);
 		c.setFitHeight(75);
+<<<<<<< HEAD
 		c.setTranslateX(screenWidth/110);
+=======
+		c.setTranslateX(screenWidth/6);
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 		c.setTranslateY((screenHeight-200)/2);
 		c.setOnMouseExited(event->{
 			c.setFitHeight(75);
@@ -309,7 +364,11 @@ public class GardenDesign extends View{
 			c.setFitHeight(85);
 			
 		});
+<<<<<<< HEAD
 		main.getChildren().add(c);
+=======
+		border.getChildren().add(c);
+>>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 	}
 	public void displayBasket() {} //Shows the plants that are currently in the garden on the rightmost pane
 }
