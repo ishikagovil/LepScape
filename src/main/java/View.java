@@ -35,6 +35,7 @@ public abstract class View{
 	
 	public void importImages() {}
 	public void changeCursor(boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
+		//https://blog.idrsolutions.com/2014/05/tutorial-change-default-cursor-javafx/ 
 		if(hand)
 			stage.getScene().setCursor(Cursor.HAND);
 		else
