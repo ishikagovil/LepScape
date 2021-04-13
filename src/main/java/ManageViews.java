@@ -12,6 +12,7 @@ public class ManageViews {
 	View currView;
 	Controller controller;
 	Stage stage;
+	public Map<String, String> plantImages;
 	
 	public ManageViews(Stage stage, Controller c, String fileName) {
 		dimLen = new ArrayList<>();
@@ -23,7 +24,8 @@ public class ManageViews {
 	}
 
 	public void importImages(String fileName) {
-		
+		plantImages = new HashMap<>();
+		plantImages = CSVtoPlants.readFileForImg(fileName);
 	}
 	
 	public void initializeViews() {
