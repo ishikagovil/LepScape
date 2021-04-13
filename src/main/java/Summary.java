@@ -1,6 +1,6 @@
-import java.io.FileInputStream;
 import java.util.ArrayList;
 
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -8,18 +8,20 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Summary extends View {
 	public Navigation navi;
@@ -31,7 +33,6 @@ public class Summary extends View {
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
 		border.getChildren().add(canvas);
-<<<<<<< HEAD
 
         // set up a Horizon Box pane for the bottom of the page
         HBox box = new HBox();
@@ -80,34 +81,48 @@ public class Summary extends View {
         buttons.add(navi.settings);
         buttons.add(navi.suggested);
         */
-        
+       
+       // center pane for the garden design
        StackPane sp1 = new StackPane();
-       sp1.setStyle("-fx-border-color: brown; -fx-border-width: 5px; -fx-background-color: lightblue");
+       sp1.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
        border.setCenter(sp1);
        
+       // get the total leps supported and cost 
        PlantSpecies p1 = new PlantSpecies();
-       VBox vb2 = new VBox();
-       /*Rectangle data = new Rectangle(100.0, 50.0);
-       data.setFill(Color.AQUAMARINE);
-       */
+      // VBox vb2 = new VBox();
        Text title = new Text("Summary");
-       title.setFont(Font.font(null, FontWeight.BOLD, 16));
+       title.setFont(Font.font(null, FontWeight.BOLD, 30));
+       title.setTextAlignment(TextAlignment.LEFT);
        Text lepCount = new Text("Number of leps supported: " + p1.getLepsSupported());
+       lepCount.setTextAlignment(TextAlignment.LEFT);
        Text totalCost = new Text("Total cost: " + p1.getCost());
-       vb2.setAlignment(Pos.TOP_LEFT);
+       totalCost.setTextAlignment(TextAlignment.LEFT);
+       /*vb2.setAlignment(Pos.TOP_LEFT);
        vb2.setStyle("-fx-background-color: lavender");
        vb2.setPadding(new Insets(20));
        vb2.getChildren().addAll(title, lepCount, totalCost);
        border.setRight(vb2);
-       
-       /*
-       // load butterfly animation
-       ImageView v1 = new ImageView();
-       Image butterfly = new
-       //Image butterfly = new Image(getClass().getResourceAsStream(""));
-       v1.setImage(butterfly);
        */
-
-	}
+       
+       // load butterfly animation
+       ImageView iv1 = new ImageView();
+       Image butterfly = new Image(getClass().getResourceAsStream("/butterfly.png"));
+       iv1.setImage(butterfly);
+       iv1.setPreserveRatio(true);
+       iv1.setFitHeight(30);
+       
+       Duration duration = Duration.millis(2500);
+       TranslateTransition translation = new TranslateTransition(duration, iv1);
+       translation.setByX(100);
+       translation.setByY(100);
+       
+       TilePane tp1 = new TilePane();
+       tp1.setPadding(new Insets(10));
+       tp1.setStyle("-fx-background-color: lavender");
+       tp1.setAlignment(Pos.TOP_LEFT);
+       tp1.getChildren().addAll(title, lepCount, totalCost, iv1);
+       border.setRight(tp1);
+    }
+	
 	public void render() {}
 }

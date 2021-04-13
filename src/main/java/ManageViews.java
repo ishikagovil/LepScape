@@ -29,7 +29,7 @@ public class ManageViews {
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-	    this.currView = this.getView("Start");
+	    this.currView = this.getView("Summary");
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class ManageViews {
 	    views.put("Gallery", new Gallery(stage,controller,this));  
 	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
 	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
-	    //views.put("Summary", new Summary(stage,controller,this));
+	    views.put("Summary", new Summary(stage,controller,this));
 	}
 	
 	/** 

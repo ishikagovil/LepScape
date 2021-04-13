@@ -36,7 +36,7 @@ class ModelTest {
 
 	@Test
 	void testUpdateOutlineSection() {
-		m.updateOutlineSection();
+		m.updateOutlineSection(x, y);
 		fail("Not yet implemented");
 	}
 
