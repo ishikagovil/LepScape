@@ -11,6 +11,9 @@ public class Model {
 	public double x;
 	public double y;
 	public int lepCount;
+	private Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
+	
+	private UserMode mode;
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh
@@ -20,6 +23,7 @@ public class Model {
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
 		initializePlantDirectory();
+		this.budget = 0;
 	}
 	// Methods for the user to draw the garden and put in desired conditions
 	// create the optimal garden based on leps and conditions provided
@@ -86,6 +90,9 @@ public class Model {
 	public int getBudget() {
 		return this.budget;
 	}
+	public void setBudget(int budget) {
+		this.budget = budget;
+	}
 	
 	public int getLepCount() {
 		return this.lepCount;
@@ -125,6 +132,13 @@ public class Model {
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
 	}
-
-
+	public UserMode getMode() {
+		return this.mode;
+	}
+	public void setMode(UserMode mode) {
+		this.mode = mode;
+	}
+	public Conditions getCurrentConditions() {
+		return this.currConditions;
+	}
 }

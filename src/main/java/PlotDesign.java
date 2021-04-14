@@ -115,7 +115,7 @@ public class PlotDesign extends View{
 	            dimension.setPromptText("Enter dimension (ft)");
 	            border.setOnMousePressed(null);
 	            border.setOnMouseDragged(null);
-	            controller.switchViews("GardenDesign");
+	            controller.switchViews("ConditionScreen");
 	          }
 	    });	
 	    grid = new GridPane();
