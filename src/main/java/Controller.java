@@ -151,11 +151,23 @@ public class Controller extends Application {
 		event.setDragDetect(true);
 	}
 		
+	/**
+	 * Creates a handler for setting the user's mode in Model
+	 * @param mode the mode to set to after handler is called
+	 * @return the associated handler
+	 * @author Jinay Jain
+	 */
 	public EventHandler<ActionEvent> getHandlerforModeSetter(UserMode mode) {
 		return (e) -> { 
 			this.model.setMode(mode); 
 		};
 	}
+	
+	/**
+	 * Creates handler for conditions canvas clicked
+	 * @return the associated canvas click handler
+	 * @author Jinay Jain
+	 */
 	public EventHandler<MouseEvent> getConditionsClickHandler() {
 		return (e) -> {
 			UserMode mode = this.model.getMode();
@@ -168,16 +180,42 @@ public class Controller extends Application {
 			}
 		};
 	}
+	
+	/**
+	 * Creates handler for when conditions canvas is dragged
+	 * @return the associated drag handler
+	 * @author Jinay Jain
+	 */
 	public EventHandler<MouseEvent> getConditionsDragHandler() {
 		return (e) -> { draw(e, false); };
 	}
+	
+	/**
+	 * Creates a handler to set the soil type
+	 * @param newType the new soil type to set to
+	 * @return the associated action handler
+	 * @author Jinay Jain
+	 */
 	public EventHandler<ActionEvent> getConditionsSoilHandler(SoilType newType) {
 		return (e) -> { this.model.getCurrentConditions().setSoilType(newType); };
 	}
+	
+	/**
+	 * Updates the value of current sunlight/moisture levels when setting garden conditions
+	 * @param moistureLevel the new moisture level
+	 * @param sunlight the new sunlight level
+	 * @author Jinay Jain
+	 */
 	public void updateConditionSlider(int moistureLevel, int sunlight) {
 		this.model.getCurrentConditions().setMoistureLevel(moistureLevel);
 		this.model.getCurrentConditions().setSunlight(sunlight);
 	}	
+	
+	/**
+	 * Updates the budget based on the String in a TextField
+	 * @param budgetString the String with the user's budget input
+	 * @author Jinay Jain
+	 */
 	public void updateBudget(String budgetString) {
 		try {
 			int newBudget = Integer.parseInt(budgetString);

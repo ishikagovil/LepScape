@@ -9,6 +9,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+/**
+ * The screen to select garden conditions and partition the garden into sections
+ * @author Jinay Jain
+ *
+ */
 public class ConditionScreen extends View {
 //	public ArrayList<Button> switchScreens; //back, next, save,
 //	public Slider soilType;
@@ -18,6 +23,12 @@ public class ConditionScreen extends View {
 	
 	private Canvas canvas;
 
+	/**
+	 * Initializes a new instance of ConditionScreen
+	 * @param stage Stage to draw on
+	 * @param c the associated MVC Controller
+	 * @param manageView view manager that stores shared info
+	 */
 	public ConditionScreen(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		border = new BorderPane();
@@ -29,6 +40,10 @@ public class ConditionScreen extends View {
         //gc.restore(); //possible to pass the gc from PlotDesign and restore the drawing
 	}
 	
+	/**
+	 * Creates the entire Conditions sidebar
+	 * @return the created sidebar node
+	 */
 	private Node createSidebar() {
 		VBox sidebar = new VBox(8);
 		sidebar.setPadding(new Insets(12.0));
@@ -65,6 +80,10 @@ public class ConditionScreen extends View {
 		return sidebar;
 	}
 	
+	/**
+	 * Creates the drawable canvas for conditions
+	 * @return the created canvas
+	 */
 	private Node createCanvasPane() {
 	    Pane wrapperPane = new Pane();
 
@@ -86,6 +105,10 @@ public class ConditionScreen extends View {
 		return wrapperPane;
 	}
 	
+	/**
+	 * Creates sunlight and moisture sliders
+	 * @return an HBox containing the two sliders and their labels
+	 */
 	private Node createSliders() {
 		HBox sliders = new HBox(16);
 		Slider moistureSlider = createConditionSlider();
@@ -105,6 +128,10 @@ public class ConditionScreen extends View {
 		return sliders;
 	}
 	
+	/**
+	 * Creates a single condition slider
+	 * @return the created condition slider
+	 */
 	private Slider createConditionSlider() {
 		Slider slider = new Slider(0, 10, 0);
 		slider.setOrientation(Orientation.VERTICAL);
@@ -116,6 +143,10 @@ public class ConditionScreen extends View {
 		return slider;
 	}
 	
+	/**
+	 * Creates the buttons to select soil type
+	 * @return a box with soil buttons for all soil types
+	 */
 	private Node createSoilButtons() {
 		HBox buttonBox = new HBox(4);
 		for(SoilType type : SoilType.values()) {
@@ -128,6 +159,9 @@ public class ConditionScreen extends View {
 	}
 	
 	
+	/**
+	 * Saves the image after partitioning to enable fill tool to update
+	 */
 	public void saveImage() {
 		this.manageView.setImage(canvas.snapshot(null, null));
 	}
