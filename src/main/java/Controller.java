@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -147,9 +148,43 @@ public class Controller extends Application {
 			view.makeInfoPane(name,description);
 		}
 		event.setDragDetect(true);
-		
 	}
-	
+		
+	public EventHandler<ActionEvent> getHandlerforModeSetter(UserMode mode) {
+		return (e) -> { 
+			this.model.setMode(mode); 
+		};
+	}
+	public EventHandler<MouseEvent> getConditionsClickHandler() {
+		return (e) -> {
+			UserMode mode = this.model.getMode();
+			if(mode == UserMode.SETTING_CONDITIONS) {
+				ConditionScreen screen = (ConditionScreen) this.view.getView("ConditionScreen");
+				screen.saveImage();
+				fillRegion(e);
+			} else if(mode == UserMode.PARTITIONING) {
+				draw(e, true);
+			}
+		};
+	}
+	public EventHandler<MouseEvent> getConditionsDragHandler() {
+		return (e) -> { draw(e, false); };
+	}
+	public EventHandler<ActionEvent> getConditionsSoilHandler(SoilType newType) {
+		return (e) -> { this.model.getCurrentConditions().setSoilType(newType); };
+	}
+	public void updateConditionSlider(int moistureLevel, int sunlight) {
+		this.model.getCurrentConditions().setMoistureLevel(moistureLevel);
+		this.model.getCurrentConditions().setSunlight(sunlight);
+	}	
+	public void updateBudget(String budgetString) {
+		try {
+			int newBudget = Integer.parseInt(budgetString);
+			this.model.setBudget(newBudget);
+		} catch(Exception e) {
+			
+		}
+	}
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
 		if (!DEBUG) {
@@ -245,8 +280,7 @@ public class Controller extends Application {
 		 else if(next.equals("ClearDim")) {
 			 this.view.getGC().drawImage(this.view.img, 0, 0);  
 			 this.view.dimLen = new ArrayList<>();
-		 }
-		 else {
+		 } else {
 			 this.view.switchViews(next);
 			 setTheStage();
 		 }
@@ -257,6 +291,15 @@ public class Controller extends Application {
 		return model.getBudget();
 	}
 
+	private void fillRegion(MouseEvent e) {
+		int x = (int) e.getSceneX();
+		int y = (int) e.getSceneY();
+		
+		Color fillColor = this.model.getCurrentConditions().toColor();
+		
+		this.view.fillRegion(x, y, fillColor);
+		this.view.redrawImage();
+	}
 	
 	//Methods used when user is designing new plot and inputting conditions
 	public void onSectioning() {} //Called in drag(), model calls updateOutlineSection and view is updated 
@@ -278,5 +321,6 @@ public class Controller extends Application {
 
 	
 	public double getStartingX() {return model.getX();}
-	public double getStartingY() {return model.getY();}	
+	public double getStartingY() {return model.getY();}
+
 }
