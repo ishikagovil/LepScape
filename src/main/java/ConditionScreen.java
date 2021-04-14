@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ConditionScreen extends View {
@@ -43,18 +42,23 @@ public class ConditionScreen extends View {
 			controller.updateBudget(budgetField.getText());
 		});
 		
-		HBox tools = new HBox();
+		HBox tools = new HBox(8);
 		Button fillButton = new Button("Fill");
 		fillButton.setOnAction(controller.getHandlerforModeSetter(UserMode.SETTING_CONDITIONS));
 		Button partitionButton = new Button("Partition");
 		partitionButton.setOnAction(controller.getHandlerforModeSetter(UserMode.PARTITIONING));
 		tools.getChildren().addAll(fillButton, partitionButton);
 		
+		Button next = new Button("Next");
+		next.setOnAction((e) -> {
+			controller.switchViews("GardenDesign");
+		});
+		
 		Node sliders = createSliders();
 		Node soilButtons = createSoilButtons();
 		
 		VBox.setVgrow(sliders, Priority.ALWAYS);
-		sidebar.getChildren().addAll(budgetRow, sliders, soilButtons, tools);
+		sidebar.getChildren().addAll(budgetRow, sliders, soilButtons, tools, next);
 		
 		return sidebar;
 	}
