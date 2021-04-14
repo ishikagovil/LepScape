@@ -31,25 +31,16 @@ public class Controller extends Application {
 		this.model = new Model();
 		this.model.setPlantDirectory(CSVtoPlants.readFile(fileName));
 		this.stage = stage;
-<<<<<<< HEAD
 	    view = new ManageViews(stage,this, fileName);
-=======
-
-	    view = new ManageViews(stage,this);
-
->>>>>>> gardenDesignScreen
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
 	}
-<<<<<<< HEAD
+
 	/** 
 	 * Sets the border pane to the scene and shows the stage
 	 * @author Ishika Govil 
 	 */
-=======
-
->>>>>>> gardenDesignScreen
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.show();
@@ -88,17 +79,7 @@ public class Controller extends Application {
 		return (e) -> { view.onChangeCursor(false);  };
 
 	}
-<<<<<<< HEAD
 	
-	/** 
-	 * Calls drag when mouse is dragged
-	 * @return EventHandler<MouseEvent>
-	 * @author Ishika Govil 
-	 */
-=======
-	public EventHandler<MouseEvent> getHandlerforDrawing(boolean isPressed) {
-		return (e) -> {  draw(e, isPressed); };
-	}
 	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
 		return null;
 	}
@@ -106,13 +87,15 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforPressed(String key){
 		return (e) -> { pressed(e,key); };
 	}
-	
->>>>>>> gardenDesignScreen
+	/** 
+	 * Calls drag when mouse is dragged
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforDrag() {
 		return (e) -> {  drag(e); };
 	}
 	
-<<<<<<< HEAD
 	/** 
 	 * Calls drag when mouse is released
 	 * @return EventHandler<MouseEvent>
@@ -138,17 +121,10 @@ public class Controller extends Application {
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-=======
 	public EventHandler<MouseEvent> getHandlerforReleased(String key, Boolean startingInTile) {
 		return (e) -> { release(e,key,startingInTile);  };
 	}
 	
-	public EventHandler<MouseEvent> getHandlerForDragReleasedOver(Boolean startedInTile){
-		return event -> {draggedOver(event, startedInTile);};
-	}
-
-
->>>>>>> gardenDesignScreen
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
@@ -210,7 +186,6 @@ public class Controller extends Application {
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
 	}
-<<<<<<< HEAD
 	
 	/** 
 	 * Called when user is drawing. 
@@ -220,11 +195,6 @@ public class Controller extends Application {
 	 * @author Ishika Govil 
 	 */
 	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false) -- in beta
-=======
-
-
-	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false)
->>>>>>> gardenDesignScreen
 		if(isPressed)
 			 this.view.getGC().beginPath();
 		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
