@@ -72,6 +72,8 @@ public class PlotDesign extends View{
         dimSwitch.add(undo);
         dimSwitch.get(0).setPrefSize(100, 30);
         dimSwitch.get(1).setPrefSize(100, 30);
+        dimSwitch.add(addNextButton("Next", "ConditionScreen"));
+        dimSwitch.get(2).setPrefSize(100, 30);
         dimSwitch.get(1).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {

@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -28,13 +29,18 @@ import javafx.util.Duration;
 public class Summary extends View {
 	public ArrayList <Button> b1;
 	public Controller ic;
+	Pane p1 = new Pane();
+	Canvas canvas;
 	
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
 		super(stage, c, manageView);
-		Canvas canvas = new Canvas(screenWidth, screenHeight);
+		this.ic = c;
+		//Canvas canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
-		border.getChildren().add(canvas);
+		p1 = canvasPane();
+		border.setCenter(p1);
+		//border.getChildren().add(canvas);
 
         // set up a Horizon Box pane for the bottom of the page
         HBox box = new HBox();
@@ -90,7 +96,7 @@ public class Summary extends View {
        // center pane for the garden design
        StackPane sp1 = new StackPane();
        sp1.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
-       border.setCenter(sp1);
+       //border.setCenter(sp1);
        
        // get the total leps supported and cost 
        PlantSpecies p1 = new PlantSpecies();
@@ -141,4 +147,21 @@ public class Summary extends View {
        border.setRight(tp1);
     }
 	public void render() {}
+	
+	public Pane canvasPane() {
+		Pane p2 = new Pane();
+		p2.setStyle("-fx-background-color: lightblue");
+		canvas = new Canvas();
+		canvas.setStyle("-fx-border-color: grey; -fx-border-width: 5px");
+		//gc.getCanvas().getGraphicsContext2D();
+		p2.getChildren().add(canvas);
+		
+		canvas.widthProperty().bind(p2.widthProperty());
+		canvas.heightProperty().bind(p2.heightProperty());
+		
+		canvas.widthProperty().addListener(e -> manageView.redrawImage());
+		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+		return p2;
+	}
+	
 }

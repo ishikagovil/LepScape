@@ -290,8 +290,13 @@ public class GardenDesign extends View{
 		Button[] buttons = new Button[] {
 			addNextButton("Back","ConditionScreen"), addNextButton("Learn More", "LearnMore"), new Button("Clear"),addNextButton("Next","Summary")
 		};
+		buttons[0].setPrefSize(100, 30);
+		buttons[1].setPrefSize(100, 30);
+		buttons[2].setPrefSize(100, 30);
+		buttons[3].setPrefSize(100, 30);
 		vb.getChildren().addAll(buttons);
 		Button save = new Button("Save");
+		save.setPrefSize(100, 30);
 		save.setOnAction(e->{
 			saveGardenImage();
 		});
@@ -304,7 +309,6 @@ public class GardenDesign extends View{
 		main.getChildren().remove(c);
 		
 		this.manageView.setImage(canvas.snapshot(null, null));
-		
 		c.setPreserveRatio(true);
 		c.setFitHeight(75);
 
