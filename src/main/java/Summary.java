@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-<<<<<<< HEAD
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -11,16 +9,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-=======
-import javafx.scene.layout.BorderPane;
->>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 import javafx.stage.Stage;
 
 public class Summary extends View{
 	public Navigation navi;
 	public Button openLepedia;
 	public Button download;
-<<<<<<< HEAD
 	public Button startNew;
 	
 	public ArrayList<Button> buttons; // Settings, suggested, saved, learn more
@@ -75,15 +69,6 @@ public class Summary extends View{
 		Text totalCost = new Text("The total cost: " + garden.getCost());
 		vb1.getChildren().addAll(lepCount, totalCost);
 		border.setRight(vb1);
-		
-		
-=======
-	public Summary(Stage stage, Controller c) {
-		super(stage, c);
-		//remove this line before merging
-		border = new BorderPane();
-
->>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 	}
 	public void render() {}
 }

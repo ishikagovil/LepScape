@@ -5,18 +5,12 @@ public class Model {
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
-<<<<<<< HEAD
+
 	public double lengthPerPixel;
 	public double x;
 	public double y;
 	public int lepCount;
 
-=======
-	public double x;
-	public double y;
-	public int lepCount;
-	
->>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
 	public Model() {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
@@ -62,11 +56,9 @@ public class Model {
 	public void costUpdate() {}
 	
 	public void initializePlantDirectory() {
-<<<<<<< HEAD
+
 		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
-=======
-		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers arranged \nin drooping clusters.",5,7,13,40, false));
->>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
+
 		plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
 	}
 	
@@ -96,7 +88,7 @@ public class Model {
 	public double getY() {
 		return this.y;
 	}
-<<<<<<< HEAD
+
 
 	public double getLengthPerPixel() {
 		return this.lengthPerPixel;
@@ -105,9 +97,5 @@ public class Model {
 		this.lengthPerPixel = pix;
 	}
 
-=======
-	
-	
-	
->>>>>>> a49086ae286d481d0ec616efebc47eba90941dfc
+
 }
