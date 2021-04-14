@@ -30,7 +30,7 @@ public class ConditionScreen extends View {
 	}
 	
 	private Node createSidebar() {
-		VBox sidebar = new VBox();
+		VBox sidebar = new VBox(8);
 		sidebar.setPadding(new Insets(12.0));
 		sidebar.setStyle("-fx-background-color: #f0ebdd");
 		
@@ -38,15 +38,9 @@ public class ConditionScreen extends View {
 		TextField budgetField = new TextField();
 		Label budgetLabel = new Label("Budget ($):");
 		budgetRow.getChildren().addAll(budgetLabel, budgetField);
-		
-		Slider moistureSlider = new Slider(0, 10, 1);
-		moistureSlider.setOrientation(Orientation.VERTICAL);
-
-		Slider sunlightSlider = new Slider(0, 10, 1);
-		sunlightSlider.setOrientation(Orientation.VERTICAL);
-
-		HBox sliders = new HBox();
-		sliders.getChildren().addAll(moistureSlider, sunlightSlider);
+		budgetField.setOnKeyReleased(e -> {
+			controller.updateBudget(budgetField.getText());
+		});
 		
 		HBox tools = new HBox();
 		Button fillButton = new Button("Fill");
@@ -55,8 +49,11 @@ public class ConditionScreen extends View {
 		partitionButton.setOnAction(controller.getHandlerforModeSetter(UserMode.PARTITIONING));
 		tools.getChildren().addAll(fillButton, partitionButton);
 		
+		Node sliders = createSliders();
+		Node soilButtons = createSoilButtons();
+		
 		VBox.setVgrow(sliders, Priority.ALWAYS);
-		sidebar.getChildren().addAll(budgetRow, sliders, tools);
+		sidebar.getChildren().addAll(budgetRow, sliders, soilButtons, tools);
 		
 		return sidebar;
 	}
@@ -81,6 +78,45 @@ public class ConditionScreen extends View {
 		
 		return wrapperPane;
 	}
+	
+	private Node createSliders() {
+		HBox sliders = new HBox(16);
+		Slider moistureSlider = new Slider(0, 10, 0);
+		Slider sunlightSlider = new Slider(0, 10, 0);
+		setupConditionSlider(sunlightSlider);
+		setupConditionSlider(moistureSlider);
+		
+		sunlightSlider.valueProperty().addListener((ov, oldVal, newVal) -> {
+			controller.updateConditionSlider((int) moistureSlider.getValue(), (int) sunlightSlider.getValue());
+		});
+		moistureSlider.valueProperty().addListener((ov, oldVal, newVal) -> {
+			controller.updateConditionSlider((int) moistureSlider.getValue(), (int) sunlightSlider.getValue());
+		});
+		
+		sliders.getChildren().addAll(moistureSlider, sunlightSlider);
+		
+		return sliders;
+	}
+	
+	private void setupConditionSlider(Slider slider) {
+		slider.setOrientation(Orientation.VERTICAL);
+		slider.setShowTickLabels(true);
+		slider.setShowTickLabels(true);
+		slider.setMajorTickUnit(1);
+		slider.setSnapToTicks(true);
+	}
+	
+	private Node createSoilButtons() {
+		HBox buttonBox = new HBox();
+		for(SoilType type : SoilType.values()) {
+			Button soilButton = new Button(type.toString());
+			soilButton.setOnAction(controller.getConditionsSoilHandler(type));
+			buttonBox.getChildren().add(soilButton);
+		}
+		
+		return buttonBox;
+	}
+	
 	
 	public void saveImage() {
 		this.manageView.setImage(canvas.snapshot(null, null));

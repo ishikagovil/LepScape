@@ -6,6 +6,7 @@ public class Model {
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
 	public double lengthPerPixel;
+	private Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
 	
 	private UserMode mode;
 	
@@ -13,6 +14,7 @@ public class Model {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
+		this.budget = 0;
 	}
 	// Methods for the user to draw the garden and put in desired conditions
 	// create the optimal garden based on leps and conditions provided
@@ -70,5 +72,8 @@ public class Model {
 	}
 	public void setMode(UserMode mode) {
 		this.mode = mode;
+	}
+	public Conditions getCurrentConditions() {
+		return this.currConditions;
 	}
 }

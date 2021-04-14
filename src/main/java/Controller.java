@@ -63,7 +63,6 @@ public class Controller extends Application {
 		return (e) -> { 
 			this.model.setMode(mode); 
 		};
-
 	}
 	public EventHandler<MouseEvent> getConditionsClickHandler() {
 		return (e) -> {
@@ -74,17 +73,27 @@ public class Controller extends Application {
 				fillRegion(e);
 			} else if(mode == UserMode.PARTITIONING) {
 				draw(e, true);
-				
 			}
 		};
 	}
 	public EventHandler<MouseEvent> getConditionsDragHandler() {
 		return (e) -> { draw(e, false); };
 	}
-	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
-		return null;
+	public EventHandler<ActionEvent> getConditionsSoilHandler(SoilType newType) {
+		return (e) -> { this.model.getCurrentConditions().setSoilType(newType); };
 	}
-	
+	public void updateConditionSlider(int moistureLevel, int sunlight) {
+		this.model.getCurrentConditions().setMoistureLevel(moistureLevel);
+		this.model.getCurrentConditions().setSunlight(sunlight);
+	}	
+	public void updateBudget(String budgetString) {
+		try {
+			int newBudget = Integer.parseInt(budgetString);
+			this.model.setBudget(newBudget);
+		} catch(Exception e) {
+			
+		}
+	}
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
 		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
@@ -136,7 +145,9 @@ public class Controller extends Application {
 		int x = (int) e.getSceneX();
 		int y = (int) e.getSceneY();
 		
-		this.view.fillRegion(x, y, Color.BLUE);
+		Color fillColor = this.model.getCurrentConditions().toColor();
+		
+		this.view.fillRegion(x, y, fillColor);
 		this.view.redrawImage();
 	}
 	
@@ -160,5 +171,6 @@ public class Controller extends Application {
 
 	
 	public double getStartingX() {return model.getX();}
-	public double getStartingY() {return model.getY();}	
+	public double getStartingY() {return model.getY();}
+
 }
