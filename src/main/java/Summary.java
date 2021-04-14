@@ -29,29 +29,15 @@ import javafx.util.Duration;
 public class Summary extends View {
 	public ArrayList <Button> b1;
 	public Controller ic;
-<<<<<<< HEAD
-	Pane p1 = new Pane();
-=======
 	Pane main;
->>>>>>> cbaa58ce31ecc9e9f58d8bed607242f5da8f4dd8
 	Canvas canvas;
 	
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
 		super(stage, c, manageView);
-<<<<<<< HEAD
-		this.ic = c;
-		//Canvas canvas = new Canvas(screenWidth, screenHeight);
-		border = new BorderPane();
-		p1 = canvasPane();
-		border.setCenter(p1);
-		//border.getChildren().add(canvas);
-
-=======
 		border = new BorderPane();
 		
 		
->>>>>>> cbaa58ce31ecc9e9f58d8bed607242f5da8f4dd8
         // set up a Horizon Box pane for the bottom of the page
         HBox box = new HBox();
         box.setStyle("-fx-background-color: steelblue");
@@ -94,9 +80,8 @@ public class Summary extends View {
         Button suggested = new Button("Suggested");
         suggested.setPrefSize(100, 30);
         buttons.add(suggested);
-        Button learnMore = new Button("Learn More");
-        learnMore.setPrefSize(100, 30);
-        buttons.add(learnMore);
+        buttons.add(addNextButton("Learn More","LearnMore"));
+        buttons.get(2).setPrefSize(100, 30);
         vb1.getChildren().addAll(buttons);
         vb1.setAlignment(Pos.TOP_RIGHT);
         /*buttons.add(navi.saved);
@@ -107,7 +92,7 @@ public class Summary extends View {
        // center pane for the garden design
        StackPane sp1 = new StackPane();
        sp1.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
-       //border.setCenter(sp1);
+       border.setCenter(sp1);
        
        // get the total leps supported and cost 
        PlantSpecies p1 = new PlantSpecies();
@@ -162,27 +147,6 @@ public class Summary extends View {
        border.setCenter(main);
        border.setCenter(main);
     }
-<<<<<<< HEAD
-	public void render() {}
-	
-	public Pane canvasPane() {
-		Pane p2 = new Pane();
-		p2.setStyle("-fx-background-color: lightblue");
-		canvas = new Canvas();
-		canvas.setStyle("-fx-border-color: grey; -fx-border-width: 5px");
-		//gc.getCanvas().getGraphicsContext2D();
-		p2.getChildren().add(canvas);
-		
-		canvas.widthProperty().bind(p2.widthProperty());
-		canvas.heightProperty().bind(p2.heightProperty());
-		
-		canvas.widthProperty().addListener(e -> manageView.redrawImage());
-		canvas.heightProperty().addListener(e -> manageView.redrawImage());
-		return p2;
-	}
-	
-}
-=======
 /**
  * Makes the canvas so the previously set garden outline can be displayed
  * Canvas then places inside a pane
@@ -201,9 +165,6 @@ public class Summary extends View {
 	
 		canvas.widthProperty().addListener(e -> manageView.redrawImage());
 		canvas.heightProperty().addListener(e -> manageView.redrawImage());
-	
-	
 		return gardenDesign;
 	}
 }
->>>>>>> cbaa58ce31ecc9e9f58d8bed607242f5da8f4dd8

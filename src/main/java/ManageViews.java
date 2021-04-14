@@ -142,6 +142,8 @@ public class ManageViews {
 	public void onChangeCursor(boolean hand) {
 		this.currView.changeCursor(hand);
 	}
+	
+	// restart the plot, clear all lines so user can draw a new garden design
 	public void restartPlot() {
 		initializeViews();
 		this.dimLen = new ArrayList<>(); 
