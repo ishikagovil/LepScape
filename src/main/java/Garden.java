@@ -79,13 +79,10 @@ public class Garden {
 		return this.compostBin;
 	}
 	
-<<<<<<< HEAD
-=======
 	public void addToGarden(PlacedPlant plant) {
 		plants.add(plant);
 	}
-	
->>>>>>> gardenDesignScreen
+
 	/**
 	 * Called when user is drawing to update the boundary outline ArrayList
 	 * @param double x representing x coordinate
