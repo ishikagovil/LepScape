@@ -1,20 +1,25 @@
 import java.util.*;
 
 public class Model {
-	public int budget;
+	public int budget = 100;
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
+
 	public double lengthPerPixel;
+
+	public double x;
+	public double y;
+	public int lepCount;
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh
 	 */
-	
 	public Model() {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
+		initializePlantDirectory();
 	}
 	// Methods for the user to draw the garden and put in desired conditions
 	// create the optimal garden based on leps and conditions provided
@@ -25,6 +30,10 @@ public class Model {
 	}
 	public Garden getGarden() {
 		return this.gardenMap;
+	}
+	
+	public void setPlantDirectory(Map<String, PlantSpecies> plantdir) {
+		this.plantDirectory = plantdir;
 	}
 	// create a new condition for the garden
 	public void createNewConditions() {}
@@ -49,21 +58,48 @@ public class Model {
 	public void getPlantInfo() {}
 	// check if plant is okay to be placed
 	public void validatePlacement() {}
-	// place down plants
-	public void placePlant() {}
+	// place down plants and updates budget and lep count
+	public void placePlant(double x, double y, String key) {
+		PlantSpecies specie = plantDirectory.get(key);
+		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
+		this.budget = budget - specie.getCost();
+		this.lepCount = lepCount + specie.getLepsSupported();
+	}
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
+	
+	public void initializePlantDirectory() {
+
+		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
+
+		plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
+	}
+	
+	public int getBudget() {
+		return this.budget;
+	}
+	
+	public int getLepCount() {
+		return this.lepCount;
+	}
 	
 	/*@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}*/
+	
+	public void setX(double x) {
+		this.x = x;
+	}
+	public void setY(double y) {
+		this.y = y;
+	}
 	public double getX() {
-		return 0;
+		return this.x;
 	}
 	public double getY() {
-		return 0;
+		return this.y;
 	}
 	
 	/**
@@ -81,4 +117,6 @@ public class Model {
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
 	}
+
+
 }

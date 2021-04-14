@@ -1,33 +1,33 @@
 
 public class PlacedPlant {
 
-	private float x;
-	private float y;
+	private double x;
+	private double y;
 	private PlantSpecies species;
 	
 	public PlacedPlant() {
 		this.species = null;
 	}
 	
-	public PlacedPlant(float x, float y, PlantSpecies species) {
+	public PlacedPlant(double x, double y, PlantSpecies species) {
 		this.x = x;
 		this.y = y;
 		this.species = species;
 	}
 	
-	public float getX() {
+	public double getX() {
 		return this.x;
 	}
 	
-	public void setX(float x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 	
-	public float getY() {
+	public double getY() {
 		return this.y;
 	}
 	
-	public void setY(float y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	

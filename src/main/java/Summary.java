@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,6 +24,7 @@ import javafx.util.Duration;
 
 public class Summary extends View {
 	public Navigation navi;
+
 	public ArrayList <Button> b1;
 	
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
@@ -122,6 +122,5 @@ public class Summary extends View {
        tp1.getChildren().addAll(title, lepCount, totalCost);
        border.setRight(tp1);
     }
-	
 	public void render() {}
 }

@@ -76,4 +76,8 @@ public abstract class View{
 	public void updateBudgetandLep(int cost, int lepCount) {}
 
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1f76b1935fb0dc9410c84cc839d214aa778b0139

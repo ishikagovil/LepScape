@@ -1,4 +1,6 @@
 import java.util.*;
+
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
@@ -12,6 +14,7 @@ public class ManageViews {
 	View currView;
 	Controller controller;
 	Stage stage;
+	public Map<String, String> plantImages;
 	
 	/**
 	 * @author Ishika Govil
@@ -24,12 +27,18 @@ public class ManageViews {
 	 * @param Controller
 	 * @author Ishika Govil
 	 */
-	public ManageViews(Stage stage, Controller c) {
+	public ManageViews(Stage stage, Controller c, String fileName) {
 		dimLen = new ArrayList<>();
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-	    this.currView = this.getView("Summary");
+	    this.currView = this.getView("Start");
+		importImages(fileName);
+	}
+
+	public void importImages(String fileName) {
+		plantImages = new HashMap<>();
+		plantImages = CSVtoPlants.readFileForImg(fileName);
 	}
 	
 	/**
@@ -42,7 +51,9 @@ public class ManageViews {
 	    views.put("Gallery", new Gallery(stage,controller,this));  
 	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
 	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
-	    views.put("Summary", new Summary(stage,controller,this));
+	    //views.put("Summary", new Summary(stage,controller,this));
+	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
+	    views.put("LearnMore", new LearnMore(stage,controller,this));
 	}
 	
 	/** 
@@ -103,6 +114,7 @@ public class ManageViews {
 	 * @param WritableImage  
 	 */
 	public void setImage(WritableImage img) {
+		this.img = new WritableImage(200,200);
 		this.img = img;
 	}
 	
@@ -122,4 +134,12 @@ public class ManageViews {
 	public void onChangeCursor(boolean hand) {
 		this.currView.changeCursor(hand);
 	}
+	
+	public void setY(double y, Node n){currView.setY(y, n);}
+	public void setX(double x, Node n){currView.setX(x, n);}
+	//Used only in gardenDesig. In here because need to called by controller
+	public void addImageView(double x, double y, boolean startingInTile, String key) {currView.addImageView(x, y, startingInTile, key);}
+	public void removePlant(Node n) {currView.removePlant(n);}
+	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
+	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
 }

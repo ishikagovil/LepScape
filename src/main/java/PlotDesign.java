@@ -15,7 +15,7 @@ public class PlotDesign extends View{
 	ArrayList<Button> dimSwitch;
 	Label label;
 	HBox box;
-	WritableImage img;
+	WritableImage img; 
 	GridPane grid;
 
 	/**
@@ -32,7 +32,7 @@ public class PlotDesign extends View{
 	public PlotDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
-		//Set canvas for drawing
+		//Set canvas for drawing: https://www.youtube.com/watch?v=gjZQB6BmyK4
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
@@ -81,7 +81,9 @@ public class PlotDesign extends View{
         drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
+            	//https://stackoverflow.com/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
             	img = canvas.snapshot(null, null);
+            
             	manageView.setImage(img);
             	onSettingDimensions();
             }
@@ -94,7 +96,7 @@ public class PlotDesign extends View{
 	
 	/**
 	 * Called when user hits "save" on their plot. Allows users to select any linear length and input its dimension.
-	 * Saves the inputted value and calls settingLength in controller to calculate length per pixel
+	 * Saves the inputed value and calls settingLength in controller to calculate length per pixel
 	 */
 	public void onSettingDimensions() {
 		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
@@ -113,7 +115,7 @@ public class PlotDesign extends View{
 	            dimension.setPromptText("Enter dimension (ft)");
 	            border.setOnMousePressed(null);
 	            border.setOnMouseDragged(null);
-	            controller.switchViews("ConditionScreen");
+	            controller.switchViews("GardenDesign");
 	          }
 	    });	
 	    grid = new GridPane();
