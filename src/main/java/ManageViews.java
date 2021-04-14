@@ -37,7 +37,7 @@ public class ManageViews {
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-	    this.currView = this.getView("Start");
+	    this.currView = this.getView("GardenDesign");
 	}
 
 	public void importImages(String fileName) {

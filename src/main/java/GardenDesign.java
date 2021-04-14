@@ -85,16 +85,16 @@ public class GardenDesign extends View{
 	public Pane addCanvas() {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-		canvas = new Canvas();
-		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-		gc = canvas.getGraphicsContext2D();
-		gardenDesign.getChildren().add(canvas);
-		
-		canvas.widthProperty().bind(gardenDesign.widthProperty());
-		canvas.heightProperty().bind(gardenDesign.heightProperty());
-		
-		canvas.widthProperty().addListener(e -> manageView.redrawImage());
-		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+//		canvas = new Canvas();
+//		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+//		gc = canvas.getGraphicsContext2D();
+//		gardenDesign.getChildren().add(canvas);
+//		
+//		canvas.widthProperty().bind(gardenDesign.widthProperty());
+//		canvas.heightProperty().bind(gardenDesign.heightProperty());
+//		
+//		canvas.widthProperty().addListener(e -> manageView.redrawImage());
+//		canvas.heightProperty().addListener(e -> manageView.redrawImage());
 		
 		
 		return gardenDesign;
@@ -194,7 +194,7 @@ public class GardenDesign extends View{
 
 		iv2.setOnMousePressed(ic.getHandlerforPressed(null));
 		iv2.setOnMouseDragged(ic.getHandlerforDrag());
-		
+		iv2.setOnMouseReleased(ic.getHandlerforReleased(key, false));
 		iv2.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -375,7 +375,7 @@ public class GardenDesign extends View{
 				Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
 				ImageView iv1 = new ImageView(im);
 				iv1.setPreserveRatio(true);
-				iv1.setFitHeight(100);
+				iv1.setFitHeight(75);
 				oblist.put(k, iv1);
 				
 			}

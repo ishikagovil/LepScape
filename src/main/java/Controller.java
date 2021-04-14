@@ -21,8 +21,6 @@ public class Controller extends Application {
 	String fileName = "src/main/resources/testdata.csv";
 	Model model;
 	Stage stage;
-	double x1;
-	double y1;
 	
 	/** 
 	 * Override for the Application start method. Instantiates all fields
@@ -211,11 +209,14 @@ public class Controller extends Application {
 		n.setMouseTransparent(false);
 //		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
 //		model.setY(model.getY() + event.getY());
-		view.setX(n.getLayoutX(),n);
-		view.setY(n.getLayoutY(),n);
-		view.addImageView(event.getSceneX(),event.getSceneY() , DEBUG, name);
+		if(startingInTile) {
+			view.setX(n.getLayoutX(),n);
+			view.setY(n.getLayoutY(),n);
+			view.addImageView(event.getSceneX(),event.getSceneY() , startingInTile, name);
+		}
 		
-		view.addImageView(model.getX(), model.getY(), true,name);
+		
+//		view.addImageView(model.getX(), model.getY(), true,name);
 		if(startingInTile) {
 			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
