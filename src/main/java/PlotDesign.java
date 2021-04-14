@@ -15,11 +15,7 @@ public class PlotDesign extends View{
 	ArrayList<Button> dimSwitch;
 	Label label;
 	HBox box;
-<<<<<<< HEAD
 	WritableImage img; 
-=======
-	WritableImage img = new WritableImage(200,200);
->>>>>>> gardenDesignScreen
 	GridPane grid;
 
 	/**
