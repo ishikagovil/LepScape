@@ -224,7 +224,7 @@ public class GardenDesign extends View{
 	
 	public void makeInfoPane(String name,String info) {
 		BorderPane info1 = new BorderPane();
-
+		info = fitInfo(info);
 		info1.setPrefWidth(screenWidth/6);
 
 		info1.setMinHeight(screenHeight-300);
@@ -260,26 +260,25 @@ public class GardenDesign extends View{
 	}
 	
 	  
-//	public String fitInfo(String info) {
-//		StringBuilder sb = new StringBuilder(info);
-//		for(int i = 20; i<info.length(); i+=20) {
-//			if(info.charAt(i)==' ') {
-//				sb.insert(i, "\n");
-//			}
-//			else {
-//				for(int j = i; j<info.length(); j++) {
-//					if(info.charAt(j)==' ') {
-//						sb.insert(j, "\n");
-//						i = j;
-//						break;
-//					}
-//				}
-//			}
-//			sb.insert(i, "\n");
-//		}
-	//	
-//		return sb.toString();
-	//}
+	public String fitInfo(String info) {
+		StringBuilder sb = new StringBuilder(info);
+		for(int i = 20; i<info.length(); i+=20) {
+			if(info.charAt(i)==' ') {
+				sb.insert(i, "\n");
+			}
+			else {
+				for(int j = i; j<info.length(); j++) {
+					if(info.charAt(j)==' ') {
+						sb.insert(j, "\n");
+						i = j;
+						break;
+					}
+				}
+			}
+			sb.insert(i, "\n");
+		}
+		return sb.toString();
+	}
 	
 	public VBox addVBox() {
 		VBox vb = new VBox();
