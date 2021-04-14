@@ -86,6 +86,12 @@ public class Controller extends Application {
 		return null;
 	}
 	
+	/**
+	 * Calls pressed when mouse is pressed
+	 * @param key the plant that is pressed
+	 * @return EventHandler<MouseEvent>
+	 * @author Arunima Dey
+	 */
 	public EventHandler<MouseEvent> getHandlerforPressed(String key){
 		return (e) -> { pressed(e,key); };
 	}
@@ -127,18 +133,13 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
-
-
 	
-	public void draggedOver(MouseEvent event, Boolean startedInTile) {
-		Node n = (Node) event.getSource();
-		System.out.println("in thr draggedOver method");
-		if(!startedInTile) {
-			view.removePlant(n);
-		}
-
-	}
-	
+	/**
+	 * Controls the event when mouse is pressed on a plant imageView
+	 * Displays name and information of that plant in garden design screen
+	 * @param event the mouse event
+	 * @param key the plant that was pressed
+	 */
 	public void pressed(MouseEvent event, String key) {
 		Node n = (Node) event.getSource();
 		n.setMouseTransparent(true);
@@ -224,6 +225,12 @@ public class Controller extends Application {
 			
 		}
 	}
+	
+	/**
+	 * Controls the drag event. Moves the imageView with mouse and gives that x and y to model
+	 * @param event
+	 * @author Arunima Dey
+	 */
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
 		if (!DEBUG) {
@@ -237,24 +244,23 @@ public class Controller extends Application {
 		event.setDragDetect(false);
 	}
 	
-	//TODO: check if it has left the upperBound of the tilePane so then it can be placed
-	//Also check if it has entered compared then do the compare. 
-	//TODO: Add String param so a placedPlant can be created if in the garden if in compare then get plant info
-	//TODO: Add String param for addImageView so view knows which image to use for making the ImageView
+	/**
+	 * Controls the release event. When drag starts in tilepane adds a new imageView of the same plant to the center pane 
+	 * @param event the mouseevent
+	 * @param name the name or key of the plant being released
+	 * @param startingInTile boolean to inform if drag started in tile pane
+	 * @author Arunima Dey
+	 */
 	public void release(MouseEvent event, String name, Boolean startingInTile) {
 		System.out.println("released");
 		Node n = (Node)event.getSource();
 		n.setMouseTransparent(false);
-//		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
-//		model.setY(model.getY() + event.getY());
 		if(startingInTile) {
 			view.setX(n.getLayoutX(),n);
 			view.setY(n.getLayoutY(),n);
-			view.addImageView(event.getSceneX(),event.getSceneY() , startingInTile, name);
+			view.addImageView(event.getSceneX(),event.getSceneY(), name);
 		}
 		
-		
-//		view.addImageView(model.getX(), model.getY(), true,name);
 		if(startingInTile) {
 			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
@@ -338,7 +344,10 @@ public class Controller extends Application {
 		 }
 	}
 	
-	//Used to set the initial budget in the garden design screen
+	/**
+	 * Gets the initial budget set by user to be displayed in garden design screen
+	 * @return the budget
+	 */
 	public int getBudget() {
 		return model.getBudget();
 	}

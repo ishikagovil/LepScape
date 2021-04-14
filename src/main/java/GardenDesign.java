@@ -30,6 +30,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+/**
+ * This class sets the main screen
+ * It allows user to make their garden based on set preferences and conditions
+ * @author Arunima Dey
+ *
+ */
 public class GardenDesign extends View{
 	public Controller ic;
 	public Navigation navi;
@@ -50,18 +56,20 @@ public class GardenDesign extends View{
 	HBox blPane;
 	Pane main;
 	
+	/**
+	 * Initializes an instance of GardenDesign
+	 * @param stage the Stage 
+	 * @param c the controller
+	 * @param manageView view manager that stores shared information
+	 */
 	public GardenDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage,c,manageView);
 		this.ic=c;
 		oblist = initializeHashMap();
 		vb = addVBox();
-//		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
 		main = addCanvas();
 		border.setCenter(main);
-//		Canvas canvas = new Canvas(main.getWidth(), main.getHeight());
-//		canvas.setStyle("-fx-background-color: PINK");
-//		main.getChildren().add(canvas);
 
 		tile = addTilePane();
 		border.setBottom(tile);
@@ -76,12 +84,13 @@ public class GardenDesign extends View{
 		border.setLeft(bd2);
 
 		showCompostBin();
-		
-//        gc = canvas.getGraphicsContext2D();	
-//        gc.drawImage(im, 0, 0, 50, 50);
-//        gc.drawImage(im, screenHeight, screenHeight, screenWidth, screenHeight);
 	}
 	
+	/**
+	 * Makes the canvas so the previously set garden outline can be displayed
+	 * Canvas then places inside a pane
+	 * @return the created pane
+	 */
 	public Pane addCanvas() {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
@@ -100,6 +109,11 @@ public class GardenDesign extends View{
 		return gardenDesign;
 	}
 	
+	/**
+	 * Makes the pane that holds all the ImageViews of the plants
+	 * Each of the imageView has handlers for different events
+	 * @return the created pane
+	 */
 	public TilePane addTilePane() {
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
@@ -130,6 +144,10 @@ public class GardenDesign extends View{
 		return tile;
 	}
 	
+	/**
+	 * Adds the pane that hols the lep count and the budget
+	 * Called from previous screen after user has set a budget
+	 */
 	public void  addBudgetLepPane() {
 		blPane = new HBox();
 		blPane.setSpacing(20);
@@ -157,6 +175,9 @@ public class GardenDesign extends View{
 		
 	}
 
+	/**
+	 * Everytime a plant is placed onto the garden the lep count and budget is updated
+	 */
 	public void updateBudgetandLep(int cost, int lepCount) {
 		border.getChildren().remove(border.getTop());
 		
@@ -182,7 +203,11 @@ public class GardenDesign extends View{
 		
 	}
 	
-	public void addImageView(double x, double y, boolean startingInTile, String key) {
+	/**
+	 * After a drag release a new imageview is created inside the center pane
+	 * This new imageView is a copy of the imageView that was dragged and can be dragged, cannot be used to create another imageView
+	 */
+	public void addImageView(double x, double y, String key) {
 		System.out.println("in the inner addImageView");
 		Image im = new Image(getClass().getResourceAsStream("/"+key+".jpg"));
 		ImageView iv2 = new ImageView(im);
@@ -222,6 +247,9 @@ public class GardenDesign extends View{
 
 	}
 	
+	/**
+	 * Makes the pane will display information about a given plant when it is clicked
+	 */
 	public void makeInfoPane(String name,String info) {
 		BorderPane info1 = new BorderPane();
 		info = fitInfo(info);
@@ -259,10 +287,14 @@ public class GardenDesign extends View{
 		border.setRight(info1);
 	}
 	
-	  
+	/**
+	 * Starts a new paragraph after a few characters so the information can bettre fit into the pane
+	 * @param info the information that will be changed
+	 * @return the changed string
+	 */
 	public String fitInfo(String info) {
 		StringBuilder sb = new StringBuilder(info);
-		for(int i = 20; i<info.length(); i+=20) {
+		for(int i = 20; i<info.length(); i+=30) {
 			if(info.charAt(i)==' ') {
 				sb.insert(i, "\n");
 			}
@@ -280,6 +312,11 @@ public class GardenDesign extends View{
 		return sb.toString();
 	}
 	
+	/**
+	 * Adds the navigation buttons to a pane. 
+	 * Back takes to the previous screen, next takes you to the next, learn more takes you to learn more page and save saves an image of the garden
+	 * @return the new pane 
+	 */
 	public VBox addVBox() {
 		VBox vb = new VBox();
 		vb.setStyle("-fx-background-color: GAINSBORO");
@@ -300,6 +337,9 @@ public class GardenDesign extends View{
 		
 	}
 	
+	/**
+	 * Saves an image of the garden when save button is pressed
+	 */
 	public void saveGardenImage() {
 		main.getChildren().remove(c);
 		
@@ -322,6 +362,10 @@ public class GardenDesign extends View{
 		main.getChildren().add(c);
 	}
 	
+	/**
+	 * Makes the compare pane where plants can be placed and compared 
+	 * @return the created pane
+	 */
 	public BorderPane addBorderPane() {
 		BorderPane border = new BorderPane();
 		border.setStyle("-fx-background-color: LIGHTBLUE");
@@ -341,6 +385,10 @@ public class GardenDesign extends View{
 		return border;
 	}
 	
+	/**
+	 * makes the pane that will display information of the plants in compare pane
+	 * @return the created pane
+	 */
 	public TilePane addTile() {
 		TilePane tile = new TilePane();
 		tile.setPrefColumns(2);
@@ -355,17 +403,22 @@ public class GardenDesign extends View{
 		return tile;
 	}
 	
+	/**
+	 * Makes the pane that plants are dragged into for the comparing
+	 * @param background the background color that is to be set for the pane
+	 * @return the created pane
+	 */
 	public StackPane addStackPane(String background) {
 		StackPane stack = new StackPane();
 		stack.setStyle("-fx-border-color:GREY; -fx-border-width:1px; "+background);
 		stack.setMinWidth(screenHeight/8);
-//		ImageView iv = new ImageView(im);
-//		iv.setPreserveRatio(true);
-//		iv.setFitHeight(100);
-//		stack.getChildren().add(iv);
 		return stack;
 	}
 	
+	/**
+	 * Makes an observable hashmap for all the images of the pants that go into the tile pane 
+	 * @return the created hashmap
+	 */
 	public ObservableMap<String,ImageView> initializeHashMap(){
 		oblist = FXCollections.observableHashMap();
 		manageView.plantImages.forEach((k,v)->{
@@ -382,6 +435,9 @@ public class GardenDesign extends View{
 		return oblist;
 	}
 	
+	/**
+	 * removed the copy of the plant imageView that is dragged over compost 
+	 */
 	public void removePlant(Node n) {
 		main.getChildren().remove(n);
 	}
@@ -389,10 +445,9 @@ public class GardenDesign extends View{
 	public void showPlantInfo(String plantInfo) {} //Shows plant information when clicked
 	public void showPlantGallery() {} //Shows plants based on conditions
 	
-	public Node compost() {
-		return this.c;
-	}
-	
+	/**
+	 * Adds a compost to the screen that is used to remove copies of plant imageViews
+	 */
 	public void showCompostBin() {
 		c.setPreserveRatio(true);
 		c.setFitHeight(75);
