@@ -1,5 +1,6 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -48,6 +49,7 @@ public class PlotDesign extends View{
         
         //Adding Back buttons
         drawSwitch.add(addNextButton("Back", "Start"));
+        drawSwitch.get(0).setPrefSize(100, 30);
         disableDrawing(drawSwitch.get(0));
         dimSwitch.add(new Button("Back"));
         setOnMouse(dimSwitch.get(0));
@@ -64,9 +66,12 @@ public class PlotDesign extends View{
         
         //Adding Clear buttons
         drawSwitch.add(addNextButton("Clear", "Clear"));
+        drawSwitch.get(1).setPrefSize(100, 30);
         Button undo = new Button("Undo");
         addNextButton("Undo", "ClearDim");
         dimSwitch.add(undo);
+        dimSwitch.get(0).setPrefSize(100, 30);
+        dimSwitch.get(1).setPrefSize(100, 30);
         dimSwitch.get(1).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
@@ -77,6 +82,7 @@ public class PlotDesign extends View{
         
         //Adding Save button
         drawSwitch.add(new Button("Save"));
+        drawSwitch.get(2).setPrefSize(100, 30);
         setOnMouse(drawSwitch.get(2));
         drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
@@ -133,6 +139,7 @@ public class PlotDesign extends View{
 			border.getChildren().remove(box);
 		box = new HBox();
 		box.setSpacing(10);
+		box.setPadding(new Insets(20));
 		box.setAlignment(Pos.TOP_CENTER);
 		box.getChildren().addAll(list);
 		border.setBottom(box);

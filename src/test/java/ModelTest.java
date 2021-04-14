@@ -72,7 +72,7 @@ class ModelTest {
 
 	@Test
 	void testPlacePlant() {
-		m.placePlant();
+		m.placePlant(x, x, null);
 		fail("Not yet implemented");
 	}
 

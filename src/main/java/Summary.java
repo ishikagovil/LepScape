@@ -1,9 +1,11 @@
+import java.io.File;
 import java.util.ArrayList;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,13 +21,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Summary extends View {
-	public Navigation navi;
-
 	public ArrayList <Button> b1;
+	public Controller ic;
 	
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
@@ -49,6 +51,11 @@ public class Summary extends View {
         b1.add(lep);
         Button download = new Button("Download");
         download.setPrefSize(100, 30);
+        download.setOnAction(e -> {
+        	FileChooser file = new FileChooser();
+        	file.setTitle("Download File");
+        	File file1 = file.showSaveDialog(stage);
+        });
         b1.add(download);
         b1.add(addNextButton("Create New Garden", "PlotDesign"));
         box.getChildren().addAll(b1);
@@ -87,11 +94,27 @@ public class Summary extends View {
        
        // get the total leps supported and cost 
        PlantSpecies p1 = new PlantSpecies();
+      /* Image lepPic = new Image(getClass().getResourceAsStream("/butterfly.png"));
+       ImageView lepView = new ImageView(lepPic);
+       lepView.setPreserveRatio(true);
+       lepView.setFitHeight(50);
+       Label lepCount = new Label("0");
+       lepCount.setTextAlignment(TextAlignment.LEFT);
+       lepCount.setFont(Font.font(null, FontWeight.BOLD, 20));
+       lepCount.setGraphic(lepView);
+       
+       Image cost = new Image(getClass().getResourceAsStream("/dollar.png"));
+       ImageView costView = new ImageView(cost);
+       costView.setPreserveRatio(true);
+       costView.setFitHeight(50);
+       Label costTotal = new Label("" + ic.getBudget());
+       costTotal.setGraphic(costView);
+       */
+       
        Text title = new Text("Summary");
        title.setFont(Font.font(null, FontWeight.BOLD, 30));
        title.setTextAlignment(TextAlignment.LEFT);
        Text lepCount = new Text("Number of leps supported: " + p1.getLepsSupported());
-       lepCount.setTextAlignment(TextAlignment.LEFT);
        Text totalCost = new Text("Total cost: " + p1.getCost());
        totalCost.setTextAlignment(TextAlignment.LEFT);
        
@@ -105,12 +128,7 @@ public class Summary extends View {
        
        Duration duration = Duration.minutes(2);
        TranslateTransition translation = new TranslateTransition(duration, iv1);
-       for (int i = 0; i < 30; i++) {
-    	   translation.setByX(100);
-    	   translation.setByY(100);
-    	   
-       }
-       //translation.setByX(100);
+       translation.setByX(100);
        translation.setAutoReverse(true);
        sp1.getChildren().add(iv1);
        translation.play();

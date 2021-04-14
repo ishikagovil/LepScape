@@ -38,10 +38,10 @@ public class Conditions {
 	}
 	public Color toColor() {
 		return new Color(
-				soilType.getValue(), 
-				(double) moistureLevel / 10., 
-				(double) sunlight / 10., 
-				1.0);
+			soilType.getValue(), 
+			(double) moistureLevel / 10., 
+			(double) sunlight / 10., 
+			1.0);
 
 	}
 }
