@@ -8,6 +8,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.Map;
+
 import javafx.application.Application;
 
 /**
@@ -31,6 +33,7 @@ public class Controller extends Application {
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
 		this.model.setPlantDirectory(CSVtoPlants.readFile(fileName));
+		this.model.setLepDirectory(CSVtoLeps.readFile(fileName));
 		this.stage = stage;
 	    view = new ManageViews(stage,this, fileName);
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
@@ -262,6 +265,10 @@ public class Controller extends Application {
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
 
+	}
+	
+	public Map<String, Lep> getLepInfo() {
+		return this.model.getLepDirectory();
 	}
 	
 	/** 

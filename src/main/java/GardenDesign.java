@@ -35,6 +35,7 @@ public class GardenDesign extends View{
 	public Navigation navi;
 	public Button compare;
 	public Button save;
+	Canvas canvas;
 	//Panes
 	public VBox vb = new VBox();
 	public BorderPane stack = new BorderPane();
@@ -44,7 +45,7 @@ public class GardenDesign extends View{
 	ObservableMap<String,ImageView> oblist;
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 	ImageView c = new ImageView(compost);
-	Image lep = new Image(getClass().getResourceAsStream("/butterfly.png"));
+	Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 	Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
 
 	Pane main;
@@ -56,10 +57,7 @@ public class GardenDesign extends View{
 		vb = addVBox();
 //		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
-		
-		main = new Pane();
-		main.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-		ImageView gardenShape = new ImageView(manageView.img);
+		main = addCanvas();
 		border.setCenter(main);
 //		Canvas canvas = new Canvas(main.getWidth(), main.getHeight());
 //		canvas.setStyle("-fx-background-color: PINK");
@@ -86,6 +84,24 @@ public class GardenDesign extends View{
 //        gc = canvas.getGraphicsContext2D();	
 //        gc.drawImage(im, 0, 0, 50, 50);
 //        gc.drawImage(im, screenHeight, screenHeight, screenWidth, screenHeight);
+	}
+	
+	public Pane addCanvas() {
+		Pane gardenDesign = new Pane();
+		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		canvas = new Canvas();
+		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		gc = canvas.getGraphicsContext2D();
+		gardenDesign.getChildren().add(canvas);
+		
+		canvas.widthProperty().bind(gardenDesign.widthProperty());
+		canvas.heightProperty().bind(gardenDesign.heightProperty());
+		
+		canvas.widthProperty().addListener(e -> manageView.redrawImage());
+		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+		
+		
+		return gardenDesign;
 	}
 	
 	public TilePane addTilePane() {
@@ -252,11 +268,38 @@ public class GardenDesign extends View{
 		vb.setMaxWidth(screenHeight/9);
 		vb.setAlignment(Pos.CENTER);;
 		Button[] buttons = new Button[] {
-			new Button("Settings"), addNextButton("Learn More", "LearnMore"), new Button("Save"), new Button("Clear"),addNextButton("Next","Summary")
+			addNextButton("Back","ConditionScreen"), addNextButton("Learn More", "LearnMore"), new Button("Clear"),addNextButton("Next","Summary")
 		};
 		vb.getChildren().addAll(buttons);
+		Button save = new Button("Save");
+		save.setOnAction(e->{
+			saveGardenImage();
+		});
+		vb.getChildren().add(save);
 		return vb;
 		
+	}
+	
+	public void saveGardenImage() {
+		main.getChildren().remove(c);
+		
+		this.manageView.setImage(canvas.snapshot(null, null));
+		
+		c.setPreserveRatio(true);
+		c.setFitHeight(75);
+
+		c.setTranslateX(screenWidth/110);
+
+		c.setTranslateY((screenHeight-200)/2);
+		c.setOnMouseExited(event->{
+			c.setFitHeight(75);
+		});
+		c.setOnMouseEntered(event->{
+			c.setFitHeight(85);
+			
+		});
+
+		main.getChildren().add(c);
 	}
 	
 	public BorderPane addBorderPane() {

@@ -39,6 +39,10 @@ public class Model {
 	public void setPlantDirectory(Map<String, PlantSpecies> plantdir) {
 		this.plantDirectory = plantdir;
 	}
+	
+	public void setLepDirectory(Map<String, Lep> lepdir) {
+		this.lepDirectory = lepdir;
+	}
 	// create a new condition for the garden
 	public void createNewConditions() {}
 	
@@ -71,6 +75,10 @@ public class Model {
 	}
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
+
+	public Map<String, Lep> getLepDirectory() {
+		return this.lepDirectory;
+	}
 	
 	public void initializePlantDirectory() {
 

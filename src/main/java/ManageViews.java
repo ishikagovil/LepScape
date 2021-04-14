@@ -58,6 +58,7 @@ public class ManageViews {
 	    views.put("Summary", new Summary(stage,controller,this));
 	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
 	    views.put("LearnMore", new LearnMore(stage,controller,this));
+	    views.put("Lepedia", new Lepedia(stage,controller,this));
 	}
 	
 	/** 
