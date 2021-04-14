@@ -63,17 +63,15 @@ public class Summary extends View {
         // add buttons of navigation on the upper right corner
         ArrayList <Button> buttons = new ArrayList<Button>();
         // need to use Navigation button instead
-        Button saved =  new Button("Saved");
-        saved.setPrefSize(100, 30);
-        Button settings = new Button("Settings");
-        settings.setPrefSize(100, 30);
+        buttons.add(addNextButton("Gallery", "Gallery"));
+        buttons.add(addNextButton("Back", "GardenDesign"));
+        buttons.get(0).setPrefSize(100, 30);
+        buttons.get(1).setPrefSize(100, 30);
         Button suggested = new Button("Suggested");
         suggested.setPrefSize(100, 30);
+        buttons.add(suggested);
         Button learnMore = new Button("Learn More");
         learnMore.setPrefSize(100, 30);
-        buttons.add(saved);
-        buttons.add(settings);
-        buttons.add(suggested);
         buttons.add(learnMore);
         vb1.getChildren().addAll(buttons);
         vb1.setAlignment(Pos.TOP_RIGHT);
@@ -89,7 +87,6 @@ public class Summary extends View {
        
        // get the total leps supported and cost 
        PlantSpecies p1 = new PlantSpecies();
-      // VBox vb2 = new VBox();
        Text title = new Text("Summary");
        title.setFont(Font.font(null, FontWeight.BOLD, 30));
        title.setTextAlignment(TextAlignment.LEFT);
@@ -97,30 +94,32 @@ public class Summary extends View {
        lepCount.setTextAlignment(TextAlignment.LEFT);
        Text totalCost = new Text("Total cost: " + p1.getCost());
        totalCost.setTextAlignment(TextAlignment.LEFT);
-       /*vb2.setAlignment(Pos.TOP_LEFT);
-       vb2.setStyle("-fx-background-color: lavender");
-       vb2.setPadding(new Insets(20));
-       vb2.getChildren().addAll(title, lepCount, totalCost);
-       border.setRight(vb2);
-       */
        
        // load butterfly animation
        ImageView iv1 = new ImageView();
        Image butterfly = new Image(getClass().getResourceAsStream("/butterfly.png"));
+      // Image flapping = new Image(getClass().getResourceAsStream("/flapping.png"));
        iv1.setImage(butterfly);
        iv1.setPreserveRatio(true);
        iv1.setFitHeight(30);
        
-       Duration duration = Duration.millis(2500);
+       Duration duration = Duration.minutes(2);
        TranslateTransition translation = new TranslateTransition(duration, iv1);
-       translation.setByX(100);
-       translation.setByY(100);
+       for (int i = 0; i < 30; i++) {
+    	   translation.setByX(100);
+    	   translation.setByY(100);
+    	   
+       }
+       //translation.setByX(100);
+       translation.setAutoReverse(true);
+       sp1.getChildren().add(iv1);
+       translation.play();
        
        TilePane tp1 = new TilePane();
        tp1.setPadding(new Insets(10));
        tp1.setStyle("-fx-background-color: lavender");
        tp1.setAlignment(Pos.TOP_LEFT);
-       tp1.getChildren().addAll(title, lepCount, totalCost, iv1);
+       tp1.getChildren().addAll(title, lepCount, totalCost);
        border.setRight(tp1);
     }
 	
