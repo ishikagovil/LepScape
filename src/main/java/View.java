@@ -29,7 +29,6 @@ public abstract class View{
 	
 	public void setX(double x, Node n) {
 		n.setTranslateX(x);
-//		n.setTranslateX(n.getLayoutX() + x);x
 	}
 	public BorderPane getBorderPane() {
 		return border;
