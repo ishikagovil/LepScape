@@ -18,7 +18,7 @@ import javafx.application.Application;
 public class Controller extends Application {
 	private final boolean DEBUG = true;
 	ManageViews view;
-	String fileName = "../resources/testdata.csv";
+	String fileName = "src/main/resources/testdata.csv";
 	Model model;
 	Stage stage;
 	double x1;
@@ -215,7 +215,7 @@ public class Controller extends Application {
 		view.setY(n.getLayoutY(),n);
 		view.addImageView(event.getSceneX(),event.getSceneY() , DEBUG, name);
 		
-//		view.addImageView(model.getX(), model.getY(), true);
+		view.addImageView(model.getX(), model.getY(), true,name);
 		if(startingInTile) {
 			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());

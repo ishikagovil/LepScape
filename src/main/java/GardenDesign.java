@@ -47,7 +47,7 @@ public class GardenDesign extends View{
 	ImageView c = new ImageView(compost);
 	Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 	Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
-
+	HBox blPane;
 	Pane main;
 	
 	public GardenDesign(Stage stage, Controller c, ManageViews manageView) {
@@ -67,10 +67,6 @@ public class GardenDesign extends View{
 		border.setBottom(tile);
 		comparePane = addBorderPane();
 		
-		HBox blPane = addBudgetLepPane();
-		blPane.setAlignment(Pos.CENTER);
-		border.setTop(blPane);
-		border.setAlignment(blPane, Pos.CENTER);
 		BorderPane bd2= new BorderPane();
 		bd2.setTop(vb);
 		bd2.setAlignment(bd2, Pos.TOP_LEFT);
@@ -134,9 +130,9 @@ public class GardenDesign extends View{
 		return tile;
 	}
 	
-	public HBox  addBudgetLepPane() {
-		HBox budgetLepPane = new HBox();
-		budgetLepPane.setSpacing(20);
+	public void  addBudgetLepPane() {
+		blPane = new HBox();
+		blPane.setSpacing(20);
 		
 		ImageView lepIv= new ImageView(lep);
 		lepIv.setPreserveRatio(true);
@@ -151,10 +147,13 @@ public class GardenDesign extends View{
 		lepCount.setGraphic(lepIv);
 		budgetCount.setGraphic(budget);
 		
-		budgetLepPane.getChildren().add(lepCount);
-		budgetLepPane.getChildren().add(budgetCount);
+		blPane.getChildren().add(lepCount);
+		blPane.getChildren().add(budgetCount);
 		
-		return budgetLepPane;
+		blPane.setAlignment(Pos.CENTER);
+		border.setTop(blPane);
+		border.setAlignment(blPane, Pos.CENTER);
+
 		
 	}
 
@@ -185,7 +184,7 @@ public class GardenDesign extends View{
 	
 	public void addImageView(double x, double y, boolean startingInTile, String key) {
 		System.out.println("in the inner addImageView");
-		Image im = new Image(getClass().getResourceAsStream("/"+key+".png"));
+		Image im = new Image(getClass().getResourceAsStream("/"+key+".jpg"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
 		iv2.setFitHeight(100);
@@ -259,6 +258,28 @@ public class GardenDesign extends View{
 		
 		border.setRight(info1);
 	}
+	
+	  
+//	public String fitInfo(String info) {
+//		StringBuilder sb = new StringBuilder(info);
+//		for(int i = 20; i<info.length(); i+=20) {
+//			if(info.charAt(i)==' ') {
+//				sb.insert(i, "\n");
+//			}
+//			else {
+//				for(int j = i; j<info.length(); j++) {
+//					if(info.charAt(j)==' ') {
+//						sb.insert(j, "\n");
+//						i = j;
+//						break;
+//					}
+//				}
+//			}
+//			sb.insert(i, "\n");
+//		}
+	//	
+//		return sb.toString();
+	//}
 	
 	public VBox addVBox() {
 		VBox vb = new VBox();
@@ -348,18 +369,17 @@ public class GardenDesign extends View{
 	
 	public ObservableMap<String,ImageView> initializeHashMap(){
 		oblist = FXCollections.observableHashMap();
-		Image im = new Image(getClass().getResourceAsStream("/commonMilkweed.png"));
-		ImageView iv1 = new ImageView(im);
-		iv1.setPreserveRatio(true);
-		iv1.setFitHeight(100);
-		oblist.put("commonMilkweed", iv1);
-		
-		Image im1 = new Image(getClass().getResourceAsStream("/pine.png"));
-		ImageView iv2 = new ImageView(im1);
-		iv2.setPreserveRatio(true);
-		iv2.setFitHeight(100);
-		oblist.put("pine", iv2);
-		
+		manageView.plantImages.forEach((k,v)->{
+			if(getClass().getResourceAsStream("/"+k+".jpg")!=null) {
+				System.out.println(k);
+				Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
+				ImageView iv1 = new ImageView(im);
+				iv1.setPreserveRatio(true);
+				iv1.setFitHeight(100);
+				oblist.put(k, iv1);
+				
+			}
+		});
 		return oblist;
 	}
 	

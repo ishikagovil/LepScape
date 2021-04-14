@@ -51,6 +51,8 @@ public class ConditionScreen extends View {
 		
 		Button next = new Button("Next");
 		next.setOnAction((e) -> {
+			GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
+			gd.addBudgetLepPane();
 			controller.switchViews("GardenDesign");
 		});
 		

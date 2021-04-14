@@ -32,12 +32,12 @@ public class ManageViews {
 	 * @author Ishika Govil
 	 */
 	public ManageViews(Stage stage, Controller c, String fileName) {
+		importImages(fileName);
 		dimLen = new ArrayList<>();
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-	    this.currView = this.getView("Gallery");
-		importImages(fileName);
+	    this.currView = this.getView("Start");
 	}
 
 	public void importImages(String fileName) {
