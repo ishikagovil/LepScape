@@ -7,18 +7,14 @@ public class Model {
 	public Map<String, Lep> lepDirectory;
 
 	public double lengthPerPixel;
-<<<<<<< HEAD
+
+	public double x;
+	public double y;
+	public int lepCount;
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh
 	 */
-	
-=======
-	public double x;
-	public double y;
-	public int lepCount;
-
->>>>>>> gardenDesignScreen
 	public Model() {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
@@ -105,16 +101,11 @@ public class Model {
 	public double getY() {
 		return this.y;
 	}
-<<<<<<< HEAD
 	
 	/**
 	 * Returns the length per pixel
 	 * @return double representing length (ft) per pixel
 	 */
-=======
-
-
->>>>>>> gardenDesignScreen
 	public double getLengthPerPixel() {
 		return this.lengthPerPixel;
 	}
