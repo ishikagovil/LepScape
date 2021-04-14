@@ -28,6 +28,7 @@ public class Controller extends Application {
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
 		this.model.setPlantDirectory(CSVtoPlants.readFile(fileName));
+		this.model.setLepDirectory(CSVtoLeps.readFile(fileName));
 		this.stage = stage;
 	    view = new ManageViews(stage,this, fileName);
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
