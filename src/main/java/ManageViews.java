@@ -142,7 +142,11 @@ public class ManageViews {
 	public void onChangeCursor(boolean hand) {
 		this.currView.changeCursor(hand);
 	}
-	
+	public void restartPlot() {
+		initializeViews();
+		this.dimLen = new ArrayList<>(); 
+		this.currView = this.views.get("PlotDesign");
+	}
 	public void setY(double y, Node n){currView.setY(y, n);}
 	public void setX(double x, Node n){currView.setX(x, n);}
 	//Used only in gardenDesig. In here because need to called by controller

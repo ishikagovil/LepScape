@@ -57,7 +57,7 @@ public class Summary extends View {
         	File file1 = file.showSaveDialog(stage);
         });
         b1.add(download);
-        b1.add(addNextButton("Create New Garden", "PlotDesign"));
+        b1.add(addNextButton("Create New Garden", "Restart"));
         box.getChildren().addAll(b1);
         
         // make a vertical box pane for the navigation button

@@ -287,7 +287,13 @@ public class Controller extends Application {
 		 else if(next.equals("ClearDim")) {
 			 this.view.getGC().drawImage(this.view.img, 0, 0);  
 			 this.view.dimLen = new ArrayList<>();
-		 } else {
+		 } 
+		 else if(next.equals("Restart")) {
+			 this.model.getGarden().outline = new ArrayList<double[]>(); 
+			 this.view.restartPlot();
+			 setTheStage();
+		 }
+		 else {
 			 this.view.switchViews(next);
 			 setTheStage();
 		 }
