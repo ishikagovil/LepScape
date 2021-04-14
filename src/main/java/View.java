@@ -42,17 +42,9 @@ public abstract class View{
 	}
 
 	public void setY(double y, Node n) {
-<<<<<<< HEAD
-		n.setTranslateY(n.getLayoutY() + y);
-	};
-
-=======
 		n.setTranslateY(y);
-//		n.setTranslateY(n.getLayoutY() + y);
 	}
-	
-	public void importImages() {}
->>>>>>> gardenDesignScreen
+
 	public void changeCursor(boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
 		//https://blog.idrsolutions.com/2014/05/tutorial-change-default-cursor-javafx/ 
 		if(hand)
