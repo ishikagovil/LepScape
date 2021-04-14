@@ -96,14 +96,6 @@ public class Controller extends Application {
 		return (e) -> {  drag(e); };
 	}
 	
-	/** 
-	 * Calls drag when mouse is released
-	 * @return EventHandler<MouseEvent>
-	 * @author Ishika Govil 
-	 */
-	public EventHandler<MouseEvent> getHandlerforReleased() {
-		return (e) -> { release(e);  };
-	}
 	
 	/** 
 	 * Calls drag when mouse is dragged, specifically when user is drawing
@@ -116,8 +108,7 @@ public class Controller extends Application {
 	}
 	
 	/** 
-	 * Calls drag when mouse is dragged, specifically when user is setting dimensions
-	 * @param boolean describing whether mouse is pressed for the first time
+	 * Calls drag when mouse is released
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
@@ -125,6 +116,12 @@ public class Controller extends Application {
 		return (e) -> { release(e,key,startingInTile);  };
 	}
 	
+	/** 
+	 * Calls drag when mouse is dragged, specifically when user is setting dimensions
+	 * @param boolean describing whether mouse is pressed for the first time
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
