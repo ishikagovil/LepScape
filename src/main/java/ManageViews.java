@@ -147,13 +147,15 @@ public class ManageViews {
 		this.dimLen = new ArrayList<>(); 
 		this.currView = this.views.get("PlotDesign");
 	}
+	
+	//methods only used by garden design
 	public void setY(double y, Node n){currView.setY(y, n);}
 	public void setX(double x, Node n){currView.setX(x, n);}
-	//Used only in gardenDesig. In here because need to called by controller
-	public void addImageView(double x, double y, boolean startingInTile, String key) {currView.addImageView(x, y, startingInTile, key);}
+	public void addImageView(double x, double y, String key) {currView.addImageView(x, y, key);}
 	public void removePlant(Node n) {currView.removePlant(n);}
 	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
 	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
+	
 	public void fillRegion(int startX, int startY, Color fillColor) {
 		// Inspired by the flood fill example https://stackoverflow.com/questions/23983465/is-there-a-fill-function-for-arbitrary-shapes-in-javafx
 		PixelReader pr = this.img.getPixelReader();

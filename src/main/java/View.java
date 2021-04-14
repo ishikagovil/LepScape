@@ -25,8 +25,6 @@ public abstract class View{
 		this.stage.setTitle("Lepscape");
 	}	
 	
-
-	
 	public void setX(double x, Node n) {
 		n.setTranslateX(x);
 	}
@@ -67,9 +65,7 @@ public abstract class View{
 	}
 
 	//Used only in gardenDesig. In here because need to called by controller
-	public void addImageView(double x, double y, boolean startingInTile, String key) {
-		System.out.println("in outer addImageView");
-	}
+	public void addImageView(double x, double y, String key) {}
 	public void removePlant(Node n) {}
 	public void makeInfoPane(String name, String info) {}
 	public void updateBudgetandLep(int cost, int lepCount) {}

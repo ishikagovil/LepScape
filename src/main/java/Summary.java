@@ -29,12 +29,17 @@ import javafx.util.Duration;
 public class Summary extends View {
 	public ArrayList <Button> b1;
 	public Controller ic;
+<<<<<<< HEAD
 	Pane p1 = new Pane();
+=======
+	Pane main;
+>>>>>>> cbaa58ce31ecc9e9f58d8bed607242f5da8f4dd8
 	Canvas canvas;
 	
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
 		super(stage, c, manageView);
+<<<<<<< HEAD
 		this.ic = c;
 		//Canvas canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
@@ -42,6 +47,11 @@ public class Summary extends View {
 		border.setCenter(p1);
 		//border.getChildren().add(canvas);
 
+=======
+		border = new BorderPane();
+		
+		
+>>>>>>> cbaa58ce31ecc9e9f58d8bed607242f5da8f4dd8
         // set up a Horizon Box pane for the bottom of the page
         HBox box = new HBox();
         box.setStyle("-fx-background-color: steelblue");
@@ -52,9 +62,10 @@ public class Summary extends View {
                 
         // make buttons for Lepedia, Download and Create New Garden
         b1 = new ArrayList <Button>();
-        Button lep = new Button("Lepedia");
-        lep.setPrefSize(100, 30);
-        b1.add(lep);
+        //Button lep = new Button("Lepedia");
+        //lep.setPrefSize(100, 30);
+        //b1.add(lep);
+        b1.add(addNextButton("Lepedia", "Lepedia"));
         Button download = new Button("Download");
         download.setPrefSize(100, 30);
         download.setOnAction(e -> {
@@ -145,7 +156,13 @@ public class Summary extends View {
        tp1.setAlignment(Pos.TOP_LEFT);
        tp1.getChildren().addAll(title, lepCount, totalCost);
        border.setRight(tp1);
+       
+       //Add garden view
+       main = addCanvas();
+       border.setCenter(main);
+       border.setCenter(main);
     }
+<<<<<<< HEAD
 	public void render() {}
 	
 	public Pane canvasPane() {
@@ -165,3 +182,28 @@ public class Summary extends View {
 	}
 	
 }
+=======
+/**
+ * Makes the canvas so the previously set garden outline can be displayed
+ * Canvas then places inside a pane
+ * @return the created pane
+ */
+	public Pane addCanvas() {
+		Pane gardenDesign = new Pane();
+		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		canvas = new Canvas();
+		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		gc = canvas.getGraphicsContext2D();
+		gardenDesign.getChildren().add(canvas);
+	
+		canvas.widthProperty().bind(gardenDesign.widthProperty());
+		canvas.heightProperty().bind(gardenDesign.heightProperty());
+	
+		canvas.widthProperty().addListener(e -> manageView.redrawImage());
+		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+	
+	
+		return gardenDesign;
+	}
+}
+>>>>>>> cbaa58ce31ecc9e9f58d8bed607242f5da8f4dd8

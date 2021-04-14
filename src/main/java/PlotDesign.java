@@ -109,6 +109,10 @@ public class PlotDesign extends View{
 	public void onSettingDimensions() {
 		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
         border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
+        border.setOnMouseReleased(event -> {
+        	border.setOnMousePressed(null);
+		    border.setOnMouseDragged(null);
+		});	
 		createHBox(dimSwitch);
 		label = new Label(" Setting Dimensions! \n Draw a line from any two points in your plot and input its dimension");
 	    label.setStyle("-fx-font: 18 arial;");
