@@ -46,9 +46,10 @@ public class Summary extends View {
                 
         // make buttons for Lepedia, Download and Create New Garden
         b1 = new ArrayList <Button>();
-        Button lep = new Button("Lepedia");
-        lep.setPrefSize(100, 30);
-        b1.add(lep);
+        //Button lep = new Button("Lepedia");
+        //lep.setPrefSize(100, 30);
+        //b1.add(lep);
+        b1.add(addNextButton("Lepedia", "Lepedia"));
         Button download = new Button("Download");
         download.setPrefSize(100, 30);
         download.setOnAction(e -> {

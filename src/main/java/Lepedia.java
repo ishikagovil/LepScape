@@ -3,6 +3,7 @@ import java.util.Map;
 
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
@@ -13,17 +14,19 @@ public class Lepedia extends View {
 
 	public Lepedia(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
-		BorderPane border = new BorderPane();
+		border = new BorderPane();
 		Label lepTitle = new Label("Lepedia");
 		lepTitle.setFont(new Font("Arial", 24));
 		border.setTop(lepTitle);
 		border.setAlignment(lepTitle, Pos.CENTER);
+		Button back = addNextButton("Back", "Summary");
+		border.setBottom(back);
 		
 	    TilePane outerTile = new TilePane(Orientation.VERTICAL);
 	    outerTile.setTileAlignment(Pos.CENTER_LEFT);
 	    outerTile.setPrefRows(5);
 	    outerTile.setPrefColumns(1);
-	    
+	   
 	    border.setCenter(outerTile);
 	    Map<String, Lep> info = c.getLepInfo();
 	    Iterator lepIter = info.entrySet().iterator();
