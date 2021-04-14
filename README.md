@@ -22,9 +22,9 @@
 - Completed Lepedia and Learn More pages
 
 # UML Diagrams
-![alt text](https://github.com/CISC275-S2021/project-team-11-1/src/main/resources/classUML.png?raw=true)
+![Class UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/classUML.jpg?raw=true)
 
-![alt text](https://github.com/CISC275-S2021/project-team-11-1/src/main/resources/dragNDropSeqUML.png?raw=true)
+![Drag-n-Drop UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/dragNDropSeqUML.jpg?raw=true)
 
-![alt text](https://github.com/CISC275-S2021/project-team-11-1/src/main/resources/sectioningGardenSeqUML.png?raw=true)
+![Drawing plot UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/sectioningGardenSeqUML.jpg?raw=true)
 

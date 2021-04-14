@@ -18,6 +18,8 @@ public class Controller extends Application {
 	String fileName = "../resources/testdata.csv";
 	Model model;
 	Stage stage;
+	double x1;
+	double y1;
 	
 	/** 
 	 * Override for the Application start method. Instantiates all fields
@@ -35,6 +37,7 @@ public class Controller extends Application {
 	    this.stage.setScene(scene);
 	    setTheStage();
 	}
+
 	/** 
 	 * Sets the border pane to the scene and shows the stage
 	 * @author Ishika Govil 
@@ -75,8 +78,16 @@ public class Controller extends Application {
 	 */
 	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
 		return (e) -> { view.onChangeCursor(false);  };
+
 	}
 	
+	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
+		return null;
+	}
+	
+	public EventHandler<MouseEvent> getHandlerforPressed(String key){
+		return (e) -> { pressed(e,key); };
+	}
 	/** 
 	 * Calls drag when mouse is dragged
 	 * @return EventHandler<MouseEvent>
@@ -86,14 +97,6 @@ public class Controller extends Application {
 		return (e) -> {  drag(e); };
 	}
 	
-	/** 
-	 * Calls drag when mouse is released
-	 * @return EventHandler<MouseEvent>
-	 * @author Ishika Govil 
-	 */
-	public EventHandler<MouseEvent> getHandlerforReleased() {
-		return (e) -> { release(e);  };
-	}
 	
 	/** 
 	 * Calls drag when mouse is dragged, specifically when user is drawing
@@ -106,6 +109,15 @@ public class Controller extends Application {
 	}
 	
 	/** 
+	 * Calls drag when mouse is released
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
+	public EventHandler<MouseEvent> getHandlerforReleased(String key, Boolean startingInTile) {
+		return (e) -> { release(e,key,startingInTile);  };
+	}
+	
+	/** 
 	 * Calls drag when mouse is dragged, specifically when user is setting dimensions
 	 * @param boolean describing whether mouse is pressed for the first time
 	 * @return EventHandler<MouseEvent>
@@ -114,21 +126,63 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
-	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
-		return null;
+
+
+	
+	public void draggedOver(MouseEvent event, Boolean startedInTile) {
+		Node n = (Node) event.getSource();
+		System.out.println("in thr draggedOver method");
+		if(!startedInTile) {
+			view.removePlant(n);
+		}
+
+	}
+	
+	public void pressed(MouseEvent event, String key) {
+		Node n = (Node) event.getSource();
+		n.setMouseTransparent(true);
+		System.out.println("Clicked");
+		if(key!=null) {
+			String name = model.plantDirectory.get(key).getCommonName();
+			String description = model.plantDirectory.get(key).getDescription();
+			view.makeInfoPane(name,description);
+		}
+		event.setDragDetect(true);
+		
 	}
 	
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
-		if (DEBUG) System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
-		
-		//model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
-		//model.setY(model.getY() + event.getY());
-		//view.setX( model.getX(),n);
-		//view.setY( model.getY(),n);
+		if (!DEBUG) {
+			System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
+			System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
+		}
+		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
+		model.setY(model.getY() + event.getY());
+		view.setX(model.getX(),n);
+		view.setY(model.getY(),n);
+		event.setDragDetect(false);
 	}
-	public void release(MouseEvent event) {
+	
+	//TODO: check if it has left the upperBound of the tilePane so then it can be placed
+	//Also check if it has entered compared then do the compare. 
+	//TODO: Add String param so a placedPlant can be created if in the garden if in compare then get plant info
+	//TODO: Add String param for addImageView so view knows which image to use for making the ImageView
+	public void release(MouseEvent event, String name, Boolean startingInTile) {
+		System.out.println("released");
+		Node n = (Node)event.getSource();
+		n.setMouseTransparent(false);
+//		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
+//		model.setY(model.getY() + event.getY());
+		view.setX(n.getLayoutX(),n);
+		view.setY(n.getLayoutY(),n);
+		view.addImageView(event.getSceneX(),event.getSceneY() , DEBUG, name);
 		
+//		view.addImageView(model.getX(), model.getY(), true);
+		if(startingInTile) {
+			model.placePlant(model.getX(), model.getY(), name);
+			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+		}
 	}
 	
 	/** 
@@ -173,6 +227,7 @@ public class Controller extends Application {
 	 */
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
+
 	}
 	
 	/** 
@@ -197,6 +252,12 @@ public class Controller extends Application {
 			 setTheStage();
 		 }
 	}
+	
+	//Used to set the initial budget in the garden design screen
+	public int getBudget() {
+		return model.getBudget();
+	}
+
 	
 	//Methods used when user is designing new plot and inputting conditions
 	public void onSectioning() {} //Called in drag(), model calls updateOutlineSection and view is updated 

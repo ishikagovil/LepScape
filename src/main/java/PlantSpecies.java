@@ -49,7 +49,7 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	}
 
 	public String getCommonName() {
-		return commonName;
+		return this.commonName;
 	}
 
 	public void setCommonName(String commonName) {
@@ -57,7 +57,7 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -104,4 +104,7 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 		this.isWoody = isWoody;
 	}
 
+	public String toString() {
+		return this.commonName;
+	}
 }
