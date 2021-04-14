@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ConditionScreen extends View {
@@ -81,10 +82,10 @@ public class ConditionScreen extends View {
 	
 	private Node createSliders() {
 		HBox sliders = new HBox(16);
-		Slider moistureSlider = new Slider(0, 10, 0);
-		Slider sunlightSlider = new Slider(0, 10, 0);
-		setupConditionSlider(sunlightSlider);
-		setupConditionSlider(moistureSlider);
+		Slider moistureSlider = createConditionSlider();
+		Label moistureLabel = new Label("Moisture");
+		Slider sunlightSlider = createConditionSlider();
+		Label sunlightLabel = new Label("Sunlight");
 		
 		sunlightSlider.valueProperty().addListener((ov, oldVal, newVal) -> {
 			controller.updateConditionSlider((int) moistureSlider.getValue(), (int) sunlightSlider.getValue());
@@ -93,21 +94,24 @@ public class ConditionScreen extends View {
 			controller.updateConditionSlider((int) moistureSlider.getValue(), (int) sunlightSlider.getValue());
 		});
 		
-		sliders.getChildren().addAll(moistureSlider, sunlightSlider);
+		sliders.getChildren().addAll(moistureLabel, moistureSlider, sunlightLabel, sunlightSlider);
 		
 		return sliders;
 	}
 	
-	private void setupConditionSlider(Slider slider) {
+	private Slider createConditionSlider() {
+		Slider slider = new Slider(0, 10, 0);
 		slider.setOrientation(Orientation.VERTICAL);
 		slider.setShowTickLabels(true);
 		slider.setShowTickLabels(true);
 		slider.setMajorTickUnit(1);
 		slider.setSnapToTicks(true);
+		
+		return slider;
 	}
 	
 	private Node createSoilButtons() {
-		HBox buttonBox = new HBox();
+		HBox buttonBox = new HBox(4);
 		for(SoilType type : SoilType.values()) {
 			Button soilButton = new Button(type.toString());
 			soilButton.setOnAction(controller.getConditionsSoilHandler(type));
