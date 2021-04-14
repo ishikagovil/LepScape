@@ -32,7 +32,6 @@ public class ManageViews {
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-<<<<<<< HEAD
 	    this.currView = this.getView("Start");
 		importImages(fileName);
 	}
@@ -40,9 +39,6 @@ public class ManageViews {
 	public void importImages(String fileName) {
 		plantImages = new HashMap<>();
 		plantImages = CSVtoPlants.readFileForImg(fileName);
-=======
-	    this.currView = this.getView("GardenDesign");
->>>>>>> gardenDesignScreen
 	}
 	
 	/**
