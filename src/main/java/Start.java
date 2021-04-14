@@ -2,6 +2,8 @@ import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.*;
 
@@ -24,9 +26,17 @@ public class Start extends View {
 		border = new BorderPane();
 		border.getChildren().add(canvas);
         border.setStyle("-fx-background-color: #94DF86");
+
+        VBox titleBox = new VBox(12);
+        border.setCenter(titleBox);
+        titleBox.setAlignment(Pos.CENTER);
+        Text title = new Text("LepScape");
+        title.setFont(new Font(32));
+
         HBox box = new HBox();
         box.setSpacing(15);
-        border.setCenter(box);
+
+        titleBox.getChildren().addAll(title, box);
  
         //Populate button array
 		buttons = new ArrayList<Button>();
