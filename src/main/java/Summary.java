@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -28,14 +29,15 @@ import javafx.util.Duration;
 public class Summary extends View {
 	public ArrayList <Button> b1;
 	public Controller ic;
+	Pane main;
+	Canvas canvas;
 	
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
 		super(stage, c, manageView);
-		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
-		border.getChildren().add(canvas);
-
+		
+		
         // set up a Horizon Box pane for the bottom of the page
         HBox box = new HBox();
         box.setStyle("-fx-background-color: steelblue");
@@ -140,6 +142,32 @@ public class Summary extends View {
        tp1.setAlignment(Pos.TOP_LEFT);
        tp1.getChildren().addAll(title, lepCount, totalCost);
        border.setRight(tp1);
+       
+       //Add garden view
+       main = addCanvas();
+       border.setCenter(main);
+       border.setCenter(main);
     }
-	public void render() {}
+/**
+ * Makes the canvas so the previously set garden outline can be displayed
+ * Canvas then places inside a pane
+ * @return the created pane
+ */
+	public Pane addCanvas() {
+		Pane gardenDesign = new Pane();
+		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		canvas = new Canvas();
+		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		gc = canvas.getGraphicsContext2D();
+		gardenDesign.getChildren().add(canvas);
+	
+		canvas.widthProperty().bind(gardenDesign.widthProperty());
+		canvas.heightProperty().bind(gardenDesign.heightProperty());
+	
+		canvas.widthProperty().addListener(e -> manageView.redrawImage());
+		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+	
+	
+		return gardenDesign;
+	}
 }

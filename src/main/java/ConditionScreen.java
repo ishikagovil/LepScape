@@ -37,7 +37,6 @@ public class ConditionScreen extends View {
 	    border.setCenter(createCanvasPane());
 		border.setRight(createSidebar());
 		
-        //gc.restore(); //possible to pass the gc from PlotDesign and restore the drawing
 	}
 	
 	/**
