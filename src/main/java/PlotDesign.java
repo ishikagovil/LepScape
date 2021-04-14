@@ -15,7 +15,11 @@ public class PlotDesign extends View{
 	ArrayList<Button> dimSwitch;
 	Label label;
 	HBox box;
+<<<<<<< HEAD
 	WritableImage img; 
+=======
+	WritableImage img = new WritableImage(200,200);
+>>>>>>> gardenDesignScreen
 	GridPane grid;
 
 	/**
@@ -83,6 +87,7 @@ public class PlotDesign extends View{
             public void handle(ActionEvent e) {
             	//https://stackoverflow.com/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
             	img = canvas.snapshot(null, null);
+            
             	manageView.setImage(img);
             	onSettingDimensions();
             }
@@ -114,7 +119,7 @@ public class PlotDesign extends View{
 	            dimension.setPromptText("Enter dimension (ft)");
 	            border.setOnMousePressed(null);
 	            border.setOnMouseDragged(null);
-	            controller.switchViews("ConditionScreen");
+	            controller.switchViews("GardenDesign");
 	          }
 	    });	
 	    grid = new GridPane();

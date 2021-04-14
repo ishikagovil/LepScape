@@ -79,6 +79,13 @@ public class Garden {
 		return this.compostBin;
 	}
 	
+<<<<<<< HEAD
+=======
+	public void addToGarden(PlacedPlant plant) {
+		plants.add(plant);
+	}
+	
+>>>>>>> gardenDesignScreen
 	/**
 	 * Called when user is drawing to update the boundary outline ArrayList
 	 * @param double x representing x coordinate
@@ -88,5 +95,12 @@ public class Garden {
 		double[] arr = {x,y};
 		this.outline.add(arr);
 	}
+
+	public void clearOutline() { //called if user clears their drawing
+		this.outline = new ArrayList<double[]>(); 
+	}
+
+	
+
 
 }
