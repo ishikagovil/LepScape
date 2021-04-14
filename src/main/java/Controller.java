@@ -7,6 +7,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.Map;
+
 import javafx.application.Application;
 
 /**
@@ -228,6 +230,10 @@ public class Controller extends Application {
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
 
+	}
+	
+	public Map<String, Lep> getLepInfo() {
+		return this.model.getLepDirectory();
 	}
 	
 	/** 

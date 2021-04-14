@@ -71,11 +71,11 @@ public class Model {
 	}
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
-	
-<<<<<<< HEAD
+
 	public Map<String, Lep> getLepDirectory() {
 		return this.lepDirectory;
-=======
+	}
+	
 	public void initializePlantDirectory() {
 
 		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
@@ -89,7 +89,6 @@ public class Model {
 	
 	public int getLepCount() {
 		return this.lepCount;
->>>>>>> 1f76b1935fb0dc9410c84cc839d214aa778b0139
 	}
 	
 	/*@Override
