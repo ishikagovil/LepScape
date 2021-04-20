@@ -73,6 +73,13 @@ public class Model {
 		this.budget = budget - specie.getCost();
 		this.lepCount = lepCount + specie.getLepsSupported();
 	}
+	
+	public void removePlant(double x, double y, String key) {
+		PlantSpecies specie = plantDirectory.get(key);
+		this.budget = budget + specie.getCost();
+		this.lepCount = lepCount - specie.getLepsSupported();
+	}
+	
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
 

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -125,6 +126,10 @@ public class Controller extends Application {
 		return (e) -> { release(e,key,startingInTile);  };
 	}
 	
+	public EventHandler<MouseDragEvent> getHandlerforMouseEntered(String key){
+		return (e) -> { entered(e,key); };
+	}
+	
 	/** 
 	 * Calls drag when mouse is dragged, specifically when user is setting dimensions
 	 * @param boolean describing whether mouse is pressed for the first time
@@ -133,24 +138,6 @@ public class Controller extends Application {
 	 */
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
-	}
-	
-	/**
-	 * Controls the event when mouse is pressed on a plant imageView
-	 * Displays name and information of that plant in garden design screen
-	 * @param event the mouse event
-	 * @param key the plant that was pressed
-	 */
-	public void pressed(MouseEvent event, String key) {
-		Node n = (Node) event.getSource();
-		n.setMouseTransparent(true);
-		System.out.println("Clicked");
-		if(key!=null) {
-			String name = model.plantDirectory.get(key).getCommonName();
-			String description = model.plantDirectory.get(key).getDescription();
-			view.makeInfoPane(name,description);
-		}
-		event.setDragDetect(true);
 	}
 		
 	/**
@@ -228,6 +215,24 @@ public class Controller extends Application {
 	}
 	
 	/**
+	 * Controls the event when mouse is pressed on a plant imageView
+	 * Displays name and information of that plant in garden design screen
+	 * @param event the mouse event
+	 * @param key the plant that was pressed
+	 */
+	public void pressed(MouseEvent event, String key) {
+		Node n = (Node) event.getSource();
+		n.setMouseTransparent(true);
+		System.out.println("Clicked");
+		if(key!=null) {
+			String name = model.plantDirectory.get(key).getCommonName();
+			String description = model.plantDirectory.get(key).getDescription();
+			view.makeInfoPane(name,description);
+		}
+		event.setDragDetect(true);
+	}
+	
+	/**
 	 * Controls the drag event. Moves the imageView with mouse and gives that x and y to model
 	 * @param event
 	 * @author Arunima Dey
@@ -257,8 +262,10 @@ public class Controller extends Application {
 		Node n = (Node)event.getSource();
 		n.setMouseTransparent(false);
 		if(startingInTile) {
-			view.setX(n.getLayoutX(),n);
-			view.setY(n.getLayoutY(),n);
+			view.setX(0,n);
+			view.setY(0, n);
+//			view.setX(n.getLayoutX(),n);
+//			view.setY(n.getLayoutY(),n);
 			view.addImageView(event.getSceneX(),event.getSceneY(), name);
 		}
 		
@@ -266,6 +273,14 @@ public class Controller extends Application {
 			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
+	}
+	
+	public void entered(MouseDragEvent event, String key) {
+		System.out.println(key);
+		view.removePlant((Node) event.getGestureSource());
+		model.removePlant(getStartingX(), getStartingY(), key);
+		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+		
 	}
 	
 	/** 
