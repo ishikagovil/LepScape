@@ -1,3 +1,9 @@
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -6,8 +12,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 import java.util.*;
 
@@ -18,6 +29,11 @@ public class PlotDesign extends View{
 	HBox box;
 	WritableImage img; 
 	GridPane grid;
+	Polygon poly;
+    double x[];
+    double y[] = new double[4];
+    List<Double> values = new ArrayList<Double>();
+    ObservableList<Anchor> anchors;
 
 	/**
 	 * @author Ishika Govil 
@@ -42,6 +58,7 @@ public class PlotDesign extends View{
         //Add editing button and functionality
         ToolBar toolbar = new ToolBar();
         toolbar.getItems().add(addNextButton("Freehand","Drawing"));
+        toolbar.getItems().add(addNextButton("Polygon","Shape"));
         
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
         drawSwitch = new ArrayList<Button>();
@@ -65,7 +82,12 @@ public class PlotDesign extends View{
         });
         
         //Adding Clear buttons
-        drawSwitch.add(addNextButton("Clear", "Clear"));
+        Button clear = addNextButton("Clear", "Clear");
+        clear.addEventHandler(ActionEvent.ACTION, (e)-> {
+        	border.getChildren().remove(poly);
+        	border.getChildren().removeAll(anchors);
+        });
+        drawSwitch.add(clear);
         drawSwitch.get(1).setPrefSize(100, 30);
         Button undo = new Button("Undo");
         addNextButton("Undo", "ClearDim");
@@ -169,4 +191,61 @@ public class PlotDesign extends View{
             border.setOnMouseDragged(null);
         });
 	}
+	
+	public void onShape() {
+		x = new double[]{113, 260, 260, 113};
+        y = new double[]{86, 86, 240, 240};   
+        poly = new Polygon();
+        for(int i = 0; i < x.length; i++) {
+        	values.add(x[i]);
+            values.add(y[i]);
+        }
+        poly.getPoints().addAll(values);
+        poly.setStroke(Color.BLACK);
+        poly.setStrokeWidth(2);
+        poly.setStrokeLineCap(StrokeLineCap.ROUND);
+        poly.setFill(Color.TRANSPARENT);
+        border.getChildren().add(poly);
+    	System.out.println("REACHED");
+
+        anchors = FXCollections.observableArrayList();
+        for (int i = 0; i < poly.getPoints().size(); i += 2) {
+        	final int idx = i;
+            DoubleProperty xProperty = new SimpleDoubleProperty(poly.getPoints().get(i));
+            DoubleProperty yProperty = new SimpleDoubleProperty(poly.getPoints().get(i + 1));
+            xProperty.addListener(new ChangeListener<Number>() {
+            	@Override
+            	public void changed(ObservableValue<? extends Number> ov, Number oldX, Number x) {
+            		poly.getPoints().set(idx, (double) x);
+            	}
+            });
+            yProperty.addListener(new ChangeListener<Number>() {
+            	@Override
+                public void changed(ObservableValue<? extends Number> ov, Number oldY, Number y) {
+            		poly.getPoints().set(idx + 1, (double) y);
+                }
+            });
+            anchors.add(new Anchor(Color.PINK, xProperty, yProperty));
+        }
+        border.getChildren().addAll(anchors);
+	}
+	
+	class Anchor extends Circle {
+        Anchor(Color color, DoubleProperty x, DoubleProperty y) {
+            super(x.get(), y.get(), 8);
+            setFill(color.deriveColor(1, 1, 1, 0.5));
+            setStroke(color);
+            setStrokeWidth(2);
+            setStrokeType(StrokeType.OUTSIDE);
+            x.bind(centerXProperty());
+            y.bind(centerYProperty());
+            setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                	setCenterX(mouseEvent.getX());           
+                    setCenterY(mouseEvent.getY());                   
+                }
+            });
+        }
+    }
 }

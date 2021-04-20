@@ -70,6 +70,8 @@ public class ManageViews {
 	public void switchViews(String next) {
 		if(next.equals("Drawing"))
 			((PlotDesign) this.currView).onDrawing();
+		else if(next.equals("Shape"))
+			((PlotDesign) this.currView).onShape();
 		else
 			this.currView = this.getView(next);
 	}
