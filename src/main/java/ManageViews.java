@@ -150,11 +150,15 @@ public class ManageViews {
 		this.currView = this.views.get("PlotDesign");
 	}
 	
+	public void removePlant(Node node) {
+		views.get("GardenDesign").removePlant(node);
+	}
+	
 	//methods only used by garden design
 	public void setY(double y, Node n){currView.setY(y, n);}
 	public void setX(double x, Node n){currView.setX(x, n);}
 	public void addImageView(double x, double y, String key) {currView.addImageView(x, y, key);}
-	public void removePlant(Node n) {currView.removePlant(n);}
+//	public void removePlant(Node n) {currView.removePlant(n);}
 	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
 	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
 	

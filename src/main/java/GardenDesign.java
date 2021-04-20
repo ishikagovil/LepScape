@@ -5,6 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
 import javax.swing.event.ChangeListener;
@@ -37,24 +43,20 @@ import javafx.stage.Stage;
  *
  */
 public class GardenDesign extends View{
-	public Controller ic;
-	public Navigation navi;
-	public Button compare;
-	public Button save;
+//	public Controller ic;
 	Canvas canvas;
 	//Panes
 	public VBox vb = new VBox();
-	public BorderPane stack = new BorderPane();
+//	public BorderPane stack = new BorderPane();
 	public TilePane tile = new TilePane();
 	public BorderPane comparePane = new BorderPane();
 	public StackPane info = new StackPane();
-	ObservableMap<String,ImageView> oblist;
+	HashMap<String,ImageView> oblist;
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 	ImageView c = new ImageView(compost);
-	Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
-	Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
-	HBox blPane;
 	Pane main;
+	
+	public ArrayList<ImageView> addedPlants;
 	
 	/**
 	 * Initializes an instance of GardenDesign
@@ -64,7 +66,7 @@ public class GardenDesign extends View{
 	 */
 	public GardenDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage,c,manageView);
-		this.ic=c;
+//		this.ic=c;
 		oblist = initializeHashMap();
 		vb = addVBox();
 		border = new BorderPane();
@@ -118,9 +120,9 @@ public class GardenDesign extends View{
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
 		oblist.forEach((k,v)->{
-			v.setOnMousePressed(ic.getHandlerforPressed(k));
-			v.setOnMouseDragged(ic.getHandlerforDrag());
-			v.setOnMouseReleased(ic.getHandlerforReleased(k,true));
+			v.setOnMousePressed(controller.getHandlerforPressed(k));
+			v.setOnMouseDragged(controller.getHandlerforDrag());
+			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
 			v.setOnDragDetected(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
@@ -148,8 +150,11 @@ public class GardenDesign extends View{
 	 * Adds the pane that hols the lep count and the budget
 	 * Called from previous screen after user has set a budget
 	 */
-	public void  addBudgetLepPane() {
-		blPane = new HBox();
+	public void addBudgetLepPane() {
+		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+		
+		HBox blPane = new HBox();
 		blPane.setSpacing(20);
 		
 		ImageView lepIv= new ImageView(lep);
@@ -160,7 +165,7 @@ public class GardenDesign extends View{
 		budget.setFitHeight(50);
 		Label lepCount = new Label("0");
 		lepCount.setFont(new Font("Arial", 16));
-		Label budgetCount = new Label(""+ic.getBudget());
+		Label budgetCount = new Label(""+controller.getBudget());
 		budgetCount.setFont(new Font("Arial", 16));
 		lepCount.setGraphic(lepIv);
 		budgetCount.setGraphic(budget);
@@ -176,9 +181,12 @@ public class GardenDesign extends View{
 	}
 
 	/**
-	 * Everytime a plant is placed onto the garden the lep count and budget is updated
+	 * Everytime a plant is placed onto or removed the garden the lep count and budget is updated
 	 */
 	public void updateBudgetandLep(int cost, int lepCount) {
+		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+		
 		border.getChildren().remove(border.getTop());
 		
 		HBox budgetLepPane = new HBox();
@@ -209,6 +217,7 @@ public class GardenDesign extends View{
 	 */
 	public void addImageView(double x, double y, String key) {
 		System.out.println("in the inner addImageView");
+//		ImageView iv2 = oblist.get(key);
 		Image im = new Image(getClass().getResourceAsStream("/"+key+".jpg"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
@@ -216,10 +225,12 @@ public class GardenDesign extends View{
 		
 		iv2.setTranslateX(x-main.getLayoutX());
 		iv2.setTranslateY(y-main.getLayoutY());
+		
+//		this.addedPlants.add(iv2);
 
-		iv2.setOnMousePressed(ic.getHandlerforPressed(null));
-		iv2.setOnMouseDragged(ic.getHandlerforDrag());
-		iv2.setOnMouseReleased(ic.getHandlerforReleased(key, false));
+		iv2.setOnMousePressed(controller.getHandlerforPressed(null));
+		iv2.setOnMouseDragged(controller.getHandlerforDrag());
+		iv2.setOnMouseReleased(controller.getHandlerforReleased(key, false));
 		iv2.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -229,22 +240,29 @@ public class GardenDesign extends View{
 			}
 		});
 		
-		c.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
-
-			@Override
-			public void handle(MouseDragEvent event) {
-				// TODO Auto-generated method stub
-				System.out.println("trying to remove");
-				c.setFitHeight(85);
-				removePlant(iv2);
-				
-			}
-			
-		});
+		c.setOnMouseDragEntered(controller.getHandlerforMouseEntered(key));
+//		c.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
+//			@Override
+//			public void handle(MouseDragEvent event) {
+//				// TODO Auto-generated method stub
+//				System.out.println("trying to remove");
+//				c.setFitHeight(85);
+//				ImageView iv = (ImageView) event.getGestureSource();
+//				oblist.forEach((k,v)->{
+//					Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
+//					Image im2 = iv.getImage();
+//					if(im==im2) {
+//						System.out.println("EQUAL");
+//					}
+//				});
+////				System.out.println("key: "+key);
+//				removePlant((Node)event.getGestureSource());
+//				
+//			}
+//		});
+		
 		
 		main.getChildren().add(iv2);
-
-
 	}
 	
 	/**
@@ -319,10 +337,10 @@ public class GardenDesign extends View{
 	 */
 	public VBox addVBox() {
 		VBox vb = new VBox();
-		vb.setStyle("-fx-background-color: GAINSBORO");
+		vb.setStyle("-fx-background-color: LIGHTBLUE");
 		vb.setSpacing(10);
 		vb.setMinHeight(screenHeight/4);
-		vb.setMaxWidth(screenHeight/9);
+		vb.setPrefWidth(screenHeight/4);
 		vb.setAlignment(Pos.CENTER);;
 		Button[] buttons = new Button[] {
 			addNextButton("Back","ConditionScreen"), addNextButton("Learn More", "LearnMore"), new Button("Clear"),addNextButton("Next","Summary")
@@ -423,9 +441,16 @@ public class GardenDesign extends View{
 	 * Makes an observable hashmap for all the images of the pants that go into the tile pane 
 	 * @return the created hashmap
 	 */
-	public ObservableMap<String,ImageView> initializeHashMap(){
-		oblist = FXCollections.observableHashMap();
+	public HashMap<String,ImageView> initializeHashMap(){
+//		oblist = FXCollections.observableHashMap();
+		oblist = new HashMap<>();
 		manageView.plantImages.forEach((k,v)->{
+			try {
+				saveImage(v,"src/"+k+".jpg");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if(getClass().getResourceAsStream("/"+k+".jpg")!=null) {
 				System.out.println(k);
 				Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
@@ -437,6 +462,29 @@ public class GardenDesign extends View{
 			}
 		});
 		return oblist;
+	}
+	
+	/**
+	 * This method saves the Image that comes from a given url into a filea
+	 * @param imageUrl the url for the image
+	 * @param destinationFile the file where it will get saved
+	 * @throws IOException the possible exception that may occur
+	 */
+	//https://stackoverflow.com/questions/10292792/getting-image-from-url-java
+	public static void saveImage(String imageUrl, String destinationFile) throws IOException {
+	    URL url = new URL(imageUrl);
+	    InputStream is = url.openStream();
+	    OutputStream os = new FileOutputStream(destinationFile);
+
+	    byte[] b = new byte[2048];
+	    int length;
+
+	    while ((length = is.read(b)) != -1) {
+	        os.write(b, 0, length);
+	    }
+
+	    is.close();
+	    os.close();
 	}
 	
 	/**
