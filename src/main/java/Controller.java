@@ -18,7 +18,8 @@ import javafx.application.Application;
 public class Controller extends Application {
 	private final boolean DEBUG = true;
 	ManageViews view;
-	String fileName = "src/main/resources/testdata.csv";
+	String fileName1 = "src/main/resources/testdata.csv";
+	String fileName2 = "src/main/resources/testleps.csv";
 	Model model;
 	Stage stage;
 	
@@ -30,8 +31,8 @@ public class Controller extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
-		this.model.setPlantDirectory(CSVtoPlants.readFile(fileName));
-		this.model.setLepDirectory(CSVtoLeps.readFile(fileName));
+		this.model.setPlantDirectory(CSVtoPlants.readFile(fileName1));
+		this.model.setLepDirectory(CSVtoLeps.readFile(fileName2));
 		this.stage = stage;
 	    view = new ManageViews(stage,this, fileName);
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
