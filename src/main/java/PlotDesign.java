@@ -29,7 +29,8 @@ public class PlotDesign extends View{
 	HBox box;
 	WritableImage img; 
 	GridPane grid;
-    ObservableList<Anchor> anchors;
+	Polygon poly;
+    ObservableList<Anchor> anchors = FXCollections.observableArrayList();
     boolean shapeClicked = false;
     boolean dragAnchor = false;
 	/**
@@ -86,6 +87,9 @@ public class PlotDesign extends View{
             	for(Anchor a: anchors) {
             		a.setDragAnchor(dragAnchor);
             	}
+            	//If there is no polygon in the borderpane right now, then set shapeClicked to false
+            	if(!border.getChildren().contains(poly))          
+            		shapeClicked = false;
             	gc.drawImage(img,0,0);
             	border.getChildren().remove(label);
             	border.getChildren().remove(grid);
@@ -215,7 +219,7 @@ public class PlotDesign extends View{
 	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
 		List<Double> values = new ArrayList<Double>();
 		anchors = FXCollections.observableArrayList();
-		Polygon poly = new Polygon();
+		poly = new Polygon();
         for(int i = 0; i < x.length; i++) {
         	values.add(x[i]);
             values.add(y[i]);
