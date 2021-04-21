@@ -1,7 +1,5 @@
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,23 +10,20 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 import java.util.*;
 
 public class PlotDesign extends View{
 	ArrayList<Button> drawSwitch; 
 	ArrayList<Button> dimSwitch;
-	Label label;
+	Label label; //instructions to user
 	HBox box;
 	WritableImage img; 
-	GridPane grid;
+	GridPane grid; //added to contain the TextField
 	Polygon poly;
     ObservableList<Anchor> anchors = FXCollections.observableArrayList();
     boolean shapeClicked = false;
@@ -94,6 +89,8 @@ public class PlotDesign extends View{
             	border.getChildren().remove(label);
             	border.getChildren().remove(grid);
             	createHBox(drawSwitch);	
+            	//Remove the arraylist of points from model by calling method in controller
+            	controller.restartPolygonBoundary();
             }
         });
 	}
@@ -139,6 +136,8 @@ public class PlotDesign extends View{
             	}
             	shapeClicked = true;
             	onSettingDimensions();
+            	//set the outline of the shape in model
+            	controller.enterPolygonBoundary(poly);
             }
         });
         dimSwitch.add(addNextButton("Next", "ConditionScreen"));

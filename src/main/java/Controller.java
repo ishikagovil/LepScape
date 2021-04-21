@@ -1,7 +1,6 @@
 import javafx.event.EventHandler;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -289,6 +288,17 @@ public class Controller extends Application {
     		poly.getPoints().set(idx + 1, y.get());
     	}
 	}
+	public void restartPolygonBoundary() {
+		this.model.getGarden().polygonCorners = new ArrayList<double[]>();
+	}
+	
+	public void enterPolygonBoundary(Polygon poly) {
+		for(int i = 0; i < poly.getPoints().size(); i+= 2) {
+			DoubleProperty x = new SimpleDoubleProperty(poly.getPoints().get(i));
+            DoubleProperty y = new SimpleDoubleProperty(poly.getPoints().get(i + 1));
+			this.model.getGarden().setPolygonCorners(x.get(), y.get());
+		}
+	}
 	
 	/** 
 	 * Called when user is drawing. 
@@ -334,7 +344,7 @@ public class Controller extends Application {
 		 //Clears the canvas the user was drawing on. Also clears the ArrayList corresponding to the coordinates of the plot boundary
 		 if(next.equals("Clear")) {
 			 this.view.getGC().clearRect(0, 0,this.view.getScreenWidth(), this.view.getScreenHeight());
-			 this.model.getGarden().outline = new ArrayList<double[]>(); 
+			 this.model.getGarden().clearOutline();
 		 }
 		 //Clears only the lines drawn after setting dimension. Also clears the ArrayList corresponding to the coordinates of the line
 		 else if(next.equals("ClearDim")) {
