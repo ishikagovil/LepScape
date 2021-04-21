@@ -29,8 +29,9 @@ public class PlotDesign extends View{
 	HBox box;
 	WritableImage img; 
 	GridPane grid;
-    ObservableList<Anchor> anchors = FXCollections.observableArrayList();
+    ObservableList<Anchor> anchors;
     boolean shapeClicked = false;
+    boolean dragAnchor = false;
 	/**
 	 * @author Ishika Govil 
 	 */
@@ -95,7 +96,6 @@ public class PlotDesign extends View{
         clear.addEventHandler(ActionEvent.ACTION, (e)-> {
         	shapeClicked = false;
        		border.getChildren().removeAll(anchors);       
-       		anchors = FXCollections.observableArrayList();
        		for(Object child: border.getChildren()) {
        			if(child instanceof Polygon) {
        				border.getChildren().remove(child);
@@ -125,8 +125,8 @@ public class PlotDesign extends View{
             public void handle(ActionEvent e) {
             	//https://stackoverflow.com/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
             	img = gc.getCanvas().snapshot(null, null);
-            
             	manageView.setImage(img);
+            	dragAnchor = false;
             	onSettingDimensions();
             }
         });
@@ -207,6 +207,7 @@ public class PlotDesign extends View{
 		double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
 	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
 		List<Double> values = new ArrayList<Double>();
+		anchors = FXCollections.observableArrayList();
 		Polygon poly = new Polygon();
         for(int i = 0; i < x.length; i++) {
         	values.add(x[i]);
@@ -255,8 +256,10 @@ public class PlotDesign extends View{
             setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                	setCenterX(mouseEvent.getX());           
-                    setCenterY(mouseEvent.getY());                   
+                	if(dragAnchor) {
+                		setCenterX(mouseEvent.getX());           
+                		setCenterY(mouseEvent.getY());     
+                	}
                 }
             });
         }
