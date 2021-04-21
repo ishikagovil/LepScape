@@ -67,7 +67,7 @@ public abstract class View{
 
 	}
 
-	//Used only in gardenDesig. In here because need to called by controller
+	//Used only in gardenDesign. In here because need to called by controller
 	public void addImageView(double x, double y, String key) {}
 	public void removePlant(Node n) {}
 	public void makeInfoPane(String name, String info) {}
