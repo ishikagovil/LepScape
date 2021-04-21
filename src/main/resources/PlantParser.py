@@ -25,7 +25,7 @@ key = "PklZD7nSq3xQVGWKD7H6WQdyWdny23lU8sgjZAVuZ28"
 # The only manual job that you must perform is recording the scientific name for all of the
 # plants from the excel spreadsheet that you want to use.
 
-plantNameSplit = ["Achillea", "millefolium"]
+plantNameSplit = ["Symphyotrichum", "novae-angliae"]
 
 plantName = plantNameSplit[0] + "-" + plantNameSplit[1]
 
@@ -57,15 +57,15 @@ print("Common Name: ", scientificName)
 print("\n")
 
 
-print("Image Data")
-imageData = plant["images"][""]
+#print("Image Data")
+#imageData = plant["images"][""]
 # printAsFormattedJSON(imageData)
 
 # There is more than just one image in the imageData, I just happened to only grab the first one.
-image = imageData[0]
-print(image)
-imageUrl = image["image_url"]
-print("URL:", imageUrl)     # If you take this URL and put into a "new Image(imageURL)" statement in Java, it will create an image using that URL instead of a local one.
+#image = imageData[0]
+#print(image)
+#imageUrl = image["image_url"]
+#print("URL:", imageUrl)     # If you take this URL and put into a "new Image(imageURL)" statement in Java, it will create an image using that URL instead of a local one.
                             # It is not strictly necessary for you to save any of these images to your local computer; however, we would recommend that you do so to allow
                             # you to use those images without internet access.
 
