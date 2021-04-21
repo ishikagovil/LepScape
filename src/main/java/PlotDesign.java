@@ -30,8 +30,8 @@ public class PlotDesign extends View{
 	WritableImage img; 
 	GridPane grid;
 	Polygon poly;
-    double x[];
-    double y[] = new double[4];
+    double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
+    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
     List<Double> values;
     ObservableList<Anchor> anchors = FXCollections.observableArrayList();
     
@@ -78,9 +78,9 @@ public class PlotDesign extends View{
 	public void backButtons() {
 		 //Adding Back buttons
         drawSwitch.add(addNextButton("Back", "Start"));
-        drawSwitch.get(0).setPrefSize(100, 30);
         disableDrawing(drawSwitch.get(0));
         dimSwitch.add(new Button("Back"));
+        dimSwitch.get(0).setPrefSize(buttonWidth, buttonHeight);
         setOnMouse(dimSwitch.get(0));
         disableDrawing(dimSwitch.get(0));
         dimSwitch.get(0).setOnAction(new EventHandler<ActionEvent>() {
@@ -113,14 +113,8 @@ public class PlotDesign extends View{
        		}      		
         });
         drawSwitch.add(clear);
-        drawSwitch.get(1).setPrefSize(100, 30);
-        Button undo = new Button("Undo");
-        addNextButton("Undo", "ClearDim");
+        Button undo = addNextButton("Undo", "ClearDim");
         dimSwitch.add(undo);
-        dimSwitch.get(0).setPrefSize(100, 30);
-        dimSwitch.get(1).setPrefSize(100, 30);
-        dimSwitch.add(addNextButton("Next", "ConditionScreen"));
-        dimSwitch.get(2).setPrefSize(100, 30);
         dimSwitch.get(1).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
@@ -133,7 +127,7 @@ public class PlotDesign extends View{
 	public void saveButtons() {
 		//Adding Save button
         drawSwitch.add(new Button("Save"));
-        drawSwitch.get(2).setPrefSize(100, 30);
+        drawSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
         setOnMouse(drawSwitch.get(2));
         drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
@@ -145,6 +139,7 @@ public class PlotDesign extends View{
             	onSettingDimensions();
             }
         });
+        dimSwitch.add(addNextButton("Next", "ConditionScreen"));
 	}
 	
 	/**
@@ -217,8 +212,7 @@ public class PlotDesign extends View{
 	
 	//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
 	public void onShape() {
-		x = new double[]{113, 260, 260, 113};
-        y = new double[]{86, 86, 240, 240};   
+		 
         values = new ArrayList<Double>();
         poly = new Polygon();
         for(int i = 0; i < x.length; i++) {

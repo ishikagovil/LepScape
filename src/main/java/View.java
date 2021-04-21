@@ -12,6 +12,8 @@ public abstract class View{
 	public Map<String, Image> plantImages;
 	public int screenWidth = 1270;
 	public int screenHeight = 760;
+	public int buttonWidth = 100;
+	public int buttonHeight = 30;
 	BorderPane border;
 	Stage stage;
 	Controller controller;
@@ -51,6 +53,7 @@ public abstract class View{
 	} 
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
+		b.setPrefSize(buttonWidth, buttonHeight);
 		b.setPrefHeight(30);;
 		setOnMouse(b);
 		b.setOnAction(controller.getHandlerforClicked(next));
