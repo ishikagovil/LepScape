@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
@@ -79,7 +80,9 @@ public class PlotDesign extends View{
             @Override 
             public void handle(ActionEvent e) {
             	dragAnchor = true;
-            	for(Anchor a: anchors) {
+            	Iterator<Anchor> itr = anchors.iterator();
+            	while(itr.hasNext()) {
+            		Anchor a = (Anchor)itr.next();
             		a.setDragAnchor(dragAnchor);
             	}
             	//If there is no polygon in the borderpane right now, then set shapeClicked to false
@@ -99,13 +102,16 @@ public class PlotDesign extends View{
         Button clear = addNextButton("Clear", "Clear");
         clear.addEventHandler(ActionEvent.ACTION, (e)-> {
         	shapeClicked = false;
-       		border.getChildren().removeAll(anchors);       
-       		for(Object child: border.getChildren()) {
-       			if(child instanceof Polygon) {
+       		border.getChildren().removeAll(anchors);      
+       		
+       		Iterator<Node> itr = border.getChildren().iterator();
+        	while(itr.hasNext()) {
+        		Object child = (Object)itr.next();
+        		if(child instanceof Polygon) {
        				border.getChildren().remove(child);
        				break;
        			}
-           	}     		
+        	}  		
         });
         drawSwitch.add(clear);
         Button undo = addNextButton("Undo", "ClearDim");
@@ -131,7 +137,10 @@ public class PlotDesign extends View{
             	img = gc.getCanvas().snapshot(null, null);
             	manageView.setImage(img);
             	dragAnchor = false;
-            	for(Anchor a: anchors) {
+            	
+            	Iterator<Anchor> itr = anchors.iterator();
+            	while(itr.hasNext()) {
+            		Anchor a = (Anchor)itr.next();
             		a.setDragAnchor(dragAnchor);
             	}
             	shapeClicked = true;
@@ -232,13 +241,16 @@ public class PlotDesign extends View{
         border.getChildren().add(poly);
         
         //Create the anchors
-        for (int i = 0; i < poly.getPoints().size(); i += 2) {
-        	final int idx = i;
-            DoubleProperty xProperty = new SimpleDoubleProperty(poly.getPoints().get(i));
-            DoubleProperty yProperty = new SimpleDoubleProperty(poly.getPoints().get(i + 1));
-            anchors.add(new Anchor(Color.PINK, xProperty, yProperty, poly, idx, dragAnchor, controller));
-        }
+		Iterator<Double> itr = poly.getPoints().iterator();
+		int count = 0;
+		while (itr.hasNext()) {
+			double index = (Double)itr.next();
+			DoubleProperty xProperty = new SimpleDoubleProperty(index);
+			index = (Double)itr.next();
+	        DoubleProperty yProperty = new SimpleDoubleProperty(index);
+	        anchors.add(new Anchor(Color.PINK, xProperty, yProperty, poly, count, dragAnchor, controller));	
+	        count+=2;
+		}
         border.getChildren().addAll(anchors);
-        
 	}
 }
