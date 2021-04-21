@@ -29,12 +29,8 @@ public class PlotDesign extends View{
 	HBox box;
 	WritableImage img; 
 	GridPane grid;
-	Polygon poly;
-    double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
-    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
-    List<Double> values;
     ObservableList<Anchor> anchors = FXCollections.observableArrayList();
-    
+    boolean shapeClicked = false;
 	/**
 	 * @author Ishika Govil 
 	 */
@@ -93,24 +89,19 @@ public class PlotDesign extends View{
             }
         });
 	}
-	
 	public void clearButtons() {
         //Adding Clear/Undo buttons
         Button clear = addNextButton("Clear", "Clear");
         clear.addEventHandler(ActionEvent.ACTION, (e)-> {
+        	shapeClicked = false;
        		border.getChildren().removeAll(anchors);       
        		anchors = FXCollections.observableArrayList();
-       		ArrayList<Integer> removeidx = new ArrayList<>();
-       		for(int i = 0; i < border.getChildren().size(); i++) {
-           		if(border.getChildren().get(i) instanceof Polygon) {
-           			removeidx.add(i);
-           		}
-           	}  
-       		Collections.sort(removeidx);
-       	    Collections.reverse(removeidx);
-       		for(int i = 0; i < removeidx.size(); i++) {
-       			border.getChildren().remove(border.getChildren().get(removeidx.get(i)));
-       		}      		
+       		for(Object child: border.getChildren()) {
+       			if(child instanceof Polygon) {
+       				border.getChildren().remove(child);
+       				break;
+       			}
+           	}     		
         });
         drawSwitch.add(clear);
         Button undo = addNextButton("Undo", "ClearDim");
@@ -212,9 +203,11 @@ public class PlotDesign extends View{
 	
 	//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
 	public void onShape() {
-		 
-        values = new ArrayList<Double>();
-        poly = new Polygon();
+		//Initializes the points clockwise starting from top left corner of box
+		double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
+	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
+		List<Double> values = new ArrayList<Double>();
+		Polygon poly = new Polygon();
         for(int i = 0; i < x.length; i++) {
         	values.add(x[i]);
             values.add(y[i]);
@@ -225,10 +218,10 @@ public class PlotDesign extends View{
         poly.setStrokeLineCap(StrokeLineCap.ROUND);
         poly.setFill(Color.TRANSPARENT);
         border.getChildren().add(poly);
-        createAnchor();
+        createAnchor(poly);
         
 	}
-	public void createAnchor() {
+	public void createAnchor(Polygon poly) {
 			border.getChildren().removeAll(anchors);
         for (int i = 0; i < poly.getPoints().size(); i += 2) {
         	final int idx = i;
