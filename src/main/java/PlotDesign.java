@@ -32,9 +32,9 @@ public class PlotDesign extends View{
 	Polygon poly;
     double x[];
     double y[] = new double[4];
-    List<Double> values = new ArrayList<Double>();
-    ObservableList<Anchor> anchors;
-
+    List<Double> values;
+    ObservableList<Anchor> anchors = FXCollections.observableArrayList();
+    
 	/**
 	 * @author Ishika Govil 
 	 */
@@ -54,17 +54,29 @@ public class PlotDesign extends View{
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
         gc.setLineWidth(2);
-
-        //Add editing button and functionality
+        //Creating buttons on the screen
+        toolbarButtons();        
+        backButtons();
+        clearButtons();   
+        saveButtons();
+        //Adding first set of buttons to HBox
+        createHBox(drawSwitch);	
+	}
+	
+	public void toolbarButtons() {
+		//Add editing button and functionality
         ToolBar toolbar = new ToolBar();
         toolbar.getItems().add(addNextButton("Freehand","Drawing"));
-        toolbar.getItems().add(addNextButton("Polygon","Shape"));
-        
+        Button shape = addNextButton("Polygon","Shape");
+        toolbar.getItems().add(shape);
+        disableDrawing(shape);
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
         drawSwitch = new ArrayList<Button>();
         dimSwitch = new ArrayList<Button>();
-        
-        //Adding Back buttons
+        border.setTop(toolbar);
+	}
+	public void backButtons() {
+		 //Adding Back buttons
         drawSwitch.add(addNextButton("Back", "Start"));
         drawSwitch.get(0).setPrefSize(100, 30);
         disableDrawing(drawSwitch.get(0));
@@ -80,12 +92,25 @@ public class PlotDesign extends View{
             	createHBox(drawSwitch);	
             }
         });
-        
-        //Adding Clear buttons
+	}
+	
+	public void clearButtons() {
+        //Adding Clear/Undo buttons
         Button clear = addNextButton("Clear", "Clear");
         clear.addEventHandler(ActionEvent.ACTION, (e)-> {
-        	border.getChildren().remove(poly);
-        	border.getChildren().removeAll(anchors);
+       		border.getChildren().removeAll(anchors);       
+       		anchors = FXCollections.observableArrayList();
+       		ArrayList<Integer> removeidx = new ArrayList<>();
+       		for(int i = 0; i < border.getChildren().size(); i++) {
+           		if(border.getChildren().get(i) instanceof Polygon) {
+           			removeidx.add(i);
+           		}
+           	}  
+       		Collections.sort(removeidx);
+       	    Collections.reverse(removeidx);
+       		for(int i = 0; i < removeidx.size(); i++) {
+       			border.getChildren().remove(border.getChildren().get(removeidx.get(i)));
+       		}      		
         });
         drawSwitch.add(clear);
         drawSwitch.get(1).setPrefSize(100, 30);
@@ -104,7 +129,9 @@ public class PlotDesign extends View{
             }
         });
         
-        //Adding Save button
+	}
+	public void saveButtons() {
+		//Adding Save button
         drawSwitch.add(new Button("Save"));
         drawSwitch.get(2).setPrefSize(100, 30);
         setOnMouse(drawSwitch.get(2));
@@ -112,16 +139,12 @@ public class PlotDesign extends View{
             @Override 
             public void handle(ActionEvent e) {
             	//https://stackoverflow.com/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
-            	img = canvas.snapshot(null, null);
+            	img = gc.getCanvas().snapshot(null, null);
             
             	manageView.setImage(img);
             	onSettingDimensions();
             }
         });
-        
-        //Adding to border
-        createHBox(drawSwitch);	
-        border.setTop(toolbar);
 	}
 	
 	/**
@@ -192,9 +215,11 @@ public class PlotDesign extends View{
         });
 	}
 	
+	//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
 	public void onShape() {
 		x = new double[]{113, 260, 260, 113};
         y = new double[]{86, 86, 240, 240};   
+        values = new ArrayList<Double>();
         poly = new Polygon();
         for(int i = 0; i < x.length; i++) {
         	values.add(x[i]);
@@ -206,9 +231,11 @@ public class PlotDesign extends View{
         poly.setStrokeLineCap(StrokeLineCap.ROUND);
         poly.setFill(Color.TRANSPARENT);
         border.getChildren().add(poly);
-    	System.out.println("REACHED");
-
-        anchors = FXCollections.observableArrayList();
+        createAnchor();
+        
+	}
+	public void createAnchor() {
+			border.getChildren().removeAll(anchors);
         for (int i = 0; i < poly.getPoints().size(); i += 2) {
         	final int idx = i;
             DoubleProperty xProperty = new SimpleDoubleProperty(poly.getPoints().get(i));
@@ -229,7 +256,6 @@ public class PlotDesign extends View{
         }
         border.getChildren().addAll(anchors);
 	}
-	
 	class Anchor extends Circle {
         Anchor(Color color, DoubleProperty x, DoubleProperty y) {
             super(x.get(), y.get(), 8);
