@@ -36,7 +36,7 @@ public class Controller extends Application {
 		this.model.setPlantDirectory(CSVtoPlants.readFile(fileName1));
 		this.model.setLepDirectory(CSVtoLeps.readFile(fileName2));
 		this.stage = stage;
-	    view = new ManageViews(stage,this, fileName);
+	    view = new ManageViews(stage,this, fileName1);
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
