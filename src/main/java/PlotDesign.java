@@ -83,6 +83,7 @@ public class PlotDesign extends View{
         dimSwitch.get(0).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
+            	dragAnchor = true;
             	gc.drawImage(img,0,0);
             	border.getChildren().remove(label);
             	border.getChildren().remove(grid);
@@ -223,29 +224,16 @@ public class PlotDesign extends View{
         
 	}
 	public void createAnchor(Polygon poly) {
-			border.getChildren().removeAll(anchors);
         for (int i = 0; i < poly.getPoints().size(); i += 2) {
         	final int idx = i;
             DoubleProperty xProperty = new SimpleDoubleProperty(poly.getPoints().get(i));
             DoubleProperty yProperty = new SimpleDoubleProperty(poly.getPoints().get(i + 1));
-            xProperty.addListener(new ChangeListener<Number>() {
-            	@Override
-            	public void changed(ObservableValue<? extends Number> ov, Number oldX, Number x) {
-            		poly.getPoints().set(idx, (double) x);
-            	}
-            });
-            yProperty.addListener(new ChangeListener<Number>() {
-            	@Override
-                public void changed(ObservableValue<? extends Number> ov, Number oldY, Number y) {
-            		poly.getPoints().set(idx + 1, (double) y);
-                }
-            });
-            anchors.add(new Anchor(Color.PINK, xProperty, yProperty));
+            anchors.add(new Anchor(Color.PINK, xProperty, yProperty, poly, idx));
         }
         border.getChildren().addAll(anchors);
 	}
 	class Anchor extends Circle {
-        Anchor(Color color, DoubleProperty x, DoubleProperty y) {
+        Anchor(Color color, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
             super(x.get(), y.get(), 8);
             setFill(color.deriveColor(1, 1, 1, 0.5));
             setStroke(color);
@@ -258,7 +246,9 @@ public class PlotDesign extends View{
                 public void handle(MouseEvent mouseEvent) {
                 	if(dragAnchor) {
                 		setCenterX(mouseEvent.getX());           
-                		setCenterY(mouseEvent.getY());     
+                		setCenterY(mouseEvent.getY());    
+                		poly.getPoints().set(idx, x.get());
+                		poly.getPoints().set(idx + 1, y.get());
                 	}
                 }
             });
