@@ -1,3 +1,7 @@
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -8,17 +12,22 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.Stage;
 import java.util.*;
 
 public class PlotDesign extends View{
 	ArrayList<Button> drawSwitch; 
 	ArrayList<Button> dimSwitch;
-	Label label;
+	Label label; //instructions to user
 	HBox box;
 	WritableImage img; 
-	GridPane grid;
-
+	GridPane grid; //added to contain the TextField
+	Polygon poly;
+    ObservableList<Anchor> anchors = FXCollections.observableArrayList();
+    boolean shapeClicked = false;
+    boolean dragAnchor = false;
 	/**
 	 * @author Ishika Govil 
 	 */
@@ -38,42 +47,69 @@ public class PlotDesign extends View{
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
         gc.setLineWidth(2);
-
-        //Add editing button and functionality
+        //Creating buttons on the screen
+        toolbarButtons();        
+        backButtons();
+        clearButtons();   
+        saveButtons();
+        //Adding first set of buttons to HBox
+        createHBox(drawSwitch);	
+	}
+	public void toolbarButtons() {
+		//Add editing button and functionality
         ToolBar toolbar = new ToolBar();
         toolbar.getItems().add(addNextButton("Freehand","Drawing"));
-        
+        Button shape = addNextButton("Polygon","Shape");
+        toolbar.getItems().add(shape);
+        disableDrawing(shape);
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
         drawSwitch = new ArrayList<Button>();
         dimSwitch = new ArrayList<Button>();
-        
-        //Adding Back buttons
+        border.setTop(toolbar);
+	}
+	public void backButtons() {
+		 //Adding Back buttons
         drawSwitch.add(addNextButton("Back", "Start"));
-        drawSwitch.get(0).setPrefSize(100, 30);
         disableDrawing(drawSwitch.get(0));
         dimSwitch.add(new Button("Back"));
+        dimSwitch.get(0).setPrefSize(buttonWidth, buttonHeight);
         setOnMouse(dimSwitch.get(0));
         disableDrawing(dimSwitch.get(0));
         dimSwitch.get(0).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
+            	dragAnchor = true;
+            	for(Anchor a: anchors) {
+            		a.setDragAnchor(dragAnchor);
+            	}
+            	//If there is no polygon in the borderpane right now, then set shapeClicked to false
+            	if(!border.getChildren().contains(poly))          
+            		shapeClicked = false;
             	gc.drawImage(img,0,0);
             	border.getChildren().remove(label);
             	border.getChildren().remove(grid);
             	createHBox(drawSwitch);	
+            	//Remove the arraylist of points from model by calling method in controller
+            	controller.restartPolygonBoundary();
             }
         });
-        
-        //Adding Clear buttons
-        drawSwitch.add(addNextButton("Clear", "Clear"));
-        drawSwitch.get(1).setPrefSize(100, 30);
-        Button undo = new Button("Undo");
-        addNextButton("Undo", "ClearDim");
+	}
+	public void clearButtons() {
+        //Adding Clear/Undo buttons
+        Button clear = addNextButton("Clear", "Clear");
+        clear.addEventHandler(ActionEvent.ACTION, (e)-> {
+        	shapeClicked = false;
+       		border.getChildren().removeAll(anchors);       
+       		for(Object child: border.getChildren()) {
+       			if(child instanceof Polygon) {
+       				border.getChildren().remove(child);
+       				break;
+       			}
+           	}     		
+        });
+        drawSwitch.add(clear);
+        Button undo = addNextButton("Undo", "ClearDim");
         dimSwitch.add(undo);
-        dimSwitch.get(0).setPrefSize(100, 30);
-        dimSwitch.get(1).setPrefSize(100, 30);
-        dimSwitch.add(addNextButton("Next", "ConditionScreen"));
-        dimSwitch.get(2).setPrefSize(100, 30);
         dimSwitch.get(1).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
@@ -82,24 +118,29 @@ public class PlotDesign extends View{
             }
         });
         
-        //Adding Save button
+	}
+	public void saveButtons() {
+		//Adding Save button
         drawSwitch.add(new Button("Save"));
-        drawSwitch.get(2).setPrefSize(100, 30);
+        drawSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
         setOnMouse(drawSwitch.get(2));
         drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
             	//https://stackoverflow.com/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
-            	img = canvas.snapshot(null, null);
-            
+            	img = gc.getCanvas().snapshot(null, null);
             	manageView.setImage(img);
+            	dragAnchor = false;
+            	for(Anchor a: anchors) {
+            		a.setDragAnchor(dragAnchor);
+            	}
+            	shapeClicked = true;
             	onSettingDimensions();
+            	//set the outline of the shape in model
+            	controller.enterPolygonBoundary(poly);
             }
         });
-        
-        //Adding to border
-        createHBox(drawSwitch);	
-        border.setTop(toolbar);
+        dimSwitch.add(addNextButton("Next", "ConditionScreen"));
 	}
 	
 	/**
@@ -168,5 +209,36 @@ public class PlotDesign extends View{
             border.setOnMousePressed(null);
             border.setOnMouseDragged(null);
         });
+	}
+	
+	//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
+	public void onShape() {
+		//Initializes the points clockwise starting from top left corner of box
+		double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
+	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
+		List<Double> values = new ArrayList<Double>();
+		anchors = FXCollections.observableArrayList();
+		poly = new Polygon();
+        for(int i = 0; i < x.length; i++) {
+        	values.add(x[i]);
+            values.add(y[i]);
+        }
+        dragAnchor = true;
+        poly.getPoints().addAll(values);
+        poly.setStroke(Color.BLACK);
+        poly.setStrokeWidth(2);
+        poly.setStrokeLineCap(StrokeLineCap.ROUND);
+        poly.setFill(Color.TRANSPARENT);
+        border.getChildren().add(poly);
+        
+        //Create the anchors
+        for (int i = 0; i < poly.getPoints().size(); i += 2) {
+        	final int idx = i;
+            DoubleProperty xProperty = new SimpleDoubleProperty(poly.getPoints().get(i));
+            DoubleProperty yProperty = new SimpleDoubleProperty(poly.getPoints().get(i + 1));
+            anchors.add(new Anchor(Color.PINK, xProperty, yProperty, poly, idx, dragAnchor, controller));
+        }
+        border.getChildren().addAll(anchors);
+        
 	}
 }

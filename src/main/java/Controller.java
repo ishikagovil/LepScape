@@ -1,5 +1,6 @@
 import javafx.event.EventHandler;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -7,10 +8,10 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Map;
-
 import javafx.application.Application;
 
 /**
@@ -60,9 +61,7 @@ public class Controller extends Application {
 	 * @author Ishika Govil 
 	 */
 	public EventHandler<ActionEvent> getHandlerforClicked(String next) { 
-		return (e) -> {
-			switchViews(next);
-		};
+		return (e) -> { switchViews(next); };
 	}
 	
 	/** 
@@ -84,10 +83,9 @@ public class Controller extends Application {
 
 	}
 	
-	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
-		return null;
+	public EventHandler<MouseEvent> getHandlerforAnchor(Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
+		return (e) -> { anchoring(e, anchor, dragAnchor, x, y, poly, idx); };
 	}
-	
 	/**
 	 * Calls pressed when mouse is pressed
 	 * @param key the plant that is pressed
@@ -298,6 +296,26 @@ public class Controller extends Application {
 		 this.model.updateOutlineSection(event.getSceneX(), event.getSceneY());
 	}
 	
+	public void anchoring(MouseEvent event, Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
+		if(dragAnchor) {
+    		anchor.setCenterX(event.getX());           
+    		anchor.setCenterY(event.getY());    
+    		poly.getPoints().set(idx, x.get());
+    		poly.getPoints().set(idx + 1, y.get());
+    	}
+	}
+	public void restartPolygonBoundary() {
+		this.model.getGarden().polygonCorners = new ArrayList<double[]>();
+	}
+	
+	public void enterPolygonBoundary(Polygon poly) {
+		for(int i = 0; i < poly.getPoints().size(); i+= 2) {
+			DoubleProperty x = new SimpleDoubleProperty(poly.getPoints().get(i));
+            DoubleProperty y = new SimpleDoubleProperty(poly.getPoints().get(i + 1));
+			this.model.getGarden().setPolygonCorners(x.get(), y.get());
+		}
+	}
+	
 	/** 
 	 * Called when user is drawing. 
 	 * Updates the canvas of the relevant view and calculates the number of pixels from the starting and ending point of line
@@ -342,7 +360,7 @@ public class Controller extends Application {
 		 //Clears the canvas the user was drawing on. Also clears the ArrayList corresponding to the coordinates of the plot boundary
 		 if(next.equals("Clear")) {
 			 this.view.getGC().clearRect(0, 0,this.view.getScreenWidth(), this.view.getScreenHeight());
-			 this.model.getGarden().outline = new ArrayList<double[]>(); 
+			 this.model.getGarden().clearOutline();
 		 }
 		 //Clears only the lines drawn after setting dimension. Also clears the ArrayList corresponding to the coordinates of the line
 		 else if(next.equals("ClearDim")) {

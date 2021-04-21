@@ -70,6 +70,11 @@ public class ManageViews {
 	public void switchViews(String next) {
 		if(next.equals("Drawing"))
 			((PlotDesign) this.currView).onDrawing();
+		else if(next.equals("Shape")) {
+	        //Only allows for one shape drawn at once
+			if(((PlotDesign) this.currView).shapeClicked == false)
+				((PlotDesign) this.currView).onShape();
+		}
 		else
 			this.currView = this.getView(next);
 	}

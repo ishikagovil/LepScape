@@ -6,6 +6,7 @@ public class Garden {
 	private int cost;
 	public ArrayList<PlacedPlant> plants;
 	public ArrayList<double[]> outline;
+	public ArrayList<double[]> polygonCorners;
 	public ArrayList<Conditions> sections;
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
@@ -20,6 +21,7 @@ public class Garden {
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
 		this.outline = new ArrayList<double[]>();
+		this.polygonCorners = new ArrayList<double[]>();
 		this.sections = new ArrayList<Conditions>();
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();
@@ -62,6 +64,9 @@ public class Garden {
 	public ArrayList<double[]> getOutline() {
 		return this.outline;
 	}
+	public ArrayList<double[]> getPolygonCorners() {
+		return this.polygonCorners;
+	}
 	
 	public ArrayList<PlacedPlant> getPlants() {
 		return this.plants;
@@ -92,9 +97,19 @@ public class Garden {
 		double[] arr = {x,y};
 		this.outline.add(arr);
 	}
+	/**
+	 * Called after user is done moving anchors to set plot boundary shape
+	 * @param double x representing x coordinate
+	 * @param double y representing y coordinate
+	 */
+	public void setPolygonCorners(double x, double y) {
+		double[] arr = {x,y};
+		this.polygonCorners.add(arr);
+	}
 
 	public void clearOutline() { //called if user clears their drawing
 		this.outline = new ArrayList<double[]>(); 
+		this.polygonCorners = new ArrayList<double[]>(); 
 	}
 
 	

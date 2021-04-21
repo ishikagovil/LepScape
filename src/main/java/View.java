@@ -12,6 +12,8 @@ public abstract class View{
 	public Map<String, Image> plantImages;
 	public int screenWidth = 1270;
 	public int screenHeight = 760;
+	public int buttonWidth = 100;
+	public int buttonHeight = 30;
 	BorderPane border;
 	Stage stage;
 	Controller controller;
@@ -51,6 +53,7 @@ public abstract class View{
 	} 
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
+		b.setPrefSize(buttonWidth, buttonHeight);
 		b.setPrefHeight(30);;
 		setOnMouse(b);
 		b.setOnAction(controller.getHandlerforClicked(next));
@@ -64,7 +67,7 @@ public abstract class View{
 
 	}
 
-	//Used only in gardenDesig. In here because need to called by controller
+	//Used only in gardenDesign. In here because need to called by controller
 	public void addImageView(double x, double y, String key) {}
 	public void removePlant(Node n) {}
 	public void makeInfoPane(String name, String info) {}
