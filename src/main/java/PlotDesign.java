@@ -47,7 +47,7 @@ public class PlotDesign extends View{
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
-        gc.setLineWidth(2);
+        gc.setLineWidth(1);
         //Creating buttons on the screen
         toolbarButtons();        
         backButtons();
@@ -88,7 +88,9 @@ public class PlotDesign extends View{
             	//If there is no polygon in the borderpane right now, then set shapeClicked to false
             	if(!border.getChildren().contains(poly))          
             		shapeClicked = false;
-            	gc.drawImage(img,0,0);
+            	border.getChildren().add(poly);
+            	border.getChildren().addAll(anchors);
+            	removeLines(true);
             	border.getChildren().remove(label);
             	border.getChildren().remove(grid);
             	createHBox(drawSwitch);	
@@ -111,6 +113,7 @@ public class PlotDesign extends View{
        				break;
        			}
         	}  		
+        	removeLines(false);
         });
         drawSwitch.add(clear);
         Button undo = addNextButton("Undo", "ClearDim");
@@ -118,7 +121,7 @@ public class PlotDesign extends View{
         dimSwitch.get(1).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	gc.drawImage(img,0,0);
+            	gc.clearRect(0,0, screenWidth, screenHeight);
             	onSettingDimensions();
             }
         });
@@ -132,10 +135,12 @@ public class PlotDesign extends View{
         drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	//https://stackoverflow.com/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
-            	img = gc.getCanvas().snapshot(null, null);
-            	gc.clearRect(0, 0, screenWidth, screenHeight);
-            	manageView.setImage(img);
+            	//https://stackoverflow.gcom/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
+            	img = gc.getCanvas().snapshot(null, null); // remove this line when WritableImage is eliminated
+            	manageView.setImage(img); // remove this line when WritableImage is eliminated
+            	border.getChildren().remove(poly);
+            	border.getChildren().removeAll(anchors);
+            	gc.clearRect(0,0, screenWidth, screenHeight);
             	dragAnchor = false;        	
             	toggleAnchorHandler();
             	shapeClicked = true;

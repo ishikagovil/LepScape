@@ -164,8 +164,8 @@ public class ManageViews {
 	public void removePlant(Node node) {
 		views.get("GardenDesign").removePlant(node);
 	}
-	public void drawLine(double x1, double y1, double x2, double y2) {
-		this.currView.drawLine(x1, y1, x2, y2);
+	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
+		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
 	}
 	
 	//methods only used by garden design

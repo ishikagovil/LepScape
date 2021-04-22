@@ -320,19 +320,21 @@ public class Controller extends Application {
 	
 	public void drawPlot() {
 		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
-		iteratePlot(itr, model.getGarden().outline);
+		iteratePlot(itr, model.getGarden().outline, false);
 		itr = model.getGarden().polygonCorners.listIterator();
-		iteratePlot(itr, model.getGarden().polygonCorners);
+		iteratePlot(itr, model.getGarden().polygonCorners, true);
 	}
-	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list) {
+	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list, boolean isPolygon) {
 		while(itr.hasNext()) {
 			double[] point1 = (double[])itr.next();
 			double[] point2;
 			if(itr.hasNext())
 				point2 = list.get(itr.nextIndex());
-			else
+			else if(isPolygon)
 				point2 = list.get(0);
-			this.view.drawLine(point1[0], point1[1], point2[0], point2[1]);
+			else 
+				return;
+			this.view.drawLine(point1[0], point1[1], point2[0], point2[1], isPolygon);
 		}
 	}
 	/** 

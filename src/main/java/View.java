@@ -19,11 +19,15 @@ public abstract class View{
 	Controller controller;
 	ManageViews manageView;
 	GraphicsContext gc;
+	ArrayList<Line> polygonLines;
+	ArrayList<Line> freeLines;
 
 	public View(Stage stage, Controller c, ManageViews manageView) { 
 		this.manageView = manageView;
 		this.stage = stage;
-        controller = c;
+		this.polygonLines = new ArrayList<>();
+		this.freeLines = new ArrayList<>();
+        this.controller = c;
 		this.stage.setTitle("Lepscape");
 	}	
 	
@@ -66,10 +70,24 @@ public abstract class View{
 
 	}
 	
-	public void drawLine(double x1, double y1, double x2, double y2) {
+	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		Line line = new Line(x1, y1, x2, y2);
 		line.setStrokeWidth(2);
 		border.getChildren().add(line);
+		if(isPolygon)
+			polygonLines.add(line);
+		else
+			freeLines.add(line);
+	}
+	public void removeLines(boolean isPolygon) {
+		if(isPolygon) {
+			border.getChildren().removeAll(polygonLines);
+			polygonLines = new ArrayList<>();
+		}
+		else {
+			border.getChildren().removeAll(freeLines);
+			freeLines = new ArrayList<>();
+		}
 	}
 	
 	//Used only in gardenDesign. In here because need to called by controller
