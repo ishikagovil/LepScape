@@ -15,9 +15,6 @@ public class Garden {
 	 * @author Ishika Govil, Kimmy Huynh,
 	 */
 	
-	/**
-	 * 
-	 */
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
 		this.outline = new ArrayList<double[]>();
@@ -58,12 +55,17 @@ public class Garden {
 	}
 	
 	/**
-	 * Returns the list of coordinates of a plot's boundary set by user
-	 * @return ArrayList<double[]> representing list of all plot boundary coordinates
+	 * Returns the list of coordinates of freedrawn piece of boundary set by user
+	 * @return ArrayList<double[]> representing list of all free drawn plot's boundary coordinates
 	 */
 	public ArrayList<double[]> getOutline() {
 		return this.outline;
 	}
+	
+	/**
+	 * Returns the list of coordinates of the polygon piece of boundary set by user
+	 * @return ArrayList<double[]> representing list of all polygon's boundary coordinates
+	 */
 	public ArrayList<double[]> getPolygonCorners() {
 		return this.polygonCorners;
 	}
@@ -106,12 +108,18 @@ public class Garden {
 		double[] arr = {x,y};
 		this.polygonCorners.add(arr);
 	}
-
-	public void clearOutline() { //called if user clears their drawing
+	/**
+	 * Clears all plot boundary coordinates, and called when user clears their plot
+	 */
+	public void clearOutline() {
 		this.outline = new ArrayList<double[]>(); 
 		this.polygonCorners = new ArrayList<double[]>(); 
 	}
-
+	/**
+	 * Finds the extreme values of the plot 
+	 * @return ArrayList<double[]> of extreme values clockwise starting from the top
+	 * @author Ishika Govil 
+	 */
 	public ArrayList<double[]> getExtremes() {
 		ArrayList<double[]> scaledOutlines = new ArrayList<>();
 		ArrayList<double[]> extrema = new ArrayList<>();
@@ -132,7 +140,7 @@ public class Garden {
 			if(point[1] <  scaledOutlines.get(lowestY)[1])
 				lowestY = idx;
 			if(point[1] > scaledOutlines.get(highestY)[1])
-				lowestX = idx;	
+				highestY = idx;	
 			idx++;
 		}
 		extrema.add(scaledOutlines.get(lowestY));

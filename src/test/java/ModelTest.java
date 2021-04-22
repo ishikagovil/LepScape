@@ -15,28 +15,15 @@ class ModelTest {
 	public int cost = 0;
 	
 	public Model m = new Model();
-	
-	@Test
-	void testCreateDefault() {
-		m.createDefault();
-		fail("Not yet implemented");
-	}
 
 	@Test
-	void testGetBoundaries() {
-		assertNull(m.getBoundaries());
-		fail("Not yet implemented");
+	void testSetGarden() {
+		m.setGarden(garden);
+		assertEquals(garden, m.getGarden());
 	}
-
 	@Test
 	void testCreateNewConditions() {
 		m.createNewConditions();
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testUpdateOutlineSection() {
-		m.updateOutlineSection(x, y);
 		fail("Not yet implemented");
 	}
 
@@ -82,22 +69,22 @@ class ModelTest {
 		fail("Not yet implemented");
 	}
 
-	/*@Test
-	void testStartStage() {
-		m.start(null);
-		fail("Not yet implemented");
-	}*/
-
 	@Test
-	void testGetX() {
-		m.getX();
-		fail("Not yet implemented");
+	void testSetX() {
+		m.setX(5);
+		assertEquals(5, m.getX());
 	}
 
 	@Test
-	void testGetY() {
-		m.getY();
-		fail("Not yet implemented");
+	void testSetY() {
+		m.setY(5.5);
+		assertEquals(5.5, m.getY());
 	}
+	@Test
+	void testSetLengthPerPixel() {
+		m.setLengthPerPixel(20.5);
+		assertEquals(20.5, m.getLengthPerPixel());
+	}
+	
 
 }

@@ -124,6 +124,14 @@ public class ManageViews {
 	}
 	
 	/** 
+	 * Returns the top left corner of the garden view frame
+	 * @return int 
+	 */
+	public double[] getGardenTopLeft() {
+		return new double[]{this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY};
+	}
+
+	/** 
 	 * Returns the GraphicsContext associated with the current View
 	 * @return GraphicsContext 
 	 */

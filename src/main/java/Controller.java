@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 import javafx.application.Application;
@@ -294,7 +295,7 @@ public class Controller extends Application {
 			 this.view.getGC().beginPath();
 		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
 		 this.view.getGC().stroke();
-		 this.model.updateOutlineSection(event.getSceneX(), event.getSceneY());
+		 this.model.getGarden().updateOutline(event.getSceneX(), event.getSceneY());
 		 this.view.validateSave();
 	}
 	
@@ -329,6 +330,12 @@ public class Controller extends Application {
 		iteratePlot(itr, model.getGarden().outline, false, scale);
 	}
 	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list, boolean isPolygon, double scale) {
+		double[] translate;
+		if(scale == 1)
+			translate = new double[] {0, 0};
+		else
+			translate = this.translateScaledPlot(scale);
+			
 		while(itr.hasNext()) {
 			double[] point1 = (double[])itr.next();
 			double[] point2;
@@ -339,10 +346,10 @@ public class Controller extends Application {
 			else 
 				return;
 			if(isPolygon) {
-				this.view.drawLine(point1[0]*scale, point1[1]*scale, point2[0]*scale, point2[1]*scale, isPolygon);
+				this.view.drawLine(point1[0]*scale + translate[0], point1[1]*scale + translate[1], point2[0]*scale + translate[0], point2[1]*scale + translate[1], isPolygon);
 			}
 			if(!isPolygon && Math.abs(point1[0] - point2[0]) < 60 && Math.abs(point1[1] - point2[1]) < 60)
-				this.view.drawLine(point1[0]*scale, point1[1]*scale, point2[0]*scale, point2[1]*scale, isPolygon);
+				this.view.drawLine(point1[0]*scale + translate[0], point1[1]*scale + translate[1], point2[0]*scale + translate[0], point2[1]*scale + translate[1], isPolygon);
 		}
 	}
 	
@@ -353,6 +360,15 @@ public class Controller extends Application {
 		double scale =  Math.min(scaleX, scaleY);
 		drawPlot(scale);
 	}
+	
+	public double[] translateScaledPlot(double scale) {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+		double[] topLeft = this.view.getGardenTopLeft();
+		double translateX = topLeft[0] - extrema.get(3)[0] * scale;
+		double translateY = topLeft[1] - extrema.get(0)[1] * scale;
+		return new double[] {translateX, translateY};
+	}
+	
 	public double calculateLineDistance(double x1, double y1, double x2, double y2) {
 		return Math.sqrt(Math.pow((x1 -  x2),2) + Math.pow(( y1 - y2 ),2) );
 	}
@@ -443,7 +459,6 @@ public class Controller extends Application {
 	}
 	
 	//Methods used when user is designing new plot and inputting conditions
-	public void onSectioning() {} //Called in drag(), model calls updateOutlineSection and view is updated 
 	public void displayConditionsOptions() {} //Called in release() to update the view with conditions (changeCursor called with false)
 	
 	//Methods used when user is designing their garden
@@ -452,11 +467,9 @@ public class Controller extends Application {
 	
 	//Methods that provide other feedback when buttons are pressed
 	public void downloadGarden() {} //Called in getHandlerforClicked if download is pressed. gets info from model, puts it in a pdf, downloads it to computer
-	public void toolClicked(MouseEvent event, Image img) {} //Called in getHandlerforClicked if a tool is clicked. changes cursor to image
 	public void getCompostInfo() {} //Called in getHandlerforClicked if compost bin clicked, which gets info about deleted plants and sends to View
 
 	//Helpers
-	public ArrayList<float[]> getBoundaries() {return null;} //Gets boundaries of garden and sends to View when rendering the ConditionScreen
 	public void getRecommendedPlants() {} //when designGarden is called, this method is also called to initialize the optimal garden (calls createDefault in model)
 	public void loadGarden() {} // takes garden information stored in Model and renders GardenDesign 
 

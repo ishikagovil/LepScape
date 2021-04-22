@@ -26,17 +26,14 @@ public class Model {
 		this.budget = 0;
 		this.lengthPerPixel = -1;
 	}
-	// Methods for the user to draw the garden and put in desired conditions
-	// create the optimal garden based on leps and conditions provided
-	public void createDefault() {}
-	// get the boundaries of the garden
-	public ArrayList<double[]> getBoundaries() {
-		return this.gardenMap.getOutline();
-	}
+
+	
 	public Garden getGarden() {
 		return this.gardenMap;
 	}
-	
+	public void setGarden(Garden garden) {
+		this.gardenMap = garden;
+	}
 	public void setPlantDirectory(Map<String, PlantSpecies> plantdir) {
 		this.plantDirectory = plantdir;
 	}
@@ -47,14 +44,6 @@ public class Model {
 	// create a new condition for the garden
 	public void createNewConditions() {}
 	
-	/**
-	 * Update the outline while user is drawing their plot
-	 * @param double x coordinate
-	 * @param double y coordinate
-	 */
-	public void updateOutlineSection(double x, double y) {
-		this.gardenMap.updateOutline(x, y);
-	}
 	// update the outline to the condition that user wants
 	public void updateConditions() {}
 	// find dimension of the garden
