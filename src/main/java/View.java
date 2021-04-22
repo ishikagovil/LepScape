@@ -12,9 +12,9 @@ public abstract class View{
 	public Map<String, Image> plantImages;
 	public int screenWidth = 1270;
 	public int screenHeight = 760;
-	public double gardenWidth = 0.3*screenWidth;
-	public double gardenHeight = 0.3*screenHeight;
-	public double gardenTopLeftX = 0.2*screenWidth;
+	public double gardenWidth = 0.5*screenWidth;
+	public double gardenHeight = 0.5*screenHeight;
+	public double gardenTopLeftX = 0.3*screenWidth;
 	public double gardenTopLeftY = 0.2*screenHeight;
 	public int buttonWidth = 100;
 	public int buttonHeight = 30;

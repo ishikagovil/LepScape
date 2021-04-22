@@ -7,7 +7,8 @@ public class Model {
 	public Map<String, Lep> lepDirectory;
 
 	public double lengthPerPixel;
-
+	public double scale;
+	public double[] translate;
 	public double x;
 	public double y;
 	public int lepCount;
@@ -114,6 +115,34 @@ public class Model {
 		return this.y;
 	}
 	
+	/**
+	 * Sets the scale of boundary
+	 * @param double representing the calculated scale of plot
+	 */
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+	/**
+	 * Sets the translate of boundary
+	 * @param double array representing the x and y direction translations
+	 */
+	public void setTranslate(double[] translate) {
+		this.translate = translate;
+	}
+	/**
+	 * Returns the scale of boundary
+	 * @return double representing the calculated scale of plot
+	 */
+	public double getScale() {
+		return this.scale;
+	}
+	/**
+	 * Sets the translate of boundary
+	 * @return double array representing the x and y direction translations
+	 */
+	public double[] getTranslate() {
+		return this.translate;
+	}
 	/**
 	 * Returns the length per pixel
 	 * @return double representing length (ft) per pixel

@@ -68,6 +68,18 @@ class ModelTest {
 		m.costUpdate();
 		fail("Not yet implemented");
 	}
+	@Test
+	void testSetScale() {
+		m.setScale(5);
+		assertEquals(5, m.getScale());
+	}
+
+	@Test
+	void testSetTranslate() {
+		m.setTranslate(new double[]{2.1, 4.3});
+		assertEquals(2.1, m.getTranslate()[0]);
+		assertEquals(4.3, m.getTranslate()[1]);
+	}
 
 	@Test
 	void testSetX() {
