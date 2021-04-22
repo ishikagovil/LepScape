@@ -3,8 +3,8 @@ import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import java.util.*;
 
@@ -60,13 +60,18 @@ public abstract class View{
 		return b;
 	}	
 
-
 	public void setOnMouse(Button b) {
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
 		b.setOnMouseExited(controller.getHandlerforMouseExited());
 
 	}
-
+	
+	public void drawLine(double x1, double y1, double x2, double y2) {
+		Line line = new Line(x1, y1, x2, y2);
+		line.setStrokeWidth(2);
+		border.getChildren().add(line);
+	}
+	
 	//Used only in gardenDesign. In here because need to called by controller
 	public void addImageView(double x, double y, String key) {}
 	public void removePlant(Node n) {}

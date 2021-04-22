@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Map;
 import javafx.application.Application;
 
@@ -316,6 +318,23 @@ public class Controller extends Application {
 		}
 	}
 	
+	public void drawPlot() {
+		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
+		iteratePlot(itr, model.getGarden().outline);
+		itr = model.getGarden().polygonCorners.listIterator();
+		iteratePlot(itr, model.getGarden().polygonCorners);
+	}
+	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list) {
+		while(itr.hasNext()) {
+			double[] point1 = (double[])itr.next();
+			double[] point2;
+			if(itr.hasNext())
+				point2 = list.get(itr.nextIndex());
+			else
+				point2 = list.get(0);
+			this.view.drawLine(point1[0], point1[1], point2[0], point2[1]);
+		}
+	}
 	/** 
 	 * Called when user is drawing. 
 	 * Updates the canvas of the relevant view and calculates the number of pixels from the starting and ending point of line

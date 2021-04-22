@@ -134,6 +134,7 @@ public class PlotDesign extends View{
             public void handle(ActionEvent e) {
             	//https://stackoverflow.com/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
             	img = gc.getCanvas().snapshot(null, null);
+            	gc.clearRect(0, 0, screenWidth, screenHeight);
             	manageView.setImage(img);
             	dragAnchor = false;        	
             	toggleAnchorHandler();
@@ -141,6 +142,7 @@ public class PlotDesign extends View{
             	onSettingDimensions();
             	//set the outline of the shape in model
             	controller.enterPolygonBoundary(poly);
+            	controller.drawPlot();
             }
         });
         dimSwitch.add(addNextButton("Next", "ConditionScreen"));

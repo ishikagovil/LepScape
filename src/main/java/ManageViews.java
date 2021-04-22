@@ -8,6 +8,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 public class ManageViews {
@@ -162,6 +163,9 @@ public class ManageViews {
 	
 	public void removePlant(Node node) {
 		views.get("GardenDesign").removePlant(node);
+	}
+	public void drawLine(double x1, double y1, double x2, double y2) {
+		this.currView.drawLine(x1, y1, x2, y2);
 	}
 	
 	//methods only used by garden design
