@@ -59,7 +59,13 @@ public class PlotDesign extends View{
 	public void toolbarButtons() {
 		//Add editing button and functionality
         ToolBar toolbar = new ToolBar();
-        toolbar.getItems().add(addNextButton("Freehand","Drawing"));
+        Button freehand = addNextButton("Freehand","Drawing");
+        toolbar.getItems().add(freehand);
+        //Make sure the anchors cannot be dragged when freehand is selected
+        freehand.addEventHandler(ActionEvent.ACTION, (e)-> {
+        	dragAnchor = false;    	
+        	toggleAnchorHandler();
+        });
         Button shape = addNextButton("Polygon","Shape");
         toolbar.getItems().add(shape);
         disableDrawing(shape);
@@ -80,11 +86,7 @@ public class PlotDesign extends View{
             @Override 
             public void handle(ActionEvent e) {
             	dragAnchor = true;
-            	Iterator<Anchor> itr = anchors.iterator();
-            	while(itr.hasNext()) {
-            		Anchor a = (Anchor)itr.next();
-            		a.setDragAnchor(dragAnchor);
-            	}
+            	toggleAnchorHandler();
             	//If there is no polygon in the borderpane right now, then set shapeClicked to false
             	if(!border.getChildren().contains(poly))          
             		shapeClicked = false;
@@ -136,13 +138,8 @@ public class PlotDesign extends View{
             	//https://stackoverflow.com/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
             	img = gc.getCanvas().snapshot(null, null);
             	manageView.setImage(img);
-            	dragAnchor = false;
-            	
-            	Iterator<Anchor> itr = anchors.iterator();
-            	while(itr.hasNext()) {
-            		Anchor a = (Anchor)itr.next();
-            		a.setDragAnchor(dragAnchor);
-            	}
+            	dragAnchor = false;        	
+            	toggleAnchorHandler();
             	shapeClicked = true;
             	onSettingDimensions();
             	//set the outline of the shape in model
@@ -248,9 +245,16 @@ public class PlotDesign extends View{
 			DoubleProperty xProperty = new SimpleDoubleProperty(index);
 			index = (Double)itr.next();
 	        DoubleProperty yProperty = new SimpleDoubleProperty(index);
-	        anchors.add(new Anchor(Color.PINK, xProperty, yProperty, poly, count, dragAnchor, controller));	
+	        anchors.add(new Anchor(Color.PINK, xProperty, yProperty, poly, count, dragAnchor, this, controller));	
 	        count+=2;
 		}
         border.getChildren().addAll(anchors);
+	}
+	public void toggleAnchorHandler() {
+		Iterator<Anchor> itr = anchors.iterator();
+    	while(itr.hasNext()) {
+    		Anchor a = (Anchor)itr.next();
+    		a.setDragAnchor(dragAnchor);
+    	}
 	}
 }

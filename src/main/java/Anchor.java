@@ -1,19 +1,22 @@
 import javafx.beans.property.DoubleProperty;
+import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 
 public class Anchor extends Circle {
+	PlotDesign plotView;
 	Controller controller;
 	boolean dragAnchor;
 	Polygon poly;
 	DoubleProperty x;
 	DoubleProperty y;
 	int idx;
-        Anchor(Color color, DoubleProperty x, DoubleProperty y, Polygon poly, int idx, boolean dragAnchor, Controller controller) {
+        Anchor(Color color, DoubleProperty x, DoubleProperty y, Polygon poly, int idx, boolean dragAnchor, PlotDesign plotView, Controller controller) {
             super(x.get(), y.get(), 8);
             //Initialize values
+            this.plotView = plotView;
             this.controller = controller;
             this.x = x;
             this.y = y;
@@ -29,7 +32,7 @@ public class Anchor extends Circle {
             setOnMouseDragged(controller.getHandlerforAnchor(this, dragAnchor, x, y, poly, idx));         
         }
         public void setDragAnchor(boolean dragAnchor) {
-        	this.dragAnchor = dragAnchor;
-        	setOnMouseDragged(controller.getHandlerforAnchor(this, dragAnchor, x, y, poly, idx)); 
+        	this.dragAnchor = dragAnchor;      	
+        	setOnMouseDragged(controller.getHandlerforAnchor(this, dragAnchor, x, y, poly, idx));              	
         }
     }

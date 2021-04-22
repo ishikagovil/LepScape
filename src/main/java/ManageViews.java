@@ -74,6 +74,11 @@ public class ManageViews {
 	        //Only allows for one shape drawn at once
 			if(((PlotDesign) this.currView).shapeClicked == false)
 				((PlotDesign) this.currView).onShape();
+			else {
+				((PlotDesign) this.currView).dragAnchor = true;
+				((PlotDesign) this.currView).toggleAnchorHandler();
+			}
+			((PlotDesign) this.currView).shapeClicked = true;
 		}
 		else
 			this.currView = this.getView(next);
