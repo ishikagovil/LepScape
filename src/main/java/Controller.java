@@ -383,7 +383,7 @@ public class Controller extends Application {
 	 */
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
-
+		 System.out.println(this.model.lengthPerPixel);
 	}
 	
 	public Map<String, Lep> getLepInfo() {

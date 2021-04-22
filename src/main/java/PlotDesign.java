@@ -183,8 +183,15 @@ public class PlotDesign extends View{
 	    TextField dimension = new TextField();
 	    dimension.setPromptText("Enter dimension (ft)");
 	    dimension.setOnKeyReleased(event -> {
-	    	  if (event.getCode() == KeyCode.ENTER){
-	            controller.settingLength(Double.parseDouble(dimension.getText()));
+	    	if (event.getCode() == KeyCode.ENTER){
+	    		String length = dimension.getText();
+	    		try{
+	    			controller.settingLength(Double.parseDouble(length));
+	    		}
+	    		catch(NumberFormatException e){
+	    			//not a double
+	    			dimension.clear();
+	    		}	            
 	            dimension.setPromptText("Enter dimension (ft)");
 	            border.setOnMousePressed(null);
 	            border.setOnMouseDragged(null);
