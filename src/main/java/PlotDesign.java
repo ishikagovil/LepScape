@@ -148,16 +148,16 @@ public class PlotDesign extends View{
             	//https://stackoverflow.gcom/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
             	img = gc.getCanvas().snapshot(null, null); // remove this line when WritableImage is eliminated
             	manageView.setImage(img); // remove this line when WritableImage is eliminated
+            	//set the outline of the shape in model
+            	if(border.getChildren().contains(poly)) 
+            		controller.enterPolygonBoundary(poly);           	
             	border.getChildren().remove(poly);
             	border.getChildren().removeAll(anchors);
             	gc.clearRect(0,0, screenWidth, screenHeight);
             	dragAnchor = false;        	
             	toggleAnchorHandler();
             	shapeClicked = true;
-            	onSettingDimensions();
-            	//set the outline of the shape in model
-            	if(border.getChildren().contains(poly))
-            		controller.enterPolygonBoundary(poly);
+            	onSettingDimensions();      	
             	removeLines();
             	controller.scalePlot();
             }

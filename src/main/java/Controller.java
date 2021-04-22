@@ -11,7 +11,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 import javafx.application.Application;
@@ -353,15 +352,6 @@ public class Controller extends Application {
 		double scaleX = this.view.getGardenWidth() / calculateLineDistance(extrema.get(1)[0], extrema.get(1)[1], extrema.get(3)[0], extrema.get(3)[1]);
 		double scale =  Math.min(scaleX, scaleY);
 		drawPlot(scale);
-//		ListIterator<double[]> itr = this.model.getGarden().scaledOutlines.listIterator();
-//		while(itr.hasNext()) {
-//			double[] point = itr.next();
-//			itr.remove();
-//			double[] newPoint = point;
-//			newPoint[0] = point[0] * scale;
-//			newPoint[1] = point[1] * scale;
-//			itr.add(newPoint);
-//		}
 	}
 	public double calculateLineDistance(double x1, double y1, double x2, double y2) {
 		return Math.sqrt(Math.pow((x1 -  x2),2) + Math.pow(( y1 - y2 ),2) );

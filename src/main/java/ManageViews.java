@@ -1,5 +1,4 @@
 import java.util.*;
-
 import javafx.scene.Node;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,7 +7,6 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 public class ManageViews {
@@ -77,12 +75,12 @@ public class ManageViews {
 	        //Only allows for one shape drawn at once
 			if(((PlotDesign) this.currView).shapeClicked == false) {
 				((PlotDesign) this.currView).onShape();
-				((PlotDesign) this.currView).validateSave();
 			}
-			else {
+			else {				
 				((PlotDesign) this.currView).dragAnchor = true;
 				((PlotDesign) this.currView).toggleAnchorHandler();
 			}
+			((PlotDesign) this.currView).validateSave();
 			((PlotDesign) this.currView).shapeClicked = true;
 		}
 		else

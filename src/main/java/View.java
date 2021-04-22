@@ -76,7 +76,7 @@ public abstract class View{
 		Line line = new Line(x1, y1, x2, y2);
 		line.setStrokeWidth(2);
 		border.getChildren().add(line);
-		if(isPolygon)
+		if(isPolygon) 
 			polygonLines.add(line);
 		else
 			freeLines.add(line);

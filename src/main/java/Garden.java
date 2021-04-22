@@ -113,7 +113,7 @@ public class Garden {
 	}
 
 	public ArrayList<double[]> getExtremes() {
-		ArrayList<double[]> scaledOutlines = new ArrayList<>();;
+		ArrayList<double[]> scaledOutlines = new ArrayList<>();
 		ArrayList<double[]> extrema = new ArrayList<>();
 		int lowestX = 0; 
 		int lowestY = 0; 
