@@ -68,7 +68,7 @@ public class PlotDesign extends View{
         	toggleAnchorHandler();
         });
         toolbar.getItems().add(addNextButton("Polygon","Shape"));
-        disableDrawing((Button)toolbar.getItems().get(1));
+        disableDrawing(toolbar.getItems().get(1));
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
         drawSwitch = new ArrayList<Button>();
         dimSwitch = new ArrayList<Button>();
@@ -148,20 +148,22 @@ public class PlotDesign extends View{
 		drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	//https://stackoverflow.gcom/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
             	img = gc.getCanvas().snapshot(null, null); // remove this line when WritableImage is eliminated
+            	manageView.setImage(img); // remove this line when WritableImage is eliminated
             	toolbar.getItems().get(0).setDisable(true);
             	toolbar.getItems().get(1).setDisable(true);
-            	manageView.setImage(img); // remove this line when WritableImage is eliminated
+            	
             	//set the outline of the shape in model
             	if(border.getChildren().contains(poly)) 
-            		controller.enterPolygonBoundary(poly);           	
+            		controller.enterPolygonBoundary(poly);    
+            	
+            	//Clear everything on this screen
             	border.getChildren().remove(poly);
             	border.getChildren().removeAll(anchors);
             	gc.clearRect(0,0, screenWidth, screenHeight);
-            	dragAnchor = false;        	
-            	toggleAnchorHandler();
             	shapeClicked = true;
+            	
+            	//Start the next screen for dimensions 
             	onSettingDimensions();      	
             	removeLines();
             	controller.scalePlot();
@@ -198,8 +200,6 @@ public class PlotDesign extends View{
 	    			dimension.clear();
 	    		}	            
 	            dimension.setPromptText("Enter dimension (ft)");
-	            border.setOnMousePressed(null);
-	            border.setOnMouseDragged(null);
 	            controller.switchViews("ConditionScreen");
 	          }
 	    });	
@@ -228,7 +228,6 @@ public class PlotDesign extends View{
 	 * Calls handlers in controller when user is drawing
 	 */
 	public void onDrawing() {
-		
 		border.setOnMousePressed(controller.getHandlerforDrawing(true));
         border.setOnMouseDragged(controller.getHandlerforDrawing(false));
         border.setOnMouseReleased(controller.getHandlerforDrawBreak());
@@ -238,10 +237,11 @@ public class PlotDesign extends View{
 	 * Disables the drawing handlers when user presses the Button passed
 	 * @param Button that disables drawing when pressed
 	 */
-	public void disableDrawing(Button b) {
-		b.addEventHandler(ActionEvent.ACTION, (e)-> {
+	public void disableDrawing(Node n) {
+		n.addEventHandler(ActionEvent.ACTION, (e)-> {
             border.setOnMousePressed(null);
             border.setOnMouseDragged(null);
+            border.setOnMouseReleased(null);
         });
 	}
 	
@@ -251,8 +251,6 @@ public class PlotDesign extends View{
 		double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
 	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
 		List<Double> values = new ArrayList<Double>();
-		anchors = FXCollections.observableArrayList();
-		poly = new Polygon();
         for(int i = 0; i < x.length; i++) {
         	values.add(x[i]);
             values.add(y[i]);
@@ -260,9 +258,8 @@ public class PlotDesign extends View{
         dragAnchor = true;
         poly.getPoints().addAll(values);
         poly.setStroke(Color.BLACK);
-        poly.setStrokeWidth(2);
-        poly.setStrokeLineCap(StrokeLineCap.ROUND);
         poly.setFill(Color.TRANSPARENT);
+        poly.setStrokeWidth(2);
         border.getChildren().add(poly);
         
         //Create the anchors

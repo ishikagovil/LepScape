@@ -192,7 +192,8 @@ public class ManageViews {
 		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
 	}
 	public void validateSave() {
-		((PlotDesign) this.currView).validateSave();
+		if(this.currView instanceof PlotDesign)
+			((PlotDesign) this.currView).validateSave();
 	}
 	
 	//methods only used by garden design
