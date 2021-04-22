@@ -231,6 +231,7 @@ public class PlotDesign extends View{
 		
 		border.setOnMousePressed(controller.getHandlerforDrawing(true));
         border.setOnMouseDragged(controller.getHandlerforDrawing(false));
+        border.setOnMouseReleased(controller.getHandlerforDrawBreak());
 	}
 	
 	/**

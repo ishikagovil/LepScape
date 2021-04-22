@@ -117,6 +117,10 @@ public class Controller extends Application {
 		return (e) -> {  draw(e, isPressed); };
 	}
 	
+	public EventHandler<MouseEvent> getHandlerforDrawBreak() {
+		return (e) -> {  drawBreak(); };
+	}
+	
 	/** 
 	 * Calls drag when mouse is released
 	 * @return EventHandler<MouseEvent>
@@ -298,7 +302,9 @@ public class Controller extends Application {
 		 this.model.getGarden().updateOutline(event.getSceneX(), event.getSceneY());
 		 this.view.validateSave();
 	}
-	
+	public void drawBreak() {
+		this.model.getGarden().updateOutline(-1,-1);
+	}
 	public void anchoring(MouseEvent event, Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
 		if(dragAnchor) {
     		anchor.setCenterX(event.getX());           
@@ -339,15 +345,12 @@ public class Controller extends Application {
 			double[] point1 = (double[])itr.next();
 			double[] point2;
 			if(itr.hasNext())
-				point2 = list.get(itr.nextIndex());
+				point2 = list.get(itr.nextIndex());	
 			else if(isPolygon)
 				point2 = list.get(0);
 			else 
 				return;
-			if(isPolygon) {
-				this.view.drawLine(point1[0]*scale + translate[0], point1[1]*scale + translate[1], point2[0]*scale + translate[0], point2[1]*scale + translate[1], isPolygon);
-			}
-			if(!isPolygon && Math.abs(point1[0] - point2[0]) < 60 && Math.abs(point1[1] - point2[1]) < 60)
+			if(point2[0] != -1 && point1[0]!= -1)
 				this.view.drawLine(point1[0]*scale + translate[0], point1[1]*scale + translate[1], point2[0]*scale + translate[0], point2[1]*scale + translate[1], isPolygon);
 		}
 	}

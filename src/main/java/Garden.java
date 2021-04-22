@@ -133,13 +133,13 @@ public class Garden {
 		int idx = 0;
 		while(itr.hasNext()) {
 			double[] point = (double[])itr.next();
-			if(point[0] <  scaledOutlines.get(lowestX)[0])
+			if(point[0] <  scaledOutlines.get(lowestX)[0] && point[0]!= -1)
 				lowestX = idx;
-			if(point[0] > scaledOutlines.get(highestX)[0])
+			if(point[0] > scaledOutlines.get(highestX)[0] && point[0]!= -1)
 				highestX = idx;
-			if(point[1] <  scaledOutlines.get(lowestY)[1])
+			if(point[1] <  scaledOutlines.get(lowestY)[1] && point[1]!= -1)
 				lowestY = idx;
-			if(point[1] > scaledOutlines.get(highestY)[1])
+			if(point[1] > scaledOutlines.get(highestY)[1] && point[1]!= -1)
 				highestY = idx;	
 			idx++;
 		}
