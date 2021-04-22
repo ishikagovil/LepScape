@@ -59,16 +59,14 @@ public class PlotDesign extends View{
 	public void toolbarButtons() {
 		//Add editing button and functionality
         ToolBar toolbar = new ToolBar();
-        Button freehand = addNextButton("Freehand","Drawing");
-        toolbar.getItems().add(freehand);
+        toolbar.getItems().add(addNextButton("Freehand","Drawing"));
         //Make sure the anchors cannot be dragged when freehand is selected
-        freehand.addEventHandler(ActionEvent.ACTION, (e)-> {
+        toolbar.getItems().get(0).addEventHandler(ActionEvent.ACTION, (e)-> {
         	dragAnchor = false;    	
         	toggleAnchorHandler();
         });
-        Button shape = addNextButton("Polygon","Shape");
-        toolbar.getItems().add(shape);
-        disableDrawing(shape);
+        toolbar.getItems().add(addNextButton("Polygon","Shape"));
+        disableDrawing((Button)toolbar.getItems().get(1));
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
         drawSwitch = new ArrayList<Button>();
         dimSwitch = new ArrayList<Button>();
@@ -104,8 +102,7 @@ public class PlotDesign extends View{
         Button clear = addNextButton("Clear", "Clear");
         clear.addEventHandler(ActionEvent.ACTION, (e)-> {
         	shapeClicked = false;
-       		border.getChildren().removeAll(anchors);      
-       		
+       		border.getChildren().removeAll(anchors);             		
        		Iterator<Node> itr = border.getChildren().iterator();
         	while(itr.hasNext()) {
         		Object child = (Object)itr.next();
