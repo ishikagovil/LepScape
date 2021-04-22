@@ -47,7 +47,7 @@ public class PlotDesign extends View{
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
-        gc.setLineWidth(1);
+        gc.setLineWidth(2);
         //Creating buttons on the screen
         toolbarButtons();        
         backButtons();
@@ -113,6 +113,8 @@ public class PlotDesign extends View{
        				break;
        			}
         	}  		
+        	poly = new Polygon();
+        	anchors = FXCollections.observableArrayList();
         	removeLines(false);
         });
         drawSwitch.add(clear);

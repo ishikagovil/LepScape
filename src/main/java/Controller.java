@@ -334,7 +334,11 @@ public class Controller extends Application {
 				point2 = list.get(0);
 			else 
 				return;
-			this.view.drawLine(point1[0], point1[1], point2[0], point2[1], isPolygon);
+			if(isPolygon) {
+				this.view.drawLine(point1[0], point1[1], point2[0], point2[1], isPolygon);
+			}
+			if(!isPolygon && Math.abs(point1[0] - point2[0]) < 35 && Math.abs(point1[1] - point2[1]) < 35)
+				this.view.drawLine(point1[0], point1[1], point2[0], point2[1], isPolygon);
 		}
 	}
 	/** 
