@@ -334,8 +334,7 @@ public class Controller extends Application {
 		if(scale == 1)
 			translate = new double[] {0, 0};
 		else
-			translate = this.translateScaledPlot(scale);
-			
+			translate = this.model.translateScaledPlot(this.view.getGardenTopLeft());		
 		while(itr.hasNext()) {
 			double[] point1 = (double[])itr.next();
 			double[] point2;
@@ -355,23 +354,16 @@ public class Controller extends Application {
 	
 	public void scalePlot() {
 		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
-		double scaleY = this.view.getGardenHeight() / calculateLineDistance(extrema.get(0)[0], extrema.get(0)[1], extrema.get(2)[0], extrema.get(2)[1]);
-		double scaleX = this.view.getGardenWidth() / calculateLineDistance(extrema.get(1)[0], extrema.get(1)[1], extrema.get(3)[0], extrema.get(3)[1]);
+		double scaleY = this.view.getGardenHeight() / this.model.calculateLineDistance(extrema.get(0)[0], extrema.get(0)[1], extrema.get(2)[0], extrema.get(2)[1]);
+		double scaleX = this.view.getGardenWidth() / this.model.calculateLineDistance(extrema.get(1)[0], extrema.get(1)[1], extrema.get(3)[0], extrema.get(3)[1]);
 		double scale =  Math.min(scaleX, scaleY);
+		this.model.setScale(scale);
 		drawPlot(scale);
 	}
 	
-	public double[] translateScaledPlot(double scale) {
-		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
-		double[] topLeft = this.view.getGardenTopLeft();
-		double translateX = topLeft[0] - extrema.get(3)[0] * scale;
-		double translateY = topLeft[1] - extrema.get(0)[1] * scale;
-		return new double[] {translateX, translateY};
-	}
 	
-	public double calculateLineDistance(double x1, double y1, double x2, double y2) {
-		return Math.sqrt(Math.pow((x1 -  x2),2) + Math.pow(( y1 - y2 ),2) );
-	}
+	
+	
 	/** 
 	 * Called when user is drawing. 
 	 * Updates the canvas of the relevant view and calculates the number of pixels from the starting and ending point of line
@@ -388,7 +380,7 @@ public class Controller extends Application {
 		//Get pixel information
 		double[] arr = {event.getSceneX(),event.getSceneY()};
 		this.view.dimLen.add(arr);
-		this.view.dimPixel = calculateLineDistance(view.dimLen.get(view.dimLen.size()-1)[0], view.dimLen.get(0)[0], view.dimLen.get(view.dimLen.size()-1)[1], view.dimLen.get(0)[1]);
+		this.view.dimPixel = this.model.calculateLineDistance(view.dimLen.get(view.dimLen.size()-1)[0], view.dimLen.get(0)[0], view.dimLen.get(view.dimLen.size()-1)[1], view.dimLen.get(0)[1]);
 	}
 	
 	/** 
@@ -399,7 +391,6 @@ public class Controller extends Application {
 	 */
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
-		 System.out.println(this.model.lengthPerPixel);
 	}
 	
 	public Map<String, Lep> getLepInfo() {

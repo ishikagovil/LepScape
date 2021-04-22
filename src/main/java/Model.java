@@ -158,6 +158,18 @@ public class Model {
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
 	}
+	public double calculateLineDistance(double x1, double y1, double x2, double y2) {
+		return Math.sqrt(Math.pow((x1 -  x2),2) + Math.pow(( y1 - y2 ),2) );
+	}
+	
+	public double[] translateScaledPlot(double[] topLeft) {
+		double translateX = topLeft[0] - this.getGarden().getExtremes().get(3)[0] * scale;
+		double translateY = topLeft[1] - this.getGarden().getExtremes().get(0)[1] * scale;
+		double[] translate = new double[]{translateX, translateY};
+		this.setTranslate(translate);
+		return translate;
+	}
+	
 	public UserMode getMode() {
 		return this.mode;
 	}

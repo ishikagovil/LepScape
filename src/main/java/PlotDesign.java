@@ -26,6 +26,7 @@ public class PlotDesign extends View{
 	WritableImage img; 
 	GridPane grid; //added to contain the TextField
 	Polygon poly;
+	ToolBar toolbar;
     ObservableList<Anchor> anchors = FXCollections.observableArrayList();
     boolean shapeClicked = false;
     boolean dragAnchor = false;
@@ -59,7 +60,7 @@ public class PlotDesign extends View{
 	}
 	public void toolbarButtons() {
 		//Add editing button and functionality
-        ToolBar toolbar = new ToolBar();
+        toolbar = new ToolBar();
         toolbar.getItems().add(addNextButton("Freehand","Drawing"));
         //Make sure the anchors cannot be dragged when freehand is selected
         toolbar.getItems().get(0).addEventHandler(ActionEvent.ACTION, (e)-> {
@@ -85,12 +86,14 @@ public class PlotDesign extends View{
             @Override 
             public void handle(ActionEvent e) {
             	border.setOnMouseReleased(null);
+            	gc.clearRect(0,0, screenWidth, screenHeight);
+            	toolbar.getItems().get(0).setDisable(false);
+            	toolbar.getItems().get(1).setDisable(false);
             	dragAnchor = true;
             	toggleAnchorHandler();
-            	//If there is no polygon in the borderpane right now, then set shapeClicked to false
             	border.getChildren().add(poly);
             	border.getChildren().addAll(anchors);
-            	shapeClicked = border.getChildren().contains(poly);      
+            	shapeClicked = poly.getPoints().size() != 0;
             	removeLines();
             	controller.drawFreehandPart(1);
             	border.getChildren().remove(label);
@@ -147,6 +150,8 @@ public class PlotDesign extends View{
             public void handle(ActionEvent e) {
             	//https://stackoverflow.gcom/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
             	img = gc.getCanvas().snapshot(null, null); // remove this line when WritableImage is eliminated
+            	toolbar.getItems().get(0).setDisable(true);
+            	toolbar.getItems().get(1).setDisable(true);
             	manageView.setImage(img); // remove this line when WritableImage is eliminated
             	//set the outline of the shape in model
             	if(border.getChildren().contains(poly)) 
