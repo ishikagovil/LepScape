@@ -35,6 +35,7 @@ public class ManageViews {
 	public ManageViews(Stage stage, Controller c, String fileName) {
 		importImages(fileName);
 		dimLen = new ArrayList<>();
+		dimPixel = -1;
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
@@ -69,12 +70,15 @@ public class ManageViews {
 	 * @author Ishika Govil 
 	 */
 	public void switchViews(String next) {
-		if(next.equals("Drawing"))
+		if(next.equals("Drawing")) {
 			((PlotDesign) this.currView).onDrawing();
+		}
 		else if(next.equals("Shape")) {
 	        //Only allows for one shape drawn at once
-			if(((PlotDesign) this.currView).shapeClicked == false)
+			if(((PlotDesign) this.currView).shapeClicked == false) {
 				((PlotDesign) this.currView).onShape();
+				((PlotDesign) this.currView).validateSave();
+			}
 			else {
 				((PlotDesign) this.currView).dragAnchor = true;
 				((PlotDesign) this.currView).toggleAnchorHandler();
@@ -105,6 +109,20 @@ public class ManageViews {
 	 */
 	public int getScreenHeight() {
 		return this.currView.screenHeight;
+	}
+	/** 
+	 * Returns the garden width associated with the current View
+	 * @return int 
+	 */
+	public double getGardenWidth() {
+		return this.currView.gardenWidth;
+	}
+	/** 
+	 * Returns the garden height associated with the current View
+	 * @return int 
+	 */
+	public double getGardenHeight() {
+		return this.currView.gardenHeight;
 	}
 	
 	/** 
@@ -166,6 +184,9 @@ public class ManageViews {
 	}
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
+	}
+	public void validateSave() {
+		((PlotDesign) this.currView).validateSave();
 	}
 	
 	//methods only used by garden design

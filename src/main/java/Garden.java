@@ -113,31 +113,32 @@ public class Garden {
 	}
 
 	public ArrayList<double[]> getExtremes() {
+		ArrayList<double[]> scaledOutlines = new ArrayList<>();;
 		ArrayList<double[]> extrema = new ArrayList<>();
 		int lowestX = 0; 
 		int lowestY = 0; 
 		int highestX = 0; 
 		int highestY = 0;
-		extrema.addAll(outline);
-		extrema.addAll(polygonCorners);
-		Iterator<double[]> itr = extrema.iterator();
+		scaledOutlines.addAll(outline);
+		scaledOutlines.addAll(polygonCorners);
+		Iterator<double[]> itr = scaledOutlines.iterator();
 		int idx = 0;
 		while(itr.hasNext()) {
 			double[] point = (double[])itr.next();
-			if(point[0] <  extrema.get(lowestX)[0])
+			if(point[0] <  scaledOutlines.get(lowestX)[0])
 				lowestX = idx;
-			if(point[0] > extrema.get(highestX)[0])
+			if(point[0] > scaledOutlines.get(highestX)[0])
 				highestX = idx;
-			if(point[1] <  extrema.get(lowestY)[1])
+			if(point[1] <  scaledOutlines.get(lowestY)[1])
 				lowestY = idx;
-			if(point[1] > extrema.get(highestY)[1])
+			if(point[1] > scaledOutlines.get(highestY)[1])
 				lowestX = idx;	
 			idx++;
 		}
-		extrema.add(extrema.get(lowestY));
-		extrema.add(extrema.get(highestX));
-		extrema.add(extrema.get(highestY));
-		extrema.add(extrema.get(lowestX));
+		extrema.add(scaledOutlines.get(lowestY));
+		extrema.add(scaledOutlines.get(highestX));
+		extrema.add(scaledOutlines.get(highestY));
+		extrema.add(scaledOutlines.get(lowestX));
 		return extrema;
 	}
 

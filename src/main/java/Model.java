@@ -24,6 +24,7 @@ public class Model {
 		this.lepDirectory = new HashMap<>();
 		initializePlantDirectory();
 		this.budget = 0;
+		this.lengthPerPixel = -1;
 	}
 	// Methods for the user to draw the garden and put in desired conditions
 	// create the optimal garden based on leps and conditions provided

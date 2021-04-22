@@ -53,6 +53,7 @@ public class PlotDesign extends View{
         backButtons();
         clearButtons();   
         saveButtons();
+        poly = new Polygon();
         //Adding first set of buttons to HBox
         createHBox(drawSwitch);	
 	}
@@ -83,14 +84,15 @@ public class PlotDesign extends View{
         dimSwitch.get(0).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
+            	border.setOnMouseReleased(null);
             	dragAnchor = true;
             	toggleAnchorHandler();
             	//If there is no polygon in the borderpane right now, then set shapeClicked to false
-            	if(!border.getChildren().contains(poly))          
-            		shapeClicked = false;
             	border.getChildren().add(poly);
             	border.getChildren().addAll(anchors);
-            	removeLines(true);
+            	shapeClicked = border.getChildren().contains(poly);      
+            	removeLines();
+            	controller.drawFreehandPart(1);
             	border.getChildren().remove(label);
             	border.getChildren().remove(grid);
             	createHBox(drawSwitch);	
@@ -113,9 +115,10 @@ public class PlotDesign extends View{
        				break;
        			}
         	}  		
+        	drawSwitch.get(2).setOnAction(null);
         	poly = new Polygon();
         	anchors = FXCollections.observableArrayList();
-        	removeLines(false);
+        	removeLines();
         });
         drawSwitch.add(clear);
         Button undo = addNextButton("Undo", "ClearDim");
@@ -134,7 +137,12 @@ public class PlotDesign extends View{
         drawSwitch.add(new Button("Save"));
         drawSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
         setOnMouse(drawSwitch.get(2));
-        drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
+        
+        dimSwitch.add(addNextButton("Next", "ConditionScreen"));
+	}
+	
+	public void validateSave() {
+		drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
             	//https://stackoverflow.gcom/questions/47741406/snapshot-save-canvas-in-model-view-controller-setup
@@ -148,13 +156,13 @@ public class PlotDesign extends View{
             	shapeClicked = true;
             	onSettingDimensions();
             	//set the outline of the shape in model
-            	controller.enterPolygonBoundary(poly);
-            	controller.drawPlot();
+            	if(border.getChildren().contains(poly))
+            		controller.enterPolygonBoundary(poly);
+            	removeLines();
+            	controller.scalePlot();
             }
         });
-        dimSwitch.add(addNextButton("Next", "ConditionScreen"));
 	}
-	
 	/**
 	 * Called when user hits "save" on their plot. Allows users to select any linear length and input its dimension.
 	 * Saves the inputed value and calls settingLength in controller to calculate length per pixel
@@ -208,6 +216,7 @@ public class PlotDesign extends View{
 	 * Calls handlers in controller when user is drawing
 	 */
 	public void onDrawing() {
+		
 		border.setOnMousePressed(controller.getHandlerforDrawing(true));
         border.setOnMouseDragged(controller.getHandlerforDrawing(false));
 	}

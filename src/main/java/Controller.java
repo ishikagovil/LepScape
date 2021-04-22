@@ -296,6 +296,7 @@ public class Controller extends Application {
 		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
 		 this.view.getGC().stroke();
 		 this.model.updateOutlineSection(event.getSceneX(), event.getSceneY());
+		 this.view.validateSave();
 	}
 	
 	public void anchoring(MouseEvent event, Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
@@ -318,13 +319,17 @@ public class Controller extends Application {
 		}
 	}
 	
-	public void drawPlot() {
+	public void drawPlot(double scale) {
 		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
-		iteratePlot(itr, model.getGarden().outline, false);
+		iteratePlot(itr, model.getGarden().outline, false, scale);
 		itr = model.getGarden().polygonCorners.listIterator();
-		iteratePlot(itr, model.getGarden().polygonCorners, true);
+		iteratePlot(itr, model.getGarden().polygonCorners, true, scale);
 	}
-	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list, boolean isPolygon) {
+	public void drawFreehandPart(double scale) {
+		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
+		iteratePlot(itr, model.getGarden().outline, false, scale);
+	}
+	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list, boolean isPolygon, double scale) {
 		while(itr.hasNext()) {
 			double[] point1 = (double[])itr.next();
 			double[] point2;
@@ -335,11 +340,31 @@ public class Controller extends Application {
 			else 
 				return;
 			if(isPolygon) {
-				this.view.drawLine(point1[0], point1[1], point2[0], point2[1], isPolygon);
+				this.view.drawLine(point1[0]*scale, point1[1]*scale, point2[0]*scale, point2[1]*scale, isPolygon);
 			}
-			if(!isPolygon && Math.abs(point1[0] - point2[0]) < 35 && Math.abs(point1[1] - point2[1]) < 35)
-				this.view.drawLine(point1[0], point1[1], point2[0], point2[1], isPolygon);
+			if(!isPolygon && Math.abs(point1[0] - point2[0]) < 60 && Math.abs(point1[1] - point2[1]) < 60)
+				this.view.drawLine(point1[0]*scale, point1[1]*scale, point2[0]*scale, point2[1]*scale, isPolygon);
 		}
+	}
+	
+	public void scalePlot() {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+		double scaleY = this.view.getGardenHeight() / calculateLineDistance(extrema.get(0)[0], extrema.get(0)[1], extrema.get(2)[0], extrema.get(2)[1]);
+		double scaleX = this.view.getGardenWidth() / calculateLineDistance(extrema.get(1)[0], extrema.get(1)[1], extrema.get(3)[0], extrema.get(3)[1]);
+		double scale =  Math.min(scaleX, scaleY);
+		drawPlot(scale);
+//		ListIterator<double[]> itr = this.model.getGarden().scaledOutlines.listIterator();
+//		while(itr.hasNext()) {
+//			double[] point = itr.next();
+//			itr.remove();
+//			double[] newPoint = point;
+//			newPoint[0] = point[0] * scale;
+//			newPoint[1] = point[1] * scale;
+//			itr.add(newPoint);
+//		}
+	}
+	public double calculateLineDistance(double x1, double y1, double x2, double y2) {
+		return Math.sqrt(Math.pow((x1 -  x2),2) + Math.pow(( y1 - y2 ),2) );
 	}
 	/** 
 	 * Called when user is drawing. 
@@ -357,7 +382,7 @@ public class Controller extends Application {
 		//Get pixel information
 		double[] arr = {event.getSceneX(),event.getSceneY()};
 		this.view.dimLen.add(arr);
-		this.view.dimPixel = Math.sqrt(Math.pow((view.dimLen.get(view.dimLen.size()-1)[1] - view.dimLen.get(0)[1] ),2) + Math.pow((view.dimLen.get(view.dimLen.size()-1)[0]  - view.dimLen.get(0)[0] ),2) );
+		this.view.dimPixel = calculateLineDistance(view.dimLen.get(view.dimLen.size()-1)[0], view.dimLen.get(0)[0], view.dimLen.get(view.dimLen.size()-1)[1], view.dimLen.get(0)[1]);
 	}
 	
 	/** 
@@ -396,6 +421,12 @@ public class Controller extends Application {
 			 this.model.getGarden().outline = new ArrayList<double[]>(); 
 			 this.view.restartPlot();
 			 setTheStage();
+		 }
+		 else if(next.equals("ConditionScreen")) {
+			 if(this.model.lengthPerPixel!= -1 && this.view.dimPixel != -1) {
+				 this.view.switchViews(next);
+				 setTheStage();
+			 }
 		 }
 		 else {
 			 this.view.switchViews(next);

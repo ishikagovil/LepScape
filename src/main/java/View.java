@@ -12,6 +12,8 @@ public abstract class View{
 	public Map<String, Image> plantImages;
 	public int screenWidth = 1270;
 	public int screenHeight = 760;
+	public double gardenWidth = 0.4*screenWidth;
+	public double gardenHeight = 0.4*screenHeight;
 	public int buttonWidth = 100;
 	public int buttonHeight = 30;
 	BorderPane border;
@@ -79,15 +81,11 @@ public abstract class View{
 		else
 			freeLines.add(line);
 	}
-	public void removeLines(boolean isPolygon) {
-		if(isPolygon) {
+	public void removeLines() {
 			border.getChildren().removeAll(polygonLines);
 			polygonLines = new ArrayList<>();
-		}
-		else {
 			border.getChildren().removeAll(freeLines);
 			freeLines = new ArrayList<>();
-		}
 	}
 	
 	//Used only in gardenDesign. In here because need to called by controller
