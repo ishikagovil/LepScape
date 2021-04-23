@@ -89,9 +89,9 @@ public class Model {
 	
 	public void initializePlantDirectory() {
 
-		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
+		//plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
 
-		plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
+		//plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
 	}
 	
 	public int getBudget() {

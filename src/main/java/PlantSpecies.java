@@ -3,29 +3,49 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	private String genusName;
 	private String commonName;
 	private String description;
-	private float spreadRadius;
+	private int spreadRadius;
 	private int lepsSupported;
 	private int cost;
-	private int bloomTime;
 	private boolean isWoody;
+	private int lightReq;
+	// Required amount of light, on a scale from 0 (no light, <= 10 lux) to 10 (very intensive insolation, >= 100 000 lux)	
+	private int soilReq;
+	// Required texture of the soil, on a scale from 0 (clay) to 10 (rock)
+	private int moistReq;
+	// Required relative humidity in the air, on a scale from 0 (<=10%) to 10 (>= 90%)
 	
 	public PlantSpecies() {
 		this.speciesName = "";
 		this.genusName = "";
 		this.commonName = "";
-		this.description = "";
 	}
 	
-	public PlantSpecies(String speciesName, String genusName, String commonName, String description, float spreadRadius, int lepsSupported, int cost, int bloomTime, boolean isWoody) {
+	public PlantSpecies(String speciesName, String genusName, String commonName, int spreadRadius, int lepsSupported, int cost, boolean isWoody, int lightReq, int soilReq, int moistReq) {
 		this.speciesName = speciesName;
 		this.genusName = genusName;
 		this.commonName = commonName;
-		this.description = description;
 		this.spreadRadius = spreadRadius;
 		this.lepsSupported = lepsSupported;
 		this.cost = cost;
-		this.bloomTime = bloomTime;
 		this.isWoody = isWoody;
+		this.lightReq = lightReq;
+		this.soilReq = soilReq;
+		this.moistReq = moistReq;
+		this.setDescription();
+	}
+
+	public void setDescription() {
+		String plantType = "";
+		if (isWoody) {
+			plantType = "woody";
+		} else {
+			plantType = "herbaceous";
+		}
+		this.description = "Also known as " + this.commonName +  "\nThis " +  plantType + " plant attracts a total of " + this.lepsSupported + " leps.";
+	}
+
+	public String getDescription() {
+		return this.description;
 	}
 	
 	public int compareTo(PlantSpecies other) {
@@ -56,19 +76,11 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 		this.commonName = commonName;
 	}
 
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public float getSpreadRadius() {
 		return spreadRadius;
 	}
 
-	public void setSpreadRadius(float spreadRadius) {
+	public void setSpreadRadius(int spreadRadius) {
 		this.spreadRadius = spreadRadius;
 	}
 
@@ -88,20 +100,36 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 		this.cost = cost;
 	}
 
-	public int getBloomTime() {
-		return bloomTime;
-	}
-
-	public void setBloomTime(int bloomTime) {
-		this.bloomTime = bloomTime;
-	}
-
 	public boolean isWoody() {
 		return isWoody;
 	}
 
 	public void setWoody(boolean isWoody) {
 		this.isWoody = isWoody;
+	}
+
+	public void setLightReq(int lightReq) {
+		this.lightReq = lightReq;
+	}
+	
+	public int getLightReq() {
+		return this.lightReq;
+	}
+
+	public void setSoilReq(int soilReq) {
+		this.soilReq = soilReq;
+	}
+
+	public int getSoilReq() {
+		return this.soilReq;
+	}
+
+	public void setMoistReq(int moistReq) {
+		this.moistReq = moistReq;
+	}
+
+	public int getMoistReq() {
+		return this.moistReq;
 	}
 
 	public String toString() {
