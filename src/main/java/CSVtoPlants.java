@@ -11,11 +11,14 @@ public class CSVtoPlants {
         String speciesName;
         String genusName;
         String commonName;
-        String description;
         String tempWoody;
         int cost;
         boolean isWoody;
-        String imgUrl;
+        int spread;
+        int leps;
+        int lightReq;
+        int soilReq;
+        int moistReq;
 		
 		try {
 		    BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -26,9 +29,9 @@ public class CSVtoPlants {
                 genusName = parts[0];
                 speciesName = parts[1];
                 commonName = parts[2];
-                description = parts[3];
-                imgUrl = parts[4];
-                tempWoody = parts[7];
+                spread = Integer.parseInt(parts[3]);
+                leps = Integer.parseInt(parts[4]);
+                tempWoody = parts[5];
                 if (tempWoody.equals("h")) {
                     cost = 6;
                     isWoody = false;
@@ -36,7 +39,11 @@ public class CSVtoPlants {
                     cost = 20;
                     isWoody = true;
                 }
-                PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, description, 5, 5, cost, 0, isWoody); //create object
+                lightReq = Integer.parseInt(parts[6]);
+                soilReq = Integer.parseInt(parts[7]);
+                moistReq = Integer.parseInt(parts[8]);
+
+                PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, spread, leps, cost, isWoody, lightReq, soilReq, moistReq); //create object
                 listPlants.put(genusName + " " + speciesName, newData);     // key by genus + species
             }            
             reader.close();   
