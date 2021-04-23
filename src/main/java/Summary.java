@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
@@ -82,6 +84,11 @@ public class Summary extends View {
         buttons.add(suggested);
         buttons.add(addNextButton("Learn More","LearnMore"));
         buttons.get(2).setPrefSize(100, 30);
+        
+        Button saveToGallery = new Button("Save");
+        saveToGallery.setPrefSize(100,30);
+        buttons.add(saveToGallery);
+        
         vb1.getChildren().addAll(buttons);
         vb1.setAlignment(Pos.TOP_RIGHT);
         /*buttons.add(navi.saved);
@@ -146,6 +153,8 @@ public class Summary extends View {
        main = addCanvas();
        border.setCenter(main);
        border.setCenter(main);
+       
+       
     }
 /**
  * Makes the canvas so the previously set garden outline can be displayed

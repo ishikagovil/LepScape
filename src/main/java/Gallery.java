@@ -1,6 +1,7 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -12,6 +13,9 @@ import javafx.stage.Stage;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.*;
 
 public class Gallery extends View{

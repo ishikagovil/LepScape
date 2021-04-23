@@ -273,7 +273,9 @@ public class Controller extends Application {
 			view.setY(0, n);
 //			view.setX(n.getLayoutX(),n);
 //			view.setY(n.getLayoutY(),n);
-			view.addImageView(event.getSceneX(),event.getSceneY(), name);
+			PlantSpecies plant = model.plantDirectory.get(name);
+			double heightWidth = scalePlantSpread(plant);
+			view.addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
 		}
 		
 		if(startingInTile) {
@@ -290,8 +292,9 @@ public class Controller extends Application {
 		
 	}
 	
-	public void scalePlantSpread(PlantSpecies plant) {
+	public double scalePlantSpread(PlantSpecies plant) {
 		double numPixels = plant.getSpreadRadius() / this.model.lengthPerPixel;
+		return numPixels;
 		//not sure where the image is stored, but set its radius as:
 		//imageview.setFitHeight(numPixels)
 		//imageview.setFitWidth(numPixels)
