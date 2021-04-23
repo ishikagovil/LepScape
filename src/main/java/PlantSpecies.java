@@ -4,6 +4,7 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	private String commonName;
 	private String description;
 	private int spreadRadius;
+	// in centimeters; if value is 0, does not spread or no spread info given
 	private int lepsSupported;
 	private int cost;
 	private boolean isWoody;
@@ -13,6 +14,8 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	// Required texture of the soil, on a scale from 0 (clay) to 10 (rock)
 	private int moistReq;
 	// Required relative humidity in the air, on a scale from 0 (<=10%) to 10 (>= 90%)
+
+	// for all "req" attributes, if value is -1, no specific requirements for plant
 	
 	public PlantSpecies() {
 		this.speciesName = "";
@@ -46,6 +49,10 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public void setDescription(String desc) {
+		this.description = desc;
 	}
 	
 	public int compareTo(PlantSpecies other) {
