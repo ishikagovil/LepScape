@@ -97,6 +97,22 @@ class ModelTest {
 		m.setLengthPerPixel(20.5);
 		assertEquals(20.5, m.getLengthPerPixel());
 	}
+	@Test
+	void testTranslateScaledPlot() {
+		m.getGarden().setPolygonCorners(2, 0);
+		m.getGarden().setPolygonCorners(4, 1);
+		m.getGarden().setPolygonCorners(1, 4);
+		m.getGarden().setPolygonCorners(4, 4);
+		m.setScale(5);
+		double[] modelTranslations = m.translateScaledPlot(new double[] {5,2});
+		assertEquals(0, modelTranslations[0]);
+		assertEquals(2, modelTranslations[1]);
+	}
 	
+	@Test
+	void testCalculateLineDistance() {
+		double distance = m.calculateLineDistance(2, 2, 5, 6);
+		assertEquals(5, distance);
+	}
 
 }

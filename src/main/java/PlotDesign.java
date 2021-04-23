@@ -141,7 +141,8 @@ public class PlotDesign extends View{
         drawSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
         setOnMouse(drawSwitch.get(2));
         
-        dimSwitch.add(addNextButton("Next", "ConditionScreen"));
+        dimSwitch.add(new Button("Next"));
+        dimSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
 	}
 	
 	public void validateSave() {
@@ -189,19 +190,17 @@ public class PlotDesign extends View{
 	    //Input value box
 	    TextField dimension = new TextField();
 	    dimension.setPromptText("Enter dimension (ft)");
-	    dimension.setOnKeyReleased(event -> {
-	    	if (event.getCode() == KeyCode.ENTER){
-	    		String length = dimension.getText();
-	    		try{
-	    			controller.settingLength(Double.parseDouble(length));
-	    		}
-	    		catch(NumberFormatException e){
-	    			//not a double
-	    			dimension.clear();
-	    		}	            
-	            dimension.setPromptText("Enter dimension (ft)");
-	            controller.switchViews("ConditionScreen");
-	          }
+	    dimSwitch.get(2).addEventHandler(ActionEvent.ACTION, (event)-> {
+	    	String length = dimension.getText();
+	    	try{
+	    		controller.settingLength(Double.parseDouble(length));
+	    	}
+	    	catch(NumberFormatException e){
+	    		//not a double
+	   			dimension.clear();
+	   			dimension.setPromptText("Enter dimension (ft)");
+	   		}         
+	    	controller.switchViews("ConditionScreen");          
 	    });	
 	    grid = new GridPane();
 	    grid.getChildren().add(dimension);

@@ -62,7 +62,6 @@ public abstract class View{
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
 		b.setPrefSize(buttonWidth, buttonHeight);
-		b.setPrefHeight(30);;
 		setOnMouse(b);
 		b.setOnAction(controller.getHandlerforClicked(next));
 		return b;
