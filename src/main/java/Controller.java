@@ -357,8 +357,8 @@ public class Controller extends Application {
 	
 	public void scalePlot() {
 		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
-		double scaleY = this.view.getGardenHeight() / this.model.calculateLineDistance(extrema.get(0)[0], extrema.get(0)[1], extrema.get(2)[0], extrema.get(2)[1]);
-		double scaleX = this.view.getGardenWidth() / this.model.calculateLineDistance(extrema.get(1)[0], extrema.get(1)[1], extrema.get(3)[0], extrema.get(3)[1]);
+		double scaleY = this.view.getGardenHeight() / Math.abs(extrema.get(0)[1] -  extrema.get(2)[1]);
+		double scaleX = this.view.getGardenWidth() / Math.abs(extrema.get(1)[0] -  extrema.get(3)[0]);
 		double scale =  Math.min(scaleX, scaleY);
 		this.model.setScale(scale);
 		drawPlot(scale);

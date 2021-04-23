@@ -23,13 +23,12 @@ public class PlotDesign extends View{
 	ArrayList<Button> dimSwitch;
 	Label label; //instructions to user
 	HBox box;
-	WritableImage img; 
 	GridPane grid; //added to contain the TextField
-	Polygon poly;
 	ToolBar toolbar;
-    ObservableList<Anchor> anchors = FXCollections.observableArrayList();
+	Polygon poly;
     boolean shapeClicked = false;
     boolean dragAnchor = false;
+    ObservableList<Anchor> anchors;
 	/**
 	 * @author Ishika Govil 
 	 */
@@ -55,6 +54,7 @@ public class PlotDesign extends View{
         clearButtons();   
         saveButtons();
         poly = new Polygon();
+        anchors = FXCollections.observableArrayList();
         //Adding first set of buttons to HBox
         createHBox(drawSwitch);	
 	}
@@ -75,9 +75,11 @@ public class PlotDesign extends View{
         border.setTop(toolbar);
 	}
 	public void backButtons() {
-		 //Adding Back buttons
+		//Adding Back buttons
         drawSwitch.add(addNextButton("Back", "Start"));
         disableDrawing(drawSwitch.get(0));
+        
+        //Adding second Back button on dimensions screen
         dimSwitch.add(new Button("Back"));
         dimSwitch.get(0).setPrefSize(buttonWidth, buttonHeight);
         setOnMouse(dimSwitch.get(0));
@@ -85,27 +87,34 @@ public class PlotDesign extends View{
         dimSwitch.get(0).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	border.setOnMouseReleased(null);
+            	//Remove the lines on the current screen and polygon points
+            	removeLines();
+            	controller.restartPolygonBoundary();
             	gc.clearRect(0,0, screenWidth, screenHeight);
+            	border.setOnMouseReleased(null);
+            	
+            	//Enable toolbar buttons
             	toolbar.getItems().get(0).setDisable(false);
             	toolbar.getItems().get(1).setDisable(false);
             	dragAnchor = true;
             	toggleAnchorHandler();
+            	
+            	//Add back the polygon and freehand plot
             	border.getChildren().add(poly);
             	border.getChildren().addAll(anchors);
             	shapeClicked = poly.getPoints().size() != 0;
-            	removeLines();
             	controller.drawFreehandPart(1);
+            	
+            	//Change border design
             	border.getChildren().remove(label);
             	border.getChildren().remove(grid);
             	createHBox(drawSwitch);	
-            	//Remove the arraylist of points from model by calling method in controller
-            	controller.restartPolygonBoundary();
+            	
             }
         });
 	}
 	public void clearButtons() {
-        //Adding Clear/Undo buttons
+        //Adding Clear button
         Button clear = addNextButton("Clear", "Clear");
         clear.addEventHandler(ActionEvent.ACTION, (e)-> {
         	shapeClicked = false;
@@ -124,16 +133,15 @@ public class PlotDesign extends View{
         	removeLines();
         });
         drawSwitch.add(clear);
+        
+        //Adding Undo button
         Button undo = addNextButton("Undo", "ClearDim");
         dimSwitch.add(undo);
-        dimSwitch.get(1).setOnAction(new EventHandler<ActionEvent>() {
-            @Override 
-            public void handle(ActionEvent e) {
-            	gc.clearRect(0,0, screenWidth, screenHeight);
-            	onSettingDimensions();
-            }
+        dimSwitch.get(1).addEventHandler(ActionEvent.ACTION, (event)-> {
+            gc.clearRect(0,0, screenWidth, screenHeight);
+           	onSettingDimensions(); 
         });
-        
+  
 	}
 	public void saveButtons() {
 		//Adding Save button
@@ -141,20 +149,20 @@ public class PlotDesign extends View{
         drawSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
         setOnMouse(drawSwitch.get(2));
         
+        //Adding Next button
         dimSwitch.add(new Button("Next"));
         dimSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
+        setOnMouse(dimSwitch.get(2));
 	}
 	
 	public void validateSave() {
 		drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
             public void handle(ActionEvent e) {
-            	img = gc.getCanvas().snapshot(null, null); // remove this line when WritableImage is eliminated
-            	manageView.setImage(img); // remove this line when WritableImage is eliminated
             	toolbar.getItems().get(0).setDisable(true);
             	toolbar.getItems().get(1).setDisable(true);
             	
-            	//set the outline of the shape in model
+            	//set the outline of the polygon in model
             	if(border.getChildren().contains(poly)) 
             		controller.enterPolygonBoundary(poly);    
             	
@@ -198,7 +206,6 @@ public class PlotDesign extends View{
 	    	catch(NumberFormatException e){
 	    		//not a double
 	   			dimension.clear();
-	   			dimension.setPromptText("Enter dimension (ft)");
 	   		}         
 	    	controller.switchViews("ConditionScreen");          
 	    });	
