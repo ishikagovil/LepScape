@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -289,6 +290,12 @@ public class Controller extends Application {
 		
 	}
 	
+	public void scalePlantSpread(PlantSpecies plant) {
+		double numPixels = plant.getSpreadRadius() / this.model.lengthPerPixel;
+		//not sure where the image is stored, but set its radius as:
+		//imageview.setFitHeight(numPixels)
+		//imageview.setFitWidth(numPixels)
+	}
 	/** 
 	 * Called when user is drawing. 
 	 * Updates the canvas of the relevant view and calls updateOutlineSection in model to pass boundary coordinates
