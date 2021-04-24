@@ -40,9 +40,14 @@ public class ManageViews {
 		initializeViews();
 	    this.currView = this.getView("Start");
 	}
+	
+	public void setPlantImg(Map<String, ImageView> imgs) {
+		this.plantImages = imgs;
+	}
 
 	public void importImages(String fileName) {
 		plantImages = new HashMap<>();
+		System.out.println("setting images");
 		plantImages = CSVtoPlants.readFileForImg(fileName);
 	}
 

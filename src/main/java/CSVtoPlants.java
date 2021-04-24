@@ -72,7 +72,7 @@ public class CSVtoPlants {
                 genusName = parts[0];
                 speciesName = parts[1];
                 imgSrc = genusName + "-" + speciesName + ".png";            // file name ex: Justicia-americana.png
-                Image img = new Image("./resources/plantimg/" + imgSrc);    // file path to get image names; change if different file path
+                Image img = new Image(CSVtoPlants.class.getResourceAsStream("../resources/plantimg/" + imgSrc));    // file path to get image names; change if different file path
                 ImageView imv = new ImageView();
                 imv.setImage(img);
                 imv.setFitWidth(100);                       // resizing to be 100 x 100px; can change value
