@@ -3,6 +3,7 @@ import java.util.*;
 import javafx.scene.Node;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -18,7 +19,7 @@ public class ManageViews {
 	View currView;
 	Controller controller;
 	Stage stage;
-	public Map<String, String> plantImages;
+	public Map<String, ImageView> plantImages;
 	
 	/**
 	 * @author Ishika Govil
@@ -43,6 +44,10 @@ public class ManageViews {
 	public void importImages(String fileName) {
 		plantImages = new HashMap<>();
 		plantImages = CSVtoPlants.readFileForImg(fileName);
+	}
+
+	public Map<String, ImageView> getPlantImages() {
+		return this.plantImages;
 	}
 	
 	/**
