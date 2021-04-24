@@ -21,7 +21,7 @@ def printAsFormattedJSON(jsonObject):
 key = "PklZD7nSq3xQVGWKD7H6WQdyWdny23lU8sgjZAVuZ28"
 
 f = open('finalPlantListWithInfo.csv', mode='w')
-headers = "Genera Name, Species Name, Common Name, Spread, Leps, Woody or Herbaceous, Light, Soil, Moisture \n"
+headers = "Genera Name, Species Name, Common Name, Spread, Leps, Woody or Herbaceous, Light, Soil, Moisture, ImageURL \n"
 f.write(headers)
 
 
@@ -60,14 +60,17 @@ for plantData in data:
     print("Scientific Name: ", scientificName)
     #print("\n")
     #print("Image Data")
-    #imageData = plant["images"][""]
+    #imageData = plant["images"]['']
     # printAsFormattedJSON(imageData)
 
     # There is more than just one image in the imageData, I just happened to only grab the first one.
     #image = imageData[0]
     #print(image)
-    #imageUrl = image["image_url"]
-    #print("URL:", imageUrl)     # If you take this URL and put into a "new Image(imageURL)" statement in Java, it will create an image using that URL instead of a local one.
+    imageUrl = plant["image_url"]
+    if imageUrl is None:
+        imageUrl = "noImage"
+
+    print("URL:", imageUrl)     # If you take this URL and put into a "new Image(imageURL)" statement in Java, it will create an image using that URL instead of a local one.
                                 # It is not strictly necessary for you to save any of these images to your local computer; however, we would recommend that you do so to allow
                                 # you to use those images without internet access.
     #print("\n")
@@ -113,7 +116,7 @@ for plantData in data:
     #print(type(genusName), ",", type(speciesName), ",", type(commonName), ",", type(spread), ",", type(leps), ",", type(woodherb), ",", type(lightStr), ",", type(soilStr), ",", type(atmoStr))
 
     dataText = ""
-    dataText += genusName + "," + speciesName + "," + commonName + "," + spreadStr + "," + leps + "," + woodherb + "," + lightStr + "," + soilStr + "," + atmoStr + "\n"
+    dataText += genusName + "," + speciesName + "," + commonName + "," + spreadStr + "," + leps + "," + woodherb + "," + lightStr + "," + soilStr + "," + atmoStr + "," + imageUrl + "\n"
     #print(dataText)
     f.write(dataText)
 

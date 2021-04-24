@@ -38,7 +38,9 @@ public class Controller extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
+		System.out.println("setting plant directory");
 		this.model.setPlantDirectory(CSVtoPlants.readFile(plantFile));
+		System.out.println("setting lep directory");
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
 		this.stage = stage;
 	    view = new ManageViews(stage,this, plantFile);
@@ -410,6 +412,10 @@ public class Controller extends Application {
 	
 	public Map<String, Lep> getLepInfo() {
 		return this.model.getLepDirectory();
+	}
+	
+	public Map<String, PlantSpecies> getPlantInfo() {
+		return this.model.getPlantInfo();
 	}
 	
 	/** 

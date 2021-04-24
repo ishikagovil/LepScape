@@ -54,7 +54,9 @@ public class Model {
 	//choose 2 plants to compare the number of leps they support
 	public void comparePlant() {}
 	// get plant's sphere
-	public void getPlantInfo() {}
+	public Map<String, PlantSpecies> getPlantInfo() {
+		return this.plantDirectory;
+	}
 	// check if plant is okay to be placed
 	public void validatePlacement() {}
 	// place down plants and updates budget and lep count

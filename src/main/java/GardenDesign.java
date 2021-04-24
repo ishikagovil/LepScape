@@ -39,7 +39,7 @@ import javafx.stage.Stage;
 /**
  * This class sets the main screen
  * It allows user to make their garden based on set preferences and conditions
- * @author Arunima Dey
+ * @author Arunima Dey, Dea Harjianto
  *
  */
 public class GardenDesign extends View{
@@ -51,7 +51,7 @@ public class GardenDesign extends View{
 	public TilePane tile = new TilePane();
 	public BorderPane comparePane = new BorderPane();
 	public StackPane info = new StackPane();
-	HashMap<String,ImageView> oblist;
+	Map<String,ImageView> oblist;
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 	ImageView c = new ImageView(compost);
 	Pane main;
@@ -67,14 +67,27 @@ public class GardenDesign extends View{
 	public GardenDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage,c,manageView);
 //		this.ic=c;
-		oblist = initializeHashMap();
+		//oblist = initializeHashMap();
+		oblist = manageView.getPlantImages();					// loading in plantImages
 		vb = addVBox();
 		border = new BorderPane();
 		main = addCanvas();
 		border.setCenter(main);
+		
+		ScrollPane scroll = new ScrollPane();					// for holding plant images and TilePane
+		tile.setMaxWidth(screenHeight);
 
 		tile = addTilePane();
-		border.setBottom(tile);
+		
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        //scroll.setMaxWidth(screenWidth);
+        scroll.setMaxHeight(screenHeight);						// needed to initialize a dimension for scrollpane; leave in
+		scroll.setContent(tile);
+		border.setBottom(scroll);
+		//border.setBottom(tile);
 		comparePane = addBorderPane();
 		
 		BorderPane bd2= new BorderPane();
@@ -440,7 +453,7 @@ public class GardenDesign extends View{
 	 * Makes an observable hashmap for all the images of the pants that go into the tile pane 
 	 * @return the created hashmap
 	 */
-	public HashMap<String,ImageView> initializeHashMap(){
+	/*public Map<String,ImageView> initializeHashMap(){
 //		oblist = FXCollections.observableHashMap();
 		oblist = new HashMap<>();
 		manageView.plantImages.forEach((k,v)->{
@@ -461,7 +474,7 @@ public class GardenDesign extends View{
 			}
 		});
 		return oblist;
-	}
+	}*/
 	
 	/**
 	 * This method saves the Image that comes from a given url into a filea
