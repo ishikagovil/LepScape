@@ -39,7 +39,7 @@ import javafx.stage.Stage;
 /**
  * This class sets the main screen
  * It allows user to make their garden based on set preferences and conditions
- * @author Arunima Dey
+ * @author Arunima Dey, Dea Harjianto
  *
  */
 public class GardenDesign extends View{
@@ -68,14 +68,26 @@ public class GardenDesign extends View{
 		super(stage,c,manageView);
 //		this.ic=c;
 		//oblist = initializeHashMap();
-		oblist = manageView.getPlantImages();
+		oblist = manageView.getPlantImages();					// loading in plantImages
 		vb = addVBox();
 		border = new BorderPane();
 		main = addCanvas();
 		border.setCenter(main);
+		
+		ScrollPane scroll = new ScrollPane();					// for holding plant images and TilePane
+		tile.setMaxWidth(screenHeight);
 
 		tile = addTilePane();
-		border.setBottom(tile);
+		
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        //scroll.setMaxWidth(screenWidth);
+        scroll.setMaxHeight(screenHeight);						// needed to initialize a dimension for scrollpane; leave in
+		scroll.setContent(tile);
+		border.setBottom(scroll);
+		//border.setBottom(tile);
 		comparePane = addBorderPane();
 		
 		BorderPane bd2= new BorderPane();
