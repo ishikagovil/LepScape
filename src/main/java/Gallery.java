@@ -1,6 +1,8 @@
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -12,8 +14,12 @@ import javafx.stage.Stage;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.*;
 
+//https://stackoverflow.com/questions/44841329/how-to-implement-serializable-for-my-project-to-have-persistence
 public class Gallery extends View{
 	public ArrayList<Button> multiview;
 	public Button back;
@@ -46,16 +52,17 @@ public class Gallery extends View{
 		vb1.getChildren().add(summary);
 		border.setRight(vb1);
 		
+		
 		// make scrollable screen with scroll bar
-		ScrollBar scroll = new ScrollBar();
-		scroll.setOrientation(Orientation.VERTICAL);
-		AnchorPane ap1 = new AnchorPane();
-		ap1.setStyle("-fx-background-color: lightblue; -fx-border-color: chocolate; -fx-border-width: 5px");
-		ap1.getChildren().add(scroll);
-		AnchorPane.setTopAnchor(scroll, 0d);
-		AnchorPane.setRightAnchor(scroll, 0d);
-		AnchorPane.setBottomAnchor(scroll, 0d);
-		border.setCenter(ap1);
+//		ScrollBar scroll = new ScrollBar();
+//		scroll.setOrientation(Orientation.VERTICAL);
+//		AnchorPane ap1 = new AnchorPane();
+//		ap1.setStyle("-fx-background-color: lightblue; -fx-border-color: chocolate; -fx-border-width: 5px");
+//		ap1.getChildren().add(scroll);
+//		AnchorPane.setTopAnchor(scroll, 0d);
+//		AnchorPane.setRightAnchor(scroll, 0d);
+//		AnchorPane.setBottomAnchor(scroll, 0d);
+//		border.setCenter(ap1);
 		
 		// make title of the page
 		HBox hb2 = new HBox();
@@ -66,6 +73,30 @@ public class Gallery extends View{
 		hb2.getChildren().add(title);
 		border.setTop(hb2);
 		
+	}
+	
+	public void loadScreen() {
+		try {
+			Canvas canvas;
+			FileInputStream fis = new FileInputStream("garden1.ser");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Garden g = (Garden) ois.readObject();
+			ois.close();
+//			canvas = g.getCanvas();
+//			if(g.getPane()==null) {
+//				System.out.println("not set");
+//			}
+//			StackPane sp = (StackPane) g.getPane();
+			System.out.println(g.getCost());
+			System.out.println(g.getNumLeps());
+			new File("garden1.ser").delete();
+//			border.setCenter(sp);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("No the error is here");
+			e.printStackTrace();
+		}
 	}
 	
 }

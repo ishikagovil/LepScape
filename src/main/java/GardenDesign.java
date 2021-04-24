@@ -365,7 +365,6 @@ public class GardenDesign extends View{
 	 */
 	public void saveGardenImage() {
 		main.getChildren().remove(c);
-		
 		this.manageView.setImage(canvas.snapshot(null, null));
 		c.setPreserveRatio(true);
 		c.setFitHeight(75);
@@ -384,6 +383,9 @@ public class GardenDesign extends View{
 		main.getChildren().add(c);
 	}
 	
+	public Pane mainPane(){
+		return main;
+	}
 	/**
 	 * Makes the compare pane where plants can be placed and compared 
 	 * @return the created pane

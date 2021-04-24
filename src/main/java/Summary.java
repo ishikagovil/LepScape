@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
@@ -82,6 +84,11 @@ public class Summary extends View {
         buttons.add(suggested);
         buttons.add(addNextButton("Learn More","LearnMore"));
         buttons.get(2).setPrefSize(100, 30);
+        
+        Button saveGarden = new Button("Save");
+        saveGarden.setPrefSize(100,30);
+        buttons.add(saveGarden);
+        
         vb1.getChildren().addAll(buttons);
         vb1.setAlignment(Pos.TOP_RIGHT);
         /*buttons.add(navi.saved);
@@ -146,6 +153,27 @@ public class Summary extends View {
        main = addCanvas();
        border.setCenter(main);
        border.setCenter(main);
+       
+       saveGarden.setOnAction(e->{
+     		System.out.println("button works");
+     		try {
+   			FileOutputStream fos = new FileOutputStream("garden1.ser");
+   			ObjectOutputStream oos = new ObjectOutputStream(fos);
+   			StackPane sp = new StackPane();
+   			sp.setStyle("-fx-background-color: lavender");
+   			Garden g = new Garden(canvas,0.3,7,sp);
+   			oos.writeObject(g);
+   			oos.close();
+   			Gallery gal = (Gallery) manageView.views.get("Gallery");
+//   			gal.loadScreen();
+   			
+   			
+   		} catch (Exception e1) {
+   			// TODO Auto-generated catch block
+   			System.out.println("The error is here");
+   			e1.printStackTrace();
+   		}
+     });
     }
 /**
  * Makes the canvas so the previously set garden outline can be displayed

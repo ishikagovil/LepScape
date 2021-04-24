@@ -1,15 +1,29 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
-public class Garden {
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.Pane;
+
+public class Garden implements Serializable {
 	
 	private int numLeps;
-	private int cost;
+	private double cost;
 	public ArrayList<PlacedPlant> plants;
 	public ArrayList<double[]> outline;
 	public ArrayList<double[]> polygonCorners;
 	public ArrayList<Conditions> sections;
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
+	private transient SimpleObjectProperty<Canvas> canvas;
+//	private transient Canvas canvas;
+	private transient Pane pane;
+//	private transient SimpleDoubleProperty costForgallery;
+
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh,
@@ -24,10 +38,46 @@ public class Garden {
 		this.compostBin = new HashSet<PlantSpecies>();
 	}
 	
-	public Garden(int numLeps, int cost) {
+	public Garden(int numLeps, double cost) {
 		this();
 		this.numLeps = numLeps;
 		this.cost = cost;
+	}
+	
+	public Garden(Canvas canvas, double cost, int lepCount, Pane pane) {
+//		this.canvas = new SimpleObjectProperty<Canvas>(canvas);
+//		this.canvas2 = canvas;
+		this.numLeps = lepCount;
+		this.cost = cost;
+		this.pane = pane;
+	}
+	
+//	public SimpleObjectProperty<Canvas> getCanvas() {
+//		return canvas;
+//	}
+	public Pane getPane() {
+		return this.pane;
+	}
+	
+//	public Canvas getCanvas() {
+//		return canvas;
+//	}
+	
+	private void writeObject(ObjectOutputStream s) throws IOException{
+		s.defaultWriteObject();
+//		s.writeObject(pane);
+		s.writeObject(canvas);
+		s.write(numLeps);
+		s.writeDouble(cost);
+	}
+	
+	private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException{
+		s.defaultReadObject();
+		this.canvas = (SimpleObjectProperty<Canvas>) s.readObject();
+		this.numLeps = s.read();
+		this.cost = s.readDouble();
+//		this.pane = (Pane) s.readObject();
+//		this.canvas = new SimpleObjectProperty<>((Canvas)s.readObject());
 	}
 	
 	public int getNumLeps() {
@@ -42,7 +92,7 @@ public class Garden {
 		this.numLeps += x;
 	}
 	
-	public int getCost() {
+	public double getCost() {
 		return this.cost;
 	}
 	

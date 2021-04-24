@@ -37,7 +37,7 @@ public class ManageViews {
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-	    this.currView = this.getView("Start");
+	    this.currView = this.getView("Summary");
 	}
 
 	public void importImages(String fileName) {
@@ -199,7 +199,9 @@ public class ManageViews {
 	//methods only used by garden design
 	public void setY(double y, Node n){currView.setY(y, n);}
 	public void setX(double x, Node n){currView.setX(x, n);}
-	public void addImageView(double x, double y, String key) {currView.addImageView(x, y, key);}
+	public void addImageView(double x, double y, String key) {
+		currView.addImageView(x, y, key);
+	}
 //	public void removePlant(Node n) {currView.removePlant(n);}
 	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
 	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
