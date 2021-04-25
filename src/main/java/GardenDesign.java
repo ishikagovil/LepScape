@@ -6,6 +6,10 @@ import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +33,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -222,9 +225,12 @@ public class GardenDesign extends View{
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
 		iv2.setFitHeight(100);
-		
+		System.out.println("x: "+x+" y: "+y);
+		System.out.println("main x: "+ main.getLayoutX());
+		System.out.println("main y: "+ main.getLayoutY());
 		iv2.setTranslateX(x-main.getLayoutX());
 		iv2.setTranslateY(y-main.getLayoutY());
+		System.out.println("with the - x:"+(x-main.getLayoutX())+" y: "+(y-main.getLayoutY()));
 		
 //		this.addedPlants.add(iv2);
 
@@ -365,7 +371,17 @@ public class GardenDesign extends View{
 	 */
 	public void saveGardenImage() {
 		main.getChildren().remove(c);
-		this.manageView.setImage(canvas.snapshot(null, null));
+		this.manageView.setImage(main.snapshot(null, null));
+		try {
+			Robot robot = new Robot();
+			Rectangle rect = new Rectangle((int)main.getHeight(), (int)main.getWidth());
+			BufferedImage image = robot.createScreenCapture(rect);
+			manageView.image = image;
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			System.out.println("is the error here?");
+			e.printStackTrace();
+		}
 		c.setPreserveRatio(true);
 		c.setFitHeight(75);
 
@@ -379,8 +395,11 @@ public class GardenDesign extends View{
 			c.setFitHeight(85);
 			
 		});
-
+		
+		this.manageView.sp = main;
+		((Summary) this.manageView.views.get("Summary")).addCanvas();
 		main.getChildren().add(c);
+		
 	}
 	
 	public Pane mainPane(){

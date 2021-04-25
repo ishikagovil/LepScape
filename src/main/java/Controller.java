@@ -7,9 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -193,6 +197,10 @@ public class Controller extends Application {
 		return (e) -> { this.model.getCurrentConditions().setSoilType(newType); };
 	}
 	
+	public EventHandler<ActionEvent> getHandlerforSummarySave(){
+		return (e) -> {summarySave(e);};
+	}
+	
 	/**
 	 * Updates the value of current sunlight/moisture levels when setting garden conditions
 	 * @param moistureLevel the new moisture level
@@ -271,12 +279,14 @@ public class Controller extends Application {
 //			view.setX(n.getLayoutX(),n);
 //			view.setY(n.getLayoutY(),n);
 			view.addImageView(event.getSceneX(),event.getSceneY(), name);
-		}
-		
-		if(startingInTile) {
-			model.placePlant(model.getX(), model.getY(), name);
+			model.placePlant(event.getSceneX(), event.getSceneY(), name);
+//			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
+//		
+//		if(startingInTile) {
+//			
+//		}
 	}
 	
 	public void entered(MouseDragEvent event, String key) {
@@ -285,6 +295,26 @@ public class Controller extends Application {
 		model.removePlant(getStartingX(), getStartingY(), key);
 		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		
+	}
+	
+	public void summarySave(ActionEvent event) {
+		System.out.println("button works");
+ 		try {
+			FileOutputStream fos = new FileOutputStream("garden1.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			StackPane sp = new StackPane();
+			sp.setStyle("-fx-background-color: lavender");
+			oos.writeObject(model.gardenMap);
+			oos.close();
+			Gallery gal = (Gallery) view.views.get("Gallery");
+			gal.loadScreen();
+			
+			
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			System.out.println("The error is here");
+			e1.printStackTrace();
+		}
 	}
 	
 	/** 
@@ -427,6 +457,11 @@ public class Controller extends Application {
 				 this.view.switchViews(next);
 				 setTheStage();
 			 }
+		 }
+		 else if(next.equals("Summary")) {
+			 this.view.switchViews(next);
+			 setTheStage();
+//			 model.gardenMap.image = view.image;
 		 }
 		 else {
 			 this.view.switchViews(next);

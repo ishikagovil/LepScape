@@ -59,6 +59,7 @@ public class Model {
 	public void validatePlacement() {}
 	// place down plants and updates budget and lep count
 	public void placePlant(double x, double y, String key) {
+		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
 		this.budget = budget - specie.getCost();

@@ -1,25 +1,20 @@
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -27,6 +22,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.swing.*;
 
 public class Summary extends View {
 	public ArrayList <Button> b1;
@@ -150,49 +146,46 @@ public class Summary extends View {
        border.setRight(tp1);
        
        //Add garden view
-       main = addCanvas();
+//       main = addCanvas();
        border.setCenter(main);
        border.setCenter(main);
        
-       saveGarden.setOnAction(e->{
-     		System.out.println("button works");
-     		try {
-   			FileOutputStream fos = new FileOutputStream("garden1.ser");
-   			ObjectOutputStream oos = new ObjectOutputStream(fos);
-   			StackPane sp = new StackPane();
-   			sp.setStyle("-fx-background-color: lavender");
-   			Garden g = new Garden(canvas,0.3,7,sp);
-   			oos.writeObject(g);
-   			oos.close();
-   			Gallery gal = (Gallery) manageView.views.get("Gallery");
-//   			gal.loadScreen();
-   			
-   			
-   		} catch (Exception e1) {
-   			// TODO Auto-generated catch block
-   			System.out.println("The error is here");
-   			e1.printStackTrace();
-   		}
-     });
+       saveGarden.setOnAction(c.getHandlerforSummarySave());
+       
     }
+	
+//	public void addPane() {
+////		border.setCenter(this.manageView.sp);
+//		Pane p = ((GardenDesign) manageView.views.get("GardenDesign")).main;
+//		border.setCenter(p);
+//	}
+	
+	
 /**
  * Makes the canvas so the previously set garden outline can be displayed
  * Canvas then places inside a pane
  * @return the created pane
  */
-	public Pane addCanvas() {
+	public void addCanvas() {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-		canvas = new Canvas();
-		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-		gc = canvas.getGraphicsContext2D();
-		gardenDesign.getChildren().add(canvas);
-	
-		canvas.widthProperty().bind(gardenDesign.widthProperty());
-		canvas.heightProperty().bind(gardenDesign.heightProperty());
-	
-		canvas.widthProperty().addListener(e -> manageView.redrawImage());
-		canvas.heightProperty().addListener(e -> manageView.redrawImage());
-		return gardenDesign;
+//		canvas = new Canvas();
+//		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+//		gc = canvas.getGraphicsContext2D();
+//		gardenDesign.getChildren().add(canvas);
+//	
+//		canvas.widthProperty().bind(gardenDesign.widthProperty());
+//		canvas.heightProperty().bind(gardenDesign.heightProperty());
+//	
+//		canvas.widthProperty().addListener(e -> manageView.redrawImage());
+//		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+		ImageView iv = new ImageView(manageView.img);
+		iv.setPreserveRatio(true);
+		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
+		iv.fitHeightProperty().bind(gardenDesign.widthProperty());
+		gardenDesign.getChildren().add(iv);
+		border.setCenter(gardenDesign);
+//		return gardenDesign;
 	}
+	
 }

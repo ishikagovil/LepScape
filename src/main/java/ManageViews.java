@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.util.*;
 import javafx.scene.Node;
 import javafx.geometry.Point2D;
@@ -6,6 +7,8 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -18,6 +21,8 @@ public class ManageViews {
 	Controller controller;
 	Stage stage;
 	public Map<String, String> plantImages;
+	public Pane sp;
+	public BufferedImage image;
 	
 	/**
 	 * @author Ishika Govil
@@ -36,7 +41,9 @@ public class ManageViews {
 		dimPixel = -1;
 		this.controller = c;
 	    this.stage = stage;
+	    this.sp = new Pane();
 		initializeViews();
+//		this.image = new BufferedImage(0,0,0);
 	    this.currView = this.getView("Summary");
 	}
 

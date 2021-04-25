@@ -2,9 +2,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -13,7 +16,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -25,6 +27,7 @@ public class Gallery extends View{
 	public Button back;
 	public Button sort;
 	public TextField search;
+	Garden g;
 	
 	public Gallery(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
@@ -53,16 +56,16 @@ public class Gallery extends View{
 		border.setRight(vb1);
 		
 		
-		// make scrollable screen with scroll bar
-//		ScrollBar scroll = new ScrollBar();
-//		scroll.setOrientation(Orientation.VERTICAL);
-//		AnchorPane ap1 = new AnchorPane();
-//		ap1.setStyle("-fx-background-color: lightblue; -fx-border-color: chocolate; -fx-border-width: 5px");
-//		ap1.getChildren().add(scroll);
-//		AnchorPane.setTopAnchor(scroll, 0d);
-//		AnchorPane.setRightAnchor(scroll, 0d);
-//		AnchorPane.setBottomAnchor(scroll, 0d);
-//		border.setCenter(ap1);
+		//make scrollable screen with scroll bar
+		ScrollBar scroll = new ScrollBar();
+		scroll.setOrientation(Orientation.VERTICAL);
+		AnchorPane ap1 = new AnchorPane();
+		ap1.setStyle("-fx-background-color: lightblue; -fx-border-color: chocolate; -fx-border-width: 5px");
+		ap1.getChildren().add(scroll);
+		AnchorPane.setTopAnchor(scroll, 0d);
+		AnchorPane.setRightAnchor(scroll, 0d);
+		AnchorPane.setBottomAnchor(scroll, 0d);
+		border.setCenter(ap1);
 		
 		// make title of the page
 		HBox hb2 = new HBox();
@@ -80,7 +83,10 @@ public class Gallery extends View{
 			Canvas canvas;
 			FileInputStream fis = new FileInputStream("garden1.ser");
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			Garden g = (Garden) ois.readObject();
+			g = (Garden) ois.readObject();
+			g.getPlants().forEach(k->{
+				System.out.println(k.getName());
+			});
 			ois.close();
 //			canvas = g.getCanvas();
 //			if(g.getPane()==null) {
@@ -90,13 +96,41 @@ public class Gallery extends View{
 			System.out.println(g.getCost());
 			System.out.println(g.getNumLeps());
 			new File("garden1.ser").delete();
-//			border.setCenter(sp);
+			StackPane garden = makeSavedGarden();
+//			border.setCenter(garden);
+			border.setCenter(garden);
+			border.setAlignment(garden, Pos.BOTTOM_LEFT);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("No the error is here");
 			e.printStackTrace();
 		}
+	}
+	
+	public StackPane makeSavedGarden() {
+		StackPane sp = new StackPane();
+		sp.setPrefSize(200,200);
+		sp.setStyle("-fx-background-color: yellow");
+//		g.getPlants().forEach(plant->{
+//			String key = plant.getName();
+//			Image im = new Image(getClass().getResourceAsStream("/"+key+".jpg"));
+//			ImageView iv = new ImageView(im);
+//			double x = plant.getX();
+//			double y = plant.getY();
+//			System.out.println(x-sp.getLayoutX());
+//			System.out.println(y-sp.getLayoutY());
+//			System.out.println(sp.getLayoutBounds());
+//			iv.setTranslateX(x+sp.getLayoutX());
+//			iv.setTranslateY(y+sp.getLayoutY());
+//			
+////			iv.setTranslateX(x-sp.getLayoutX());
+////			iv.setTranslateY(y-sp.getLayoutY());
+//			sp.getChildren().add(iv);
+//		});
+//		ImageView iv = new ImageView(image);
+//		sp.getChildren().add(iv);
+		return sp;
 	}
 	
 }
