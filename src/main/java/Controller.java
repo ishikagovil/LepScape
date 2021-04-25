@@ -55,6 +55,7 @@ public class Controller extends Application {
 	 */
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
+		this.stage.setFullScreen(true);
 		this.stage.show();
 	}
 	public static void main(String[] args) {
