@@ -78,6 +78,10 @@ public class Garden {
 		return this.sections;
 	}
 	
+	public void addSection(Conditions cond) {
+		this.sections.add(cond);
+	}
+	
 	public Map<String, Lep> getLeps() {
 		return this.leps;
 	}

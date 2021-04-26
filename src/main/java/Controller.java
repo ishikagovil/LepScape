@@ -168,26 +168,15 @@ public class Controller extends Application {
 	 * @return the associated canvas click handler
 	 * @author Jinay Jain
 	 */
-	public EventHandler<MouseEvent> getConditionsClickHandler() {
+	public EventHandler<MouseEvent> getConditionsClickHandler(Canvas canvas) {
 		return (e) -> {
 			UserMode mode = this.model.getMode();
 			if(mode == UserMode.SETTING_CONDITIONS) {
-				ConditionScreen screen = (ConditionScreen) this.view.getView("ConditionScreen");
-				screen.saveImage();
-				fillRegion(e);
+				fillRegion(canvas, e);
 			} else if(mode == UserMode.PARTITIONING) {
 				draw(e, true);
 			}
 		};
-	}
-	
-	/**
-	 * Creates handler for when conditions canvas is dragged
-	 * @return the associated drag handler
-	 * @author Jinay Jain
-	 */
-	public EventHandler<MouseEvent> getConditionsDragHandler() {
-		return (e) -> { draw(e, false); };
 	}
 	
 	/**
@@ -350,9 +339,10 @@ public class Controller extends Application {
 	public void drawToCanvas(Canvas canvas) {
 		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
 		ArrayList<double[]> points = this.model.getGarden().getOutline();
+		ArrayList<Conditions> conds = this.model.getGarden().getSections();
 		points.addAll(this.model.getGarden().getPolygonCorners());
 		
-		View.drawOnCanvas(canvas, points, extrema);
+		View.drawOnCanvas(canvas, points, extrema, conds);
 	}
 	public void drawFreehandPart(double scale) {
 		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
@@ -469,13 +459,24 @@ public class Controller extends Application {
 		return model.getBudget();
 	}
 
-	private void fillRegion(MouseEvent e) {
-		int x = (int) e.getSceneX();
-		int y = (int) e.getSceneY();
+	private void fillRegion(Canvas canvas, MouseEvent e) {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+
+		double minX = extrema.get(3)[0];
+		double maxX = extrema.get(1)[0];
+		double minY = extrema.get(0)[1];
+		double maxY = extrema.get(2)[1];
+
+		double newX = Model.mapValue(e.getX(), 0, canvas.getWidth(), minX, maxX);
+		double newY = Model.mapValue(e.getY(), 0, canvas.getHeight(), minY, maxY);
 		
-		Color fillColor = this.model.getCurrentConditions().toColor();
+		Conditions currConditions = this.model.getCurrentConditions();
 		
-		this.view.fillRegion(x, y, fillColor);
+		currConditions.setX(newX);
+		currConditions.setY(newY);
+		
+		this.model.getGarden().addSection(currConditions);
+		this.drawToCanvas(canvas);
 	}
 	
 	//Methods used when user is designing new plot and inputting conditions

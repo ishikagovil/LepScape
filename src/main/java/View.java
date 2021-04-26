@@ -1,10 +1,15 @@
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import java.util.*;
@@ -13,6 +18,7 @@ public abstract class View{
 	public Map<String, Image> plantImages;
 	
 	private static final int lineWidth = 3;
+	private static final double fillThreshold = 0.95;
 	
 	public int screenWidth = 1270;
 	public int screenHeight = 760;
@@ -92,15 +98,15 @@ public abstract class View{
 			border.getChildren().removeAll(freeLines);
 			freeLines = new ArrayList<>();
 	}
-	public static void drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema) {
+	public static void drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
 		double minX = extrema.get(3)[0];
 		double maxX = extrema.get(1)[0];
 		double minY = extrema.get(0)[1];
 		double maxY = extrema.get(2)[1];
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setLineWidth(lineWidth);
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
 		double scale = findScale(minX, maxX, minY, maxY, canvas.getWidth(), canvas.getHeight());
 		
@@ -113,9 +119,10 @@ public abstract class View{
 //		System.out.println("ch: " + canvas.getHeight());
 		
 		Iterator<double[]> pointIter = points.iterator();
-		
+
 		boolean isNewLine = true;
 		
+		gc.beginPath();
 		while(pointIter.hasNext()) {
 
 			double[] point = pointIter.next();
@@ -131,10 +138,22 @@ public abstract class View{
 				isNewLine = false;
 			} else {
 				gc.lineTo(x, y);
+				gc.stroke();
 			}
 			
 		}
-		gc.stroke();
+		gc.closePath();
+		
+		
+		Iterator<Conditions> condIter = conditions.iterator();
+		
+		while(condIter.hasNext()) {
+			Conditions cond = condIter.next();
+			int startX = (int) ((cond.getX() - minX) * scale);
+			int startY = (int) ((cond.getY() - minY) * scale);
+			floodFill(canvas, cond, startX, startY, (int) canvas.getWidth(), (int) canvas.getHeight());
+		}
+		
 	}
 	
 	private static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
@@ -145,6 +164,52 @@ public abstract class View{
 		double yScale = targetHeight / sourceHeight;
 
 		return Math.min(xScale, yScale);
+	}
+
+	private static void floodFill(Canvas canvas, Conditions conds, int startX, int startY, int width, int height) {
+		// Inspired by the flood fill example https://stackoverflow.com/questions/23983465/is-there-a-fill-function-for-arbitrary-shapes-in-javafx
+		Stack<Point2D> fillStack = new Stack<>();
+
+		WritableImage snapshot = canvas.snapshot(null, null);
+		PixelReader pr = snapshot.getPixelReader();
+		PixelWriter imgPW = snapshot.getPixelWriter();
+
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		PixelWriter pw = gc.getPixelWriter();
+
+		
+		Color fillColor = conds.toColor();
+		
+		fillStack.push(new Point2D(startX, startY));
+		
+		while(!fillStack.empty()) {
+			Point2D curr = fillStack.pop();
+
+			int x = (int) curr.getX();
+			int y = (int) curr.getY();
+
+			if(pr.getColor(x, y).grayscale().getBrightness() < fillThreshold) continue;
+			
+			pw.setColor(x, y, fillColor);
+			imgPW.setColor(x, y, Color.BLACK);
+
+			if(x > 0) {
+				fillStack.push(new Point2D(x-1, y));
+			}
+			
+			if(x < width - 1) {
+				fillStack.push(new Point2D(x+1, y));
+			}
+
+			if(y > 0) {
+				fillStack.push(new Point2D(x, y-1));
+			}
+
+			if(y < height - 1) {
+				fillStack.push(new Point2D(x, y+1));
+			}
+				
+		}
 	}
 	
 	//Used only in gardenDesign. In here because need to called by controller
