@@ -91,6 +91,15 @@ public class GardenDesign extends View{
 		showCompostBin();
 	}
 	
+	public void remakePane() {
+		border.getChildren().remove(border.getCenter());
+		this.main = addCanvas();
+		showCompostBin();
+		border.setCenter(main);
+		border.getChildren().remove(border.getRight());
+		makeInfoPane("Information","");
+	}
+	
 	/**
 	 * Makes the canvas so the previously set garden outline can be displayed
 	 * Canvas then places inside a pane
@@ -130,14 +139,14 @@ public class GardenDesign extends View{
 				@Override
 				public void handle(MouseEvent event) {
 					v.startFullDrag();
-					System.out.println("drag detected");
+					//System.out.println("drag detected");
 					
 				}
 			});
 			main.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
 				@Override
 				public void handle(MouseDragEvent event) {
-					System.out.println("entered the pane");
+					//System.out.println("entered the pane");
 					
 				}
 				
@@ -186,7 +195,7 @@ public class GardenDesign extends View{
 	/**
 	 * Everytime a plant is placed onto or removed the garden the lep count and budget is updated
 	 */
-	public void updateBudgetandLep(int cost, int lepCount) {
+	public void updateBudgetandLep(double cost, int lepCount) {
 		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
 		
@@ -219,18 +228,18 @@ public class GardenDesign extends View{
 	 * This new imageView is a copy of the imageView that was dragged and can be dragged, cannot be used to create another imageView
 	 */
 	public void addImageView(double x, double y, String key) {
-		System.out.println("in the inner addImageView");
+		//System.out.println("in the inner addImageView");
 //		ImageView iv2 = oblist.get(key);
 		Image im = new Image(getClass().getResourceAsStream("/"+key+".jpg"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
 		iv2.setFitHeight(100);
-		System.out.println("x: "+x+" y: "+y);
-		System.out.println("main x: "+ main.getLayoutX());
-		System.out.println("main y: "+ main.getLayoutY());
+//		System.out.println("x: "+x+" y: "+y);
+//		System.out.println("main x: "+ main.getLayoutX());
+//		System.out.println("main y: "+ main.getLayoutY());
 		iv2.setTranslateX(x-main.getLayoutX());
 		iv2.setTranslateY(y-main.getLayoutY());
-		System.out.println("with the - x:"+(x-main.getLayoutX())+" y: "+(y-main.getLayoutY()));
+		//System.out.println("with the - x:"+(x-main.getLayoutX())+" y: "+(y-main.getLayoutY()));
 		
 //		this.addedPlants.add(iv2);
 
@@ -241,7 +250,7 @@ public class GardenDesign extends View{
 			@Override
 			public void handle(MouseEvent event) {
 				iv2.startFullDrag();
-				System.out.println("drag detected");
+				//System.out.println("drag detected");
 				
 			}
 		});
@@ -371,17 +380,18 @@ public class GardenDesign extends View{
 	 */
 	public void saveGardenImage() {
 		main.getChildren().remove(c);
-		this.manageView.setImage(main.snapshot(null, null));
-		try {
-			Robot robot = new Robot();
-			Rectangle rect = new Rectangle((int)main.getHeight(), (int)main.getWidth());
-			BufferedImage image = robot.createScreenCapture(rect);
-			manageView.image = image;
-		} catch (AWTException e) {
-			// TODO Auto-generated catch block
-			System.out.println("is the error here?");
-			e.printStackTrace();
-		}
+		System.out.println("calling from in here");
+		this.manageView.setSavedImage(main.snapshot(null, null));
+//		try {
+//			Robot robot = new Robot();
+//			Rectangle rect = new Rectangle((int)main.getHeight(), (int)main.getWidth());
+//			BufferedImage image = robot.createScreenCapture(rect);
+//			manageView.image = image;
+//		} catch (AWTException e) {
+//			// TODO Auto-generated catch block
+//			System.out.println("is the error here?");
+//			e.printStackTrace();
+//		}
 		c.setPreserveRatio(true);
 		c.setFitHeight(75);
 
@@ -473,7 +483,7 @@ public class GardenDesign extends View{
 				e.printStackTrace();
 			}
 			if(getClass().getResourceAsStream("/"+k+".jpg")!=null) {
-				System.out.println(k);
+				//System.out.println(k);
 				Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
 				ImageView iv1 = new ImageView(im);
 				iv1.setPreserveRatio(true);

@@ -22,7 +22,7 @@ public class ManageViews {
 	Stage stage;
 	public Map<String, String> plantImages;
 	public Pane sp;
-	public BufferedImage image;
+	public WritableImage savedImg;
 	
 	/**
 	 * @author Ishika Govil
@@ -43,8 +43,7 @@ public class ManageViews {
 	    this.stage = stage;
 	    this.sp = new Pane();
 		initializeViews();
-//		this.image = new BufferedImage(0,0,0);
-	    this.currView = this.getView("Summary");
+	    this.currView = this.getView("Start");
 	}
 
 	public void importImages(String fileName) {
@@ -92,6 +91,34 @@ public class ManageViews {
 		}
 		else
 			this.currView = this.getView(next);
+	}
+	
+	
+	public int[][] makeData() {
+		int width = (int)savedImg.getWidth();
+		int height = (int) savedImg.getHeight();
+		int[][] data = new int[width][height];
+		PixelReader r = savedImg.getPixelReader();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                data[i][j] = r.getArgb(i, j);
+            }
+        }
+        return data;
+	}
+	
+	public void makeImage(int width, int height, int[][] data) {
+		System.out.println(width);
+		System.out.println(height);
+		WritableImage img = new WritableImage(width, height);
+	    PixelWriter w = img.getPixelWriter();
+	    for (int i = 0; i < width; i++) {
+	    	for (int j = 0; j < height; j++) {
+	    		w.setArgb(i, j, data[i][j]);
+	    	}
+	    }
+
+	    setSavedImage(img);
 	}
 	
 	/** 
@@ -164,6 +191,11 @@ public class ManageViews {
 		this.img = img;
 	}
 	
+	public void setSavedImage(WritableImage img) {
+		System.out.println("called");
+		this.savedImg = img;
+	}
+	
 	/** 
 	 * Sets the current View to the View described by the key
 	 * @param String representing key of the desired View
@@ -211,7 +243,7 @@ public class ManageViews {
 	}
 //	public void removePlant(Node n) {currView.removePlant(n);}
 	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
-	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
+	public void updateBudgetandLep(double cost, int lepCount) {((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);}
 	
 	public void fillRegion(int startX, int startY, Color fillColor) {
 		// Inspired by the flood fill example https://stackoverflow.com/questions/23983465/is-there-a-fill-function-for-arbitrary-shapes-in-javafx
@@ -249,6 +281,5 @@ public class ManageViews {
 			}
 				
 		}
-		
 	}
 }

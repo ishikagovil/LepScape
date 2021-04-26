@@ -1,4 +1,7 @@
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+
 import java.awt.image.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,27 +17,26 @@ import javafx.scene.layout.Pane;
 
 public class Garden implements Serializable {
 	
-	private int numLeps;
-	private int cost;
+	public int numLeps;
+	public double cost;
 	public ArrayList<PlacedPlant> plants;
 	public ArrayList<double[]> outline;
 	public ArrayList<double[]> polygonCorners;
 	public ArrayList<Conditions> sections;
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
-	private transient SimpleObjectProperty<Canvas> canvas;
-//	private transient Canvas canvas;
-	private transient Pane pane;
 	public ArrayList<String> plant;
-	public transient WritableImage image;
+//	public transient WritableImage image;
+	public int width;
+	public int height;
+	public int[][] data;
 //	public transient BufferedImage image;
 //	private transient SimpleDoubleProperty costForgallery;
 
 	
 	/**
-	 * @author Ishika Govil, Kimmy Huynh,
+	 * @author Ishika Govil, Kimmy Huynh, Arunima Dey
 	 */
-	
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
 		this.outline = new ArrayList<double[]>();
@@ -43,6 +45,9 @@ public class Garden implements Serializable {
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();
 		this.plant = new ArrayList<>();
+		this.width = 0;
+		this.height = 0;
+		this.data = new int[width][height];
 //		this.image = new BufferedImage (0,0,0);
 	}
 	
@@ -52,49 +57,24 @@ public class Garden implements Serializable {
 		this.cost = cost;
 	}
 	
-//	public Garden(Canvas canvas, int cost, int lepCount, Pane pane) {
-////		this.canvas = new SimpleObjectProperty<Canvas>(canvas);
-////		this.canvas2 = canvas;
-//		this.numLeps = lepCount;
-//		this.cost = cost;
-//		this.pane = pane;
-//	}
-	
-	
-	
-//	public SimpleObjectProperty<Canvas> getCanvas() {
-//		return canvas;
-//	}
-	public Pane getPane() {
-		return this.pane;
+	public void setGardenImageInfo(int width, int height, int[][] data){
+		//this.image = image;
+		this.width = width;
+		this.height = height;
+		this.data = data;
+		//makeData();
 	}
 	
-//	public Canvas getCanvas() {
-//		return canvas;
-//	}
-	
-	private void writeObject(ObjectOutputStream s) throws IOException{
-		s.defaultWriteObject();
-//		s.writeObject(pane);
-//		s.writeObject(canvas);
-//		s.writeObject(new SerializableRenderedImage(image));
-//		image = javafx.embed.swing.SwingFXUtils.fromFXImage(image, null);
-//		BufferedImage fromFXImage = SwingFXUtils.fromFXImage(image, null);
-		
-		//BufferedImage im = SwingFXUtils.fromFXImage(this.image, null);
-		//ImageIO.write(im, "jpg", s);
-		s.writeObject(plants);
-		s.write(numLeps);
-		s.write(cost);
+	public int[][] getGardenData(){
+		return this.data;
 	}
 	
-	private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException{
-		s.defaultReadObject();
-//		this.canvas = (SimpleObjectProperty<Canvas>) s.readObject();
-		this.numLeps = s.read();
-		this.cost = s.read();
-//		image = ImageIO.read(s);
-
+	public int getWidth() {
+		return this.width;
+	}
+	
+	public int getHeight() {
+		return this.height;
 	}
 	
 	public int getNumLeps() {
@@ -113,15 +93,12 @@ public class Garden implements Serializable {
 		return this.cost;
 	}
 	
-	public void setCost(int x) {
-		this.cost = x;
+	public void setCost(double d) {
+		this.cost = d;
 	}
 	
 	public void addCost(int x) {
 		this.cost += x;
-//		this.plants = (ArrayList<PlacedPlant>) s.readObject();
-//		this.pane = (Pane) s.readObject();
-//		this.canvas = new SimpleObjectProperty<>((Canvas)s.readObject());
 	}
 	
 	/**

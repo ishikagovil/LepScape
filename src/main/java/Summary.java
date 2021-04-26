@@ -154,11 +154,6 @@ public class Summary extends View {
        
     }
 	
-//	public void addPane() {
-////		border.setCenter(this.manageView.sp);
-//		Pane p = ((GardenDesign) manageView.views.get("GardenDesign")).main;
-//		border.setCenter(p);
-//	}
 	
 	
 /**
@@ -179,13 +174,12 @@ public class Summary extends View {
 //	
 //		canvas.widthProperty().addListener(e -> manageView.redrawImage());
 //		canvas.heightProperty().addListener(e -> manageView.redrawImage());
-		ImageView iv = new ImageView(manageView.img);
+		ImageView iv = new ImageView(manageView.savedImg);
 		iv.setPreserveRatio(true);
 		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
 		iv.fitHeightProperty().bind(gardenDesign.widthProperty());
 		gardenDesign.getChildren().add(iv);
 		border.setCenter(gardenDesign);
-//		return gardenDesign;
 	}
 	
 }

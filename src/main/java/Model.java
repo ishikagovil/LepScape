@@ -1,18 +1,18 @@
 import java.util.*;
 
-public class Model {
-	public int budget = 100;
+public class Model{
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
-
+	public ArrayList<Garden> savedGardens;
 	public double lengthPerPixel;
 	public double scale;
 	public double[] translate;
 	public double x;
 	public double y;
-	public int lepCount;
-	private Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
+	public Boolean editGarden;
+	public int editGardenIndex;
+	private  Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
 	
 	private UserMode mode;
 	
@@ -20,14 +20,31 @@ public class Model {
 	 * @author Ishika Govil, Kimmy Huynh
 	 */
 	public Model() {
+		this.savedGardens = new ArrayList<>();
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
 		initializePlantDirectory();
-		this.budget = 0;
 		this.lengthPerPixel = -1;
+		editGarden = false;
+		
 	}
 
+	public void setToEdit() {
+		this.editGarden = true;
+	}
+	
+	public boolean editing() {
+		return this.editGarden;
+	}
+	
+	public void setEditGardenIndex(int index) {
+		editGardenIndex = index;
+	}
+	
+	public int getEditGardenIndex() {
+		return this.editGardenIndex;
+	}
 	
 	public Garden getGarden() {
 		return this.gardenMap;
@@ -62,14 +79,14 @@ public class Model {
 		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
-		this.budget = budget - specie.getCost();
-		this.lepCount = lepCount + specie.getLepsSupported();
+		gardenMap.setCost(gardenMap.getCost() - specie.getCost()); 
+		gardenMap.setNumLeps(gardenMap.getNumLeps() + specie.getLepsSupported());
 	}
 	
 	public void removePlant(double x, double y, String key) {
 		PlantSpecies specie = plantDirectory.get(key);
-		this.budget = budget + specie.getCost();
-		this.lepCount = lepCount - specie.getLepsSupported();
+		gardenMap.setCost(gardenMap.getCost() + specie.getCost()); 
+		gardenMap.setNumLeps(gardenMap.getNumLeps() - specie.getLepsSupported());
 	}
 	
 	// update the cost every time a plant is placed
@@ -86,15 +103,15 @@ public class Model {
 //		plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
 	}
 	
-	public int getBudget() {
-		return this.budget;
+	public double getBudget() {
+		return gardenMap.getCost();
 	}
-	public void setBudget(int budget) {
-		this.budget = budget;
+	public void setBudget(double budget) {
+		gardenMap.setCost(budget);
 	}
 	
 	public int getLepCount() {
-		return this.lepCount;
+		return gardenMap.getNumLeps();
 	}
 	
 	/*@Override
