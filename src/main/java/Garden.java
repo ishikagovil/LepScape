@@ -17,6 +17,10 @@ import javafx.scene.layout.Pane;
 
 public class Garden implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public int numLeps;
 	public double cost;
 	public ArrayList<PlacedPlant> plants;
