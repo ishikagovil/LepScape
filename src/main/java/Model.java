@@ -160,10 +160,24 @@ public class Model {
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
 	}
+	
+	/**
+	 * Calculates the distance of a line between the two provided points
+	 * @param double x1 representing x coordinate of first point
+	 * @param double y1 representing y coordinate of first point
+	 * @param double x2 representing x coordinate of second point
+	 * @param double y2 representing y coordinate of second point
+	 * @return double representing distance of the line
+	 */
 	public double calculateLineDistance(double x1, double y1, double x2, double y2) {
 		return Math.sqrt(Math.pow((x1 -  x2),2) + Math.pow(( y1 - y2 ),2) );
 	}
 	
+	/**
+	 * 
+	 * @param double[] topLeft representing the topLeft coordinate to be scaled
+	 * @return double[] representing translate in the x direction and translate in the y direction
+	 */
 	public double[] translateScaledPlot(double[] topLeft) {
 		double translateX = topLeft[0] - this.getGarden().getExtremes().get(3)[0] * scale;
 		double translateY = topLeft[1] - this.getGarden().getExtremes().get(0)[1] * scale;
