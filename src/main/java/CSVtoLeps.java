@@ -29,7 +29,7 @@ public class CSVtoLeps {
                 Lep newData = new Lep(speciesName, genusName, commonName); //create object
                 newData.setDescription(description);
                 // use newData.setThrivesIn to put initialize ArrayList
-                listLeps.put(genusName + " " + speciesName, newData);
+                listLeps.put(genusName + "-" + speciesName, newData);
             }            
             reader.close();   
 		}
