@@ -46,7 +46,7 @@ public class CSVtoPlants {
                 moistReq = Integer.parseInt(parts[8]);
 
                 PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, spread, leps, cost, isWoody, lightReq, soilReq, moistReq); //create object
-                listPlants.put(genusName + " " + speciesName, newData);     // key by genus + species
+                listPlants.put(genusName + "-" + speciesName, newData);     // key by genus-species
             }            
             reader.close();   
 		}
@@ -84,7 +84,7 @@ public class CSVtoPlants {
                 imv.setPreserveRatio(true);
                 imv.setSmooth(true);
                 imv.setCache(true);
-                plantImg.put(genusName + " " + speciesName, imv);   // key: genusName " " speciesName
+                plantImg.put(genusName + "-" + speciesName, imv);   // key: genusName-speciesName
             }            
             reader.close();   
 		}

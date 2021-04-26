@@ -69,7 +69,7 @@ public class GardenDesign extends View{
 //		this.ic=c;
 		//oblist = initializeHashMap();
 		oblist = manageView.getPlantImages();					// loading in plantImages
-		vb = addVBox();
+		vb = addVueBox();
 		border = new BorderPane();
 		main = addCanvas();
 		border.setCenter(main);
