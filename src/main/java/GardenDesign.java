@@ -69,7 +69,7 @@ public class GardenDesign extends View{
 //		this.ic=c;
 		//oblist = initializeHashMap();
 		oblist = manageView.getPlantImages();					// loading in plantImages
-		vb = addVueBox();
+		vb = addVBox();
 		border = new BorderPane();
 		main = addCanvas();
 		border.setCenter(main);
@@ -231,7 +231,9 @@ public class GardenDesign extends View{
 	public void addImageView(double x, double y, String key, double heightWidth) {
 		System.out.println("in the inner addImageView");
 //		ImageView iv2 = oblist.get(key);
-		Image im = new Image(getClass().getResourceAsStream("/"+key+".jpg"));
+		System.out.println("key: "+key);
+//		Image im = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
 		iv2.setFitHeight(heightWidth);

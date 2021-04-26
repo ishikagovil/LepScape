@@ -278,7 +278,7 @@ public class Controller extends Application {
 //			view.setY(n.getLayoutY(),n);
 			PlantSpecies plant = model.plantDirectory.get(name);
 			double heightWidth = scalePlantSpread(plant);
-			view.addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
+			((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
 		}
 		
 		if(startingInTile) {
