@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
+
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -34,6 +36,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -45,6 +48,7 @@ import javafx.stage.Stage;
 public class GardenDesign extends View{
 //	public Controller ic;
 	Canvas canvas;
+	Stage stage;
 	//Panes
 	public VBox vb = new VBox();
 //	public BorderPane stack = new BorderPane();
@@ -56,7 +60,8 @@ public class GardenDesign extends View{
 	ImageView c = new ImageView(compost);
 	Pane main;
 	
-	public ArrayList<ImageView> addedPlants;
+	
+//	public ArrayList<ImageView> addedPlants;
 	
 	/**
 	 * Initializes an instance of GardenDesign
@@ -66,6 +71,7 @@ public class GardenDesign extends View{
 	 */
 	public GardenDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage,c,manageView);
+		this.stage = stage;
 //		this.ic=c;
 		//oblist = initializeHashMap();
 		oblist = manageView.getPlantImages();					// loading in plantImages
@@ -123,6 +129,38 @@ public class GardenDesign extends View{
 		
 		return gardenDesign;
 	}
+	
+	//https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
+	public Stage compostPopUp() {
+		final Stage deleted = new Stage();
+		VBox box = new VBox();
+		//BorderPane bp = new BorderPane();
+		Label plantName = new Label();
+		deleted.setTitle("Deleted");
+		deleted.initModality(Modality.APPLICATION_MODAL);
+		deleted.initOwner(stage);
+		ListView<ImageView> list = new ListView<ImageView> ();
+		box.getChildren().addAll(list);
+		VBox.setVgrow(list, Priority.ALWAYS);
+		plantName.setLayoutX(10);
+		plantName.setLayoutY(115);
+		plantName.setFont(Font.font("Verdana", 20));
+		ObservableList<ImageView> images = FXCollections.observableArrayList();
+		images.add(new ImageView(new Image(getClass().getResourceAsStream("/compost.png"))));
+		images.add(new ImageView(new Image(getClass().getResourceAsStream("/butterfly.png"))));
+		images.add(new ImageView(new Image(getClass().getResourceAsStream("/dollar.png"))));
+		images.add(new ImageView(new Image(getClass().getResourceAsStream("/commonMilkweed.png"))));
+		
+		
+		list.setItems(images);
+				
+		//bp.setCenter(list);
+		//bp.setBottom(plantName);
+		//bp.setCenter(list);
+		return deleted;
+		
+	}
+	
 	
 	/**
 	 * Makes the pane that holds all the ImageViews of the plants
