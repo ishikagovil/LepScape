@@ -174,10 +174,6 @@ public class ManageViews {
 		this.currView = this.views.get(key);
 	}
 	
-	public void redrawImage() {
-		this.getGC().drawImage(img, 0, 0);
-	}
-
 	/** 
 	 * Called when mouse enters or exits a button
 	 * @param boolean describing if the cursor to be shown is a hand or not 

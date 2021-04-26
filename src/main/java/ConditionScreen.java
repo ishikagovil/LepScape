@@ -95,8 +95,8 @@ public class ConditionScreen extends View {
 	    canvas.widthProperty().bind(wrapperPane.widthProperty());
 	    canvas.heightProperty().bind(wrapperPane.heightProperty());
 		
-		canvas.widthProperty().addListener(e -> manageView.redrawImage());
-		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
+		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
 		
 		canvas.setOnMousePressed(controller.getConditionsClickHandler());
 		canvas.setOnMouseDragged(controller.getConditionsDragHandler());

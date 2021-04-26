@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
@@ -346,6 +347,13 @@ public class Controller extends Application {
 		itr = model.getGarden().polygonCorners.listIterator();
 		iteratePlot(itr, model.getGarden().polygonCorners, true, scale);
 	}
+	public void drawToCanvas(Canvas canvas) {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+		ArrayList<double[]> points = this.model.getGarden().getOutline();
+		points.addAll(this.model.getGarden().getPolygonCorners());
+		
+		View.drawOnCanvas(canvas, points, extrema);
+	}
 	public void drawFreehandPart(double scale) {
 		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
 		iteratePlot(itr, model.getGarden().outline, false, scale);
@@ -468,7 +476,6 @@ public class Controller extends Application {
 		Color fillColor = this.model.getCurrentConditions().toColor();
 		
 		this.view.fillRegion(x, y, fillColor);
-		this.view.redrawImage();
 	}
 	
 	//Methods used when user is designing new plot and inputting conditions

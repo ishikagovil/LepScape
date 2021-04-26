@@ -1,5 +1,6 @@
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -10,6 +11,9 @@ import java.util.*;
 
 public abstract class View{
 	public Map<String, Image> plantImages;
+	
+	private static final int lineWidth = 3;
+	
 	public int screenWidth = 1270;
 	public int screenHeight = 760;
 	public double gardenWidth = 0.5*screenWidth;
@@ -87,6 +91,60 @@ public abstract class View{
 			polygonLines = new ArrayList<>();
 			border.getChildren().removeAll(freeLines);
 			freeLines = new ArrayList<>();
+	}
+	public static void drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema) {
+		double minX = extrema.get(3)[0];
+		double maxX = extrema.get(1)[0];
+		double minY = extrema.get(0)[1];
+		double maxY = extrema.get(2)[1];
+		
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		gc.setLineWidth(lineWidth);
+		
+		double scale = findScale(minX, maxX, minY, maxY, canvas.getWidth(), canvas.getHeight());
+		
+//		System.out.println("minX: " + minX);
+//		System.out.println("maxX: " + maxX);
+//		System.out.println("minY: " + minY);
+//		System.out.println("maxY: " + maxY);
+//		System.out.println("scale: " + scale);
+//		System.out.println("cw: " + canvas.getWidth());
+//		System.out.println("ch: " + canvas.getHeight());
+		
+		Iterator<double[]> pointIter = points.iterator();
+		
+		boolean isNewLine = true;
+		
+		while(pointIter.hasNext()) {
+
+			double[] point = pointIter.next();
+			double x = (point[0] - minX) * scale;
+			double y = (point[1] - minY) * scale;
+			
+//			System.out.println("x: " + x + " y: " + y);
+
+			if(x == -1 && y == -1) {
+				isNewLine = true;
+			} else if (isNewLine) {
+				gc.moveTo(x, y);
+				isNewLine = false;
+			} else {
+				gc.lineTo(x, y);
+			}
+			
+		}
+		gc.stroke();
+	}
+	
+	private static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
+		double sourceWidth = maxX - minX;
+		double sourceHeight = maxY - minY;
+
+		double xScale = targetWidth / sourceWidth;
+		double yScale = targetHeight / sourceHeight;
+
+		return Math.min(xScale, yScale);
 	}
 	
 	//Used only in gardenDesign. In here because need to called by controller
