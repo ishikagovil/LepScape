@@ -4,15 +4,12 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 import javafx.application.Application;
@@ -89,7 +86,17 @@ public class Controller extends Application {
 		return (e) -> { view.onChangeCursor(false);  };
 
 	}
-	
+	/** 
+	 * Calls anchoring when the anchor is dragged on the polygon
+	 * @param EventHandler<MouseEvent>
+	 * @param Anchor
+	 * @param Polygon
+	 * @param boolean dragAnchor describing whether anchor is draggable
+	 * @param DoubleProperty x describing x position
+	 * @param DoubleProperty y describing y position
+	 * @param int index of anchor
+	 * @author Ishika Govil 
+	 */
 	public EventHandler<MouseEvent> getHandlerforAnchor(Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
 		return (e) -> { anchoring(e, anchor, dragAnchor, x, y, poly, idx); };
 	}
@@ -121,20 +128,29 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforDrawing(boolean isPressed) {
 		return (e) -> {  draw(e, isPressed); };
 	}
-	
+	/**
+	 * Calls drawBreak when the user lifts the mouse when freedrawing plot
+	 * @param EventHandler<MouseEvent>
+	 */
 	public EventHandler<MouseEvent> getHandlerforDrawBreak() {
 		return (e) -> {  drawBreak(); };
 	}
 	
 	/** 
 	 * Calls drag when mouse is released
+	 * @param String key
+	 * @param boolean startingInTile
 	 * @return EventHandler<MouseEvent>
-	 * @author Ishika Govil 
 	 */
 	public EventHandler<MouseEvent> getHandlerforReleased(String key, Boolean startingInTile) {
 		return (e) -> { release(e,key,startingInTile);  };
 	}
 	
+	/**
+	 * Calls entered when mouse is entered
+	 * @param String key
+	 * @return EventHandler<MouseDragEvent>
+	 */
 	public EventHandler<MouseDragEvent> getHandlerforMouseEntered(String key){
 		return (e) -> { entered(e,key); };
 	}
@@ -294,12 +310,14 @@ public class Controller extends Application {
 		
 	}
 	
+	/**
+	 * The spread of a plant is calculated using the lengthPerPixel and spread of the plant
+	 * @param PlantSpecies plant
+	 * @return double representing the number of pixels of the radius of the plant
+	 */
 	public double scalePlantSpread(PlantSpecies plant) {
 		double numPixels = plant.getSpreadRadius() / this.model.lengthPerPixel;
 		return numPixels;
-		//not sure where the image is stored, but set its radius as:
-		//imageview.setFitHeight(numPixels)
-		//imageview.setFitWidth(numPixels)
 	}
 	/** 
 	 * Called when user is drawing. 
@@ -316,9 +334,23 @@ public class Controller extends Application {
 		 this.model.getGarden().updateOutline(event.getSceneX(), event.getSceneY());
 		 this.view.validateSave();
 	}
+	/**
+	 * When user lifts their mouse upon drawing the plot boundary, it adds a (-1, -1) point to the outline 
+	 */
 	public void drawBreak() {
 		this.model.getGarden().updateOutline(-1,-1);
 	}
+	
+	/** Sets the new coordinates of the anchor of the relevant anchor of the polygon after user drags it
+	 * @param EventHandler<MouseEvent>
+	 * @param Anchor
+	 * @param Polygon
+	 * @param boolean dragAnchor describing whether anchor is draggable
+	 * @param DoubleProperty x describing x position
+	 * @param DoubleProperty y describing y position
+	 * @param int index of anchor
+	 * @author Ishika Govil 
+	 */
 	public void anchoring(MouseEvent event, Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
 		if(dragAnchor) {
     		anchor.setCenterX(event.getX());           
@@ -327,10 +359,19 @@ public class Controller extends Application {
     		poly.getPoints().set(idx + 1, y.get());
     	}
 	}
+	
+	/**
+	 * When user hits clear on the polygon boundary, polygonCorners ArrayList in the Garden is reset
+	 */
 	public void restartPolygonBoundary() {
 		this.model.getGarden().polygonCorners = new ArrayList<double[]>();
 	}
 	
+	/**
+	 * When the user saves the boundary, if they have drawn a polygon, it saves the corners of the polygon
+	 * @param Polygon drawn by user
+	 * @author Ishika Govil
+	 */
 	public void enterPolygonBoundary(Polygon poly) {
 		for(int i = 0; i < poly.getPoints().size(); i+= 2) {
 			DoubleProperty x = new SimpleDoubleProperty(poly.getPoints().get(i));
@@ -339,16 +380,37 @@ public class Controller extends Application {
 		}
 	}
 	
+	/**
+	 * Iterates over the boundary ArrayLists in Garden to draw plot to screen.
+	 * Calls iteratePlot() to translate and scale the plot
+	 * @param double scale 
+	 * @author Ishika Govil
+	 */
 	public void drawPlot(double scale) {
 		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
 		iteratePlot(itr, model.getGarden().outline, false, scale);
 		itr = model.getGarden().polygonCorners.listIterator();
 		iteratePlot(itr, model.getGarden().polygonCorners, true, scale);
 	}
+	
+	/**
+	 * Iterates over just the freehand portion outline ArrayList in Garden
+	 * @param double scale
+	 * @author Ishika Govil
+	 */
 	public void drawFreehandPart(double scale) {
 		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
 		iteratePlot(itr, model.getGarden().outline, false, scale);
 	}
+	
+	/**
+	 * Scales and translates all the points onto the screen by calling drawLine in View
+	 * @param Iterator itr
+	 * @param ArrayList representing which plot boundary list, outline or polygonCorners
+	 * @param boolean isPolygon representing if the boundary is a polygon
+	 * @param double scale 
+	 * @author Ishika Govil
+	 */
 	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list, boolean isPolygon, double scale) {
 		double[] translate;
 		if(scale == 1)
@@ -369,6 +431,12 @@ public class Controller extends Application {
 		}
 	}
 	
+	/**
+	 * Using the extreme x and y coordinates, the pixel lengths of the maximum minus minimum are determined.
+	 * Then, these lengths are divided by desired lengths to determine scale.
+	 * The minimum is used as the scale and drawPlot is called
+	 * @author Ishika Govil
+	 */
 	public void scalePlot() {
 		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
 		double scaleY = this.view.getGardenHeight() / Math.abs(extrema.get(0)[1] -  extrema.get(2)[1]);
@@ -470,21 +538,6 @@ public class Controller extends Application {
 		this.view.redrawImage();
 	}
 	
-	//Methods used when user is designing new plot and inputting conditions
-	public void displayConditionsOptions() {} //Called in release() to update the view with conditions (changeCursor called with false)
-	
-	//Methods used when user is designing their garden
-	public void displayValidPlantLocation() {} ///Called in drag(), if it is not validated in Model, it tells the view and colors plant red. Otherwise plant is green
-	public void onPlantRelease() {} //placePlant() is called in model and updated cost/leps are returned. view is created to show that plant and updates Basket		
-	
-	//Methods that provide other feedback when buttons are pressed
-	public void downloadGarden() {} //Called in getHandlerforClicked if download is pressed. gets info from model, puts it in a pdf, downloads it to computer
-	public void getCompostInfo() {} //Called in getHandlerforClicked if compost bin clicked, which gets info about deleted plants and sends to View
-
-	//Helpers
-	public void getRecommendedPlants() {} //when designGarden is called, this method is also called to initialize the optimal garden (calls createDefault in model)
-	public void loadGarden() {} // takes garden information stored in Model and renders GardenDesign 
-
 	
 	public double getStartingX() {return model.getX();}
 	public double getStartingY() {return model.getY();}

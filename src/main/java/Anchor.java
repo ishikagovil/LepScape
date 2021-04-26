@@ -4,7 +4,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
-
+/**
+ * Anchor class used to create draggable circles on the edges of the Polygon in PlotDesign
+ * @author Ishika Govil
+ */
 public class Anchor extends Circle {
 	PlotDesign plotView;
 	Controller controller;
@@ -31,6 +34,11 @@ public class Anchor extends Circle {
             y.bind(centerYProperty());
             setOnMouseDragged(controller.getHandlerforAnchor(this, dragAnchor, x, y, poly, idx));         
         }
+        /**
+         * When dragged by user, it calls the controller's getHandlerforAnchor() with the relevant parameters. 
+         * Also sets the class's field dragAnchor to the boolean parameter
+         * @param boolean dragAnchor representing whether the anchor should be draggable or not
+         */
         public void setDragAnchor(boolean dragAnchor) {
         	this.dragAnchor = dragAnchor;      	
         	setOnMouseDragged(controller.getHandlerforAnchor(this, dragAnchor, x, y, poly, idx));              	
