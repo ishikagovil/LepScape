@@ -96,6 +96,7 @@ public class Controller extends Application {
 	 * @param DoubleProperty x describing x position
 	 * @param DoubleProperty y describing y position
 	 * @param int index of anchor
+	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
 	public EventHandler<MouseEvent> getHandlerforAnchor(Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
