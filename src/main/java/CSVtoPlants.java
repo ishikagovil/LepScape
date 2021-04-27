@@ -16,7 +16,7 @@ public class CSVtoPlants {
         String tempWoody;
         int cost;
         boolean isWoody;
-        int spread;
+        double spread;
         int leps;
         int lightReq;
         int soilReq;
@@ -31,7 +31,7 @@ public class CSVtoPlants {
                 genusName = parts[0];
                 speciesName = parts[1];
                 commonName = parts[2];
-                spread = Integer.parseInt(parts[3]);
+                spread = Double.parseDouble(parts[3]);
                 leps = Integer.parseInt(parts[4]);
                 tempWoody = parts[5];
                 if (tempWoody.equals("h")) {
