@@ -21,6 +21,9 @@ public class ConditionScreen extends View {
 //	public Slider sunlight;
 //	public TextField budget;
 	
+	private final int boxSpacing = 8;
+	private final int boxPadding = 12;
+	
 	private Canvas canvas;
 
 	/**
@@ -44,8 +47,8 @@ public class ConditionScreen extends View {
 	 * @return the created sidebar node
 	 */
 	private Node createSidebar() {
-		VBox sidebar = new VBox(8);
-		sidebar.setPadding(new Insets(12.0));
+		VBox sidebar = new VBox(boxSpacing);
+		sidebar.setPadding(new Insets(boxPadding));
 		sidebar.setStyle("-fx-background-color: #f0ebdd");
 		
 		HBox budgetRow = new HBox();
@@ -56,12 +59,10 @@ public class ConditionScreen extends View {
 			controller.updateBudget(budgetField.getText());
 		});
 		
-		HBox tools = new HBox(8);
+		HBox tools = new HBox(boxSpacing);
 		Button fillButton = new Button("Fill");
 		fillButton.setOnAction(controller.getHandlerforModeSetter(UserMode.SETTING_CONDITIONS));
-		Button partitionButton = new Button("Partition");
-		partitionButton.setOnAction(controller.getHandlerforModeSetter(UserMode.PARTITIONING));
-		tools.getChildren().addAll(fillButton, partitionButton);
+		tools.getChildren().addAll(fillButton);
 		
 		Button next = new Button("Next");
 		next.setOnAction((e) -> {
@@ -95,11 +96,10 @@ public class ConditionScreen extends View {
 	    canvas.widthProperty().bind(wrapperPane.widthProperty());
 	    canvas.heightProperty().bind(wrapperPane.heightProperty());
 		
-		canvas.widthProperty().addListener(e -> manageView.redrawImage());
-		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
+		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
 		
-		canvas.setOnMousePressed(controller.getConditionsClickHandler());
-		canvas.setOnMouseDragged(controller.getConditionsDragHandler());
+		canvas.setOnMousePressed(controller.getConditionsClickHandler(canvas));
 		
 		return wrapperPane;
 	}

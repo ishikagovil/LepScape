@@ -4,6 +4,9 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -184,26 +187,15 @@ public class Controller extends Application {
 	 * @return the associated canvas click handler
 	 * @author Jinay Jain
 	 */
-	public EventHandler<MouseEvent> getConditionsClickHandler() {
+	public EventHandler<MouseEvent> getConditionsClickHandler(Canvas canvas) {
 		return (e) -> {
 			UserMode mode = this.model.getMode();
 			if(mode == UserMode.SETTING_CONDITIONS) {
-				ConditionScreen screen = (ConditionScreen) this.view.getView("ConditionScreen");
-				screen.saveImage();
-				fillRegion(e);
+				fillRegion(canvas, e);
 			} else if(mode == UserMode.PARTITIONING) {
 				draw(e, true);
 			}
 		};
-	}
-	
-	/**
-	 * Creates handler for when conditions canvas is dragged
-	 * @return the associated drag handler
-	 * @author Jinay Jain
-	 */
-	public EventHandler<MouseEvent> getConditionsDragHandler() {
-		return (e) -> { draw(e, false); };
 	}
 	
 	/**
@@ -405,6 +397,15 @@ public class Controller extends Application {
 		iteratePlot(itr, model.getGarden().outline, false, scale);
 	}
 	
+	public void drawToCanvas(Canvas canvas) {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+		ArrayList<double[]> points = this.model.getGarden().getOutline();
+		ArrayList<Conditions> conds = this.model.getGarden().getSections();
+		points.addAll(this.model.getGarden().getPolygonCorners());
+		
+		View.drawOnCanvas(canvas, points, extrema, conds);
+	}
+	
 	/**
 	 * Scales and translates all the points onto the screen by calling drawLine in View
 	 * @param Iterator itr
@@ -530,14 +531,26 @@ public class Controller extends Application {
 		return model.getBudget();
 	}
 
-	private void fillRegion(MouseEvent e) {
-		int x = (int) e.getSceneX();
-		int y = (int) e.getSceneY();
+	private void fillRegion(Canvas canvas, MouseEvent e) {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+
+		double minX = extrema.get(3)[0];
+		double maxX = extrema.get(1)[0];
+		double minY = extrema.get(0)[1];
+		double maxY = extrema.get(2)[1];
+
+		double scale = View.findScale(minX, maxX, minY, maxY, canvas.getWidth(), canvas.getHeight());
+		double newX = (e.getX() / scale) + minX;
+		double newY = (e.getY() / scale) + minY;
+
+		Conditions curr = this.model.getCurrentConditions();
+		Conditions conditions = new Conditions(curr.getSoilType(), curr.getMoistureLevel(), curr.getSunlight());
 		
-		Color fillColor = this.model.getCurrentConditions().toColor();
+		conditions.setX(newX);
+		conditions.setY(newY);
 		
-		this.view.fillRegion(x, y, fillColor);
-		this.view.redrawImage();
+		this.model.getGarden().addSection(conditions);
+		this.drawToCanvas(canvas);
 	}
 	
 	
