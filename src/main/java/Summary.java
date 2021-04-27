@@ -28,11 +28,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+
 public class Summary extends View {
 	public Controller ic;
 	Pane main;
 	Canvas canvas;
-	
+
+/**
+ * set up a stage and border pane to hold other panes
+ * @param stage
+ * @param c
+ * @param manageView
+ */
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
 		super(stage, c, manageView);
@@ -64,6 +71,10 @@ public class Summary extends View {
        border.setCenter(main);  
     }
 	
+/**
+ * add bottom pane to hold the buttons for create new garden and download
+ * @return the bottom pane created 
+ */
 	public HBox addBottomHBox() {
 		HBox box = new HBox();
         box.setStyle("-fx-background-color: steelblue");
@@ -71,10 +82,13 @@ public class Summary extends View {
         box.setPadding(new Insets(15, 12, 15, 12));
         box.setAlignment(Pos.CENTER_RIGHT);
         box.getChildren().addAll(addBottomButtons());
-        
         return box;
 	}
 	
+/**
+ * create an array list of buttons of download and create new garden
+ * @return an array list of buttons
+ */
 	public ArrayList<Button> addBottomButtons() {
 		// make buttons for Lepedia, Download and Create New Garden
         ArrayList <Button> bottomButtons = new ArrayList <Button>();
@@ -91,17 +105,24 @@ public class Summary extends View {
         return bottomButtons;
 	}
 	
+/**
+ * create a vertical box pane to hold the navigation buttons
+ * @return the vertical pane
+ */
 	public VBox addNavigationVBox() {
 		VBox sideVBox = new VBox();
         sideVBox.setStyle("-fx-background-color: lavender");
         sideVBox.setSpacing(15);
         sideVBox.setPadding(new Insets(20));
-        
         sideVBox.getChildren().addAll(addNavigationButtons());
         sideVBox.setAlignment(Pos.TOP_RIGHT);
         return sideVBox;
 	}
-	
+
+/**
+ * create an array list of navigation buttons
+ * @return an array list of buttons
+ */
 	public ArrayList<Button> addNavigationButtons() {
 		ArrayList <Button> buttons = new ArrayList<Button>();
         buttons.add(addNextButton("Back", "GardenDesign"));
@@ -110,11 +131,14 @@ public class Summary extends View {
         buttons.add(addNextButton("Save", "Gallery"));
         return buttons;
 	}
-	
+
+/**
+ * create a center pane to hold the garden design 
+ * @return the center pane
+ */
 	public StackPane addCenterPane() {
 		StackPane centerPane = new StackPane();
 		centerPane.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
-		
 		return centerPane;
 	}
 	
@@ -136,18 +160,20 @@ public class Summary extends View {
 	
 		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
 		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
-
 		return gardenDesign;
 	}
 	
+/**
+ * create a tilepane to hold information about the garden
+ * @return the tilepane created
+ */
 	public TilePane addInfoPane() {
 		TilePane rightPane = new TilePane();
 	    rightPane.setPadding(new Insets(10));
 	    rightPane.setStyle("-fx-background-color: lavender");
-	    
 	    Text title = new Text("Summary");
 	    title.setFont(Font.font(null, FontWeight.BOLD, 30));
-	    
+	  
 	    Image lepCount = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 		Image cost = new Image(getClass().getResourceAsStream("/dollar.png"));
 		ImageView lepIV = new ImageView(lepCount);
@@ -156,7 +182,6 @@ public class Summary extends View {
 		ImageView costIV = new ImageView(cost);
 		costIV.setPreserveRatio(true);
 		costIV.setFitHeight(50);
-		
 		rightPane.getChildren().addAll(title, lepIV, costIV);
 		return rightPane;
 	}
