@@ -14,6 +14,9 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	// Required texture of the soil, on a scale from 0 (clay) to 10 (rock)
 	private int moistReq;
 	// Required relative humidity in the air, on a scale from 0 (<=10%) to 10 (>= 90%)
+	private SoilType soil;
+	private LightType light;
+	private MoistureType moisture;
 
 	// for all "req" attributes, if value is -1, no specific requirements for plant
 	
@@ -34,7 +37,62 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 		this.lightReq = lightReq;
 		this.soilReq = soilReq;
 		this.moistReq = moistReq;
-		this.setDescription();
+		this.setDescription();				// setting generic description to display
+		this.setRequirements();				// setting basic enum requirements for PlantSpecies
+	}
+	
+	public void setRequirements() {
+		// setting soil type
+		if (this.soilReq >= 0) {
+			if (this.soilReq < 4) {
+				this.soil = SoilType.CLAY;
+			} else if (this.soilReq < 8) {
+				this.soil = SoilType.DIRT;
+			} else {
+				this.soil = SoilType.ROCK;
+			}
+		} else {
+			this.soil = SoilType.ANY;
+		}
+		
+		// setting light type
+		if (this.lightReq >= 0) {
+			if (this.lightReq < 4) {
+				this.light = LightType.DARK;
+			} else if (this.soilReq < 8) {
+				this.light = LightType.BRIGHT;
+			} else {
+				this.light = LightType.INTENSE;
+			}
+		} else {
+			this.light = LightType.ANY;
+		}
+	
+		
+		// setting moisture type
+		if (this.moistReq >= 0) { 
+			if (this.moistReq < 4) {
+				this.moisture = MoistureType.DRY;
+			} else if (this.moistReq < 8) {
+				this.moisture = MoistureType.MOIST;
+			} else {
+				this.moisture = MoistureType.WET;
+			}
+		} else {
+			this.moisture = MoistureType.ANY;
+		}
+	}
+	
+	public SoilType getSoilType() {
+		return this.soil;
+	}
+	
+	public MoistureType getMoistureType() {
+		return this.moisture;
+	}
+	
+	public LightType getLightType() {
+		return this.light;
 	}
 
 	public void setDescription() {
