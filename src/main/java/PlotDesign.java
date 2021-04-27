@@ -58,6 +58,9 @@ public class PlotDesign extends View{
         //Adding first set of buttons to HBox
         createHBox(drawSwitch);	
 	}
+	/**
+	 * Creates the buttons Freehand and Polygon in the toolbar
+	 */
 	public void toolbarButtons() {
 		//Add editing button and functionality
         toolbar = new ToolBar();
@@ -74,6 +77,9 @@ public class PlotDesign extends View{
         dimSwitch = new ArrayList<Button>();
         border.setTop(toolbar);
 	}
+	/**
+	 * Creates the buttons Back in both dimSwitch and drawSwitch lists
+	 */
 	public void backButtons() {
 		//Adding Back buttons
         drawSwitch.add(addNextButton("Back", "Start"));
@@ -113,6 +119,9 @@ public class PlotDesign extends View{
             }
         });
 	}
+	/**
+	 * Creates the buttons Undo and Clear in dimSwitch and drawSwitch lists, respectively
+	 */
 	public void clearButtons() {
         //Adding Clear button
         Button clear = addNextButton("Clear", "Clear");
@@ -143,6 +152,10 @@ public class PlotDesign extends View{
         });
   
 	}
+	
+	/**
+	 * Creates the buttons Next and Save in dimSwitch and drawSwitch lists, respectively
+	 */
 	public void saveButtons() {
 		//Adding Save button
         drawSwitch.add(new Button("Save"));
@@ -155,6 +168,10 @@ public class PlotDesign extends View{
         setOnMouse(dimSwitch.get(2));
 	}
 	
+	/**
+	 * If the user has drawn a plot on their screen, this method is called when the user hits save
+	 * Switches to the dimension setting screen
+	 */
 	public void validateSave() {
 		drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
             @Override 
@@ -175,7 +192,7 @@ public class PlotDesign extends View{
             	//Start the next screen for dimensions 
             	onSettingDimensions();      	
             	removeLines();
-            	controller.scalePlot();
+            	controller.drawPlot(1);
             }
         });
 	}
@@ -251,8 +268,12 @@ public class PlotDesign extends View{
         });
 	}
 	
-	//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
+	/**
+	 * Creates the polygon shape when the button Polygon is pressed. Initializes the anchors.
+	 */
 	public void onShape() {
+		//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
+
 		//Initializes the points clockwise starting from top left corner of box
 		double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
 	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
@@ -281,6 +302,11 @@ public class PlotDesign extends View{
 		}
         border.getChildren().addAll(anchors);
 	}
+	
+	/**
+	 * Toggles the drag handler for the Anchor depending on the boolean dragAnchor. 
+	 * dragAnchor is changed to true and false depending if the anchors should be draggable
+	 */
 	public void toggleAnchorHandler() {
 		Iterator<Anchor> itr = anchors.iterator();
     	while(itr.hasNext()) {

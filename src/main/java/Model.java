@@ -23,7 +23,7 @@ public class Model {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
-		initializePlantDirectory();
+		//initializePlantDirectory();
 		this.budget = 0;
 		this.lengthPerPixel = -1;
 	}
@@ -41,7 +41,37 @@ public class Model {
 	
 	public void setLepDirectory(Map<String, Lep> lepdir) {
 		this.lepDirectory = lepdir;
+		Iterator lepIt = lepdir.entrySet().iterator();
+		Iterator plantIt = this.plantDirectory.entrySet().iterator();
+		System.out.println("created iterators for plant + lep");
+		
+		while(lepIt.hasNext()) {
+			Map.Entry lepEntry = (Map.Entry)lepIt.next();
+			Lep lepObj = (Lep)lepEntry.getValue();
+			ArrayList<String> genusOfPlants = lepObj.getThrivesInGenus();
+			
+			Iterator genusPlantsIt = genusOfPlants.iterator();
+			while(genusPlantsIt.hasNext()) {
+				String genusNameForPlant = (String)genusPlantsIt.next();
+				
+				while (plantIt.hasNext()) {
+					Map.Entry plantEntry = (Map.Entry)plantIt.next();
+					PlantSpecies plantObj = (PlantSpecies)plantEntry.getValue();
+					String genusOfPlant = plantObj.getGenusName();
+					
+					if (genusOfPlant.equals(genusNameForPlant)) {
+						lepObj.getThrivesIn().add(plantObj);
+					}
+				}
+				
+			}
+			
+			System.out.println(lepObj.getThrivesIn());
+			
+		}
+		
 	}
+
 	// create a new condition for the garden
 	public void createNewConditions() {}
 	
@@ -160,10 +190,24 @@ public class Model {
 	public void setLengthPerPixel(double pix) {
 		this.lengthPerPixel = pix;
 	}
+	
+	/**
+	 * Calculates the distance of a line between the two provided points
+	 * @param double x1 representing x coordinate of first point
+	 * @param double y1 representing y coordinate of first point
+	 * @param double x2 representing x coordinate of second point
+	 * @param double y2 representing y coordinate of second point
+	 * @return double representing distance of the line
+	 */
 	public double calculateLineDistance(double x1, double y1, double x2, double y2) {
 		return Math.sqrt(Math.pow((x1 -  x2),2) + Math.pow(( y1 - y2 ),2) );
 	}
 	
+	/**
+	 * 
+	 * @param double[] topLeft representing the topLeft coordinate to be scaled
+	 * @return double[] representing translate in the x direction and translate in the y direction
+	 */
 	public double[] translateScaledPlot(double[] topLeft) {
 		double translateX = topLeft[0] - this.getGarden().getExtremes().get(3)[0] * scale;
 		double translateY = topLeft[1] - this.getGarden().getExtremes().get(0)[1] * scale;

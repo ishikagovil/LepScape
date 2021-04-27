@@ -1,13 +1,9 @@
 import java.util.*;
 import javafx.scene.Node;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ManageViews {
@@ -19,6 +15,8 @@ public class ManageViews {
 	Controller controller;
 	Stage stage;
 	public Map<String, ImageView> plantImages;
+	public Map<String, ImageView> lepImages;
+	
 	/**
 	 * @author Ishika Govil
 	 */
@@ -30,8 +28,8 @@ public class ManageViews {
 	 * @param Controller
 	 * @author Ishika Govil
 	 */
-	public ManageViews(Stage stage, Controller c, String fileName) {
-		importImages(fileName);
+	public ManageViews(Stage stage, Controller c, String fileName, String fileName2) {
+		importImages(fileName, fileName2);
 		dimLen = new ArrayList<>();
 		dimPixel = -1;
 		this.controller = c;
@@ -44,14 +42,21 @@ public class ManageViews {
 		this.plantImages = imgs;
 	}
 
-	public void importImages(String fileName) {
+	public void importImages(String fileName, String fileName2) {
 		plantImages = new HashMap<>();
-		System.out.println("setting images");
+		System.out.println("setting plant images");
 		plantImages = CSVtoPlants.readFileForImg(fileName);
+		lepImages = new HashMap<>();
+		System.out.println("setting lep images");
+		lepImages = CSVtoLeps.readFileForImg(fileName2);
 	}
 
 	public Map<String, ImageView> getPlantImages() {
 		return this.plantImages;
+	}
+	
+	public Map<String, ImageView> getLepImages() {
+		return this.lepImages;
 	}
 	
 	/**
@@ -174,10 +179,6 @@ public class ManageViews {
 		this.currView = this.views.get(key);
 	}
 	
-	public void redrawImage() {
-		this.getGC().drawImage(img, 0, 0);
-	}
-
 	/** 
 	 * Called when mouse enters or exits a button
 	 * @param boolean describing if the cursor to be shown is a hand or not 
@@ -215,43 +216,4 @@ public class ManageViews {
 //	public void removePlant(Node n) {currView.removePlant(n);}
 	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
 	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
-	
-	public void fillRegion(int startX, int startY, Color fillColor) {
-		// Inspired by the flood fill example https://stackoverflow.com/questions/23983465/is-there-a-fill-function-for-arbitrary-shapes-in-javafx
-		PixelReader pr = this.img.getPixelReader();
-		PixelWriter pw = this.img.getPixelWriter();
-		
-		Stack<Point2D> fillStack = new Stack<>();
-		
-		fillStack.push(new Point2D(startX, startY));
-		
-		while(!fillStack.empty()) {
-			Point2D curr = fillStack.pop();
-
-			int x = (int) curr.getX();
-			int y = (int) curr.getY();
-
-			if(pr.getColor(x, y).grayscale().getBrightness() < 0.95) continue;
-			
-			pw.setColor(x, y, fillColor);
-
-			if(x > 0) {
-				fillStack.push(new Point2D(x-1, y));
-			}
-			
-			if(x < this.img.getWidth() - 1) {
-				fillStack.push(new Point2D(x+1, y));
-			}
-
-			if(y > 0) {
-				fillStack.push(new Point2D(x, y-1));
-			}
-
-			if(y < this.img.getHeight() - 1) {
-				fillStack.push(new Point2D(x, y+1));
-			}
-				
-		}
-		
-	}
 }

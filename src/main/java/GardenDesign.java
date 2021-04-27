@@ -117,9 +117,8 @@ public class GardenDesign extends View{
 		canvas.widthProperty().bind(gardenDesign.widthProperty());
 		canvas.heightProperty().bind(gardenDesign.heightProperty());
 		
-		canvas.widthProperty().addListener(e -> manageView.redrawImage());
-		canvas.heightProperty().addListener(e -> manageView.redrawImage());
-		
+		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
+		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
 		
 		return gardenDesign;
 	}
@@ -231,7 +230,9 @@ public class GardenDesign extends View{
 	public void addImageView(double x, double y, String key, double heightWidth) {
 		System.out.println("in the inner addImageView");
 //		ImageView iv2 = oblist.get(key);
-		Image im = new Image(getClass().getResourceAsStream("/"+key+".jpg"));
+		System.out.println("key: "+key);
+//		Image im = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
 		iv2.setFitHeight(heightWidth);

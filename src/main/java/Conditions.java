@@ -1,5 +1,3 @@
-import java.util.*;
-
 import javafx.scene.paint.Color;
 
 //Each region (spereated based on plating conditions will have a condition object associated with it
@@ -9,6 +7,8 @@ public class Conditions {
 	private SoilType soilType;
 	private int moistureLevel;
 	private int sunlight;
+	
+	private double x, y;
 	
 	//soil type, moisture level and sunlight range from 0-10
 	public Conditions(SoilType soilType, int moistureRange, int sunRange) {
@@ -35,6 +35,18 @@ public class Conditions {
 	}
 	public void setSunlight(int sunlight) {
 		this.sunlight = sunlight;
+	}
+	public double getX() {
+		return this.x;
+	}
+	public void setX(double x) {
+		this.x = x;
+	}
+	public double getY() {
+		return this.y;
+	}
+	public void setY(double y) {
+		this.y = y;
 	}
 	public Color toColor() {
 		return new Color(
