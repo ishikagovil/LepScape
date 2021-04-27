@@ -361,10 +361,10 @@ public class GardenDesign extends View{
 //		iv2.setFitWidth(heightWidth);
 		String uniqueID = UUID.randomUUID().toString();
  		iv2.setId(uniqueID);
- 		iv2.setX(x);
- 		iv2.setY(y);
-//		iv2.setTranslateX(x-main.getLayoutX());
-//		iv2.setTranslateY(y-main.getLayoutY());
+// 		iv2.setX(x);
+// 		iv2.setY(y);
+		iv2.setTranslateX(x-main.getLayoutX());
+		iv2.setTranslateY(y-main.getLayoutY());
 
 		iv2.setOnMousePressed(controller.getHandlerforPressed(key,true));
 		iv2.setOnMouseDragged(controller.getHandlerforDrag());

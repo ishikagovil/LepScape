@@ -316,11 +316,22 @@ public class Controller extends Application {
 			System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
 			System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
 		}
-		System.out.println("drag. x: "+model.getX()+" y: "+model.getY());
-		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
-		model.setY(model.getY() + event.getY());
-		view.setX(model.getX(),n);
-		view.setY(model.getY(),n);
+//		System.out.println("drag. x: "+model.getX()+" y: "+model.getY());
+		String id = ((Node) event.getSource()).getId();
+//		if(model.gardenMap.placedPlants.get(id)!=null) {
+//			PlacedPlant plant = model.gardenMap.placedPlants.get(id);
+//			model.setX(plant.getX());
+//			model.setY(plant.getY());
+//			view.setX(model.getX(),n);
+//			view.setY(model.getY(),n);
+//		}
+//		else {
+			model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
+			model.setY(model.getY() + event.getY());
+			view.setX(model.getX(),n);
+			view.setY(model.getY(),n);
+//		}
+		
 		event.setDragDetect(false);
 	}
 	
@@ -342,12 +353,13 @@ public class Controller extends Application {
 //			view.setY(n.getLayoutY(),n);
 //			PlantSpecies plant = model.plantDirectory.get(name);
 			double heightWidth = scalePlantSpread(name);
-			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
- 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
-			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
+//			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
+// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
+			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
+			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
 //			model.placePlant(model.getX(), model.getY(), name);
 //			view.addImageView(event.getSceneX(),event.getSceneY(), name);
- 			model.placePlant(event.getSceneX()-deltaX, event.getSceneY()-deltaY, name, nodeId);
+ 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
 //			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
