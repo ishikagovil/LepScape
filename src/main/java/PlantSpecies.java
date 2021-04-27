@@ -3,8 +3,8 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	private String genusName;
 	private String commonName;
 	private String description;
-	private int spreadRadius;
-	// in centimeters; if value is 0, does not spread or no spread info given
+	private double spreadRadius;
+	// in inches
 	private int lepsSupported;
 	private int cost;
 	private boolean isWoody;
@@ -23,7 +23,7 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 		this.commonName = "";
 	}
 	
-	public PlantSpecies(String speciesName, String genusName, String commonName, int spreadRadius, int lepsSupported, int cost, boolean isWoody, int lightReq, int soilReq, int moistReq) {
+	public PlantSpecies(String speciesName, String genusName, String commonName, double spreadRadius, int lepsSupported, int cost, boolean isWoody, int lightReq, int soilReq, int moistReq) {
 		this.speciesName = speciesName;
 		this.genusName = genusName;
 		this.commonName = commonName;
@@ -83,7 +83,7 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 		this.commonName = commonName;
 	}
 
-	public float getSpreadRadius() {
+	public double getSpreadRadius() {
 		return spreadRadius;
 	}
 
