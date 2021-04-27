@@ -29,7 +29,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Summary extends View {
-	public ArrayList <Button> b1;
 	public Controller ic;
 	Pane main;
 	Canvas canvas;
@@ -38,95 +37,12 @@ public class Summary extends View {
 		// set up the stage with different area
 		super(stage, c, manageView);
 		border = new BorderPane();
+		border.setBottom(addBottomHBox());
+		border.setLeft(addNavigationVBox());
+		border.setCenter(addCenterPane());
+		border.setRight(addInfoPane());
 		
-		
-        // set up a Horizon Box pane for the bottom of the page
-        HBox box = new HBox();
-        box.setStyle("-fx-background-color: steelblue");
-        box.setSpacing(15);
-        box.setPadding(new Insets(15, 12, 15, 12));
-        box.setAlignment(Pos.CENTER_RIGHT);
-        border.setBottom(box);
-                
-        // make buttons for Lepedia, Download and Create New Garden
-        b1 = new ArrayList <Button>();
-        //Button lep = new Button("Lepedia");
-        //lep.setPrefSize(100, 30);
-        //b1.add(lep);
-        b1.add(addNextButton("Lepedia", "Lepedia"));
-        Button download = new Button("Download");
-        download.setPrefSize(100, 30);
-        download.setOnAction(e -> {
-        	FileChooser file = new FileChooser();
-        	file.setTitle("Download File");
-        	File file1 = file.showSaveDialog(stage);
-        });
-        b1.add(download);
-        b1.add(addNextButton("Create New Garden", "Restart"));
-        box.getChildren().addAll(b1);
-        
-        // make a vertical box pane for the navigation button
-        VBox vb1 = new VBox();
-        vb1.setStyle("-fx-background-color: lavender");
-        vb1.setSpacing(15);
-        vb1.setPadding(new Insets(20));
-        border.setLeft(vb1);
-        
-        // add buttons of navigation on the upper right corner
-        ArrayList <Button> buttons = new ArrayList<Button>();
-        // need to use Navigation button instead
-        buttons.add(addNextButton("Gallery", "Gallery"));
-        buttons.add(addNextButton("Back", "GardenDesign"));
-        buttons.get(0).setPrefSize(100, 30);
-        buttons.get(1).setPrefSize(100, 30);
-        Button suggested = new Button("Suggested");
-        suggested.setPrefSize(100, 30);
-        buttons.add(suggested);
-        buttons.add(addNextButton("Learn More","LearnMore"));
-        buttons.get(2).setPrefSize(100, 30);
-        
-        Button saveToGallery = new Button("Save");
-        saveToGallery.setPrefSize(100,30);
-        buttons.add(saveToGallery);
-        
-        vb1.getChildren().addAll(buttons);
-        vb1.setAlignment(Pos.TOP_RIGHT);
-        /*buttons.add(navi.saved);
-        buttons.add(navi.settings);
-        buttons.add(navi.suggested);
-        */
-       
-       // center pane for the garden design
-       StackPane sp1 = new StackPane();
-       sp1.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
-       border.setCenter(sp1);
-       
-       // get the total leps supported and cost 
-       PlantSpecies p1 = new PlantSpecies();
-      /* Image lepPic = new Image(getClass().getResourceAsStream("/butterfly.png"));
-       ImageView lepView = new ImageView(lepPic);
-       lepView.setPreserveRatio(true);
-       lepView.setFitHeight(50);
-       Label lepCount = new Label("0");
-       lepCount.setTextAlignment(TextAlignment.LEFT);
-       lepCount.setFont(Font.font(null, FontWeight.BOLD, 20));
-       lepCount.setGraphic(lepView);
-       
-       Image cost = new Image(getClass().getResourceAsStream("/dollar.png"));
-       ImageView costView = new ImageView(cost);
-       costView.setPreserveRatio(true);
-       costView.setFitHeight(50);
-       Label costTotal = new Label("" + ic.getBudget());
-       costTotal.setGraphic(costView);
-       */
-       
-       Text title = new Text("Summary");
-       title.setFont(Font.font(null, FontWeight.BOLD, 30));
-       title.setTextAlignment(TextAlignment.LEFT);
-       Text lepCount = new Text("Number of leps supported: " + p1.getLepsSupported());
-       Text totalCost = new Text("Total cost: " + p1.getCost());
-       totalCost.setTextAlignment(TextAlignment.LEFT);
-       
+       /*
        // load butterfly animation
        ImageView iv1 = new ImageView();
        Image butterfly = new Image(getClass().getResourceAsStream("/butterfly.png"));
@@ -141,21 +57,67 @@ public class Summary extends View {
        translation.setAutoReverse(true);
        sp1.getChildren().add(iv1);
        translation.play();
-       
-       TilePane tp1 = new TilePane();
-       tp1.setPadding(new Insets(10));
-       tp1.setStyle("-fx-background-color: lavender");
-       tp1.setAlignment(Pos.TOP_LEFT);
-       tp1.getChildren().addAll(title, lepCount, totalCost);
-       border.setRight(tp1);
+       */
        
        //Add garden view
        main = addCanvas();
-       border.setCenter(main);
-       border.setCenter(main);
-       
-       
+       border.setCenter(main);  
     }
+	
+	public HBox addBottomHBox() {
+		HBox box = new HBox();
+        box.setStyle("-fx-background-color: steelblue");
+        box.setSpacing(15);
+        box.setPadding(new Insets(15, 12, 15, 12));
+        box.setAlignment(Pos.CENTER_RIGHT);
+        box.getChildren().addAll(addBottomButtons());
+        
+        return box;
+	}
+	
+	public ArrayList<Button> addBottomButtons() {
+		// make buttons for Lepedia, Download and Create New Garden
+        ArrayList <Button> bottomButtons = new ArrayList <Button>();
+        Button download = new Button("Download");
+        download.setPrefSize(buttonWidth, buttonHeight);
+        download.setOnAction(e -> {
+        	FileChooser file = new FileChooser();
+        	file.setTitle("Download File");
+        	File file1 = file.showSaveDialog(stage);
+        });
+        bottomButtons.add(download);
+        bottomButtons.add(addNextButton("Create New Garden", "Restart"));
+        bottomButtons.get(1).setPrefSize(120, buttonHeight);
+        return bottomButtons;
+	}
+	
+	public VBox addNavigationVBox() {
+		VBox sideVBox = new VBox();
+        sideVBox.setStyle("-fx-background-color: lavender");
+        sideVBox.setSpacing(15);
+        sideVBox.setPadding(new Insets(20));
+        
+        sideVBox.getChildren().addAll(addNavigationButtons());
+        sideVBox.setAlignment(Pos.TOP_RIGHT);
+        return sideVBox;
+	}
+	
+	public ArrayList<Button> addNavigationButtons() {
+		ArrayList <Button> buttons = new ArrayList<Button>();
+        buttons.add(addNextButton("Back", "GardenDesign"));
+        buttons.add(addNextButton("Lepedia", "Lepedia"));
+        buttons.add(addNextButton("Learn More","LearnMore"));
+        buttons.add(addNextButton("Save", "Gallery"));
+        return buttons;
+	}
+	
+	public StackPane addCenterPane() {
+		StackPane centerPane = new StackPane();
+		centerPane.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
+		
+		return centerPane;
+	}
+	
 /**
  * Makes the canvas so the previously set garden outline can be displayed
  * Canvas then places inside a pane
@@ -177,4 +139,26 @@ public class Summary extends View {
 
 		return gardenDesign;
 	}
+	
+	public TilePane addInfoPane() {
+		TilePane rightPane = new TilePane();
+	    rightPane.setPadding(new Insets(10));
+	    rightPane.setStyle("-fx-background-color: lavender");
+	    
+	    Text title = new Text("Summary");
+	    title.setFont(Font.font(null, FontWeight.BOLD, 30));
+	    
+	    Image lepCount = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+		Image cost = new Image(getClass().getResourceAsStream("/dollar.png"));
+		ImageView lepIV = new ImageView(lepCount);
+		lepIV.setPreserveRatio(true);
+		lepIV.setFitHeight(50);
+		ImageView costIV = new ImageView(cost);
+		costIV.setPreserveRatio(true);
+		costIV.setFitHeight(50);
+		
+		rightPane.getChildren().addAll(title, lepIV, costIV);
+		return rightPane;
+	}
+	
 }

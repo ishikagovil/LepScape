@@ -35,7 +35,7 @@ public class Gallery extends View{
 		back = new Button("Back");
 		back.setPrefSize(100, 30);;
 		setOnMouse(back);
-		back.setOnAction(controller.getHandlerforClicked("Start"));
+		back.setOnAction(controller.getHandlerforClicked("Back to Start"));
 		hb1.getChildren().add(back);
 		border.setBottom(hb1);
 		
@@ -71,5 +71,7 @@ public class Gallery extends View{
 		border.setTop(hb2);
 		
 	}
+	
+	
 	
 }
