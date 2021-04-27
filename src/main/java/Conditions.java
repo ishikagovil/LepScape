@@ -1,5 +1,3 @@
-import java.util.*;
-
 import javafx.scene.paint.Color;
 
 //Each region (spereated based on plating conditions will have a condition object associated with it
