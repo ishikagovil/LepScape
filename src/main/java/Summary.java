@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -7,19 +8,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -27,6 +24,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.swing.*;
 
 public class Summary extends View {
 	public ArrayList <Button> b1;
@@ -85,9 +83,15 @@ public class Summary extends View {
         buttons.add(addNextButton("Learn More","LearnMore"));
         buttons.get(2).setPrefSize(100, 30);
         
+<<<<<<< HEAD
         Button saveToGallery = new Button("Save");
         saveToGallery.setPrefSize(100,30);
         buttons.add(saveToGallery);
+=======
+        Button saveGarden = new Button("Save");
+        saveGarden.setPrefSize(100,30);
+        buttons.add(saveGarden);
+>>>>>>> saveGarden
         
         vb1.getChildren().addAll(buttons);
         vb1.setAlignment(Pos.TOP_RIGHT);
@@ -150,30 +154,43 @@ public class Summary extends View {
        border.setRight(tp1);
        
        //Add garden view
-       main = addCanvas();
+//       main = addCanvas();
        border.setCenter(main);
        border.setCenter(main);
        
+<<<<<<< HEAD
+=======
+       saveGarden.setOnAction(c.getHandlerforSummarySave());
+>>>>>>> saveGarden
        
     }
+	
+	
+	
 /**
  * Makes the canvas so the previously set garden outline can be displayed
  * Canvas then places inside a pane
  * @return the created pane
  */
-	public Pane addCanvas() {
+	public void addCanvas() {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-		canvas = new Canvas();
-		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-		gc = canvas.getGraphicsContext2D();
-		gardenDesign.getChildren().add(canvas);
-	
-		canvas.widthProperty().bind(gardenDesign.widthProperty());
-		canvas.heightProperty().bind(gardenDesign.heightProperty());
-	
-		canvas.widthProperty().addListener(e -> manageView.redrawImage());
-		canvas.heightProperty().addListener(e -> manageView.redrawImage());
-		return gardenDesign;
+//		canvas = new Canvas();
+//		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+//		gc = canvas.getGraphicsContext2D();
+//		gardenDesign.getChildren().add(canvas);
+//	
+//		canvas.widthProperty().bind(gardenDesign.widthProperty());
+//		canvas.heightProperty().bind(gardenDesign.heightProperty());
+//	
+//		canvas.widthProperty().addListener(e -> manageView.redrawImage());
+//		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+		ImageView iv = new ImageView(manageView.savedImg);
+		iv.setPreserveRatio(true);
+		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
+		iv.fitHeightProperty().bind(gardenDesign.widthProperty());
+		gardenDesign.getChildren().add(iv);
+		border.setCenter(gardenDesign);
 	}
+	
 }

@@ -6,6 +6,10 @@ import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +35,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -106,6 +109,15 @@ public class GardenDesign extends View{
 		border.setLeft(bd2);
 
 		showCompostBin();
+	}
+	
+	public void remakePane() {
+		border.getChildren().remove(border.getCenter());
+		this.main = addCanvas();
+		showCompostBin();
+		border.setCenter(main);
+		border.getChildren().remove(border.getRight());
+		makeInfoPane("Information","");
 	}
 	
 	/**
@@ -249,14 +261,14 @@ public class GardenDesign extends View{
 				@Override
 				public void handle(MouseEvent event) {
 					v.startFullDrag();
-					System.out.println("drag detected");
+					//System.out.println("drag detected");
 					
 				}
 			});
 			main.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
 				@Override
 				public void handle(MouseDragEvent event) {
-					System.out.println("entered the pane");
+					//System.out.println("entered the pane");
 					
 				}
 				
@@ -304,7 +316,7 @@ public class GardenDesign extends View{
 	/**
 	 * Everytime a plant is placed onto or removed the garden the lep count and budget is updated
 	 */
-	public void updateBudgetandLep(int cost, int lepCount) {
+	public void updateBudgetandLep(double cost, int lepCount) {
 		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
 		
@@ -336,8 +348,13 @@ public class GardenDesign extends View{
 	 * After a drag release a new imageview is created inside the center pane
 	 * This new imageView is a copy of the imageView that was dragged and can be dragged, cannot be used to create another imageView
 	 */
+<<<<<<< HEAD
 	public void addImageView(double x, double y, String key, double heightWidth) {
 		System.out.println("in the inner addImageView");
+=======
+	public void addImageView(double x, double y, String key) {
+		//System.out.println("in the inner addImageView");
+>>>>>>> saveGarden
 //		ImageView iv2 = oblist.get(key);
 		System.out.println("key: "+key);
 //		Image im = new Image(getClass().getResourceAsStream("/butterfly1.png"));
@@ -345,11 +362,22 @@ public class GardenDesign extends View{
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
 		iv2.setFitHeight(100);
+<<<<<<< HEAD
 //		iv2.setFitHeight(heightWidth);
 //		iv2.setFitWidth(heightWidth);
 		
 		iv2.setTranslateX(x-main.getLayoutX());
 		iv2.setTranslateY(y-main.getLayoutY());
+=======
+//		System.out.println("x: "+x+" y: "+y);
+//		System.out.println("main x: "+ main.getLayoutX());
+//		System.out.println("main y: "+ main.getLayoutY());
+		iv2.setTranslateX(x-main.getLayoutX());
+		iv2.setTranslateY(y-main.getLayoutY());
+		//System.out.println("with the - x:"+(x-main.getLayoutX())+" y: "+(y-main.getLayoutY()));
+		
+//		this.addedPlants.add(iv2);
+>>>>>>> saveGarden
 
 		iv2.setOnMousePressed(controller.getHandlerforPressed(key));
 		iv2.setOnMouseDragged(controller.getHandlerforDrag());
@@ -358,7 +386,7 @@ public class GardenDesign extends View{
 			@Override
 			public void handle(MouseEvent event) {
 				iv2.startFullDrag();
-				System.out.println("drag detected");
+				//System.out.println("drag detected");
 				
 			}
 		});
@@ -488,8 +516,18 @@ public class GardenDesign extends View{
 	 */
 	public void saveGardenImage() {
 		main.getChildren().remove(c);
-		
-		this.manageView.setImage(canvas.snapshot(null, null));
+		System.out.println("calling from in here");
+		this.manageView.setSavedImage(main.snapshot(null, null));
+//		try {
+//			Robot robot = new Robot();
+//			Rectangle rect = new Rectangle((int)main.getHeight(), (int)main.getWidth());
+//			BufferedImage image = robot.createScreenCapture(rect);
+//			manageView.image = image;
+//		} catch (AWTException e) {
+//			// TODO Auto-generated catch block
+//			System.out.println("is the error here?");
+//			e.printStackTrace();
+//		}
 		c.setPreserveRatio(true);
 		c.setFitHeight(75);
 
@@ -503,10 +541,16 @@ public class GardenDesign extends View{
 			c.setFitHeight(85);
 			
 		});
-
+		
+		this.manageView.sp = main;
+		((Summary) this.manageView.views.get("Summary")).addCanvas();
 		main.getChildren().add(c);
+		
 	}
 	
+	public Pane mainPane(){
+		return main;
+	}
 	/**
 	 * Makes the compare pane where plants can be placed and compared 
 	 * @return the created pane
@@ -575,7 +619,7 @@ public class GardenDesign extends View{
 				e.printStackTrace();
 			}
 			if(getClass().getResourceAsStream("/"+k+".jpg")!=null) {
-				System.out.println(k);
+				//System.out.println(k);
 				Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
 				ImageView iv1 = new ImageView(im);
 				iv1.setPreserveRatio(true);

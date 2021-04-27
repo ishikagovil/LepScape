@@ -4,11 +4,24 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+<<<<<<< HEAD
+=======
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+>>>>>>> saveGarden
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Map;
@@ -40,7 +53,12 @@ public class Controller extends Application {
 		System.out.println("setting lep directory");
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
 		this.stage = stage;
+<<<<<<< HEAD
 	    view = new ManageViews(stage,this, plantFile);
+=======
+	    view = new ManageViews(stage,this, fileName1);
+	    readBack();
+>>>>>>> saveGarden
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
@@ -216,12 +234,35 @@ public class Controller extends Application {
 		return (e) -> { this.model.getCurrentConditions().setSoilType(newType); };
 	}
 	
+<<<<<<< HEAD
 	public EventHandler<MouseEvent> getHandlerForCompostClicked(){
 		return (e) -> {showCompost(e);};
 	}
 	
 	public void showCompost(MouseEvent event) {
 		((GardenDesign) view.views.get("GardenDesign")).compostPopUp(model.deleted);
+=======
+	public EventHandler<ActionEvent> getHandlerforSummarySave(){
+		return (e) -> {summarySave(e);};
+	}
+	
+	public EventHandler<ActionEvent> getHandlerforEditSaved(int index, Stage dialog){
+		return (e) -> {editSavedGarden(e,index, dialog);};
+	}
+	
+	public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
+		this.view.switchViews("GardenDesign");
+		setTheStage();
+		Garden garden = model.savedGardens.get(index);
+		((GardenDesign) view.views.get("GardenDesign")).remakePane();
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
+		garden.plants.forEach(plant->{
+			((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName());
+		});
+		dialog.close();
+		model.setToEdit();
+		model.setEditGardenIndex(index);
+>>>>>>> saveGarden
 	}
 	
 	/**
@@ -242,7 +283,7 @@ public class Controller extends Application {
 	 */
 	public void updateBudget(String budgetString) {
 		try {
-			int newBudget = Integer.parseInt(budgetString);
+			double newBudget = Integer.parseInt(budgetString);
 			this.model.setBudget(newBudget);
 		} catch(Exception e) {
 			
@@ -258,8 +299,12 @@ public class Controller extends Application {
 	public void pressed(MouseEvent event, String key) {
 		Node n = (Node) event.getSource();
 		n.setMouseTransparent(true);
+<<<<<<< HEAD
 		System.out.println("Clicked");
 		model.movedPlant = key;
+=======
+		//System.out.println("Clicked");
+>>>>>>> saveGarden
 		if(key!=null) {
 			String name = model.plantDirectory.get(key).getCommonName();
 			String description = model.plantDirectory.get(key).getDescription();
@@ -276,8 +321,8 @@ public class Controller extends Application {
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
 		if (!DEBUG) {
-			System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
-			System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
+			//System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
+			//System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
 		}
 		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
 		model.setY(model.getY() + event.getY());
@@ -294,7 +339,7 @@ public class Controller extends Application {
 	 * @author Arunima Dey
 	 */
 	public void release(MouseEvent event, String name, Boolean startingInTile) {
-		System.out.println("released");
+		//System.out.println("released");
 		Node n = (Node)event.getSource();
 		n.setMouseTransparent(false);
 		if(startingInTile) {
@@ -302,6 +347,7 @@ public class Controller extends Application {
 			view.setY(0, n);
 //			view.setX(n.getLayoutX(),n);
 //			view.setY(n.getLayoutY(),n);
+<<<<<<< HEAD
 //			PlantSpecies plant = model.plantDirectory.get(name);
 			double heightWidth = scalePlantSpread(name);
 			((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
@@ -309,8 +355,17 @@ public class Controller extends Application {
 		
 		if(startingInTile) {
 			model.placePlant(model.getX(), model.getY(), name);
+=======
+			view.addImageView(event.getSceneX(),event.getSceneY(), name);
+			model.placePlant(event.getSceneX(), event.getSceneY(), name);
+//			model.placePlant(model.getX(), model.getY(), name);
+>>>>>>> saveGarden
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
+//		
+//		if(startingInTile) {
+//			
+//		}
 	}
 	
 	public void entered(MouseDragEvent event, String key) {
@@ -329,6 +384,7 @@ public class Controller extends Application {
 		
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * The spread of a plant is calculated using the lengthPerPixel and spread of the plant
 	 * @param PlantSpecies plant
@@ -339,6 +395,59 @@ public class Controller extends Application {
 		double numPixels = plant.getSpreadRadius() / this.model.lengthPerPixel;
 		return numPixels;
 	}
+=======
+	public void readBack() {
+		try {
+			System.out.println("reading");
+			FileInputStream fis = new FileInputStream("src/main/resources/garden.ser");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+//			ObjectInputStream ois = new ObjectInputStream(getClass().getResourceAsStream("/garden1.ser"));
+			model.savedGardens = (ArrayList<Garden>) ois.readObject();
+			Gallery gal = (Gallery) view.views.get("Gallery");
+//			gal.clearTilePane();
+			for(int i = 0; i<model.savedGardens.size();i++) {
+				view.makeImage(model.savedGardens.get(i).getWidth(), model.savedGardens.get(i).getHeight(), model.savedGardens.get(i).data);
+				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).cost,(model.savedGardens.get(i)).numLeps);
+			}
+			ois.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Nothing to readIn");
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public void summarySave(ActionEvent event) {
+		new File("src/main/resources/garden.ser").delete();
+		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
+		System.out.println("button works");
+ 		try {
+			Gallery gal = (Gallery) view.views.get("Gallery");
+			if(model.editing()) {
+				System.out.println("editing");
+				model.savedGardens.remove(model.getEditGardenIndex());
+				model.savedGardens.add(model.getEditGardenIndex(),model.getGarden());
+				gal.loadScreen(view.savedImg,model.getEditGardenIndex(),(model.savedGardens.get(model.getEditGardenIndex())).cost,(model.savedGardens.get(model.getEditGardenIndex())).numLeps);
+			}else {
+				System.out.println("add to the end of the arrayList");
+				model.savedGardens.add(model.getGarden());
+				gal.loadScreen(view.savedImg,model.savedGardens.size()-1,(model.savedGardens.get(model.savedGardens.size()-1)).cost,(model.savedGardens.get(model.savedGardens.size()-1)).numLeps);
+			}
+			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(model.savedGardens);
+			oos.close();
+			
+			
+		} catch (Exception e1) {
+			System.out.println("The error is here");
+			e1.printStackTrace();
+		}
+	}
+	
+>>>>>>> saveGarden
 	/** 
 	 * Called when user is drawing. 
 	 * Updates the canvas of the relevant view and calls updateOutlineSection in model to pass boundary coordinates
@@ -534,6 +643,12 @@ public class Controller extends Application {
 				 setTheStage();
 			 }
 		 }
+		 else if(next.equals("Summary")) {
+			 this.view.switchViews(next);
+			 setTheStage();
+			 //model.gardenMap.setImage(view.savedImg);
+			 
+		 }
 		 else {
 			 this.view.switchViews(next);
 			 setTheStage();
@@ -544,7 +659,7 @@ public class Controller extends Application {
 	 * Gets the initial budget set by user to be displayed in garden design screen
 	 * @return the budget
 	 */
-	public int getBudget() {
+	public double getBudget() {
 		return model.getBudget();
 	}
 
