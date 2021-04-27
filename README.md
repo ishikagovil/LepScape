@@ -8,18 +8,20 @@
 - Kimmy Huynh
 
 # Current progress
-- Draw plot boundaries
+- Draw plot boundaries freehand and with polygon
 - Set dimensions
+- scale plot
 - Add condition boundaries
 - Select conditions
 - Drag and drop plants
 - Compost plants no longer needed
 - Import plant information and populate images
+- serialization with saving and loading gardens
+- Lepedia view most numerous leps 
+- Summary of garden in Gallery 
 
 # Future implementations
-- Save gardens
-- View summary of garden and leps 
-- Completed Lepedia and Learn More pages
+- Better user interface
 
 # UML Diagrams
 ![Class UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/classUML.jpg?raw=true)
