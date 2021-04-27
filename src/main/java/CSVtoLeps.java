@@ -71,7 +71,7 @@ public class CSVtoLeps {
                 imv.setPreserveRatio(true);
                 imv.setSmooth(true);
                 imv.setCache(true);
-                lepImg.put(genusName + "-" + speciesName, imv);   // key: genusName " " speciesName
+                lepImg.put(genusName + "-" + speciesName, imv);   // key: genusName "-" speciesName
             }            
             reader.close();   
 		}
