@@ -93,7 +93,8 @@ public class ManageViews {
 			this.currView = this.getView(next);
 	}
 	
-	
+	//for the next 2 methods
+	//https://stackoverflow.com/questions/33074774/javafx-image-serialization
 	public int[][] makeData() {
 		int width = (int)savedImg.getWidth();
 		int height = (int) savedImg.getHeight();
@@ -117,7 +118,6 @@ public class ManageViews {
 	    		w.setArgb(i, j, data[i][j]);
 	    	}
 	    }
-
 	    setSavedImage(img);
 	}
 	
