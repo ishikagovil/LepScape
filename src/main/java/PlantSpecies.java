@@ -43,30 +43,43 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 	
 	public void setRequirements() {
 		// setting soil type
-		if (this.soilReq < 4) {
-			this.soil = SoilType.CLAY;
-		} else if (this.soilReq < 8) {
-			this.soil = SoilType.DIRT;
+		if (this.soilReq >= 0) {
+			if (this.soilReq < 4) {
+				this.soil = SoilType.CLAY;
+			} else if (this.soilReq < 8) {
+				this.soil = SoilType.DIRT;
+			} else {
+				this.soil = SoilType.ROCK;
+			}
 		} else {
-			this.soil = SoilType.ROCK;
+			this.soil = SoilType.ANY;
 		}
 		
 		// setting light type
-		if (this.lightReq < 4) {
-			this.light = LightType.DARK;
-		} else if (this.soilReq < 8) {
-			this.light = LightType.BRIGHT;
+		if (this.lightReq >= 0) {
+			if (this.lightReq < 4) {
+				this.light = LightType.DARK;
+			} else if (this.soilReq < 8) {
+				this.light = LightType.BRIGHT;
+			} else {
+				this.light = LightType.INTENSE;
+			}
 		} else {
-			this.light = LightType.INTENSE;
+			this.light = LightType.ANY;
 		}
+	
 		
 		// setting moisture type
-		if (this.moistReq < 4) {
-			this.moisture = MoistureType.DRY;
-		} else if (this.moistReq < 8) {
-			this.moisture = MoistureType.MOIST;
+		if (this.moistReq >= 0) { 
+			if (this.moistReq < 4) {
+				this.moisture = MoistureType.DRY;
+			} else if (this.moistReq < 8) {
+				this.moisture = MoistureType.MOIST;
+			} else {
+				this.moisture = MoistureType.WET;
+			}
 		} else {
-			this.moisture = MoistureType.WET;
+			this.moisture = MoistureType.ANY;
 		}
 	}
 	

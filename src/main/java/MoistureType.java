@@ -1,4 +1,5 @@
 public enum MoistureType {
+	ANY("Any", 0),
 	DRY("Dry", 1),
 	MOIST("Moist", 2),
 	WET("Wet", 3);

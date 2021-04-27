@@ -1,5 +1,6 @@
 
 public enum LightType {
+	ANY("Any", 0),
 	DARK("Dark", 1),
 	BRIGHT("Bright", 2),
 	INTENSE("Intense", 3);
