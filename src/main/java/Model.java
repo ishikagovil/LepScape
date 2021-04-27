@@ -13,6 +13,10 @@ public class Model {
 	public double y;
 	public int lepCount;
 	private Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
+	public String movedPlant;
+	public double initialX;
+	public double initialY;
+	public HashSet<String> deleted;
 	
 	private UserMode mode;
 	
@@ -26,6 +30,8 @@ public class Model {
 		initializePlantDirectory();
 		this.budget = 0;
 		this.lengthPerPixel = -1;
+		this.movedPlant = "";
+		this.deleted = new HashSet<>();
 	}
 
 	
@@ -71,6 +77,9 @@ public class Model {
 		PlantSpecies specie = plantDirectory.get(key);
 		this.budget = budget + specie.getCost();
 		this.lepCount = lepCount - specie.getLepsSupported();
+		System.out.println("removing: "+key);
+		deleted.add(key);
+		System.out.println(deleted);
 	}
 	
 	// update the cost every time a plant is placed

@@ -216,6 +216,14 @@ public class Controller extends Application {
 		return (e) -> { this.model.getCurrentConditions().setSoilType(newType); };
 	}
 	
+	public EventHandler<MouseEvent> getHandlerForCompostClicked(){
+		return (e) -> {showCompost(e);};
+	}
+	
+	public void showCompost(MouseEvent event) {
+		((GardenDesign) view.views.get("GardenDesign")).compostPopUp(model.deleted);
+	}
+	
 	/**
 	 * Updates the value of current sunlight/moisture levels when setting garden conditions
 	 * @param moistureLevel the new moisture level
@@ -251,6 +259,7 @@ public class Controller extends Application {
 		Node n = (Node) event.getSource();
 		n.setMouseTransparent(true);
 		System.out.println("Clicked");
+		model.movedPlant = key;
 		if(key!=null) {
 			String name = model.plantDirectory.get(key).getCommonName();
 			String description = model.plantDirectory.get(key).getDescription();
@@ -293,8 +302,8 @@ public class Controller extends Application {
 			view.setY(0, n);
 //			view.setX(n.getLayoutX(),n);
 //			view.setY(n.getLayoutY(),n);
-			PlantSpecies plant = model.plantDirectory.get(name);
-			double heightWidth = scalePlantSpread(plant);
+//			PlantSpecies plant = model.plantDirectory.get(name);
+			double heightWidth = scalePlantSpread(name);
 			((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
 		}
 		
@@ -307,8 +316,16 @@ public class Controller extends Application {
 	public void entered(MouseDragEvent event, String key) {
 		System.out.println(key);
 		view.removePlant((Node) event.getGestureSource());
-		model.removePlant(getStartingX(), getStartingY(), key);
+		model.removePlant(getStartingX(), getStartingY(), model.movedPlant);
 		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+		
+		
+	}
+	
+	public void removeFromDeleted(String plantName) {
+		model.deleted.remove(plantName);
+		model.placePlant(0, 0, plantName);
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.getBudget(), model.getLepCount());
 		
 	}
 	
@@ -317,7 +334,8 @@ public class Controller extends Application {
 	 * @param PlantSpecies plant
 	 * @return double representing the number of pixels of the radius of the plant
 	 */
-	public double scalePlantSpread(PlantSpecies plant) {
+	public double scalePlantSpread(String plantKey) {
+		PlantSpecies plant = model.plantDirectory.get(plantKey);
 		double numPixels = plant.getSpreadRadius() / this.model.lengthPerPixel;
 		return numPixels;
 	}

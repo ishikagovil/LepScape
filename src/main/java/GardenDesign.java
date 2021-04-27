@@ -47,6 +47,7 @@ import javafx.stage.Stage;
  */
 public class GardenDesign extends View{
 //	public Controller ic;
+	final int STANDARD_IMAGEVIEW = 100;
 	Canvas canvas;
 	Stage stage;
 	//Panes
@@ -80,17 +81,17 @@ public class GardenDesign extends View{
 		main = addCanvas();
 		border.setCenter(main);
 		
-		ScrollPane scroll = new ScrollPane();					// for holding plant images and TilePane
+		ScrollPane scroll = new ScrollPane();
 		tile.setMaxWidth(screenHeight);
-
+		tile.setMaxHeight(200);
 		tile = addTilePane();
 		
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
-        scroll.setFitToHeight(true);
+//        scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
         //scroll.setMaxWidth(screenWidth);
-        scroll.setMaxHeight(screenHeight);						// needed to initialize a dimension for scrollpane; leave in
+        scroll.setMaxHeight(300);						// needed to initialize a dimension for scrollpane; leave in
 		scroll.setContent(tile);
 		border.setBottom(scroll);
 		//border.setBottom(tile);
@@ -131,7 +132,7 @@ public class GardenDesign extends View{
 	}
 	
 	//https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
-	public Stage compostPopUp() {
+	public void compostPopUp(HashSet<String> plant) {
 		final Stage deleted = new Stage();
 		VBox box = new VBox();
 		//BorderPane bp = new BorderPane();
@@ -139,25 +140,95 @@ public class GardenDesign extends View{
 		deleted.setTitle("Deleted");
 		deleted.initModality(Modality.APPLICATION_MODAL);
 		deleted.initOwner(stage);
-		ListView<ImageView> list = new ListView<ImageView> ();
+		ListView<Label> list = new ListView<Label> ();
 		box.getChildren().addAll(list);
 		VBox.setVgrow(list, Priority.ALWAYS);
 		plantName.setLayoutX(10);
 		plantName.setLayoutY(115);
 		plantName.setFont(Font.font("Verdana", 20));
-		ObservableList<ImageView> images = FXCollections.observableArrayList();
-		images.add(new ImageView(new Image(getClass().getResourceAsStream("/compost.png"))));
-		images.add(new ImageView(new Image(getClass().getResourceAsStream("/butterfly.png"))));
-		images.add(new ImageView(new Image(getClass().getResourceAsStream("/dollar.png"))));
-		images.add(new ImageView(new Image(getClass().getResourceAsStream("/commonMilkweed.png"))));
-		
-		
+		ObservableList<Label> images = FXCollections.observableArrayList();
+		plant.forEach(v->{
+			System.out.println("adding plant to popUp");
+			System.out.println(v);
+			Image im1 = new Image(getClass().getResourceAsStream("/plantimg/"+v+".png"));
+			ImageView iv1 = new ImageView(im1);
+			iv1.setPreserveRatio(true);
+			iv1.setFitHeight(STANDARD_IMAGEVIEW);
+			Label l = new Label(v);
+			l.setGraphic(iv1);
+			iv1.setOnMouseClicked(e->{
+				System.out.println("the deleted clicked");
+			});
+			images.add(l);
+		});
 		list.setItems(images);
+		
+		list.setCellFactory(lv -> new ListCell<Label>() {
+		    @Override
+		    public void updateItem(Label item, boolean empty) {
+		        super.updateItem(item, empty);
+		        if (empty) {
+		            setText(null);
+		        } else {
+		        	System.out.println("where are we");
+		        	this.setText(getDisplayText(item));
+		        	Image im1 = new Image(getClass().getResourceAsStream("/plantimg/"+getDisplayText(item)+".png"));
+					ImageView iv1 = new ImageView(im1);
+					iv1.setPreserveRatio(true);
+					iv1.setFitHeight(STANDARD_IMAGEVIEW);
+		        	this.setGraphic(iv1);
+		        	this.setGraphicTextGap(10);
+		        }
+		    }
+		});
+		
+		list.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent event) {
+	        	if(event.getClickCount()==2) {
+	        		System.out.println("clicked on " + getDisplayText(list.getSelectionModel().getSelectedItem()));
+	        		String name = getDisplayText(list.getSelectionModel().getSelectedItem());
+	        		addImageView(main.getLayoutX(),main.getLayoutY(),name,controller.scalePlantSpread(name));
+	        		controller.removeFromDeleted(name);
+	        	}
+	            
+	        }
+	    });
+		
+//		System.out.println(list.getSelectionModel().getSelectedItem().toString());
+		Label item = list.getSelectionModel().getSelectedItem();
+		if(item!=null) {
+			String displayText = getDisplayText(item);
+			System.out.println("dsiplayText: "+displayText);
+		}
+		
+		
+		
+//		Iterator<String> iter = plant.iterator();
+//		while(iter.hasNext()) {
+//			System.out.println("adding plant to popUp");
+//			System.out.println(iter.toString());
+			
+//		}
+//		list.setItems(images);
+		
 				
 		//bp.setCenter(list);
 		//bp.setBottom(plantName);
 		//bp.setCenter(list);
-		return deleted;
+		Scene del = new Scene(box,400,700);
+		deleted.setScene(del);
+		deleted.show();
+		//return deleted;
+		
+	}
+	
+	private String getDisplayText(Label l) {
+//		return "";
+		if(l.getText()!=null) {
+			return l.getText();
+		}
+		return "";
 		
 	}
 	
@@ -228,7 +299,6 @@ public class GardenDesign extends View{
 		border.setTop(blPane);
 		border.setAlignment(blPane, Pos.CENTER);
 
-		
 	}
 
 	/**
@@ -274,13 +344,14 @@ public class GardenDesign extends View{
 		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
-		iv2.setFitHeight(heightWidth);
-		iv2.setFitWidth(heightWidth);
+		iv2.setFitHeight(100);
+//		iv2.setFitHeight(heightWidth);
+//		iv2.setFitWidth(heightWidth);
 		
 		iv2.setTranslateX(x-main.getLayoutX());
 		iv2.setTranslateY(y-main.getLayoutY());
 
-		iv2.setOnMousePressed(controller.getHandlerforPressed(null));
+		iv2.setOnMousePressed(controller.getHandlerforPressed(key));
 		iv2.setOnMouseDragged(controller.getHandlerforDrag());
 		iv2.setOnMouseReleased(controller.getHandlerforReleased(key, false));
 		iv2.setOnDragDetected(new EventHandler<MouseEvent>() {
@@ -566,6 +637,7 @@ public class GardenDesign extends View{
 			c.setFitHeight(85);
 			
 		});
+		c.setOnMouseClicked(controller.getHandlerForCompostClicked());
 
 		main.getChildren().add(c);
 		
