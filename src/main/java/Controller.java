@@ -307,7 +307,7 @@ public class Controller extends Application {
 	 * @return double representing the number of pixels of the radius of the plant
 	 */
 	public double scalePlantSpread(PlantSpecies plant) {
-		double numPixels = plant.getSpreadRadius() / this.model.lengthPerPixel;
+		double numPixels = plant.getSpreadRadius() / (this.model.getLengthPerPixel() * this.model.getScale());
 		return numPixels;
 	}
 	/** 
@@ -400,8 +400,9 @@ public class Controller extends Application {
 		ArrayList<Conditions> conds = this.model.getGarden().getSections();
 		points.addAll(this.model.getGarden().getPolygonCorners());
 		
-		View.drawOnCanvas(canvas, points, extrema, conds);
-	}
+		double newScale = View.drawOnCanvas(canvas, points, extrema, conds);
+		this.model.setScale(newScale);
+	}	
 	
 	/**
 	 * Scales and translates all the points onto the screen by calling drawLine in View

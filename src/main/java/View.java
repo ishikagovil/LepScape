@@ -98,7 +98,7 @@ public abstract class View{
 			border.getChildren().removeAll(freeLines);
 			freeLines = new ArrayList<>();
 	}
-	public static void drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
+	public static double drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
 		double minX = extrema.get(3)[0];
 		double maxX = extrema.get(1)[0];
 		double minY = extrema.get(0)[1];
@@ -132,6 +132,7 @@ public abstract class View{
 			System.out.println("drawing cond at " + startX + " " + startY);
 		}
 		
+		return scale;
 	}
 	
 	public static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
