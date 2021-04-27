@@ -324,17 +324,17 @@ public class Controller extends Application {
 	public void readBack() {
 		try {
 			System.out.println("reading");
-			FileInputStream fis = new FileInputStream("garden1.ser");
+			FileInputStream fis = new FileInputStream("src/main/resources/garden.ser");
 			ObjectInputStream ois = new ObjectInputStream(fis);
+//			ObjectInputStream ois = new ObjectInputStream(getClass().getResourceAsStream("/garden1.ser"));
 			model.savedGardens = (ArrayList<Garden>) ois.readObject();
-			ois.close();
 			Gallery gal = (Gallery) view.views.get("Gallery");
 //			gal.clearTilePane();
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				view.makeImage(model.savedGardens.get(i).getWidth(), model.savedGardens.get(i).getHeight(), model.savedGardens.get(i).data);
 				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).cost,(model.savedGardens.get(i)).numLeps);
 			}
-			new File("garden1.ser").delete();
+			ois.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Nothing to readIn");
@@ -345,11 +345,10 @@ public class Controller extends Application {
 	}
 	
 	public void summarySave(ActionEvent event) {
+		new File("src/main/resources/garden.ser").delete();
 		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
 		System.out.println("button works");
  		try {
-			FileOutputStream fos = new FileOutputStream("garden1.ser");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			Gallery gal = (Gallery) view.views.get("Gallery");
 			if(model.editing()) {
 				System.out.println("editing");
@@ -361,6 +360,8 @@ public class Controller extends Application {
 				model.savedGardens.add(model.getGarden());
 				gal.loadScreen(view.savedImg,model.savedGardens.size()-1,(model.savedGardens.get(model.savedGardens.size()-1)).cost,(model.savedGardens.get(model.savedGardens.size()-1)).numLeps);
 			}
+			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(model.savedGardens);
 			oos.close();
 			

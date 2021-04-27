@@ -6,7 +6,6 @@ import java.awt.image.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -15,7 +14,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 
-public class Garden implements Serializable {
+public class Garden implements java.io.Serializable {
 	
 	/**
 	 * 
