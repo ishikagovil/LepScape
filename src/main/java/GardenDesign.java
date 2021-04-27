@@ -254,7 +254,7 @@ public class GardenDesign extends View{
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
 		oblist.forEach((k,v)->{
-			v.setOnMousePressed(controller.getHandlerforPressed(k));
+			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
 			v.setOnMouseDragged(controller.getHandlerforDrag());
 			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
 			v.setOnDragDetected(new EventHandler<MouseEvent>() {
@@ -348,7 +348,7 @@ public class GardenDesign extends View{
 	 * After a drag release a new imageview is created inside the center pane
 	 * This new imageView is a copy of the imageView that was dragged and can be dragged, cannot be used to create another imageView
 	 */
-	public void addImageView(double x, double y, String key, double heightWidth) {
+	public String addImageView(double x, double y, String key, double heightWidth) {
 		System.out.println("in the inner addImageView");
 //		ImageView iv2 = oblist.get(key);
 		System.out.println("key: "+key);
@@ -356,47 +356,34 @@ public class GardenDesign extends View{
 		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
-		iv2.setFitHeight(heightWidth);
-		iv2.setFitWidth(heightWidth);
-		
-		iv2.setTranslateX(x-main.getLayoutX());
-		iv2.setTranslateY(y-main.getLayoutY());
+		iv2.setFitHeight(100);
+//		iv2.setFitHeight(heightWidth);
+//		iv2.setFitWidth(heightWidth);
+		String uniqueID = UUID.randomUUID().toString();
+ 		iv2.setId(uniqueID);
+ 		iv2.setX(x);
+ 		iv2.setY(y);
+//		iv2.setTranslateX(x-main.getLayoutX());
+//		iv2.setTranslateY(y-main.getLayoutY());
 
-		iv2.setOnMousePressed(controller.getHandlerforPressed(key));
+		iv2.setOnMousePressed(controller.getHandlerforPressed(key,true));
 		iv2.setOnMouseDragged(controller.getHandlerforDrag());
 		iv2.setOnMouseReleased(controller.getHandlerforReleased(key, false));
 		iv2.setOnDragDetected(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				iv2.startFullDrag();
-				//System.out.println("drag detected");
 				
 			}
 		});
 		
 		c.setOnMouseDragEntered(controller.getHandlerforMouseEntered(key));
-//		c.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
-//			@Override
-//			public void handle(MouseDragEvent event) {
-//				// TODO Auto-generated method stub
-//				System.out.println("trying to remove");
-//				c.setFitHeight(85);
-//				ImageView iv = (ImageView) event.getGestureSource();
-//				oblist.forEach((k,v)->{
-//					Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
-//					Image im2 = iv.getImage();
-//					if(im==im2) {
-//						System.out.println("EQUAL");
-//					}
-//				});
-////				System.out.println("key: "+key);
-//				removePlant((Node)event.getGestureSource());
-//				
-//			}
-//		});
-		
 		
 		main.getChildren().add(iv2);
+		return iv2.getId();
+		
+		
+		
 	}
 	
 	/**

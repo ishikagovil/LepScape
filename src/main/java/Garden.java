@@ -33,6 +33,7 @@ public class Garden implements java.io.Serializable {
 	public int width;
 	public int height;
 	public int[][] data;
+	public HashMap<String, PlacedPlant> placedPlants;
 //	public transient BufferedImage image;
 //	private transient SimpleDoubleProperty costForgallery;
 

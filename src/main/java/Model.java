@@ -85,22 +85,34 @@ public class Model implements java.io.Serializable{
 	// check if plant is okay to be placed
 	public void validatePlacement() {}
 	// place down plants and updates budget and lep count
-	public void placePlant(double x, double y, String key) {
+	public void placePlant(double x, double y, String key, String nodeId) {
 		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
+		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
+ 		System.out.println("plants: "+gardenMap.placedPlants);
 		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
 		gardenMap.setCost(gardenMap.getCost() - specie.getCost()); 
 		gardenMap.setNumLeps(gardenMap.getNumLeps() + specie.getLepsSupported());
 	}
 	
-	public void removePlant(double x, double y, String key) {
+	public void removePlant(String key, String nodeId) {
 		PlantSpecies specie = plantDirectory.get(key);
 		System.out.println("removing: "+key);
 		deleted.add(key);
 		System.out.println(deleted);
+		gardenMap.placedPlants.remove(nodeId);
+ 		System.out.println("plants: "+gardenMap.placedPlants);
 		gardenMap.setCost(gardenMap.getCost() + specie.getCost()); 
 		gardenMap.setNumLeps(gardenMap.getNumLeps() - specie.getLepsSupported());
 	}
+	
+	public void updateXY(String nodeId) {
+ 		PlacedPlant plant = gardenMap.placedPlants.get(nodeId);
+ 		plant.setX(x);
+ 		plant.setY(y);
+ 		gardenMap.placedPlants.put(nodeId, plant);
+ 		System.out.println("plants: "+gardenMap.placedPlants);
+ 	}
 	
 	// update the cost every time a plant is placed
 	public void costUpdate() {}

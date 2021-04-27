@@ -118,8 +118,8 @@ public class Controller extends Application {
 	 * @return EventHandler<MouseEvent>
 	 * @author Arunima Dey
 	 */
-	public EventHandler<MouseEvent> getHandlerforPressed(String key){
-		return (e) -> { pressed(e,key); };
+	public EventHandler<MouseEvent> getHandlerforPressed(String key, boolean inMain){
+		return (e) -> { pressed(e,key,inMain); };
 	}
 	/** 
 	 * Calls drag when mouse is dragged
@@ -288,7 +288,7 @@ public class Controller extends Application {
 	 * @param event the mouse event
 	 * @param key the plant that was pressed
 	 */
-	public void pressed(MouseEvent event, String key) {
+	public void pressed(MouseEvent event, String key, boolean inMain) {
 		Node n = (Node) event.getSource();
 		n.setMouseTransparent(true);
 		System.out.println("Clicked");
@@ -337,13 +337,20 @@ public class Controller extends Application {
 //			view.setY(n.getLayoutY(),n);
 //			PlantSpecies plant = model.plantDirectory.get(name);
 			double heightWidth = scalePlantSpread(name);
-			((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-			model.placePlant(model.getX(), model.getY(), name);
+			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
+//			model.placePlant(model.getX(), model.getY(), name);
 //			view.addImageView(event.getSceneX(),event.getSceneY(), name);
-			model.placePlant(event.getSceneX(), event.getSceneY(), name);
+			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
+ 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
+ 			model.placePlant(event.getSceneX()-deltaX, event.getSceneY()-deltaY, name, nodeId);
 //			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
+		else {
+ 			System.out.println("updating");
+ 			String id = ((Node) event.getSource()).getId();
+ 			model.updateXY(id);
+ 		}
 //		
 //		if(startingInTile) {
 //			
@@ -352,8 +359,8 @@ public class Controller extends Application {
 	
 	public void entered(MouseDragEvent event, String key) {
 		System.out.println(key);
-		view.removePlant((Node) event.getGestureSource());
-		model.removePlant(getStartingX(), getStartingY(), model.movedPlant);
+		((GardenDesign) view.views.get("GardenDesign")).removePlant((Node) event.getGestureSource());
+ 		model.removePlant(model.movedPlant,((Node)event.getGestureSource()).getId());
 		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		
 		
@@ -361,7 +368,7 @@ public class Controller extends Application {
 	
 	public void removeFromDeleted(String plantName) {
 		model.deleted.remove(plantName);
-		model.placePlant(0, 0, plantName);
+//		model.placePlant(0, 0, plantName);
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.getBudget(), model.getLepCount());
 		
 	}
