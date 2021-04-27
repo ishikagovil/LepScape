@@ -3,11 +3,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-<<<<<<< HEAD
-=======
 import javafx.scene.Parent;
 import javafx.scene.Scene;
->>>>>>> saveGarden
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,10 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
-<<<<<<< HEAD
-
-=======
->>>>>>> saveGarden
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;

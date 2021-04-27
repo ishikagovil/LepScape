@@ -4,18 +4,14 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-<<<<<<< HEAD
-=======
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
->>>>>>> saveGarden
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,12 +49,8 @@ public class Controller extends Application {
 		System.out.println("setting lep directory");
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
 		this.stage = stage;
-<<<<<<< HEAD
 	    view = new ManageViews(stage,this, plantFile);
-=======
-	    view = new ManageViews(stage,this, fileName1);
 	    readBack();
->>>>>>> saveGarden
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
@@ -234,14 +226,13 @@ public class Controller extends Application {
 		return (e) -> { this.model.getCurrentConditions().setSoilType(newType); };
 	}
 	
-<<<<<<< HEAD
 	public EventHandler<MouseEvent> getHandlerForCompostClicked(){
 		return (e) -> {showCompost(e);};
 	}
 	
 	public void showCompost(MouseEvent event) {
 		((GardenDesign) view.views.get("GardenDesign")).compostPopUp(model.deleted);
-=======
+	}
 	public EventHandler<ActionEvent> getHandlerforSummarySave(){
 		return (e) -> {summarySave(e);};
 	}
@@ -256,13 +247,14 @@ public class Controller extends Application {
 		Garden garden = model.savedGardens.get(index);
 		((GardenDesign) view.views.get("GardenDesign")).remakePane();
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
+		
 		garden.plants.forEach(plant->{
-			((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName());
+			double heightWidth = scalePlantSpread(plant.getName());
+			((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
 		});
 		dialog.close();
 		model.setToEdit();
 		model.setEditGardenIndex(index);
->>>>>>> saveGarden
 	}
 	
 	/**
@@ -299,12 +291,8 @@ public class Controller extends Application {
 	public void pressed(MouseEvent event, String key) {
 		Node n = (Node) event.getSource();
 		n.setMouseTransparent(true);
-<<<<<<< HEAD
 		System.out.println("Clicked");
 		model.movedPlant = key;
-=======
-		//System.out.println("Clicked");
->>>>>>> saveGarden
 		if(key!=null) {
 			String name = model.plantDirectory.get(key).getCommonName();
 			String description = model.plantDirectory.get(key).getDescription();
@@ -347,19 +335,13 @@ public class Controller extends Application {
 			view.setY(0, n);
 //			view.setX(n.getLayoutX(),n);
 //			view.setY(n.getLayoutY(),n);
-<<<<<<< HEAD
 //			PlantSpecies plant = model.plantDirectory.get(name);
 			double heightWidth = scalePlantSpread(name);
 			((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-		}
-		
-		if(startingInTile) {
 			model.placePlant(model.getX(), model.getY(), name);
-=======
-			view.addImageView(event.getSceneX(),event.getSceneY(), name);
+//			view.addImageView(event.getSceneX(),event.getSceneY(), name);
 			model.placePlant(event.getSceneX(), event.getSceneY(), name);
 //			model.placePlant(model.getX(), model.getY(), name);
->>>>>>> saveGarden
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
 //		
@@ -384,7 +366,6 @@ public class Controller extends Application {
 		
 	}
 	
-<<<<<<< HEAD
 	/**
 	 * The spread of a plant is calculated using the lengthPerPixel and spread of the plant
 	 * @param PlantSpecies plant
@@ -395,7 +376,7 @@ public class Controller extends Application {
 		double numPixels = plant.getSpreadRadius() / this.model.lengthPerPixel;
 		return numPixels;
 	}
-=======
+
 	public void readBack() {
 		try {
 			System.out.println("reading");
@@ -446,8 +427,7 @@ public class Controller extends Application {
 			e1.printStackTrace();
 		}
 	}
-	
->>>>>>> saveGarden
+
 	/** 
 	 * Called when user is drawing. 
 	 * Updates the canvas of the relevant view and calls updateOutlineSection in model to pass boundary coordinates

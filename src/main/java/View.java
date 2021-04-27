@@ -90,12 +90,6 @@ public abstract class View{
 	}
 	
 	//Used only in gardenDesign. In here because need to called by controller
-<<<<<<< HEAD
-	//public void addImageView(double x, double y, String key, double heightWidth) {}
-=======
-	//
-	public void addImageView(double x, double y, String key) {}
->>>>>>> saveGarden
 	public void removePlant(Node n) {}
 	public void makeInfoPane(String name, String info) {}
 	public void updateBudgetandLep(int cost, int lepCount) {}

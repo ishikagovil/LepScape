@@ -348,36 +348,19 @@ public class GardenDesign extends View{
 	 * After a drag release a new imageview is created inside the center pane
 	 * This new imageView is a copy of the imageView that was dragged and can be dragged, cannot be used to create another imageView
 	 */
-<<<<<<< HEAD
 	public void addImageView(double x, double y, String key, double heightWidth) {
 		System.out.println("in the inner addImageView");
-=======
-	public void addImageView(double x, double y, String key) {
-		//System.out.println("in the inner addImageView");
->>>>>>> saveGarden
 //		ImageView iv2 = oblist.get(key);
 		System.out.println("key: "+key);
 //		Image im = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
-		iv2.setFitHeight(100);
-<<<<<<< HEAD
-//		iv2.setFitHeight(heightWidth);
-//		iv2.setFitWidth(heightWidth);
+		iv2.setFitHeight(heightWidth);
+		iv2.setFitWidth(heightWidth);
 		
 		iv2.setTranslateX(x-main.getLayoutX());
 		iv2.setTranslateY(y-main.getLayoutY());
-=======
-//		System.out.println("x: "+x+" y: "+y);
-//		System.out.println("main x: "+ main.getLayoutX());
-//		System.out.println("main y: "+ main.getLayoutY());
-		iv2.setTranslateX(x-main.getLayoutX());
-		iv2.setTranslateY(y-main.getLayoutY());
-		//System.out.println("with the - x:"+(x-main.getLayoutX())+" y: "+(y-main.getLayoutY()));
-		
-//		this.addedPlants.add(iv2);
->>>>>>> saveGarden
 
 		iv2.setOnMousePressed(controller.getHandlerforPressed(key));
 		iv2.setOnMouseDragged(controller.getHandlerforDrag());

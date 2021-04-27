@@ -21,14 +21,9 @@ public class ManageViews {
 	View currView;
 	Controller controller;
 	Stage stage;
-<<<<<<< HEAD
 	public Map<String, ImageView> plantImages;
-=======
-	public Map<String, String> plantImages;
 	public Pane sp;
 	public WritableImage savedImg;
-	
->>>>>>> saveGarden
 	/**
 	 * @author Ishika Govil
 	 */
@@ -252,14 +247,9 @@ public class ManageViews {
 	//methods only used by garden design
 	public void setY(double y, Node n){currView.setY(y, n);}
 	public void setX(double x, Node n){currView.setX(x, n);}
-<<<<<<< HEAD
 	public void addImageView(double x, double y, String key, double heightWidth) {
 		((GardenDesign) views.get("GardenDesign")).addImageView(x,y,key,heightWidth);
 //		currView.addImageView(x, y, key);
-=======
-	public void addImageView(double x, double y, String key) {
-		currView.addImageView(x, y, key);
->>>>>>> saveGarden
 	}
 //	public void removePlant(Node n) {currView.removePlant(n);}
 	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}

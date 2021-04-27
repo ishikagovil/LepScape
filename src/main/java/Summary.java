@@ -83,15 +83,9 @@ public class Summary extends View {
         buttons.add(addNextButton("Learn More","LearnMore"));
         buttons.get(2).setPrefSize(100, 30);
         
-<<<<<<< HEAD
-        Button saveToGallery = new Button("Save");
-        saveToGallery.setPrefSize(100,30);
-        buttons.add(saveToGallery);
-=======
         Button saveGarden = new Button("Save");
         saveGarden.setPrefSize(100,30);
         buttons.add(saveGarden);
->>>>>>> saveGarden
         
         vb1.getChildren().addAll(buttons);
         vb1.setAlignment(Pos.TOP_RIGHT);
@@ -158,10 +152,7 @@ public class Summary extends View {
        border.setCenter(main);
        border.setCenter(main);
        
-<<<<<<< HEAD
-=======
        saveGarden.setOnAction(c.getHandlerforSummarySave());
->>>>>>> saveGarden
        
     }
 	

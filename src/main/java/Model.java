@@ -10,18 +10,15 @@ public class Model implements java.io.Serializable{
 	public double[] translate;
 	public double x;
 	public double y;
-<<<<<<< HEAD
 	public int lepCount;
 	private Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
 	public String movedPlant;
 	public double initialX;
 	public double initialY;
 	public HashSet<String> deleted;
-=======
 	public Boolean editGarden;
 	public int editGardenIndex;
-	private  Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
->>>>>>> saveGarden
+
 	
 	private UserMode mode;
 	
@@ -35,13 +32,10 @@ public class Model implements java.io.Serializable{
 		this.lepDirectory = new HashMap<>();
 		initializePlantDirectory();
 		this.lengthPerPixel = -1;
-<<<<<<< HEAD
 		this.movedPlant = "";
 		this.deleted = new HashSet<>();
-=======
 		editGarden = false;
-		
->>>>>>> saveGarden
+
 	}
 
 	public void setToEdit() {
@@ -101,16 +95,11 @@ public class Model implements java.io.Serializable{
 	
 	public void removePlant(double x, double y, String key) {
 		PlantSpecies specie = plantDirectory.get(key);
-<<<<<<< HEAD
-		this.budget = budget + specie.getCost();
-		this.lepCount = lepCount - specie.getLepsSupported();
 		System.out.println("removing: "+key);
 		deleted.add(key);
 		System.out.println(deleted);
-=======
 		gardenMap.setCost(gardenMap.getCost() + specie.getCost()); 
 		gardenMap.setNumLeps(gardenMap.getNumLeps() - specie.getLepsSupported());
->>>>>>> saveGarden
 	}
 	
 	// update the cost every time a plant is placed
@@ -121,16 +110,6 @@ public class Model implements java.io.Serializable{
 	}
 	
 	public void initializePlantDirectory() {
-
-<<<<<<< HEAD
-		//plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
-
-		//plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
-=======
-//		plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
-//
-//		plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
->>>>>>> saveGarden
 	}
 	
 	public double getBudget() {
