@@ -181,7 +181,4 @@ public class Model {
 	public Conditions getCurrentConditions() {
 		return this.currConditions;
 	}
-	public static double mapValue(double value, double srcMin, double srcMax, double targMin, double targMax) {
-		return (value - srcMin) * ((targMax - targMin) / (srcMax - srcMin)) + targMin;
-	}
 }

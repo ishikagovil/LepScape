@@ -467,15 +467,17 @@ public class Controller extends Application {
 		double minY = extrema.get(0)[1];
 		double maxY = extrema.get(2)[1];
 
-		double newX = Model.mapValue(e.getX(), 0, canvas.getWidth(), minX, maxX);
-		double newY = Model.mapValue(e.getY(), 0, canvas.getHeight(), minY, maxY);
+		double scale = View.findScale(minX, maxX, minY, maxY, canvas.getWidth(), canvas.getHeight());
+		double newX = (e.getX() / scale) + minX;
+		double newY = (e.getY() / scale) + minY;
+
+		Conditions curr = this.model.getCurrentConditions();
+		Conditions conditions = new Conditions(curr.getSoilType(), curr.getMoistureLevel(), curr.getSunlight());
 		
-		Conditions currConditions = this.model.getCurrentConditions();
+		conditions.setX(newX);
+		conditions.setY(newY);
 		
-		currConditions.setX(newX);
-		currConditions.setY(newY);
-		
-		this.model.getGarden().addSection(currConditions);
+		this.model.getGarden().addSection(conditions);
 		this.drawToCanvas(canvas);
 	}
 	

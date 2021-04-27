@@ -122,7 +122,6 @@ public abstract class View{
 
 		boolean isNewLine = true;
 		
-		gc.beginPath();
 		while(pointIter.hasNext()) {
 
 			double[] point = pointIter.next();
@@ -131,9 +130,10 @@ public abstract class View{
 			
 //			System.out.println("x: " + x + " y: " + y);
 
-			if(x == -1 && y == -1) {
+			if(x < 0 && y < 0) {
 				isNewLine = true;
 			} else if (isNewLine) {
+				gc.beginPath();
 				gc.moveTo(x, y);
 				isNewLine = false;
 			} else {
@@ -147,16 +147,19 @@ public abstract class View{
 		
 		Iterator<Conditions> condIter = conditions.iterator();
 		
+		System.out.println("Drawing conditions");
 		while(condIter.hasNext()) {
 			Conditions cond = condIter.next();
 			int startX = (int) ((cond.getX() - minX) * scale);
 			int startY = (int) ((cond.getY() - minY) * scale);
 			floodFill(canvas, cond, startX, startY, (int) canvas.getWidth(), (int) canvas.getHeight());
+			gc.save();
+			System.out.println("drawing cond at " + startX + " " + startY);
 		}
 		
 	}
 	
-	private static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
+	public static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
 		double sourceWidth = maxX - minX;
 		double sourceHeight = maxY - minY;
 
