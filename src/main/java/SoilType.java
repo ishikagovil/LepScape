@@ -1,13 +1,13 @@
 
 public enum SoilType {
-	HUMUS("Humus", 0.3),
-	SAND("Sand", 0.6),
-	CLAY("Clay", 0.9);
+	CLAY("Clay", 1),
+	DIRT("Dirt", 2),
+	ROCK("Rock", 3);
 	
 	private final String name;
-	private final double value;
+	private final int value;
 	
-	private SoilType(String name, double value) {
+	private SoilType(String name, int value) {
 		this.name = name;
 		this.value = value;
 	}
