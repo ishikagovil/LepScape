@@ -1,9 +1,14 @@
 
-public class PlacedPlant {
+public class PlacedPlant implements java.io.Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double x;
 	private double y;
-	private PlantSpecies species;
+	private transient PlantSpecies species;
+	private String name;
 	
 	public PlacedPlant() {
 		this.species = null;
@@ -13,6 +18,7 @@ public class PlacedPlant {
 		this.x = x;
 		this.y = y;
 		this.species = species;
+		this.name = species.getGenusName() + "-" + species.getSpeciesName();
 	}
 	
 	public double getX() {
@@ -38,4 +44,12 @@ public class PlacedPlant {
 	public void setSpecies(PlantSpecies species) {
 		this.species = species;
 	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String toString() {
+ 		return this.name;
+ 	}
 }

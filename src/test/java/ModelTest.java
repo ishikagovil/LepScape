@@ -57,11 +57,11 @@ class ModelTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	void testPlacePlant() {
-		m.placePlant(x, x, null);
-		fail("Not yet implemented");
-	}
+//	@Test
+//	void testPlacePlant() {
+//		m.placePlant(x, x, null);
+//		fail("Not yet implemented");
+//	}
 
 	@Test
 	void testCostUpdate() {

@@ -1,11 +1,10 @@
 import java.util.*;
 
-public class Model {
-	public int budget = 100;
+public class Model implements java.io.Serializable{
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;
-
+	public ArrayList<Garden> savedGardens;
 	public double lengthPerPixel;
 	public double scale;
 	public double[] translate;
@@ -13,6 +12,14 @@ public class Model {
 	public double y;
 	public int lepCount;
 	private Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
+	public String movedPlant;
+	public double initialX;
+	public double initialY;
+	public HashSet<String> deleted;
+	public Boolean editGarden;
+	public int editGardenIndex;
+	public int budget;
+
 	
 	private UserMode mode;
 	
@@ -20,14 +27,33 @@ public class Model {
 	 * @author Ishika Govil, Kimmy Huynh
 	 */
 	public Model() {
+		this.savedGardens = new ArrayList<>();
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
-		//initializePlantDirectory();
 		this.budget = 0;
 		this.lengthPerPixel = -1;
+		this.movedPlant = "";
+		this.deleted = new HashSet<>();
+		editGarden = false;
+
 	}
 
+	public void setToEdit() {
+		this.editGarden = true;
+	}
+	
+	public boolean editing() {
+		return this.editGarden;
+	}
+	
+	public void setEditGardenIndex(int index) {
+		editGardenIndex = index;
+	}
+	
+	public int getEditGardenIndex() {
+		return this.editGardenIndex;
+	}
 	
 	public Garden getGarden() {
 		return this.gardenMap;
@@ -90,18 +116,34 @@ public class Model {
 	// check if plant is okay to be placed
 	public void validatePlacement() {}
 	// place down plants and updates budget and lep count
-	public void placePlant(double x, double y, String key) {
+	public void placePlant(double x, double y, String key, String nodeId) {
+		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
-		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
-		this.budget = budget - specie.getCost();
-		this.lepCount = lepCount + specie.getLepsSupported();
+		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
+ 		System.out.println("plants: "+gardenMap.placedPlants);
+//		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
+		gardenMap.setCost(gardenMap.getCost() - specie.getCost()); 
+		gardenMap.setNumLeps(gardenMap.getNumLeps() + specie.getLepsSupported());
 	}
 	
-	public void removePlant(double x, double y, String key) {
+	public void removePlant(String key, String nodeId) {
 		PlantSpecies specie = plantDirectory.get(key);
-		this.budget = budget + specie.getCost();
-		this.lepCount = lepCount - specie.getLepsSupported();
+		System.out.println("removing: "+key);
+		deleted.add(key);
+		System.out.println(deleted);
+		gardenMap.placedPlants.remove(nodeId);
+ 		System.out.println("plants: "+gardenMap.placedPlants);
+		gardenMap.setCost(gardenMap.getCost() + specie.getCost()); 
+		gardenMap.setNumLeps(gardenMap.getNumLeps() - specie.getLepsSupported());
 	}
+	
+	public void updateXY(String nodeId) {
+ 		PlacedPlant plant = gardenMap.placedPlants.get(nodeId);
+ 		plant.setX(x);
+ 		plant.setY(y);
+ 		gardenMap.placedPlants.put(nodeId, plant);
+ 		System.out.println("plants: "+gardenMap.placedPlants);
+ 	}
 	
 	// update the cost every time a plant is placed
 	public void costUpdate() {}
@@ -111,21 +153,17 @@ public class Model {
 	}
 	
 	public void initializePlantDirectory() {
-
-		//plantDirectory.put("commonMilkweed", new PlantSpecies("Asclepias syriaca","Milkweed","Common Milkweed","Milkweed produces purple or pink flowers\narranged in drooping clusters.",5,7,13,40, false));
-
-		//plantDirectory.put("pine", new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true));
 	}
 	
-	public int getBudget() {
-		return this.budget;
+	public double getBudget() {
+		return gardenMap.getCost();
 	}
-	public void setBudget(int budget) {
-		this.budget = budget;
+	public void setBudget(double budget) {
+		gardenMap.setCost(budget);
 	}
 	
 	public int getLepCount() {
-		return this.lepCount;
+		return gardenMap.getNumLeps();
 	}
 	
 	/*@Override
