@@ -20,8 +20,8 @@ public abstract class View{
 	private static final int lineWidth = 3;
 	private static final double fillThreshold = 0.95;
 	
-	public int screenWidth = 1270;
-	public int screenHeight = 760;
+	public int screenWidth = 1290;
+	public int screenHeight = 800;
 	public double gardenWidth = 0.5*screenWidth;
 	public double gardenHeight = 0.5*screenHeight;
 	public double gardenTopLeftX = 0.3*screenWidth;
