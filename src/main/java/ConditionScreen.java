@@ -61,21 +61,28 @@ public class ConditionScreen extends View {
 		
 		HBox tools = new HBox(boxSpacing);
 		Button fillButton = new Button("Fill");
+		fillButton.setPrefSize(buttonWidth, buttonHeight);
 		fillButton.setOnAction(controller.getHandlerforModeSetter(UserMode.SETTING_CONDITIONS));
 		tools.getChildren().addAll(fillButton);
 		
+		HBox buttons = new HBox(boxSpacing);
+		Button back = new Button("Back");
+		back.setPrefSize(buttonWidth, buttonHeight);
+		setOnMouse(back);
+		back.setOnAction(controller.getHandlerforClicked("PlotDesign"));
 		Button next = new Button("Next");
+		next.setPrefSize(buttonWidth, buttonHeight);
 		next.setOnAction((e) -> {
 			GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
 			gd.addBudgetLepPane();
 			controller.switchViews("GardenDesign");
 		});
-		
+		buttons.getChildren().addAll(back, next);
 		Node sliders = createSliders();
 		Node soilButtons = createSoilButtons();
 		
 		VBox.setVgrow(sliders, Priority.ALWAYS);
-		sidebar.getChildren().addAll(budgetRow, sliders, soilButtons, tools, next);
+		sidebar.getChildren().addAll(budgetRow, sliders, soilButtons, tools, buttons);
 		
 		return sidebar;
 	}

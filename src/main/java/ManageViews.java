@@ -35,7 +35,7 @@ public class ManageViews {
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
-	    this.currView = this.getView("Summary");
+	    this.currView = this.getView("Start");
 	}
 	
 	public void setPlantImg(Map<String, ImageView> imgs) {
