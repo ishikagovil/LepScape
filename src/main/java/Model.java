@@ -22,7 +22,7 @@ public class Model {
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
-		initializePlantDirectory();
+		//initializePlantDirectory();
 		this.budget = 0;
 	}
 	// Methods for the user to draw the garden and put in desired conditions
@@ -42,7 +42,37 @@ public class Model {
 	
 	public void setLepDirectory(Map<String, Lep> lepdir) {
 		this.lepDirectory = lepdir;
+		Iterator lepIt = lepdir.entrySet().iterator();
+		Iterator plantIt = this.plantDirectory.entrySet().iterator();
+		System.out.println("created iterators for plant + lep");
+		
+		while(lepIt.hasNext()) {
+			Map.Entry lepEntry = (Map.Entry)lepIt.next();
+			Lep lepObj = (Lep)lepEntry.getValue();
+			ArrayList<String> genusOfPlants = lepObj.getThrivesInGenus();
+			
+			Iterator genusPlantsIt = genusOfPlants.iterator();
+			while(genusPlantsIt.hasNext()) {
+				String genusNameForPlant = (String)genusPlantsIt.next();
+				
+				while (plantIt.hasNext()) {
+					Map.Entry plantEntry = (Map.Entry)plantIt.next();
+					PlantSpecies plantObj = (PlantSpecies)plantEntry.getValue();
+					String genusOfPlant = plantObj.getGenusName();
+					
+					if (genusOfPlant.equals(genusNameForPlant)) {
+						lepObj.getThrivesIn().add(plantObj);
+					}
+				}
+				
+			}
+			
+			System.out.println(lepObj.getThrivesIn());
+			
+		}
+		
 	}
+
 	// create a new condition for the garden
 	public void createNewConditions() {}
 	

@@ -22,7 +22,7 @@ public class Controller extends Application {
 	// reading plant information
 	String plantFile = "src/main/resources/finalPlantListWithInfo.csv";
 	// reading lep information
-	String lepFile = "src/main/resources/testleps.csv";
+	String lepFile = "src/main/resources/finalLepList.csv";
 	Model model;
 	Stage stage;
 	
@@ -39,7 +39,7 @@ public class Controller extends Application {
 		System.out.println("setting lep directory");
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
 		this.stage = stage;
-	    view = new ManageViews(stage,this, plantFile);
+	    view = new ManageViews(stage,this, plantFile, lepFile);
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();

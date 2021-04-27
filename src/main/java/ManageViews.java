@@ -20,6 +20,7 @@ public class ManageViews {
 	Controller controller;
 	Stage stage;
 	public Map<String, ImageView> plantImages;
+	public Map<String, ImageView> lepImages;
 	
 	/**
 	 * @author Ishika Govil
@@ -32,8 +33,8 @@ public class ManageViews {
 	 * @param Controller
 	 * @author Ishika Govil
 	 */
-	public ManageViews(Stage stage, Controller c, String fileName) {
-		importImages(fileName);
+	public ManageViews(Stage stage, Controller c, String fileName, String fileName2) {
+		importImages(fileName, fileName2);
 		dimLen = new ArrayList<>();
 		this.controller = c;
 	    this.stage = stage;
@@ -45,14 +46,21 @@ public class ManageViews {
 		this.plantImages = imgs;
 	}
 
-	public void importImages(String fileName) {
+	public void importImages(String fileName, String fileName2) {
 		plantImages = new HashMap<>();
-		System.out.println("setting images");
+		System.out.println("setting plant images");
 		plantImages = CSVtoPlants.readFileForImg(fileName);
+		lepImages = new HashMap<>();
+		System.out.println("setting lep images");
+		lepImages = CSVtoLeps.readFileForImg(fileName2);
 	}
 
 	public Map<String, ImageView> getPlantImages() {
 		return this.plantImages;
+	}
+	
+	public Map<String, ImageView> getLepImages() {
+		return this.lepImages;
 	}
 	
 	/**

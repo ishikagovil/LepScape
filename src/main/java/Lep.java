@@ -9,16 +9,22 @@ public class Lep {
 	private String genusName;
 	private String commonName;
 	private String description;
+	private ArrayList<String> thrivesInGenus;
 	private ArrayList<PlantSpecies> thrivesIn; //all the plants species the lep feeds on
 	
 	public Lep(String speciesName, String genusName, String commonName) {
 		this.speciesName = speciesName;
 		this.genusName = genusName;
 		this.commonName = commonName;
+		thrivesInGenus = new ArrayList<>();
+		thrivesIn = new ArrayList<>();
 	}
 	
 	public void setDescription(String des) {this.description = des;}
 	public void setThrivesIn(ArrayList<PlantSpecies> thrives) {this.thrivesIn = thrives;}
+
+	public void setThrivesInGenus(ArrayList<String> thrives) {this.thrivesInGenus = thrives;}
+	public ArrayList<String> getThrivesInGenus() {return this.thrivesInGenus;}
 	
 	public String getSpeciesName() {return this.speciesName;}
 	public String getGenusName() {return this.genusName;}
