@@ -46,7 +46,11 @@ public class CSVtoPlants {
                 moistReq = Integer.parseInt(parts[8]);
 
                 PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, spread, leps, cost, isWoody, lightReq, soilReq, moistReq); //create object
+<<<<<<< HEAD
                 listPlants.put(genusName + "-" + speciesName, newData);     // key by genus-species
+=======
+                listPlants.put(genusName + "-" + speciesName, newData);     // key by genus + species
+>>>>>>> datascraper
             }            
             reader.close();   
 		}
@@ -75,16 +79,20 @@ public class CSVtoPlants {
                 speciesName = parts[1];
                 imgSrc = genusName + "-" + speciesName + ".png";		// file name ex: Justicia-americana.png
                 filePath = "plantimg/" + imgSrc;
-                System.out.println(filePath);
+                //System.out.println(filePath);
                 Image img = new Image(filePath);    // file path to get image names; change if different file path
-                System.out.println("fetching images");
+                //System.out.println("fetching images");
                 ImageView imv = new ImageView();
                 imv.setImage(img);
                 imv.setFitWidth(100);                       // resizing to be 100 x 100px; can change value
                 imv.setPreserveRatio(true);
                 imv.setSmooth(true);
                 imv.setCache(true);
+<<<<<<< HEAD
                 plantImg.put(genusName + "-" + speciesName, imv);   // key: genusName-speciesName
+=======
+                plantImg.put(genusName + "-" + speciesName, imv);   // key: genusName " " speciesName
+>>>>>>> datascraper
             }            
             reader.close();   
 		}
