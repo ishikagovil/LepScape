@@ -19,8 +19,12 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import javafx.application.Application;
 
 /**
@@ -309,9 +313,10 @@ public class Controller extends Application {
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
 		if (!DEBUG) {
-			//System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
-			//System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
+			System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
+			System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
 		}
+		System.out.println("drag. x: "+model.getX()+" y: "+model.getY());
 		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
 		model.setY(model.getY() + event.getY());
 		view.setX(model.getX(),n);
@@ -326,22 +331,22 @@ public class Controller extends Application {
 	 * @param startingInTile boolean to inform if drag started in tile pane
 	 * @author Arunima Dey
 	 */
-	public void release(MouseEvent event, String name, Boolean startingInTile) {
-		//System.out.println("released");
+	public void release(MouseEvent event, String name, boolean startingInTile) {
+		System.out.println("released");
 		Node n = (Node)event.getSource();
 		n.setMouseTransparent(false);
 		if(startingInTile) {
 			view.setX(0,n);
-			view.setY(0, n);
+			view.setY(0,n);
 //			view.setX(n.getLayoutX(),n);
 //			view.setY(n.getLayoutY(),n);
 //			PlantSpecies plant = model.plantDirectory.get(name);
 			double heightWidth = scalePlantSpread(name);
-			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-//			model.placePlant(model.getX(), model.getY(), name);
-//			view.addImageView(event.getSceneX(),event.getSceneY(), name);
 			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
  			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
+			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
+//			model.placePlant(model.getX(), model.getY(), name);
+//			view.addImageView(event.getSceneX(),event.getSceneY(), name);
  			model.placePlant(event.getSceneX()-deltaX, event.getSceneY()-deltaY, name, nodeId);
 //			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
@@ -409,6 +414,9 @@ public class Controller extends Application {
 	
 	public void summarySave(ActionEvent event) {
 		new File("src/main/resources/garden.ser").delete();
+		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
+		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
+		
 		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
 		System.out.println("button works");
  		try {

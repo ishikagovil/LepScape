@@ -90,7 +90,7 @@ public class Model implements java.io.Serializable{
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
  		System.out.println("plants: "+gardenMap.placedPlants);
-		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
+//		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
 		gardenMap.setCost(gardenMap.getCost() - specie.getCost()); 
 		gardenMap.setNumLeps(gardenMap.getNumLeps() + specie.getLepsSupported());
 	}
