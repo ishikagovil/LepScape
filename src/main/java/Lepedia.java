@@ -42,7 +42,7 @@ public class Lepedia extends View {
 		Label description = new Label(lep.getDescription());
 		
 		TilePane lepTile = new TilePane(Orientation.HORIZONTAL);
-		lepTile.setTileAlignment(Pos.CENTER_LEFT);
+		//lepTile.setTileAlignment(Pos.CENTER_LEFT);
 		lepTile.setPrefColumns(4);
 		lepTile.setPrefRows(1);
 		
