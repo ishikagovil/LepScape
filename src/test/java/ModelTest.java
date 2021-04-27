@@ -15,28 +15,15 @@ class ModelTest {
 	public int cost = 0;
 	
 	public Model m = new Model();
-	
-	@Test
-	void testCreateDefault() {
-		m.createDefault();
-		fail("Not yet implemented");
-	}
 
 	@Test
-	void testGetBoundaries() {
-		assertNull(m.getBoundaries());
-		fail("Not yet implemented");
+	void testSetGarden() {
+		m.setGarden(garden);
+		assertEquals(garden, m.getGarden());
 	}
-
 	@Test
 	void testCreateNewConditions() {
 		m.createNewConditions();
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testUpdateOutlineSection() {
-		m.updateOutlineSection(x, y);
 		fail("Not yet implemented");
 	}
 
@@ -72,7 +59,7 @@ class ModelTest {
 
 	@Test
 	void testPlacePlant() {
-		m.placePlant();
+		m.placePlant(x, x, null);
 		fail("Not yet implemented");
 	}
 
@@ -81,23 +68,51 @@ class ModelTest {
 		m.costUpdate();
 		fail("Not yet implemented");
 	}
-
-	/*@Test
-	void testStartStage() {
-		m.start(null);
-		fail("Not yet implemented");
-	}*/
-
 	@Test
-	void testGetX() {
-		m.getX();
-		fail("Not yet implemented");
+	void testSetScale() {
+		m.setScale(5);
+		assertEquals(5, m.getScale());
 	}
 
 	@Test
-	void testGetY() {
-		m.getY();
-		fail("Not yet implemented");
+	void testSetTranslate() {
+		m.setTranslate(new double[]{2.1, 4.3});
+		assertEquals(2.1, m.getTranslate()[0]);
+		assertEquals(4.3, m.getTranslate()[1]);
+	}
+
+	@Test
+	void testSetX() {
+		m.setX(5);
+		assertEquals(5, m.getX());
+	}
+
+	@Test
+	void testSetY() {
+		m.setY(5.5);
+		assertEquals(5.5, m.getY());
+	}
+	@Test
+	void testSetLengthPerPixel() {
+		m.setLengthPerPixel(20.5);
+		assertEquals(20.5, m.getLengthPerPixel());
+	}
+	@Test
+	void testTranslateScaledPlot() {
+		m.getGarden().setPolygonCorners(2, 0);
+		m.getGarden().setPolygonCorners(4, 1);
+		m.getGarden().setPolygonCorners(1, 4);
+		m.getGarden().setPolygonCorners(4, 4);
+		m.setScale(5);
+		double[] modelTranslations = m.translateScaledPlot(new double[] {5,2});
+		assertEquals(0, modelTranslations[0]);
+		assertEquals(2, modelTranslations[1]);
+	}
+	
+	@Test
+	void testCalculateLineDistance() {
+		double distance = m.calculateLineDistance(2, 2, 5, 6);
+		assertEquals(5, distance);
 	}
 
 }

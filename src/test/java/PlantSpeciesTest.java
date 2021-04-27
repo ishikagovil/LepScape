@@ -21,7 +21,7 @@ class PlantSpeciesTest {
 
 	@Test
 	void testPlantSpeciesParameterConstructor() {
-		PlantSpecies ps = new PlantSpecies("Pinaceae","Pinus","Pine","A simple pine.", 23, 5, 20, 3, true);
+		PlantSpecies ps = new PlantSpecies("Pinaceae","Pinus","Pine", 100, 5, 20, true, 5, 5, 5);
 		fail("Not yet implemented");
 	}
 
@@ -108,7 +108,7 @@ class PlantSpeciesTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
+	/*@Test
 	void testGetBloomTime() {
 		assertEquals(ps.getBloomTime(), -1);
 	}
@@ -117,7 +117,7 @@ class PlantSpeciesTest {
 	void testSetBloomTime() {
 		ps.setBloomTime(0);
 		fail("Not yet implemented");
-	}
+	}*/
 
 	@Test
 	void testIsWoody() {

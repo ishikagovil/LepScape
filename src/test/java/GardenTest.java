@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
 
 class GardenTest {
@@ -78,5 +80,37 @@ class GardenTest {
 		assertTrue(g1.getCompostBin().isEmpty());
 		assertTrue(g1.getCompostBin().isEmpty());
 	}
-
+	@Test
+	void testUpdateOutline() {
+		g1.updateOutline(0, 0);
+		assertArrayEquals(new double[]{0,0}, g1.outline.get(0));
+		g2.updateOutline(5, 5);
+		g2.updateOutline(5, 10);
+		assertArrayEquals(new double[]{5,10}, g2.outline.get(1));
+		
+	}
+	@Test
+	void testClearBoundaries() {
+		g1.clearOutline();
+		assertEquals(0, g1.getOutline().size());
+		assertEquals(0, g1.getPolygonCorners().size());
+	}
+	
+	@Test
+	void testGetExtremes() {
+		g1.updateOutline(3, 3);
+		g1.updateOutline(5, 2);
+		g1.updateOutline(1, 9);
+		g1.updateOutline(2, 1);
+		g1.setPolygonCorners(1, 0);
+		g1.setPolygonCorners(4, 1);
+		g1.setPolygonCorners(0, 4);
+		g1.setPolygonCorners(4, 4);
+		ArrayList<double[]> extrema = g1.getExtremes();
+		assertArrayEquals(new double[] {1,0}, extrema.get(0));
+		assertArrayEquals(new double[] {5,2}, extrema.get(1));
+		assertArrayEquals(new double[] {1,9}, extrema.get(2));
+		assertArrayEquals(new double[] {0,4}, extrema.get(3));
+	}
+	
 }

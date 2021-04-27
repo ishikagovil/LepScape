@@ -1,9 +1,13 @@
 import java.util.*;
-
 import javafx.scene.Node;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ManageViews {
@@ -14,7 +18,8 @@ public class ManageViews {
 	View currView;
 	Controller controller;
 	Stage stage;
-	public Map<String, String> plantImages;
+	public Map<String, ImageView> plantImages;
+	public Map<String, ImageView> lepImages;
 	
 	/**
 	 * @author Ishika Govil
@@ -27,18 +32,35 @@ public class ManageViews {
 	 * @param Controller
 	 * @author Ishika Govil
 	 */
-	public ManageViews(Stage stage, Controller c, String fileName) {
+	public ManageViews(Stage stage, Controller c, String fileName, String fileName2) {
+		importImages(fileName, fileName2);
 		dimLen = new ArrayList<>();
+		dimPixel = -1;
 		this.controller = c;
 	    this.stage = stage;
 		initializeViews();
 	    this.currView = this.getView("Start");
-		importImages(fileName);
+	}
+	
+	public void setPlantImg(Map<String, ImageView> imgs) {
+		this.plantImages = imgs;
 	}
 
-	public void importImages(String fileName) {
+	public void importImages(String fileName, String fileName2) {
 		plantImages = new HashMap<>();
+		System.out.println("setting plant images");
 		plantImages = CSVtoPlants.readFileForImg(fileName);
+		lepImages = new HashMap<>();
+		System.out.println("setting lep images");
+		lepImages = CSVtoLeps.readFileForImg(fileName2);
+	}
+
+	public Map<String, ImageView> getPlantImages() {
+		return this.plantImages;
+	}
+	
+	public Map<String, ImageView> getLepImages() {
+		return this.lepImages;
 	}
 	
 	/**
@@ -51,7 +73,7 @@ public class ManageViews {
 	    views.put("Gallery", new Gallery(stage,controller,this));  
 	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
 	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
-	    //views.put("Summary", new Summary(stage,controller,this));
+	    views.put("Summary", new Summary(stage,controller,this));
 	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
 	    views.put("LearnMore", new LearnMore(stage,controller,this));
 	    views.put("Lepedia", new Lepedia(stage,controller,this));
@@ -64,8 +86,21 @@ public class ManageViews {
 	 * @author Ishika Govil 
 	 */
 	public void switchViews(String next) {
-		if(next.equals("Drawing"))
+		if(next.equals("Drawing")) {
 			((PlotDesign) this.currView).onDrawing();
+		}
+		else if(next.equals("Shape")) {
+	        //Only allows for one shape drawn at once
+			if(((PlotDesign) this.currView).shapeClicked == false) {
+				((PlotDesign) this.currView).onShape();
+			}
+			else {				
+				((PlotDesign) this.currView).dragAnchor = true;
+				((PlotDesign) this.currView).toggleAnchorHandler();
+			}
+			((PlotDesign) this.currView).validateSave();
+			((PlotDesign) this.currView).shapeClicked = true;
+		}
 		else
 			this.currView = this.getView(next);
 	}
@@ -91,7 +126,29 @@ public class ManageViews {
 	public int getScreenHeight() {
 		return this.currView.screenHeight;
 	}
+	/** 
+	 * Returns the garden width associated with the current View
+	 * @return int 
+	 */
+	public double getGardenWidth() {
+		return this.currView.gardenWidth;
+	}
+	/** 
+	 * Returns the garden height associated with the current View
+	 * @return int 
+	 */
+	public double getGardenHeight() {
+		return this.currView.gardenHeight;
+	}
 	
+	/** 
+	 * Returns the top left corner of the garden view frame
+	 * @return int 
+	 */
+	public double[] getGardenTopLeft() {
+		return new double[]{this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY};
+	}
+
 	/** 
 	 * Returns the GraphicsContext associated with the current View
 	 * @return GraphicsContext 
@@ -115,7 +172,6 @@ public class ManageViews {
 	 * @param WritableImage  
 	 */
 	public void setImage(WritableImage img) {
-		this.img = new WritableImage(200,200);
 		this.img = img;
 	}
 	
@@ -136,11 +192,32 @@ public class ManageViews {
 		this.currView.changeCursor(hand);
 	}
 	
+	// restart the plot, clear all lines so user can draw a new garden design
+	public void restartPlot() {
+		initializeViews();
+		this.dimLen = new ArrayList<>(); 
+		this.currView = this.views.get("PlotDesign");
+	}
+	
+	public void removePlant(Node node) {
+		views.get("GardenDesign").removePlant(node);
+	}
+	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
+		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
+	}
+	public void validateSave() {
+		if(this.currView instanceof PlotDesign)
+			((PlotDesign) this.currView).validateSave();
+	}
+	
+	//methods only used by garden design
 	public void setY(double y, Node n){currView.setY(y, n);}
 	public void setX(double x, Node n){currView.setX(x, n);}
-	//Used only in gardenDesig. In here because need to called by controller
-	public void addImageView(double x, double y, boolean startingInTile, String key) {currView.addImageView(x, y, startingInTile, key);}
-	public void removePlant(Node n) {currView.removePlant(n);}
+	public void addImageView(double x, double y, String key, double heightWidth) {
+		((GardenDesign) views.get("GardenDesign")).addImageView(x,y,key,heightWidth);
+//		currView.addImageView(x, y, key);
+	}
+//	public void removePlant(Node n) {currView.removePlant(n);}
 	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
 	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
 }

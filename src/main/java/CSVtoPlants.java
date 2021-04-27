@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class CSVtoPlants {
 
@@ -11,11 +13,14 @@ public class CSVtoPlants {
         String speciesName;
         String genusName;
         String commonName;
-        String description;
         String tempWoody;
         int cost;
         boolean isWoody;
-        String imgUrl;
+        int spread;
+        int leps;
+        int lightReq;
+        int soilReq;
+        int moistReq;
 		
 		try {
 		    BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -26,9 +31,9 @@ public class CSVtoPlants {
                 genusName = parts[0];
                 speciesName = parts[1];
                 commonName = parts[2];
-                description = parts[3];
-                imgUrl = parts[4];
-                tempWoody = parts[7];
+                spread = Integer.parseInt(parts[3]);
+                leps = Integer.parseInt(parts[4]);
+                tempWoody = parts[5];
                 if (tempWoody.equals("h")) {
                     cost = 6;
                     isWoody = false;
@@ -36,8 +41,12 @@ public class CSVtoPlants {
                     cost = 20;
                     isWoody = true;
                 }
-                PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, description, 5, 5, cost, 0, isWoody); //create object
-                listPlants.put(genusName + " " + speciesName, newData);     // key by genus + species
+                lightReq = Integer.parseInt(parts[6]);
+                soilReq = Integer.parseInt(parts[7]);
+                moistReq = Integer.parseInt(parts[8]);
+
+                PlantSpecies newData = new PlantSpecies(speciesName, genusName, commonName, spread, leps, cost, isWoody, lightReq, soilReq, moistReq); //create object
+                listPlants.put(genusName + "-" + speciesName, newData);     // key by genus-species
             }            
             reader.close();   
 		}
@@ -48,11 +57,13 @@ public class CSVtoPlants {
 		return listPlants;
 	}
 
-    public static Map<String, String> readFileForImg(String fileName) {
-		Map<String, String> plantImg = new HashMap<>();
+    public static Map<String, ImageView> readFileForImg(String fileName) {
+		Map<String, ImageView> plantImg = new HashMap<>();
         
-        String genusName, speciesName, commonName;
-        String imgUrl;
+        String genusName, speciesName;
+        String imgSrc, filePath;
+        
+        System.out.println("beginning images");
 		
 		try {
 		    BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -62,9 +73,18 @@ public class CSVtoPlants {
                 String[] parts = line.split(","); // separate the line by comma
                 genusName = parts[0];
                 speciesName = parts[1];
-                commonName = parts[2];
-                imgUrl = parts[4];
-                plantImg.put(genusName + " " + speciesName, imgUrl);                // key by genus + species
+                imgSrc = genusName + "-" + speciesName + ".png";		// file name ex: Justicia-americana.png
+                filePath = "plantimg/" + imgSrc;
+                //System.out.println(filePath);
+                Image img = new Image(filePath);    // file path to get image names; change if different file path
+                //System.out.println("fetching images");
+                ImageView imv = new ImageView();
+                imv.setImage(img);
+                imv.setFitWidth(100);                       // resizing to be 100 x 100px; can change value
+                imv.setPreserveRatio(true);
+                imv.setSmooth(true);
+                imv.setCache(true);
+                plantImg.put(genusName + "-" + speciesName, imv);   // key: genusName-speciesName
             }            
             reader.close();   
 		}
@@ -78,7 +98,7 @@ public class CSVtoPlants {
     // debugging; guaranteeing working
     
     public static void main(String[] args) {
-        Map<String, String> plantImg = readFileForImg("../resources/testdata.csv");
+        Map<String, ImageView> plantImg = readFileForImg("../resources/finalPlantListWithInfo.csv");
 
         /*for (String p : plantDir.keySet()) {
             String key = p;
@@ -87,7 +107,7 @@ public class CSVtoPlants {
         }*/
         for (String p : plantImg.keySet()) {
             String key = p;
-            String img = plantImg.get(p);
+            ImageView img = plantImg.get(p);
             System.out.println(key + " " + img);
         }
     }

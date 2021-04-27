@@ -1,14 +1,20 @@
 import javafx.event.EventHandler;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Map;
-
 import javafx.application.Application;
 
 /**
@@ -17,11 +23,12 @@ import javafx.application.Application;
 public class Controller extends Application {
 	private final boolean DEBUG = true;
 	ManageViews view;
-	String fileName = "../resources/testdata.csv";
+	// reading plant information
+	String plantFile = "src/main/resources/finalPlantListWithInfo.csv";
+	// reading lep information
+	String lepFile = "src/main/resources/finalLepList.csv";
 	Model model;
 	Stage stage;
-	double x1;
-	double y1;
 	
 	/** 
 	 * Override for the Application start method. Instantiates all fields
@@ -31,10 +38,12 @@ public class Controller extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.model = new Model();
-		this.model.setPlantDirectory(CSVtoPlants.readFile(fileName));
-		this.model.setLepDirectory(CSVtoLeps.readFile(fileName));
+		System.out.println("setting plant directory");
+		this.model.setPlantDirectory(CSVtoPlants.readFile(plantFile));
+		System.out.println("setting lep directory");
+		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
 		this.stage = stage;
-	    view = new ManageViews(stage,this, fileName);
+	    view = new ManageViews(stage,this, plantFile, lepFile);
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
@@ -46,6 +55,7 @@ public class Controller extends Application {
 	 */
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
+		this.stage.setFullScreen(true);
 		this.stage.show();
 	}
 	public static void main(String[] args) {
@@ -59,9 +69,7 @@ public class Controller extends Application {
 	 * @author Ishika Govil 
 	 */
 	public EventHandler<ActionEvent> getHandlerforClicked(String next) { 
-		return (e) -> {
-			switchViews(next);
-		};
+		return (e) -> { switchViews(next); };
 	}
 	
 	/** 
@@ -82,11 +90,27 @@ public class Controller extends Application {
 		return (e) -> { view.onChangeCursor(false);  };
 
 	}
-	
-	public ChangeListener<Number> onSliderChanged(String sliderType) { //When user changes the conditions slider, this method which updates Model (based on which slider was changed)
-		return null;
+	/** 
+	 * Calls anchoring when the anchor is dragged on the polygon
+	 * @param EventHandler<MouseEvent>
+	 * @param Anchor
+	 * @param Polygon
+	 * @param boolean dragAnchor describing whether anchor is draggable
+	 * @param DoubleProperty x describing x position
+	 * @param DoubleProperty y describing y position
+	 * @param int index of anchor
+	 * @return EventHandler<MouseEvent>
+	 * @author Ishika Govil 
+	 */
+	public EventHandler<MouseEvent> getHandlerforAnchor(Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
+		return (e) -> { anchoring(e, anchor, dragAnchor, x, y, poly, idx); };
 	}
-	
+	/**
+	 * Calls pressed when mouse is pressed
+	 * @param key the plant that is pressed
+	 * @return EventHandler<MouseEvent>
+	 * @author Arunima Dey
+	 */
 	public EventHandler<MouseEvent> getHandlerforPressed(String key){
 		return (e) -> { pressed(e,key); };
 	}
@@ -109,14 +133,31 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforDrawing(boolean isPressed) {
 		return (e) -> {  draw(e, isPressed); };
 	}
+	/**
+	 * Calls drawBreak when the user lifts the mouse when freedrawing plot
+	 * @param EventHandler<MouseEvent>
+	 */
+	public EventHandler<MouseEvent> getHandlerforDrawBreak() {
+		return (e) -> {  drawBreak(); };
+	}
 	
 	/** 
 	 * Calls drag when mouse is released
+	 * @param String key
+	 * @param boolean startingInTile
 	 * @return EventHandler<MouseEvent>
-	 * @author Ishika Govil 
 	 */
 	public EventHandler<MouseEvent> getHandlerforReleased(String key, Boolean startingInTile) {
 		return (e) -> { release(e,key,startingInTile);  };
+	}
+	
+	/**
+	 * Calls entered when mouse is entered
+	 * @param String key
+	 * @return EventHandler<MouseDragEvent>
+	 */
+	public EventHandler<MouseDragEvent> getHandlerforMouseEntered(String key){
+		return (e) -> { entered(e,key); };
 	}
 	
 	/** 
@@ -128,18 +169,76 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforSettingDimension(boolean isPressed) {
 		return (e) -> {  settingDimensionLine(e, isPressed); };
 	}
-
-
-	
-	public void draggedOver(MouseEvent event, Boolean startedInTile) {
-		Node n = (Node) event.getSource();
-		System.out.println("in thr draggedOver method");
-		if(!startedInTile) {
-			view.removePlant(n);
-		}
-
+		
+	/**
+	 * Creates a handler for setting the user's mode in Model
+	 * @param mode the mode to set to after handler is called
+	 * @return the associated handler
+	 * @author Jinay Jain
+	 */
+	public EventHandler<ActionEvent> getHandlerforModeSetter(UserMode mode) {
+		return (e) -> { 
+			this.model.setMode(mode); 
+		};
 	}
 	
+	/**
+	 * Creates handler for conditions canvas clicked
+	 * @return the associated canvas click handler
+	 * @author Jinay Jain
+	 */
+	public EventHandler<MouseEvent> getConditionsClickHandler(Canvas canvas) {
+		return (e) -> {
+			UserMode mode = this.model.getMode();
+			if(mode == UserMode.SETTING_CONDITIONS) {
+				fillRegion(canvas, e);
+			} else if(mode == UserMode.PARTITIONING) {
+				draw(e, true);
+			}
+		};
+	}
+	
+	/**
+	 * Creates a handler to set the soil type
+	 * @param newType the new soil type to set to
+	 * @return the associated action handler
+	 * @author Jinay Jain
+	 */
+	public EventHandler<ActionEvent> getConditionsSoilHandler(SoilType newType) {
+		return (e) -> { this.model.getCurrentConditions().setSoilType(newType); };
+	}
+	
+	/**
+	 * Updates the value of current sunlight/moisture levels when setting garden conditions
+	 * @param moistureLevel the new moisture level
+	 * @param sunlight the new sunlight level
+	 * @author Jinay Jain
+	 */
+	public void updateConditionSlider(int moistureLevel, int sunlight) {
+		this.model.getCurrentConditions().setMoistureLevel(moistureLevel);
+		this.model.getCurrentConditions().setSunlight(sunlight);
+	}	
+	
+	/**
+	 * Updates the budget based on the String in a TextField
+	 * @param budgetString the String with the user's budget input
+	 * @author Jinay Jain
+	 */
+	public void updateBudget(String budgetString) {
+		try {
+			int newBudget = Integer.parseInt(budgetString);
+			this.model.setBudget(newBudget);
+		} catch(Exception e) {
+			
+		}
+	}
+	
+	/**
+	 * Controls the event when mouse is pressed on a plant imageView
+	 * Displays name and information of that plant in garden design screen
+	 * @param event the mouse event
+	 * @param key the plant that was pressed
+	 */
 	public void pressed(MouseEvent event, String key) {
 		Node n = (Node) event.getSource();
 		n.setMouseTransparent(true);
@@ -150,9 +249,13 @@ public class Controller extends Application {
 			view.makeInfoPane(name,description);
 		}
 		event.setDragDetect(true);
-		
 	}
 	
+	/**
+	 * Controls the drag event. Moves the imageView with mouse and gives that x and y to model
+	 * @param event
+	 * @author Arunima Dey
+	 */
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
 		if (!DEBUG) {
@@ -166,27 +269,50 @@ public class Controller extends Application {
 		event.setDragDetect(false);
 	}
 	
-	//TODO: check if it has left the upperBound of the tilePane so then it can be placed
-	//Also check if it has entered compared then do the compare. 
-	//TODO: Add String param so a placedPlant can be created if in the garden if in compare then get plant info
-	//TODO: Add String param for addImageView so view knows which image to use for making the ImageView
+	/**
+	 * Controls the release event. When drag starts in tilepane adds a new imageView of the same plant to the center pane 
+	 * @param event the mouseevent
+	 * @param name the name or key of the plant being released
+	 * @param startingInTile boolean to inform if drag started in tile pane
+	 * @author Arunima Dey
+	 */
 	public void release(MouseEvent event, String name, Boolean startingInTile) {
 		System.out.println("released");
 		Node n = (Node)event.getSource();
 		n.setMouseTransparent(false);
-//		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
-//		model.setY(model.getY() + event.getY());
-		view.setX(n.getLayoutX(),n);
-		view.setY(n.getLayoutY(),n);
-		view.addImageView(event.getSceneX(),event.getSceneY() , DEBUG, name);
+		if(startingInTile) {
+			view.setX(0,n);
+			view.setY(0, n);
+//			view.setX(n.getLayoutX(),n);
+//			view.setY(n.getLayoutY(),n);
+			PlantSpecies plant = model.plantDirectory.get(name);
+			double heightWidth = scalePlantSpread(plant);
+			((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
+		}
 		
-//		view.addImageView(model.getX(), model.getY(), true);
 		if(startingInTile) {
 			model.placePlant(model.getX(), model.getY(), name);
 			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
 	}
 	
+	public void entered(MouseDragEvent event, String key) {
+		System.out.println(key);
+		view.removePlant((Node) event.getGestureSource());
+		model.removePlant(getStartingX(), getStartingY(), key);
+		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+		
+	}
+	
+	/**
+	 * The spread of a plant is calculated using the lengthPerPixel and spread of the plant
+	 * @param PlantSpecies plant
+	 * @return double representing the number of pixels of the radius of the plant
+	 */
+	public double scalePlantSpread(PlantSpecies plant) {
+		double numPixels = plant.getSpreadRadius() / this.model.lengthPerPixel;
+		return numPixels;
+	}
 	/** 
 	 * Called when user is drawing. 
 	 * Updates the canvas of the relevant view and calls updateOutlineSection in model to pass boundary coordinates
@@ -199,8 +325,132 @@ public class Controller extends Application {
 			 this.view.getGC().beginPath();
 		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
 		 this.view.getGC().stroke();
-		 this.model.updateOutlineSection(event.getSceneX(), event.getSceneY());
+		 this.model.getGarden().updateOutline(event.getSceneX(), event.getSceneY());
+		 this.view.validateSave();
 	}
+	/**
+	 * When user lifts their mouse upon drawing the plot boundary, it adds a (-1, -1) point to the outline 
+	 */
+	public void drawBreak() {
+		this.model.getGarden().updateOutline(-1,-1);
+	}
+	
+	/** Sets the new coordinates of the anchor of the relevant anchor of the polygon after user drags it
+	 * @param EventHandler<MouseEvent>
+	 * @param Anchor
+	 * @param Polygon
+	 * @param boolean dragAnchor describing whether anchor is draggable
+	 * @param DoubleProperty x describing x position
+	 * @param DoubleProperty y describing y position
+	 * @param int index of anchor
+	 * @author Ishika Govil 
+	 */
+	public void anchoring(MouseEvent event, Anchor anchor, boolean dragAnchor, DoubleProperty x, DoubleProperty y, Polygon poly, int idx) {
+		if(dragAnchor) {
+    		anchor.setCenterX(event.getX());           
+    		anchor.setCenterY(event.getY());    
+    		poly.getPoints().set(idx, x.get());
+    		poly.getPoints().set(idx + 1, y.get());
+    	}
+	}
+	
+	/**
+	 * When user hits clear on the polygon boundary, polygonCorners ArrayList in the Garden is reset
+	 */
+	public void restartPolygonBoundary() {
+		this.model.getGarden().polygonCorners = new ArrayList<double[]>();
+	}
+	
+	/**
+	 * When the user saves the boundary, if they have drawn a polygon, it saves the corners of the polygon
+	 * @param Polygon drawn by user
+	 * @author Ishika Govil
+	 */
+	public void enterPolygonBoundary(Polygon poly) {
+		for(int i = 0; i < poly.getPoints().size(); i+= 2) {
+			DoubleProperty x = new SimpleDoubleProperty(poly.getPoints().get(i));
+            DoubleProperty y = new SimpleDoubleProperty(poly.getPoints().get(i + 1));
+			this.model.getGarden().setPolygonCorners(x.get(), y.get());
+		}
+	}
+	
+	/**
+	 * Iterates over the boundary ArrayLists in Garden to draw plot to screen.
+	 * Calls iteratePlot() to translate and scale the plot
+	 * @param double scale 
+	 * @author Ishika Govil
+	 */
+	public void drawPlot(double scale) {
+		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
+		iteratePlot(itr, model.getGarden().outline, false, scale);
+		itr = model.getGarden().polygonCorners.listIterator();
+		iteratePlot(itr, model.getGarden().polygonCorners, true, scale);
+	}
+	
+	/**
+	 * Iterates over just the freehand portion outline ArrayList in Garden
+	 * @param double scale
+	 * @author Ishika Govil
+	 */
+	public void drawFreehandPart(double scale) {
+		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
+		iteratePlot(itr, model.getGarden().outline, false, scale);
+	}
+	
+	public void drawToCanvas(Canvas canvas) {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+		ArrayList<double[]> points = this.model.getGarden().getOutline();
+		ArrayList<Conditions> conds = this.model.getGarden().getSections();
+		points.addAll(this.model.getGarden().getPolygonCorners());
+		
+		View.drawOnCanvas(canvas, points, extrema, conds);
+	}
+	
+	/**
+	 * Scales and translates all the points onto the screen by calling drawLine in View
+	 * @param Iterator itr
+	 * @param ArrayList representing which plot boundary list, outline or polygonCorners
+	 * @param boolean isPolygon representing if the boundary is a polygon
+	 * @param double scale 
+	 * @author Ishika Govil
+	 */
+	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list, boolean isPolygon, double scale) {
+		double[] translate;
+		if(scale == 1)
+			translate = new double[] {0, 0};
+		else
+			translate = this.model.translateScaledPlot(this.view.getGardenTopLeft());		
+		while(itr.hasNext()) {
+			double[] point1 = (double[])itr.next();
+			double[] point2;
+			if(itr.hasNext())
+				point2 = list.get(itr.nextIndex());	
+			else if(isPolygon)
+				point2 = list.get(0);
+			else 
+				return;
+			if(point2[0] != -1 && point1[0]!= -1)
+				this.view.drawLine(point1[0]*scale + translate[0], point1[1]*scale + translate[1], point2[0]*scale + translate[0], point2[1]*scale + translate[1], isPolygon);
+		}
+	}
+	
+	/**
+	 * Using the extreme x and y coordinates, the pixel lengths of the maximum minus minimum are determined.
+	 * Then, these lengths are divided by desired lengths to determine scale.
+	 * The minimum is used as the scale and drawPlot is called
+	 * @author Ishika Govil
+	 */
+	public void scalePlot() {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+		double scaleY = this.view.getGardenHeight() / Math.abs(extrema.get(0)[1] -  extrema.get(2)[1]);
+		double scaleX = this.view.getGardenWidth() / Math.abs(extrema.get(1)[0] -  extrema.get(3)[0]);
+		double scale =  Math.min(scaleX, scaleY);
+		this.model.setScale(scale);
+		drawPlot(scale);
+	}
+	
+	
+	
 	
 	/** 
 	 * Called when user is drawing. 
@@ -218,7 +468,7 @@ public class Controller extends Application {
 		//Get pixel information
 		double[] arr = {event.getSceneX(),event.getSceneY()};
 		this.view.dimLen.add(arr);
-		this.view.dimPixel = Math.sqrt(Math.pow((view.dimLen.get(view.dimLen.size()-1)[1] - view.dimLen.get(0)[1] ),2) + Math.pow((view.dimLen.get(view.dimLen.size()-1)[0]  - view.dimLen.get(0)[0] ),2) );
+		this.view.dimPixel = this.model.calculateLineDistance(view.dimLen.get(view.dimLen.size()-1)[0], view.dimLen.get(0)[0], view.dimLen.get(view.dimLen.size()-1)[1], view.dimLen.get(0)[1]);
 	}
 	
 	/** 
@@ -229,11 +479,14 @@ public class Controller extends Application {
 	 */
 	public void settingLength(double length) {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
-
 	}
 	
 	public Map<String, Lep> getLepInfo() {
 		return this.model.getLepDirectory();
+	}
+	
+	public Map<String, PlantSpecies> getPlantInfo() {
+		return this.model.getPlantInfo();
 	}
 	
 	/** 
@@ -246,12 +499,23 @@ public class Controller extends Application {
 		 //Clears the canvas the user was drawing on. Also clears the ArrayList corresponding to the coordinates of the plot boundary
 		 if(next.equals("Clear")) {
 			 this.view.getGC().clearRect(0, 0,this.view.getScreenWidth(), this.view.getScreenHeight());
-			 this.model.getGarden().outline = new ArrayList<double[]>(); 
+			 this.model.getGarden().clearOutline();
 		 }
 		 //Clears only the lines drawn after setting dimension. Also clears the ArrayList corresponding to the coordinates of the line
 		 else if(next.equals("ClearDim")) {
 			 this.view.getGC().drawImage(this.view.img, 0, 0);  
 			 this.view.dimLen = new ArrayList<>();
+		 } 
+		 else if(next.equals("Restart")) {
+			 this.model.getGarden().outline = new ArrayList<double[]>(); 
+			 this.view.restartPlot();
+			 setTheStage();
+		 }
+		 else if(next.equals("ConditionScreen")) {
+			 if(this.model.lengthPerPixel!= -1 && this.view.dimPixel != -1) {
+				 this.view.switchViews(next);
+				 setTheStage();
+			 }
 		 }
 		 else {
 			 this.view.switchViews(next);
@@ -259,31 +523,38 @@ public class Controller extends Application {
 		 }
 	}
 	
-	//Used to set the initial budget in the garden design screen
+	/**
+	 * Gets the initial budget set by user to be displayed in garden design screen
+	 * @return the budget
+	 */
 	public int getBudget() {
 		return model.getBudget();
 	}
 
-	
-	//Methods used when user is designing new plot and inputting conditions
-	public void onSectioning() {} //Called in drag(), model calls updateOutlineSection and view is updated 
-	public void displayConditionsOptions() {} //Called in release() to update the view with conditions (changeCursor called with false)
-	
-	//Methods used when user is designing their garden
-	public void displayValidPlantLocation() {} ///Called in drag(), if it is not validated in Model, it tells the view and colors plant red. Otherwise plant is green
-	public void onPlantRelease() {} //placePlant() is called in model and updated cost/leps are returned. view is created to show that plant and updates Basket		
-	
-	//Methods that provide other feedback when buttons are pressed
-	public void downloadGarden() {} //Called in getHandlerforClicked if download is pressed. gets info from model, puts it in a pdf, downloads it to computer
-	public void toolClicked(MouseEvent event, Image img) {} //Called in getHandlerforClicked if a tool is clicked. changes cursor to image
-	public void getCompostInfo() {} //Called in getHandlerforClicked if compost bin clicked, which gets info about deleted plants and sends to View
+	private void fillRegion(Canvas canvas, MouseEvent e) {
+		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
 
-	//Helpers
-	public ArrayList<float[]> getBoundaries() {return null;} //Gets boundaries of garden and sends to View when rendering the ConditionScreen
-	public void getRecommendedPlants() {} //when designGarden is called, this method is also called to initialize the optimal garden (calls createDefault in model)
-	public void loadGarden() {} // takes garden information stored in Model and renders GardenDesign 
+		double minX = extrema.get(3)[0];
+		double maxX = extrema.get(1)[0];
+		double minY = extrema.get(0)[1];
+		double maxY = extrema.get(2)[1];
 
+		double scale = View.findScale(minX, maxX, minY, maxY, canvas.getWidth(), canvas.getHeight());
+		double newX = (e.getX() / scale) + minX;
+		double newY = (e.getY() / scale) + minY;
+
+		Conditions curr = this.model.getCurrentConditions();
+		Conditions conditions = new Conditions(curr.getSoilType(), curr.getMoistureLevel(), curr.getSunlight());
+		
+		conditions.setX(newX);
+		conditions.setY(newY);
+		
+		this.model.getGarden().addSection(conditions);
+		this.drawToCanvas(canvas);
+	}
+	
 	
 	public double getStartingX() {return model.getX();}
-	public double getStartingY() {return model.getY();}	
+	public double getStartingY() {return model.getY();}
+
 }
