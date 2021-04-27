@@ -172,8 +172,9 @@ public class Summary extends View {
 		canvas.widthProperty().bind(gardenDesign.widthProperty());
 		canvas.heightProperty().bind(gardenDesign.heightProperty());
 	
-		canvas.widthProperty().addListener(e -> manageView.redrawImage());
-		canvas.heightProperty().addListener(e -> manageView.redrawImage());
+		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
+		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
+
 		return gardenDesign;
 	}
 }
