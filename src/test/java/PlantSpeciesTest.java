@@ -4,130 +4,96 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class PlantSpeciesTest {
-	
-	private PlantSpecies ps;
+	PlantSpecies ps, ps2, ps3;
+
 	
 	@BeforeEach
-	void init() {
-		ps = new PlantSpecies();
+	void beforeEach() {
+		ps = new PlantSpecies("a", "a", "c", 1, 2, 3, false, -1, -1, -1);
+		ps2 = new PlantSpecies("a", "a", "c", 1, 2, 3, true, -1, -1, -1);
 	}
 	
-
 	@Test
-	void testPlantSpeciesDefaultConstructor() {
-		PlantSpecies ps = new PlantSpecies();
-		fail("Not yet implemented");
+	void testConstructors() {
+		ps3 = new PlantSpecies();
+		
+		for(int i = 0; i < 10; i++) { 
+			for(int j = 0; j < 10; j++) { 
+				for(int k = 0; k < 10; k++) { 
+					ps3 = new PlantSpecies("a", "b", "c", 1, 2, 3, true, i, j, k);
+				}
+			}
+		}
+	}
+	
+	@Test
+	void testSoilType() {
+		assertEquals(ps.getSoilType(), SoilType.ANY);
 	}
 
 	@Test
-	void testPlantSpeciesParameterConstructor() {
-		PlantSpecies ps = new PlantSpecies("Pinaceae","Pinus","Pine", 100, 5, 20, true, 5, 5, 5);
-		fail("Not yet implemented");
+	void testMoistureType() {
+		assertEquals(ps.getMoistureType(), MoistureType.ANY);
 	}
 
 	@Test
-	void testCompareTo() {
-		assertEquals(ps.compareTo(null), 20);
-		fail("Not yet implemented");
+	void testLightType() {
+		assertEquals(ps.getLightType(), LightType.ANY);
+	}
+	
+	@Test
+	void testDescription() {
+		ps.setDescription();
+		assertEquals(ps.getDescription(), "Also known as c\nThis herbaceous plant attracts a total of 2 leps.");
+		ps.setDescription("a");
+		assertEquals(ps.getDescription(), "a");
 	}
 
 	@Test
-	void testGetSpeciesName() {
-		assertEquals(ps.getSpeciesName(), "fail");
+	void testCommonName() {
+		ps.setCommonName("a");
+		assertEquals(ps.getCommonName(), "a");
 	}
 
 	@Test
-	void testSetSpeciesName() {
-		ps.setSpeciesName(null);
-		fail("Not yet implemented");
+	void testSpeciesName() {
+		ps.setSpeciesName("a");
+		assertEquals(ps.getSpeciesName(), "a");
 	}
 
 	@Test
-	void testGetGenusName() {
-		assertEquals(ps.getGenusName(), "fail");
+	void testGenusName() {
+		ps.setGenusName("a");
+		assertEquals(ps.getGenusName(), "a");
 	}
 
 	@Test
-	void testSetGenusName() {
-		ps.setGenusName(null);
-		fail("Not yet implemented");
+	void testSpreadRadius() {
+		ps.setSpreadRadius(5);
+		assertEquals(ps.getSpreadRadius(), 5);
 	}
-
-	@Test
-	void testGetCommonName() {
-		assertEquals(ps.getCommonName(), "fail");
+	
+	
+	@Test 
+	void testLeps() {
+		ps.setLepsSupported(5);
+		assertEquals(ps.getLepsSupported(), 5);
 	}
-
+	
 	@Test
-	void testSetCommonName() {
-		ps.setCommonName(null);
-		fail("Not yet implemented");
+	void testCost() {
+		ps.setCost(30);
+		assertEquals(ps.getCost(), 30);
 	}
-
+	
 	@Test
-	void testGetDescription() {
-		assertEquals(ps.getDescription(), "fail");
-	}
-
-	@Test
-	void testSetDescription() {
-		ps.setDescription(null);
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testGetSpreadRadius() {
-		assertEquals(ps.getSpreadRadius(), -1);
-	}
-
-	@Test
-	void testSetSpreadRadius() {
-		ps.setSpreadRadius(0);
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testGetLepsSupported() {
-		assertEquals(ps.getLepsSupported(), -1);
-	}
-
-	@Test
-	void testSetLepsSupported() {
-		ps.setLepsSupported(0);
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testGetCost() {
-		assertEquals(ps.getCost(), -1);
-	}
-
-	@Test
-	void testSetCost() {
-		ps.setCost(0);
-		fail("Not yet implemented");
-	}
-
-	/*@Test
-	void testGetBloomTime() {
-		assertEquals(ps.getBloomTime(), -1);
-	}
-
-	@Test
-	void testSetBloomTime() {
-		ps.setBloomTime(0);
-		fail("Not yet implemented");
-	}*/
-
-	@Test
-	void testIsWoody() {
+	void testWoody() {
+		ps.setWoody(false);
 		assertEquals(ps.isWoody(), false);
 	}
-
+	
 	@Test
-	void testSetWoody() {
-		ps.setWoody(true);
-		fail("Not yet implemented");
+	void testToString() {
+		assertEquals(ps.toString(), ps.getCommonName());
 	}
-
 }
