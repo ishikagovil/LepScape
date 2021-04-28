@@ -106,16 +106,13 @@ public abstract class View{
 		else
 			stage.getScene().setCursor(this.flowerCursor);
 	} 
-<<<<<<< HEAD
-	
-=======
+
 	/**
 	 * Adds a button with the correct size and actions
 	 * @param String text representing text to be displayed on the Button
 	 * @param String next representing the action the button performs when clicked
 	 * @return Button
 	 */
->>>>>>> c22161822afa58b8bfed021066e67d4975ec522e
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
 		b.setPrefSize(buttonWidth, buttonHeight);
@@ -150,12 +147,10 @@ public abstract class View{
 			freeLines.add(line);
 	}
 	
-<<<<<<< HEAD
-=======
+
 	/**
 	 * Removes all the lines drawn using the drawLine() method
 	 */
->>>>>>> c22161822afa58b8bfed021066e67d4975ec522e
 	public void removeLines() {
 			border.getChildren().removeAll(polygonLines);
 			polygonLines = new ArrayList<>();

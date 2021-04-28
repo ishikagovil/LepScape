@@ -625,6 +625,9 @@ public class Controller extends Application {
 		 //Clears the canvas the user was drawing on. Also clears the ArrayList corresponding to the coordinates of the plot boundary
 		 if(next.equals("Clear")) {
 			 this.model.getGarden().clearOutline();
+			 this.view.views.remove("ConditionScreen");
+			 this.view.views.put("ConditionScreen", new ConditionScreen(stage,this,this.view));
+			 this.model.getGarden().sections = new ArrayList<Conditions>();
 		 }
 		 //Clears only the lines drawn after setting dimension. Also clears the ArrayList corresponding to the coordinates of the line
 		 else if(next.equals("ClearDim")) {
