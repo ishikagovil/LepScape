@@ -5,16 +5,16 @@ import javafx.scene.paint.Color;
 //as well as the x,y coordinates of thee outline of that region
 public class Conditions {
 	private SoilType soilType;
-	private int moistureLevel;
-	private int sunlight;
+	private MoistureType moistureType;
+	private LightType sunlightType;
 	
 	private double x, y;
 	
 	//soil type, moisture level and sunlight range from 0-10
-	public Conditions(SoilType soilType, int moistureRange, int sunRange) {
+	public Conditions(SoilType soilType, MoistureType moistureType, LightType sunlightType) {
 		this.soilType = soilType;
-		this.moistureLevel = moistureRange;
-		this.sunlight = sunRange;
+		this.moistureType = moistureType;
+		this.sunlightType = sunlightType;
 	}
 	
 	//getters for attributes
@@ -24,17 +24,17 @@ public class Conditions {
 	public void setSoilType(SoilType type) {
 		this.soilType = type;
 	}
-	public int getMoistureLevel() {
-		return this.moistureLevel;
+	public MoistureType getMoistureType() {
+		return this.moistureType;
 	}
-	public void setMoistureLevel(int moistureLevel) {
-		this.moistureLevel = moistureLevel;
+	public void setMoistureType(MoistureType moistureType) {
+		this.moistureType = moistureType;
 	}
-	public int getSunlight() {
-		return this.sunlight;
+	public LightType getSunlightType() {
+		return this.sunlightType;
 	}
-	public void setSunlight(int sunlight) {
-		this.sunlight = sunlight;
+	public void setSunlightType(LightType lightType) {
+		this.sunlightType = lightType;
 	}
 	public double getX() {
 		return this.x;
@@ -51,8 +51,8 @@ public class Conditions {
 	public Color toColor() {
 		return new Color(
 			soilType.getValue(), 
-			(double) moistureLevel / 10., 
-			(double) sunlight / 10., 
+			moistureType.getValue(),
+			sunlightType.getValue(),
 			1.0);
 
 	}

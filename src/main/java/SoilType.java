@@ -1,14 +1,14 @@
 
 public enum SoilType {
 	ANY("Any", 0),
-	CLAY("Clay", 1),
-	DIRT("Dirt", 2),
-	ROCK("Rock", 3);
+	CLAY("Clay", 0.3),
+	DIRT("Dirt", 0.6),
+	ROCK("Rock", 0.9);
 	
 	private final String name;
-	private final int value;
+	private final double value;
 	
-	private SoilType(String name, int value) {
+	private SoilType(String name, double value) {
 		this.name = name;
 		this.value = value;
 	}

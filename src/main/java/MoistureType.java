@@ -1,13 +1,13 @@
 public enum MoistureType {
 	ANY("Any", 0),
-	DRY("Dry", 1),
-	MOIST("Moist", 2),
-	WET("Wet", 3);
+	DRY("Dry", 0.3),
+	MOIST("Moist", 0.6),
+	WET("Wet", 0.9);
 	
 	private final String name;
-	private final int value;
+	private final double value;
 	
-	private MoistureType(String name, int value) {
+	private MoistureType(String name, double value) {
 		this.name = name;
 		this.value = value;
 	}

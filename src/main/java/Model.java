@@ -11,7 +11,6 @@ public class Model implements java.io.Serializable{
 	public double x;
 	public double y;
 	public int lepCount;
-	private Conditions currConditions = new Conditions(SoilType.CLAY, 0, 0);
 	public String movedPlant;
 	public double initialX;
 	public double initialY;
@@ -19,9 +18,6 @@ public class Model implements java.io.Serializable{
 	public Boolean editGarden;
 	public int editGardenIndex;
 	public int budget;
-
-	
-	private UserMode mode;
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh
@@ -252,15 +248,5 @@ public class Model implements java.io.Serializable{
 		double[] translate = new double[]{translateX, translateY};
 		this.setTranslate(translate);
 		return translate;
-	}
-	
-	public UserMode getMode() {
-		return this.mode;
-	}
-	public void setMode(UserMode mode) {
-		this.mode = mode;
-	}
-	public Conditions getCurrentConditions() {
-		return this.currConditions;
 	}
 }
