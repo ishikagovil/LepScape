@@ -5,6 +5,8 @@ public enum LightType {
 	BRIGHT("Bright", 0.6),
 	INTENSE("Intense", 0.9);
 	
+	private static final double epsilon = 0.07;
+	
 	private final String name;
 	private final double value;
 	
@@ -20,6 +22,16 @@ public enum LightType {
 	
 	public double getValue() {
 		return value;
+	}
+	
+	public static LightType fromValue(double value) {
+		for(LightType type : LightType.values()) {
+			if(Math.abs(value - type.getValue()) <= epsilon) {
+				return type;
+			}
+		}
+		
+		return LightType.ANY;
 	}
 	
 	
