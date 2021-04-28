@@ -1,4 +1,4 @@
-public class PlantSpecies implements Comparable<PlantSpecies> {
+public class PlantSpecies {
 	private String speciesName;
 	private String genusName;
 	private String commonName;
@@ -113,9 +113,9 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 		this.description = desc;
 	}
 	
-	public int compareTo(PlantSpecies other) {
-		return 0;
-	}
+//	public int compareTo(PlantSpecies other) {
+//		return 0;
+//	}
 	
 	public String getSpeciesName() {
 		return speciesName;

@@ -72,6 +72,8 @@ public class Lepedia extends View {
 	    Map<String, Lep> info = controller.getLepInfo();
 	    Map<String, ImageView> lepImages = manageView.getLepImages();
 	    Iterator plantIter = plants.iterator();
+	    
+	    ArrayList<Lep> lepsInGarden = new ArrayList<>();
 	    Iterator lepIter = info.entrySet().iterator();
 	    
 	    while(lepIter.hasNext()) {
@@ -80,16 +82,22 @@ public class Lepedia extends View {
 	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
 	    	System.out.println(thrivesIn);
 	    	for (PlacedPlant plant: plants) {
-	    		String genusName = plant.getSpecies().getGenusName();
-	    		System.out.println(genusName);
+	    		String genus = plant.getSpecies().getGenusName();
+	    		System.out.println(genus);
 	    		for (String genusReqs: thrivesIn) {
 	    			System.out.println(genusReqs);
-	    			if (genusName.equals(genusReqs)) {
-	    				outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
-	    				outerTile.setTileAlignment(Pos.CENTER);
+	    			if (genus.equals(genusReqs)) {
+	    				if (!(lepsInGarden.contains(lepObj))) {
+	    					lepsInGarden.add(lepObj);
+	    				}
 	    			}
 	    		}
 	    	}
+	    }
+	    
+	    for (Lep lepInfo : lepsInGarden) {
+	    	outerTile.getChildren().add(getInfoTile(lepImages, lepInfo));
+			outerTile.setTileAlignment(Pos.CENTER);
 	    }
 	    
 		sp.setContent(outerTile);

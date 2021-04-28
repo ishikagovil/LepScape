@@ -64,6 +64,7 @@ public class Controller extends Application {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.setFullScreen(true);
 		this.stage.show();
+		this.stage.getScene().setOnMouseMoved(this.getHandlerforMouseExited());
 		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited());
 		this.stage.getScene().setOnMouseExited(this.getHandlerforMouseEntered());
 	}

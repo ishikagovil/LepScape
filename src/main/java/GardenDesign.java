@@ -493,9 +493,8 @@ public class GardenDesign extends View{
 		c.setPreserveRatio(true);
 		c.setFitHeight(NORMALCOMPOST);
 
-		c.setTranslateX(screenWidth/110);
-
-		c.setTranslateY((screenHeight-200)/2);
+		c.setTranslateX(screenWidth/2);
+		c.setTranslateY((screenHeight-200)/2 + 70);
 		c.setOnMouseExited(event->{
 			c.setFitHeight(NORMALCOMPOST);
 		});
@@ -636,8 +635,8 @@ public class GardenDesign extends View{
 	public void showCompostBin() {
 		c.setPreserveRatio(true);
 		c.setFitHeight(NORMALCOMPOST);
-		c.setTranslateX(screenWidth/2+50);
-		c.setTranslateY((screenHeight-200)/2);
+		c.setTranslateX(screenWidth/2);
+		c.setTranslateY((screenHeight-200)/2 + 70);
 		c.setOnMouseExited(event->{
 			c.setFitHeight(NORMALCOMPOST);
 		});
