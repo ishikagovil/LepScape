@@ -235,10 +235,12 @@ public class Controller extends Application {
 		Garden garden = model.savedGardens.get(index);
 		((GardenDesign) view.views.get("GardenDesign")).remakePane();
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
-		
+		model.scale = garden.scale;
+		model.lengthPerPixel = garden.lengthPerPixel;
 		garden.plants.forEach(plant->{
 			double heightWidth = scalePlantSpread(plant.getName());
-			((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			model.gardenMap.placedPlants.put(node, plant);
 		});
 		dialog.close();
 		model.setToEdit();
@@ -403,6 +405,8 @@ public class Controller extends Application {
 	public void summarySave(ActionEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
+		model.gardenMap.lengthPerPixel = model.lengthPerPixel;
+		model.gardenMap.scale = model.scale;
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
 		
 		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
