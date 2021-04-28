@@ -44,9 +44,12 @@ public class Lepedia extends View {
 		Button back = addNextButton("Back", "Summary");
 		border.setBottom(back);
 		border.setAlignment(back, Pos.CENTER);
+	}
 		
+		
+	public void updateLepedia() {
 		ScrollPane sp = new ScrollPane();
-		sp.setBackground(new Background(bgImg));
+		//sp.setBackground(new Background(bgImg));
 		sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);    // horizontal scroll bar
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
         sp.setFitToHeight(true);
@@ -60,17 +63,55 @@ public class Lepedia extends View {
 	    outerTile.setPrefRows(numLepImages);
 	    outerTile.setPrefColumns(1);
 	    
-	    Map<String, Lep> info = c.getLepInfo();
+	    ArrayList<PlacedPlant> plants = controller.getGarden().getPlants();
+	    Map<String, Lep> info = controller.getLepInfo();
 	    Map<String, ImageView> lepImages = manageView.getLepImages();
+	    Iterator plantIter = plants.iterator();
 	    Iterator lepIter = info.entrySet().iterator();
 	    
-	    while (lepIter.hasNext()) {
+	   /*while (plantIter.hasNext()) {
+	    	PlacedPlant plant = (PlacedPlant)plantIter.next();
+	    	String plantGenus = plant.getSpecies().getGenusName();
+		    while (lepIter.hasNext()) {
+		    	Map.Entry lepElement = (Map.Entry)lepIter.next();
+		        	Lep lepObj = (Lep)lepElement.getValue();
+		            
+		        	Iterator genusIter = lepObj.getThrivesInGenus().iterator();
+		        	while (genusIter.hasNext()) {
+		        		String lepGenus = (String)genusIter.next();
+		        		if (lepGenus.equals(plantGenus)) {
+		        			outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
+		            	}
+		            }
+		    	}
+		    outerTile.setTileAlignment(Pos.CENTER);
+	    }*/
+	    
+	    while(lepIter.hasNext()) {
+	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
+	    	Lep lepObj = (Lep)lepElement.getValue();
+	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
+	    	System.out.println(thrivesIn);
+	    	for (PlacedPlant plant: plants) {
+	    		String genusName = plant.getSpecies().getGenusName();
+	    		System.out.println(genusName);
+	    		for (String genusReqs: thrivesIn) {
+	    			System.out.println(genusReqs);
+	    			if (genusName.equals(genusReqs)) {
+	    				outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
+	    				outerTile.setTileAlignment(Pos.CENTER);
+	    			}
+	    		}
+	    	}
+	    }
+		    
+	    /*while (lepIter.hasNext()) {
 	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
             Lep lepObj = (Lep)lepElement.getValue();
             //outerTile.setPrefWidth(screenWidth);
             outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
             outerTile.setTileAlignment(Pos.CENTER);
-	    }
+	    }*/
 	    
 		sp.setContent(outerTile);
 	    border.setCenter(sp);

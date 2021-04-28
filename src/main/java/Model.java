@@ -104,6 +104,7 @@ public class Model implements java.io.Serializable{
 	public void placePlant(double x, double y, String key, String nodeId) {
 		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
+		gardenMap.plants.add(new PlacedPlant(x,y,specie));
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
  		System.out.println("plants: "+gardenMap.placedPlants);
 //		gardenMap.addToGarden(new PlacedPlant(x,y,specie));

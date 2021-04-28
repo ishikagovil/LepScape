@@ -655,6 +655,10 @@ public class Controller extends Application {
 	public double getBudget() {
 		return model.getBudget();
 	}
+	
+	public Garden getGarden() {
+		return this.model.getGarden();
+	}
 
 	private void fillRegion(Canvas canvas, MouseEvent e) {
 		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
