@@ -1,9 +1,14 @@
+import java.awt.image.BufferedImage;
 import java.util.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class ManageViews {
@@ -16,7 +21,9 @@ public class ManageViews {
 	Stage stage;
 	public Map<String, ImageView> plantImages;
 	public Map<String, ImageView> lepImages;
-	
+	public Pane sp;
+	public WritableImage savedImg;
+
 	/**
 	 * @author Ishika Govil
 	 */
@@ -34,6 +41,7 @@ public class ManageViews {
 		dimPixel = -1;
 		this.controller = c;
 	    this.stage = stage;
+	    this.sp = new Pane();
 		initializeViews();
 	    this.currView = this.getView("Start");
 	}
@@ -99,6 +107,34 @@ public class ManageViews {
 		}
 		else
 			this.currView = this.getView(next);
+	}
+	
+	//for the next 2 methods
+	//https://stackoverflow.com/questions/33074774/javafx-image-serialization
+	public int[][] makeData() {
+		int width = (int)savedImg.getWidth();
+		int height = (int) savedImg.getHeight();
+		int[][] data = new int[width][height];
+		PixelReader r = savedImg.getPixelReader();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                data[i][j] = r.getArgb(i, j);
+            }
+        }
+        return data;
+	}
+	
+	public void makeImage(int width, int height, int[][] data) {
+		System.out.println(width);
+		System.out.println(height);
+		WritableImage img = new WritableImage(width, height);
+	    PixelWriter w = img.getPixelWriter();
+	    for (int i = 0; i < width; i++) {
+	    	for (int j = 0; j < height; j++) {
+	    		w.setArgb(i, j, data[i][j]);
+	    	}
+	    }
+	    setSavedImage(img);
 	}
 	
 	/** 
@@ -171,6 +207,11 @@ public class ManageViews {
 		this.img = img;
 	}
 	
+	public void setSavedImage(WritableImage img) {
+		System.out.println("called");
+		this.savedImg = img;
+	}
+	
 	/** 
 	 * Sets the current View to the View described by the key
 	 * @param String representing key of the desired View
@@ -215,5 +256,7 @@ public class ManageViews {
 	}
 //	public void removePlant(Node n) {currView.removePlant(n);}
 	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
-	public void updateBudgetandLep(int cost, int lepCount) {currView.updateBudgetandLep(cost, lepCount);}
+	public void updateBudgetandLep(double cost, int lepCount) {((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);}
+	
+
 }
