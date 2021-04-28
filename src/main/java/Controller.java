@@ -608,6 +608,7 @@ public class Controller extends Application {
 		 } 
 		 else if(next.equals("Restart")) {
 			 this.model.getGarden().outline = new ArrayList<double[]>(); 
+			 this.model.getGarden().polygonCorners = new ArrayList<double[]>();
 			 this.view.restartPlot();
 			 setTheStage();
 		 }
