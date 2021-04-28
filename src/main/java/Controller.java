@@ -290,6 +290,8 @@ public class Controller extends Application {
 		n.setMouseTransparent(true);
 		System.out.println("Clicked");
 		model.movedPlant = key;
+		model.setX(n.getTranslateX());
+		model.setY(n.getTranslateY());
 		if(key!=null) {
 			String name = model.plantDirectory.get(key).getCommonName();
 			String description = model.plantDirectory.get(key).getDescription();
