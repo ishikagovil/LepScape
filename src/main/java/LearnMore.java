@@ -109,7 +109,7 @@ public class LearnMore extends View{
 		HBox b = new HBox(); 
 		Image l = new Image(getClass().getResourceAsStream("/new-button.png"));
 		ImageView lIV = new ImageView(l);
-		Label d = new Label("Choose \"New Garen\" to start designing your own garden.");
+		Label d = new Label("Choose \"New Garden\" to start designing your own garden.");
 		d.setFont(Font.font(30));
 		d.isWrapText();
 		b.getChildren().addAll(lIV, d);

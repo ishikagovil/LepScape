@@ -49,6 +49,7 @@ public class Controller extends Application {
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
 	    view = new ManageViews(stage,this, plantFile, lepFile);
 	    this.stage = stage;
+		this.stage.setFullScreen(true);
 	    readBack();
 
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
@@ -62,7 +63,6 @@ public class Controller extends Application {
 	 */
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
-		this.stage.setFullScreen(true);
 		this.stage.show();
 		this.stage.getScene().setOnMouseMoved(this.getHandlerforMouseExited());
 		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited());
@@ -489,6 +489,7 @@ public class Controller extends Application {
 			ObjectInputStream ois = new ObjectInputStream(fis);
 //			ObjectInputStream ois = new ObjectInputStream(getClass().getResourceAsStream("/garden1.ser"));
 			model.savedGardens = (ArrayList<Garden>) ois.readObject();
+			model.savedGardens.clear();
 			Gallery gal = (Gallery) view.views.get("Gallery");
 //			gal.clearTilePane();
 			for(int i = 0; i<model.savedGardens.size();i++) {
