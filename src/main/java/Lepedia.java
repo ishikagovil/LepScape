@@ -93,18 +93,18 @@ public class Lepedia extends View {
 	            }
 	    	}
             outerTile.setTileAlignment(Pos.CENTER);
-	    }*/
+	    }
 	    		
-	   while (lepIter.hasNext()) {
+	    		
+	   /* while (lepIter.hasNext()) {
 	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
             Lep lepObj = (Lep)lepElement.getValue();
             //outerTile.setPrefWidth(screenWidth);
             outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
             outerTile.setTileAlignment(Pos.CENTER);
-	    }
-	   
+	    } */
 		sp.setContent(outerTile);
-	    this.border.setCenter(sp);
+	    border.setCenter(sp);
 	} 
 	
 	public HBox getInfoTile(Map<String, ImageView> lepImages, Lep lep) {
