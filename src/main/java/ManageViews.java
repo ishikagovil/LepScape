@@ -21,6 +21,7 @@ public class ManageViews {
 	public Map<String, ImageView> lepImages;
 	public Pane sp;
 	public WritableImage savedImg;
+	public WritableImage plot;
 
 	/**
 	 * @author Ishika Govil
@@ -140,6 +141,46 @@ public class ManageViews {
 	    setSavedImage(img);
 	}
 	
+	/**
+	 * Makes the image data for the a garden
+	 * @return the int matrix
+	 */
+	public int[][] makeDataforPlot() {
+		int width = (int)plot.getWidth();
+		int height = (int)plot.getHeight();
+		int[][] data = new int[width][height];
+		PixelReader r = plot.getPixelReader();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                data[i][j] = r.getArgb(i, j);
+            }
+        }
+        return data;
+	}
+	
+	/**
+	 * with data makes the image of a garden
+	 * @param width the width of garden
+	 * @param height height of garden
+	 * @param data imageData for garden
+	 */
+	public void makeImageforplot(int width, int height, int[][] data) {
+		System.out.println(width);
+		System.out.println(height);
+		if(width<=0 && height<=0) {
+			width = 1;
+			height=1;
+		}
+		WritableImage img = new WritableImage(width, height);
+	    PixelWriter w = img.getPixelWriter();
+	    for (int i = 0; i < width; i++) {
+	    	for (int j = 0; j < height; j++) {
+	    		w.setArgb(i, j, data[i][j]);
+	    	}
+	    }
+	    setPlot(img);
+	}
+	
 	/** 
 	 * Returns the BorderPane associated with the current View
 	 * @return BorderPane 
@@ -250,6 +291,10 @@ public class ManageViews {
 	public void validateSave() {
 		if(this.currView instanceof PlotDesign)
 			((PlotDesign) this.currView).validateSave();
+	}
+	
+	public void setPlot(WritableImage plot) {
+		this.plot = plot;
 	}
 	
 	//methods only used by garden design

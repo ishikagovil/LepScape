@@ -62,7 +62,15 @@ public class GardenDesign extends View{
 		oblist = manageView.getPlantImages();					// loading in plantImages
 		vb = addVBox();
 		border = new BorderPane();
-		main = addCanvas();
+		try {
+			main = addCanvas();
+		}catch(Exception e) {
+//			ImageView iv = new ImageView(manageView.plot);
+//			iv.setPreserveRatio(true);
+//			main.getChildren().add(iv);
+			System.out.println("error in making canvas");
+		}
+		
 		border.setCenter(main);
 		
 		ScrollPane scroll = new ScrollPane();
@@ -79,19 +87,22 @@ public class GardenDesign extends View{
 		scroll.setContent(tile);
 		border.setBottom(scroll);
 		//border.setBottom(tile);
-		comparePane = addBorderPane();
+		//comparePane = addBorderPane();
 		
 		BorderPane bd2= new BorderPane();
 		bd2.setTop(vb);
 		bd2.setAlignment(bd2, Pos.TOP_LEFT);
-		bd2.setBottom(comparePane);
-		bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
+		//bd2.setBottom(comparePane);
+		//bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
 		
 		border.setLeft(bd2);
 
 		showCompostBin();
 	}
 	
+	/**
+	 * Remakes the main pane when user tries to edit a saved garden
+	 */
 	public void remakePane() {
 		border.getChildren().remove(border.getCenter());
 		this.main = addCanvas();
@@ -125,6 +136,10 @@ public class GardenDesign extends View{
 		return gardenDesign;
 	}
 	
+	/**
+	 * Makes the popup pane for all the deleted p;ants
+	 * @param plant all the plants that have been deleted 
+	 */
 	//https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
 	public void compostPopUp(HashSet<String> plant) {
 		final Stage deleted = new Stage();
@@ -217,6 +232,11 @@ public class GardenDesign extends View{
 		
 	}
 	
+	/**
+	 * Gets the plant name from a label in deleted pane
+	 * @param l the label that is clicked
+	 * @return the plant name
+	 */
 	private String getDisplayText(Label l) {
 //		return "";
 		if(l.getText()!=null) {
@@ -432,10 +452,14 @@ public class GardenDesign extends View{
 		vb.setPrefWidth(screenHeight/4);
 		vb.setAlignment(Pos.CENTER);;
 		Button[] buttons = new Button[] {
-			addNextButton("Back","ConditionScreen"), addNextButton("Learn More", "LearnMore"), addNextButton("Lepedia", "Lepedia")
-		};
+			addNextButton("Back","ConditionScreen"), addNextButton("Learn More", "LearnMore"),addNextButton("Next","Summary")
+		}; //, new Button("Clear")
+		buttons[0].setPrefSize(100, 30);
+		buttons[1].setPrefSize(100, 30);
+		buttons[2].setPrefSize(100, 30);
+//		buttons[3].setPrefSize(100, 30);
 		vb.getChildren().addAll(buttons);
-		Button save = new Button("Next");
+		Button save = new Button("Save");
 		save.setPrefSize(buttonWidth, buttonHeight);
 		save.setOnAction(e->{
 			saveGardenImage();
@@ -484,6 +508,10 @@ public class GardenDesign extends View{
 		
 	}
 	
+	/**
+	 * returns the center pane in borderPane
+	 * @return the pane
+	 */
 	public Pane mainPane(){
 		return main;
 	}
@@ -624,6 +652,10 @@ public class GardenDesign extends View{
 
 	}
 	
+	/**
+	 * updated the images on the screen
+	 * @param plantNames the plants that are placed
+	 */
 	public void updateImageList(ArrayList<String> plantNames) {
 		tile.getChildren().clear();
 		
@@ -632,8 +664,4 @@ public class GardenDesign extends View{
 		});
 	}
 	
-	//TODO: will make a list view of all the plants that are put in the compost.
-	//Clicking on one will place in the pane and can be placed wherever 
-	//the user wants
-	public void displayBasket() {} //Shows the plants that are currently in the garden on the rightmost pane
 }

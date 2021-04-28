@@ -129,6 +129,7 @@ public class Summary extends View {
         saveGarden.setPrefSize(buttonWidth, buttonHeight);
         saveGarden.setOnAction(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
+        buttons.add(addNextButton("Gallery","Gallery"));
         return buttons;
 	}
 

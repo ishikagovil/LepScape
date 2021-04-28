@@ -192,18 +192,36 @@ public class Controller extends Application {
 		return (e) -> { fillRegion(canvas, e); };
 	}
 	
+	/**
+	 * Handler for compopst clicked
+	 * @return the MouseEvent
+	 */
 	public EventHandler<MouseEvent> getHandlerForCompostClicked(){
 		return (e) -> {showCompost(e);};
 	}
 	
+	/**
+	 * When compost is clicked, shows the deleted pane
+	 * @param event the mouse event
+	 */
 	public void showCompost(MouseEvent event) {
 		((GardenDesign) view.views.get("GardenDesign")).compostPopUp(model.deleted);
 	}
 	
+	/**
+	 * Handler for when save button pressed in summary
+	 * @return the event
+	 */
 	public EventHandler<ActionEvent> getHandlerforSummarySave(){
 		return (e) -> {summarySave(e);};
 	}
 	
+	/**
+	 * Handler for edit button pressed
+	 * @param index index of the garden with that index
+	 * @param dialog stage that holds the dit button
+	 * @return the action event
+	 */
 	public EventHandler<ActionEvent> getHandlerforEditSaved(int index, Stage dialog){
 		return (e) -> {editSavedGarden(e,index, dialog);};
 	}
@@ -231,16 +249,26 @@ public class Controller extends Application {
 		gd.updateImageList(filteredNames);
 	}
 	
+	/**
+	 * when a user wants to edit a previously saved garden
+	 * @param event the edit button action
+	 * @param index index of saved garden
+	 * @param dialog the stage that contains edit button
+	 */
 	public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
 		this.view.switchViews("GardenDesign");
 		setTheStage();
 		Garden garden = model.savedGardens.get(index);
+		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
+		System.out.println("putline: "+garden.outline + " "+ garden.outline.size());
 		((GardenDesign) view.views.get("GardenDesign")).remakePane();
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
-		
+		model.scale = garden.scale;
+		model.lengthPerPixel = garden.lengthPerPixel;
 		garden.plants.forEach(plant->{
 			double heightWidth = scalePlantSpread(plant.getName());
-			((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			model.gardenMap.placedPlants.put(node, plant);
 		});
 		dialog.close();
 		model.setToEdit();
@@ -364,6 +392,12 @@ public class Controller extends Application {
 //		}
 	}
 	
+	/**
+	 * Called when a node is trying to be deleted
+	 * when it enters the compost nodee
+	 * @param event the drag event
+	 * @param key the name of the plant
+	 */
 	public void entered(MouseDragEvent event, String key) {
 		System.out.println(key);
 		((GardenDesign) view.views.get("GardenDesign")).removePlant((Node) event.getGestureSource());
@@ -371,6 +405,10 @@ public class Controller extends Application {
 		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 	}
 	
+	/**
+	 * when plant is added back from deleted pane it gets added back in the garden
+	 * @param plantName the name of the plant that is added back
+	 */
 	public void removeFromDeleted(String plantName) {
 		model.deleted.remove(plantName);
 //		model.placePlant(0, 0, plantName);
@@ -389,6 +427,9 @@ public class Controller extends Application {
 		return numPixels;
 	}
 
+	/**
+	 * Everytime the application is started a read back all the saved gardens from previos sessions
+	 */
 	public void readBack() {
 		try {
 			System.out.println("reading");
@@ -400,6 +441,7 @@ public class Controller extends Application {
 //			gal.clearTilePane();
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				view.makeImage(model.savedGardens.get(i).getWidth(), model.savedGardens.get(i).getHeight(), model.savedGardens.get(i).data);
+				//view.makeImageforplot(model.savedGardens.get(i).plotWidth, model.savedGardens.get(i).plotHeight, model.savedGardens.get(i).plotData);
 				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).cost,(model.savedGardens.get(i)).numLeps);
 			}
 			ois.close();
@@ -410,12 +452,20 @@ public class Controller extends Application {
 		}
 	}
 	
+	/**
+	 * Called when user saves garden from summary
+	 * @param event button pressed event
+	 */
 	public void summarySave(ActionEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
+		System.out.println("polygonCorners "+ model.gardenMap.polygonCorners+" "+ model.gardenMap.polygonCorners.size());
+		System.out.println("outline "+ model.gardenMap.outline+ " "+model.gardenMap.outline.size());
+		model.gardenMap.lengthPerPixel = model.lengthPerPixel;
+		model.gardenMap.scale = model.scale;
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
-		
 		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
+		model.gardenMap.setPlotImageInfo((int)view.plot.getWidth(), (int)view.plot.getHeight(), view.makeDataforPlot());
 		System.out.println("button works");
  		try {
 			Gallery gal = (Gallery) view.views.get("Gallery");
@@ -699,9 +749,17 @@ public class Controller extends Application {
 		this.drawToCanvas(canvas);
 	}
 	
-	
-	
+
+	/**
+	 * Starting x location for a node
+	 * @return the x
+	 */
 	public double getStartingX() {return model.getX();}
+	
+	/**
+	 * starting y location of a node
+	 * @return the y
+	 */
 	public double getStartingY() {return model.getY();}
 
 }

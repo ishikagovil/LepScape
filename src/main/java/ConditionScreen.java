@@ -72,6 +72,7 @@ public class ConditionScreen extends View {
 			GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
 			gd.addBudgetLepPane();
 			controller.switchViews("GardenDesign");
+			this.manageView.setPlot(gd.main.snapshot(null, null));
 		});
 		buttons.getChildren().addAll(back, next);
 		
