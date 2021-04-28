@@ -1,4 +1,3 @@
-import java.awt.image.BufferedImage;
 import java.util.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,7 +7,6 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class ManageViews {
@@ -105,6 +103,11 @@ public class ManageViews {
 			}
 			((PlotDesign) this.currView).validateSave();
 			((PlotDesign) this.currView).shapeClicked = true;
+		}
+		else if (next.equals("Lepedia")) {
+			this.currView = this.getView(next);
+			Lepedia temp = (Lepedia)this.currView;
+			temp.updateLepedia();
 		}
 		else
 			this.currView = this.getView(next);
@@ -280,12 +283,11 @@ public class ManageViews {
 	public void removePlant(Node node) {
 		views.get("GardenDesign").removePlant(node);
 	}
+	
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
 	}
-	/**
-	 * Calls validateSave() method in PlotDesign
-	 */
+	
 	public void validateSave() {
 		if(this.currView instanceof PlotDesign)
 			((PlotDesign) this.currView).validateSave();
@@ -296,15 +298,31 @@ public class ManageViews {
 	}
 	
 	//methods only used by garden design
-	public void setY(double y, Node n){currView.setY(y, n);}
-	public void setX(double x, Node n){currView.setX(x, n);}
+	public void setY(double y, Node n){
+		currView.setY(y, n);
+	}
+	
+	public void setX(double x, Node n){
+		currView.setX(x, n);
+	}
+	
 	public void addImageView(double x, double y, String key, double heightWidth) {
 		((GardenDesign) views.get("GardenDesign")).addImageView(x,y,key,heightWidth);
 //		currView.addImageView(x, y, key);
 	}
+	
 //	public void removePlant(Node n) {currView.removePlant(n);}
-	public void makeInfoPane(String name, String info) {currView.makeInfoPane(name, info);}
-	public void updateBudgetandLep(double cost, int lepCount) {((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);}
+	public void makeInfoPane(String name, String info) {
+		currView.makeInfoPane(name, info);
+	}
+	
+	public void updateBudgetandLep(double cost, int lepCount) {
+		((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);
+	}
+	
+	public void updateLepandCost(double cost, int lepCount) {
+		((Summary) views.get("Summary")).updateLepandCost(cost, lepCount);
+	}
 	
 
 }

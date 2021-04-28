@@ -17,7 +17,7 @@ public class Anchor extends Circle {
 	DoubleProperty y;
 	int idx;
         Anchor(Color color, DoubleProperty x, DoubleProperty y, Polygon poly, int idx, boolean dragAnchor, PlotDesign plotView, Controller controller) {
-            super(x.get(), y.get(), 8);
+            super(x.get(), y.get(), 10);
             //Initialize values
             this.plotView = plotView;
             this.controller = controller;
