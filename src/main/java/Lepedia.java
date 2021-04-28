@@ -22,6 +22,10 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage; 
 
+/* Creating the Lepedia screen showcasing the directory of leps associated with PlacedPlants of Garden
+ * @author Dea Harjianto
+ */
+
 public class Lepedia extends View {
 	
 	final int numLepImages = 117;
@@ -46,16 +50,16 @@ public class Lepedia extends View {
 		border.setBottom(back);
 		border.setAlignment(back, Pos.CENTER);
 	}
-		
+	
+	/* Gathers information from completed Garden and updates it based on the plants available
+	 */
 		
 	public void updateLepedia() {
 		ScrollPane sp = new ScrollPane();
-		//sp.setBackground(new Background(bgImg));
 		sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);    // horizontal scroll bar
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
         sp.setFitToHeight(true);
         sp.setFitToWidth(true);
-        //scroll.setMaxWidth(screenWidth);
         sp.setMaxHeight(screenHeight);						// needed to initialize a dimension for scrollpane; leave in
 		
 	    TilePane outerTile = new TilePane(Orientation.HORIZONTAL);
@@ -69,24 +73,6 @@ public class Lepedia extends View {
 	    Map<String, ImageView> lepImages = manageView.getLepImages();
 	    Iterator plantIter = plants.iterator();
 	    Iterator lepIter = info.entrySet().iterator();
-	    
-	   /*while (plantIter.hasNext()) {
-	    	PlacedPlant plant = (PlacedPlant)plantIter.next();
-	    	String plantGenus = plant.getSpecies().getGenusName();
-		    while (lepIter.hasNext()) {
-		    	Map.Entry lepElement = (Map.Entry)lepIter.next();
-		        	Lep lepObj = (Lep)lepElement.getValue();
-		            
-		        	Iterator genusIter = lepObj.getThrivesInGenus().iterator();
-		        	while (genusIter.hasNext()) {
-		        		String lepGenus = (String)genusIter.next();
-		        		if (lepGenus.equals(plantGenus)) {
-		        			outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
-		            	}
-		            }
-		    	}
-		    outerTile.setTileAlignment(Pos.CENTER);
-	    }*/
 	    
 	    while(lepIter.hasNext()) {
 	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
@@ -105,18 +91,16 @@ public class Lepedia extends View {
 	    		}
 	    	}
 	    }
-		    
-	    /*while (lepIter.hasNext()) {
-	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
-            Lep lepObj = (Lep)lepElement.getValue();
-            //outerTile.setPrefWidth(screenWidth);
-            outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
-            outerTile.setTileAlignment(Pos.CENTER);
-	    }*/
 	    
 		sp.setContent(outerTile);
 	    border.setCenter(sp);
 	}
+	
+	/* Create each row in the Lepedia consisting of ImageViw (if avail) and information of specific Lep
+	 * @param Map<String, ImageView>
+	 * @param Lep
+	 * @return HBox
+	 */
 	
 	public HBox getInfoTile(Map<String, ImageView> lepImages, Lep lep) {
 		String genusName = lep.getGenusName();
@@ -128,38 +112,9 @@ public class Lepedia extends View {
 		description.setFont(new Font("Arial", descFontSize));
 		
 		HBox lepTile = new HBox();
-	    //lepTile.setPadding(new Insets(15, 12, 15, 12));
-	    //lepTile.setSpacing(10);
-		//lepTile.setTileAlignment(Pos.CENTER);
-		//lepTile.setPrefColumns(2);
-		//lepTile.setPrefColumns(3);
-		//lepTile.setPrefRows(1);
-		
 		lepTile.getChildren().addAll(lepImg, description);
 		
 		return lepTile;
 	}
-	
-	/*public TilePane getInfoTile(Map<String, ImageView> lepImages, Lep lep) {
-		String genusName = lep.getGenusName();
-		String speciesName = lep.getSpeciesName();
-		String commonName = lep.getCommonName();
-		ArrayList<String> thrivesIn = lep.getThrivesInGenus();
-		ImageView lepImg = lepImages.get(genusName + "-" + speciesName);
-		Label description = new Label(genusName + " " + speciesName + ". Also known as the " + commonName + ". Thrives in " + thrivesIn.toString());
-		description.setFont(new Font("Arial", 20));
-		
-		TilePane lepTile = new TilePane(Orientation.HORIZONTAL);
-		lepTile.setTileAlignment(Pos.CENTER);
-		lepTile.setPrefColumns(2);
-		//lepTile.setPrefColumns(3);
-		lepTile.setPrefRows(1);
-		
-		lepTile.getChildren().add(lepImg);
-		lepTile.getChildren().add(description);
-
-		
-		return lepTile;
-		}*/
 	
 }
