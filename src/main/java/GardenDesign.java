@@ -355,9 +355,9 @@ public class GardenDesign extends View{
 		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
-		iv2.setFitHeight(100);
-//		iv2.setFitHeight(heightWidth);
-//		iv2.setFitWidth(heightWidth);
+//		iv2.setFitHeight(100);
+		iv2.setFitHeight(heightWidth);
+		iv2.setFitWidth(heightWidth);
 		String uniqueID = UUID.randomUUID().toString();
  		iv2.setId(uniqueID);
 // 		iv2.setX(x);

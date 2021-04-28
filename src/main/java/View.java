@@ -98,7 +98,7 @@ public abstract class View{
 			border.getChildren().removeAll(freeLines);
 			freeLines = new ArrayList<>();
 	}
-	public static void drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
+	public static double drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
 		double minX = extrema.get(3)[0];
 		double maxX = extrema.get(1)[0];
 		double minY = extrema.get(0)[1];
@@ -118,6 +118,34 @@ public abstract class View{
 //		System.out.println("cw: " + canvas.getWidth());
 //		System.out.println("ch: " + canvas.getHeight());
 		
+		drawOutlines(gc, points, scale, minX, minY);
+		
+		Iterator<Conditions> condIter = conditions.iterator();
+		
+		System.out.println("Drawing conditions");
+		while(condIter.hasNext()) {
+			Conditions cond = condIter.next();
+			int startX = (int) ((cond.getX() - minX) * scale);
+			int startY = (int) ((cond.getY() - minY) * scale);
+			floodFill(canvas, cond, startX, startY, (int) canvas.getWidth(), (int) canvas.getHeight());
+			gc.save();
+			System.out.println("drawing cond at " + startX + " " + startY);
+		}
+		
+		return scale;
+	}
+	
+	public static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
+		double sourceWidth = maxX - minX;
+		double sourceHeight = maxY - minY;
+
+		double xScale = targetWidth / sourceWidth;
+		double yScale = targetHeight / sourceHeight;
+
+		return Math.min(xScale, yScale);
+	}
+	
+	private static void drawOutlines(GraphicsContext gc, ArrayList<double[]> points, double scale, double minX, double minY) {
 		Iterator<double[]> pointIter = points.iterator();
 
 		boolean isNewLine = true;
@@ -143,30 +171,6 @@ public abstract class View{
 			
 		}
 		gc.closePath();
-		
-		
-		Iterator<Conditions> condIter = conditions.iterator();
-		
-		System.out.println("Drawing conditions");
-		while(condIter.hasNext()) {
-			Conditions cond = condIter.next();
-			int startX = (int) ((cond.getX() - minX) * scale);
-			int startY = (int) ((cond.getY() - minY) * scale);
-			floodFill(canvas, cond, startX, startY, (int) canvas.getWidth(), (int) canvas.getHeight());
-			gc.save();
-			System.out.println("drawing cond at " + startX + " " + startY);
-		}
-		
-	}
-	
-	public static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
-		double sourceWidth = maxX - minX;
-		double sourceHeight = maxY - minY;
-
-		double xScale = targetWidth / sourceWidth;
-		double yScale = targetHeight / sourceHeight;
-
-		return Math.min(xScale, yScale);
 	}
 
 	private static void floodFill(Canvas canvas, Conditions conds, int startX, int startY, int width, int height) {
