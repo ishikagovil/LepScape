@@ -56,6 +56,7 @@ public class Controller extends Application {
 		System.out.println("setting lep directory");
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
 	    view = new ManageViews(stage,this, plantFile, lepFile);
+	    this.stage = stage;
 	    readBack();
 
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
