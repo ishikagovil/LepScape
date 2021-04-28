@@ -1,20 +1,46 @@
-import java.util.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 
-public class Garden {
+import java.awt.image.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.*;
+import javax.imageio.ImageIO;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+
+public class Garden implements java.io.Serializable {
 	
-	private int numLeps;
-	private int cost;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public int numLeps;
+	public double cost;
 	public ArrayList<PlacedPlant> plants;
 	public ArrayList<double[]> outline;
 	public ArrayList<double[]> polygonCorners;
 	public ArrayList<Conditions> sections;
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
+	public ArrayList<String> plant;
+//	public transient WritableImage image;
+	public int width;
+	public int height;
+	public int[][] data;
+	public transient HashMap<String, PlacedPlant> placedPlants;
+//	public transient BufferedImage image;
+//	private transient SimpleDoubleProperty costForgallery;
+
 	
 	/**
-	 * @author Ishika Govil, Kimmy Huynh,
+	 * @author Ishika Govil, Kimmy Huynh, Arunima Dey
 	 */
-	
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
 		this.outline = new ArrayList<double[]>();
@@ -22,12 +48,38 @@ public class Garden {
 		this.sections = new ArrayList<Conditions>();
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();
+		this.plant = new ArrayList<>();
+		this.width = 0;
+		this.height = 0;
+		this.data = new int[width][height];
+		this.placedPlants= new HashMap<>();
+//		this.image = new BufferedImage (0,0,0);
 	}
 	
 	public Garden(int numLeps, int cost) {
 		this();
 		this.numLeps = numLeps;
 		this.cost = cost;
+	}
+	
+	public void setGardenImageInfo(int width, int height, int[][] data){
+		//this.image = image;
+		this.width = width;
+		this.height = height;
+		this.data = data;
+		//makeData();
+	}
+	
+	public int[][] getGardenData(){
+		return this.data;
+	}
+	
+	public int getWidth() {
+		return this.width;
+	}
+	
+	public int getHeight() {
+		return this.height;
 	}
 	
 	public int getNumLeps() {
@@ -42,12 +94,12 @@ public class Garden {
 		this.numLeps += x;
 	}
 	
-	public int getCost() {
+	public double getCost() {
 		return this.cost;
 	}
 	
-	public void setCost(int x) {
-		this.cost = x;
+	public void setCost(double d) {
+		this.cost = d;
 	}
 	
 	public void addCost(int x) {
@@ -91,6 +143,7 @@ public class Garden {
 	}
 	
 	public void addToGarden(PlacedPlant plant) {
+		System.out.println("adding to garden");
 		plants.add(plant);
 	}
 
@@ -153,6 +206,7 @@ public class Garden {
 		extrema.add(scaledOutlines.get(lowestX));
 		return extrema;
 	}
+	
 
 
 }

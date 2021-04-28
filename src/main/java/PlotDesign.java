@@ -9,23 +9,23 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.Stage;
 import java.util.*;
+
 
 public class PlotDesign extends View{
 	ArrayList<Button> drawSwitch; 
 	ArrayList<Button> dimSwitch;
-	Label label; //instructions to user
 	HBox box;
 	GridPane grid; //added to contain the TextField
 	ToolBar toolbar;
 	Polygon poly;
+	Image plotInstructions;
+	Image dimInstructions;
     boolean shapeClicked = false;
     boolean dragAnchor = false;
     ObservableList<Anchor> anchors;
@@ -43,11 +43,16 @@ public class PlotDesign extends View{
 	public PlotDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
+		//Loading Images
+		dimInstructions = new Image(getClass().getResourceAsStream("/dimensions.jpg"));
+		plotInstructions = new Image(getClass().getResourceAsStream("/drawPlot.jpg"));
 		//Set canvas for drawing: https://www.youtube.com/watch?v=gjZQB6BmyK4
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
         gc.setLineWidth(2);
+        gc.drawImage(plotInstructions, 0, 0);
+        
         //Creating buttons on the screen
         toolbarButtons();        
         backButtons();
@@ -64,6 +69,7 @@ public class PlotDesign extends View{
 	public void toolbarButtons() {
 		//Add editing button and functionality
         toolbar = new ToolBar();
+        toolbar.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
         toolbar.getItems().add(addNextButton("Freehand","Drawing"));
         //Make sure the anchors cannot be dragged when freehand is selected
         toolbar.getItems().get(0).addEventHandler(ActionEvent.ACTION, (e)-> {
@@ -112,10 +118,9 @@ public class PlotDesign extends View{
             	controller.drawFreehandPart(1);
             	
             	//Change border design
-            	border.getChildren().remove(label);
             	border.getChildren().remove(grid);
+            	gc.drawImage(plotInstructions, 0, 0);
             	createHBox(drawSwitch);	
-            	
             }
         });
 	}
@@ -140,6 +145,7 @@ public class PlotDesign extends View{
         	poly = new Polygon();
         	anchors = FXCollections.observableArrayList();
         	removeLines();
+        	gc.drawImage(plotInstructions, 0, 0);
         });
         drawSwitch.add(clear);
         
@@ -201,6 +207,7 @@ public class PlotDesign extends View{
 	 * Saves the inputed value and calls settingLength in controller to calculate length per pixel
 	 */
 	public void onSettingDimensions() {
+        gc.drawImage(dimInstructions, 0, 0);
 		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
         border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
         border.setOnMouseReleased(event -> {
@@ -208,9 +215,6 @@ public class PlotDesign extends View{
 		    border.setOnMouseDragged(null);
 		});	
 		createHBox(dimSwitch);
-		label = new Label(" Setting Dimensions! \n Draw a line from any two points in your plot and input its dimension");
-	    label.setStyle("-fx-font: 18 arial;");
-	    border.setLeft(label);
 	    
 	    //Input value box
 	    TextField dimension = new TextField();
@@ -243,6 +247,7 @@ public class PlotDesign extends View{
 		box.setSpacing(10);
 		box.setPadding(new Insets(20));
 		box.setAlignment(Pos.TOP_CENTER);
+		box.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
 		box.getChildren().addAll(list);
 		border.setBottom(box);
 	}

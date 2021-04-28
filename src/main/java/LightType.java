@@ -1,14 +1,14 @@
 
 public enum LightType {
 	ANY("Any", 0),
-	DARK("Dark", 1),
-	BRIGHT("Bright", 2),
-	INTENSE("Intense", 3);
+	DARK("Dark", 0.3),
+	BRIGHT("Bright", 0.6),
+	INTENSE("Intense", 0.9);
 	
 	private final String name;
-	private final int value;
+	private final double value;
 	
-	private LightType(String name, int value) {
+	private LightType(String name, double value) {
 		this.name = name;
 		this.value = value;
 	}

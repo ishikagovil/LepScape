@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -7,19 +8,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -27,6 +24,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.swing.*;
 
 
 public class Summary extends View {
@@ -49,26 +47,27 @@ public class Summary extends View {
 		border.setCenter(addCenterPane());
 		border.setRight(addInfoPane());
 		
-       /*
-       // load butterfly animation
-       ImageView iv1 = new ImageView();
-       Image butterfly = new Image(getClass().getResourceAsStream("/butterfly.png"));
-      // Image flapping = new Image(getClass().getResourceAsStream("/flapping.png"));
-       iv1.setImage(butterfly);
-       iv1.setPreserveRatio(true);
-       iv1.setFitHeight(30);
+		/*
+	       // load butterfly animation
+	       ImageView iv1 = new ImageView();
+	       Image butterfly = new Image(getClass().getResourceAsStream("/butterfly.png"));
+	      // Image flapping = new Image(getClass().getResourceAsStream("/flapping.png"));
+	       iv1.setImage(butterfly);
+	       iv1.setPreserveRatio(true);
+	       iv1.setFitHeight(30);
+	       
+	       Duration duration = Duration.minutes(2);
+	       TranslateTransition translation = new TranslateTransition(duration, iv1);
+	       translation.setByX(100);
+	       translation.setAutoReverse(true);
+	       sp1.getChildren().add(iv1);
+	       translation.play();
+	       */
+		
+       //main = addCanvas();
+		border.setCenter(main);  
        
-       Duration duration = Duration.minutes(2);
-       TranslateTransition translation = new TranslateTransition(duration, iv1);
-       translation.setByX(100);
-       translation.setAutoReverse(true);
-       sp1.getChildren().add(iv1);
-       translation.play();
-       */
        
-       //Add garden view
-       main = addCanvas();
-       border.setCenter(main);  
     }
 	
 /**
@@ -128,7 +127,9 @@ public class Summary extends View {
         buttons.add(addNextButton("Back", "GardenDesign"));
         buttons.add(addNextButton("Lepedia", "Lepedia"));
         buttons.add(addNextButton("Learn More","LearnMore"));
-        buttons.add(addNextButton("Save", "Gallery"));
+        Button saveGarden = new Button("Save");
+        saveGarden.setOnAction(controller.getHandlerforSummarySave());
+        buttons.add(saveGarden);
         return buttons;
 	}
 
@@ -147,9 +148,10 @@ public class Summary extends View {
  * Canvas then places inside a pane
  * @return the created pane
  */
-	public Pane addCanvas() {
+	public void addCanvas() {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+<<<<<<< HEAD
 		canvas = new Canvas();
 		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		gc = canvas.getGraphicsContext2D();
@@ -161,6 +163,25 @@ public class Summary extends View {
 		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
 		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
 		return gardenDesign;
+=======
+//		canvas = new Canvas();
+//		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+//		gc = canvas.getGraphicsContext2D();
+//		gardenDesign.getChildren().add(canvas);
+//	
+//		canvas.widthProperty().bind(gardenDesign.widthProperty());
+//		canvas.heightProperty().bind(gardenDesign.heightProperty());
+//	
+//		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
+//		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
+		
+		ImageView iv = new ImageView(manageView.savedImg);
+		iv.setPreserveRatio(true);
+		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
+		iv.fitHeightProperty().bind(gardenDesign.widthProperty());
+		gardenDesign.getChildren().add(iv);
+		border.setCenter(gardenDesign);
+>>>>>>> ad7f7acd827b27ef9f3bdf4edda7850239b848d4
 	}
 	
 /**
@@ -185,5 +206,7 @@ public class Summary extends View {
 		rightPane.getChildren().addAll(title, lepIV, costIV);
 		return rightPane;
 	}
+
+
 	
 }

@@ -1,5 +1,6 @@
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,8 +21,8 @@ public abstract class View{
 	private static final int lineWidth = 3;
 	private static final double fillThreshold = 0.95;
 	
-	public int screenWidth = 1270;
-	public int screenHeight = 760;
+	public int screenWidth = 1290;
+	public int screenHeight = 800;
 	public double gardenWidth = 0.5*screenWidth;
 	public double gardenHeight = 0.5*screenHeight;
 	public double gardenTopLeftX = 0.3*screenWidth;
@@ -35,7 +36,9 @@ public abstract class View{
 	GraphicsContext gc;
 	ArrayList<Line> polygonLines;
 	ArrayList<Line> freeLines;
-
+	ImageCursor flowerCursor;
+	ImageCursor handCursor;
+	
 	public View(Stage stage, Controller c, ManageViews manageView) { 
 		this.manageView = manageView;
 		this.stage = stage;
@@ -43,6 +46,11 @@ public abstract class View{
 		this.freeLines = new ArrayList<>();
         this.controller = c;
 		this.stage.setTitle("Lepscape");
+		//Image from: https://custom-cursor.com/en/collection/life-style/hand-painted-poppy-flower
+		this.flowerCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/flowerCursor.png"), 30,40,false,false));
+		//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
+		this.handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
+
 	}	
 	
 	public void setX(double x, Node n) {
@@ -65,9 +73,9 @@ public abstract class View{
 	public void changeCursor(boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
 		//https://blog.idrsolutions.com/2014/05/tutorial-change-default-cursor-javafx/ 
 		if(hand)
-			stage.getScene().setCursor(Cursor.HAND);
+			stage.getScene().setCursor(this.handCursor);
 		else
-			stage.getScene().setCursor(Cursor.DEFAULT);
+			stage.getScene().setCursor(this.flowerCursor);
 	} 
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
@@ -98,7 +106,7 @@ public abstract class View{
 			border.getChildren().removeAll(freeLines);
 			freeLines = new ArrayList<>();
 	}
-	public static void drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
+	public static double drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
 		double minX = extrema.get(3)[0];
 		double maxX = extrema.get(1)[0];
 		double minY = extrema.get(0)[1];
@@ -118,6 +126,34 @@ public abstract class View{
 //		System.out.println("cw: " + canvas.getWidth());
 //		System.out.println("ch: " + canvas.getHeight());
 		
+		drawOutlines(gc, points, scale, minX, minY);
+		
+		Iterator<Conditions> condIter = conditions.iterator();
+		
+		System.out.println("Drawing conditions");
+		while(condIter.hasNext()) {
+			Conditions cond = condIter.next();
+			int startX = (int) ((cond.getX() - minX) * scale);
+			int startY = (int) ((cond.getY() - minY) * scale);
+			floodFill(canvas, cond, startX, startY, (int) canvas.getWidth(), (int) canvas.getHeight());
+			gc.save();
+			System.out.println("drawing cond at " + startX + " " + startY);
+		}
+		
+		return scale;
+	}
+	
+	public static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
+		double sourceWidth = maxX - minX;
+		double sourceHeight = maxY - minY;
+
+		double xScale = targetWidth / sourceWidth;
+		double yScale = targetHeight / sourceHeight;
+
+		return Math.min(xScale, yScale);
+	}
+	
+	private static void drawOutlines(GraphicsContext gc, ArrayList<double[]> points, double scale, double minX, double minY) {
 		Iterator<double[]> pointIter = points.iterator();
 
 		boolean isNewLine = true;
@@ -143,30 +179,6 @@ public abstract class View{
 			
 		}
 		gc.closePath();
-		
-		
-		Iterator<Conditions> condIter = conditions.iterator();
-		
-		System.out.println("Drawing conditions");
-		while(condIter.hasNext()) {
-			Conditions cond = condIter.next();
-			int startX = (int) ((cond.getX() - minX) * scale);
-			int startY = (int) ((cond.getY() - minY) * scale);
-			floodFill(canvas, cond, startX, startY, (int) canvas.getWidth(), (int) canvas.getHeight());
-			gc.save();
-			System.out.println("drawing cond at " + startX + " " + startY);
-		}
-		
-	}
-	
-	public static double findScale(double minX, double maxX, double minY, double maxY, double targetWidth, double targetHeight) {
-		double sourceWidth = maxX - minX;
-		double sourceHeight = maxY - minY;
-
-		double xScale = targetWidth / sourceWidth;
-		double yScale = targetHeight / sourceHeight;
-
-		return Math.min(xScale, yScale);
 	}
 
 	private static void floodFill(Canvas canvas, Conditions conds, int startX, int startY, int width, int height) {
@@ -216,7 +228,6 @@ public abstract class View{
 	}
 	
 	//Used only in gardenDesign. In here because need to called by controller
-	//public void addImageView(double x, double y, String key, double heightWidth) {}
 	public void removePlant(Node n) {}
 	public void makeInfoPane(String name, String info) {}
 	public void updateBudgetandLep(int cost, int lepCount) {}

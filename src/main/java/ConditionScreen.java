@@ -3,10 +3,13 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -15,14 +18,16 @@ import javafx.stage.Stage;
  *
  */
 public class ConditionScreen extends View {
-//	public ArrayList<Button> switchScreens; //back, next, save,
-//	public Slider soilType;
-//	public Slider moisture;
-//	public Slider sunlight;
-//	public TextField budget;
+
+	public ComboBox<SoilType> soilDropdown;
+	public ComboBox<MoistureType> moistureDropdown;
+	public ComboBox<LightType> sunlightDropdown;
 	
 	private final int boxSpacing = 8;
 	private final int boxPadding = 12;
+	private final int largeFontSize = 20;
+	private final int fontSize = 16;
+	private final double wrappingWidth = 200;
 	
 	private Canvas canvas;
 
@@ -39,7 +44,6 @@ public class ConditionScreen extends View {
 	    // Create a wrapper Pane first
 	    border.setCenter(createCanvasPane());
 		border.setRight(createSidebar());
-		
 	}
 	
 	/**
@@ -53,17 +57,11 @@ public class ConditionScreen extends View {
 		
 		HBox budgetRow = new HBox();
 		TextField budgetField = new TextField();
-		Label budgetLabel = new Label("Budget ($):");
+		Label budgetLabel = new Label("Budget ($): ");
 		budgetRow.getChildren().addAll(budgetLabel, budgetField);
 		budgetField.setOnKeyReleased(e -> {
 			controller.updateBudget(budgetField.getText());
 		});
-		
-		HBox tools = new HBox(boxSpacing);
-		Button fillButton = new Button("Fill");
-		fillButton.setPrefSize(buttonWidth, buttonHeight);
-		fillButton.setOnAction(controller.getHandlerforModeSetter(UserMode.SETTING_CONDITIONS));
-		tools.getChildren().addAll(fillButton);
 		
 		HBox buttons = new HBox(boxSpacing);
 		Button back = new Button("Back");
@@ -78,11 +76,19 @@ public class ConditionScreen extends View {
 			controller.switchViews("GardenDesign");
 		});
 		buttons.getChildren().addAll(back, next);
-		Node sliders = createSliders();
-		Node soilButtons = createSoilButtons();
 		
-		VBox.setVgrow(sliders, Priority.ALWAYS);
-		sidebar.getChildren().addAll(budgetRow, sliders, soilButtons, tools, buttons);
+		Node dropdowns = createConditionDropdowns();
+		
+		Text title = new Text("Plot Conditions");
+		Text info = new Text("Set the conditions of your garden by selecting them from the dropdowns.");
+		Text info2 = new Text("Then, select any region of your garden to fill the conditions in!");
+		title.setFont(new Font(largeFontSize));
+		info.setFont(new Font(fontSize));
+		info2.setFont(new Font(fontSize));
+		info.setWrappingWidth(wrappingWidth);
+		info2.setWrappingWidth(wrappingWidth);
+		title.setWrappingWidth(wrappingWidth);
+		sidebar.getChildren().addAll(title, info, info2, budgetRow, dropdowns, buttons);
 		
 		return sidebar;
 	}
@@ -111,65 +117,31 @@ public class ConditionScreen extends View {
 		return wrapperPane;
 	}
 	
-	/**
-	 * Creates sunlight and moisture sliders
-	 * @return an HBox containing the two sliders and their labels
-	 */
-	private Node createSliders() {
-		HBox sliders = new HBox(16);
-		Slider moistureSlider = createConditionSlider();
-		Label moistureLabel = new Label("Moisture");
-		Slider sunlightSlider = createConditionSlider();
-		Label sunlightLabel = new Label("Sunlight");
+	private Node createConditionDropdowns() {
+		VBox box = new VBox(boxSpacing);
 		
-		sunlightSlider.valueProperty().addListener((ov, oldVal, newVal) -> {
-			controller.updateConditionSlider((int) moistureSlider.getValue(), (int) sunlightSlider.getValue());
-		});
-		moistureSlider.valueProperty().addListener((ov, oldVal, newVal) -> {
-			controller.updateConditionSlider((int) moistureSlider.getValue(), (int) sunlightSlider.getValue());
-		});
+		Label soilLabel = new Label("Soil Type: ");
+		soilDropdown = new ComboBox<>();
+		soilDropdown.getItems().addAll(SoilType.values());
+		soilDropdown.getItems().remove(0);
+		soilDropdown.getSelectionModel().select(1);
 		
-		sliders.getChildren().addAll(moistureLabel, moistureSlider, sunlightLabel, sunlightSlider);
+		Label moistLabel = new Label("Moisture Level: ");
+		moistureDropdown = new ComboBox<>();
+		moistureDropdown.getItems().addAll(MoistureType.values());
+		moistureDropdown.getItems().remove(0);
+		moistureDropdown.getSelectionModel().select(1);
+
+		Label sunLabel = new Label("Sunlight Level: ");
+		sunlightDropdown = new ComboBox<>();
+		sunlightDropdown.getItems().addAll(LightType.values());
+		sunlightDropdown.getItems().remove(0);
+		sunlightDropdown.getSelectionModel().select(1);
+
+		box.getChildren().addAll(soilLabel, soilDropdown, moistLabel, moistureDropdown, sunLabel, sunlightDropdown);
 		
-		return sliders;
+		VBox.setVgrow(box, Priority.ALWAYS);
+		
+		return box;
 	}
-	
-	/**
-	 * Creates a single condition slider
-	 * @return the created condition slider
-	 */
-	private Slider createConditionSlider() {
-		Slider slider = new Slider(0, 10, 0);
-		slider.setOrientation(Orientation.VERTICAL);
-		slider.setShowTickLabels(true);
-		slider.setShowTickLabels(true);
-		slider.setMajorTickUnit(1);
-		slider.setSnapToTicks(true);
-		
-		return slider;
-	}
-	
-	/**
-	 * Creates the buttons to select soil type
-	 * @return a box with soil buttons for all soil types
-	 */
-	private Node createSoilButtons() {
-		HBox buttonBox = new HBox(4);
-		for(SoilType type : SoilType.values()) {
-			Button soilButton = new Button(type.toString());
-			soilButton.setOnAction(controller.getConditionsSoilHandler(type));
-			buttonBox.getChildren().add(soilButton);
-		}
-		
-		return buttonBox;
-	}
-	
-	
-	/**
-	 * Saves the image after partitioning to enable fill tool to update
-	 */
-	public void saveImage() {
-		this.manageView.setImage(canvas.snapshot(null, null));
-	}
-	
 }
