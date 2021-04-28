@@ -4,6 +4,8 @@ public enum SoilType {
 	CLAY("Clay", 0.3),
 	DIRT("Dirt", 0.6),
 	ROCK("Rock", 0.9);
+
+	private static final double epsilon = 0.07;
 	
 	private final String name;
 	private final double value;
@@ -22,5 +24,14 @@ public enum SoilType {
 		return value;
 	}
 	
+	public static SoilType fromValue(double value) {
+		for(SoilType type : SoilType.values()) {
+			if(Math.abs(value - type.getValue()) <= epsilon) {
+				return type;
+			}
+		}
+		
+		return SoilType.ANY;
+	}
 	
 }
