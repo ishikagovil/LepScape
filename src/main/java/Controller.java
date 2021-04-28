@@ -207,6 +207,12 @@ public class Controller extends Application {
 		return (e) -> {editSavedGarden(e,index, dialog);};
 	}
 	
+	/**
+	 * Creates handler for when the user clicks on a section of the garden. Updates the list of plants to match those conditions.
+	 * @param canvas the Canvas that was clicked
+	 * @return the corresponding handler
+	 * @author Jinay Jain
+	 */
 	public EventHandler<MouseEvent> getHandlerForSectionClick(Canvas canvas) {
 		return (e) -> {sectionClicked(e, canvas);};
 	}
@@ -372,7 +378,7 @@ public class Controller extends Application {
 	
 	/**
 	 * The spread of a plant is calculated using the lengthPerPixel and spread of the plant
-	 * @param PlantSpecies plant
+	 * @param plantKey the name of the plant to get pixel spread for
 	 * @return double representing the number of pixels of the radius of the plant
 	 */
 	public double scalePlantSpread(String plantKey) {
@@ -517,6 +523,10 @@ public class Controller extends Application {
 		iteratePlot(itr, model.getGarden().outline, false, scale);
 	}
 	
+	/**
+	 * Draws the garden onto any sized Canvas including plot boundaries and conditions
+	 * @param canvas the Canvas to draw onto
+	 */
 	public void drawToCanvas(Canvas canvas) {
 		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
 		ArrayList<double[]> points = this.model.getGarden().getOutline();
