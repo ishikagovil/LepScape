@@ -41,13 +41,10 @@ public class Lepedia extends View {
 		lepTitle.setFont(new Font("Arial", titleFontSize));
 		border.setTop(lepTitle);
 		border.setAlignment(lepTitle, Pos.CENTER);
-		HBox buttons = new HBox();
-		Button summary = addNextButton("Summary", "Summary");
-		summary.setPadding(new Insets(15));
-		Button gardenDesign = addNextButton("Garden Design", "GardenDesign");
-		gardenDesign.setPadding(new Insets(15));
-		border.setBottom(buttons);
-		border.setAlignment(buttons, Pos.CENTER);
+		Button back = addNextButton("Back", "Summary");
+		back.setPadding(new Insets(15));
+		border.setBottom(back);
+		border.setAlignment(back, Pos.CENTER);
 	}
 		
 		
