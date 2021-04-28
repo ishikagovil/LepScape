@@ -1,5 +1,6 @@
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -35,7 +36,9 @@ public abstract class View{
 	GraphicsContext gc;
 	ArrayList<Line> polygonLines;
 	ArrayList<Line> freeLines;
-
+	ImageCursor flowerCursor;
+	ImageCursor handCursor;
+	
 	public View(Stage stage, Controller c, ManageViews manageView) { 
 		this.manageView = manageView;
 		this.stage = stage;
@@ -43,6 +46,11 @@ public abstract class View{
 		this.freeLines = new ArrayList<>();
         this.controller = c;
 		this.stage.setTitle("Lepscape");
+		//Image from: https://custom-cursor.com/en/collection/life-style/hand-painted-poppy-flower
+		this.flowerCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/flowerCursor.png"), 30,40,false,false));
+		//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
+		this.handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
+
 	}	
 	
 	public void setX(double x, Node n) {
@@ -65,9 +73,9 @@ public abstract class View{
 	public void changeCursor(boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
 		//https://blog.idrsolutions.com/2014/05/tutorial-change-default-cursor-javafx/ 
 		if(hand)
-			stage.getScene().setCursor(Cursor.HAND);
+			stage.getScene().setCursor(this.handCursor);
 		else
-			stage.getScene().setCursor(Cursor.DEFAULT);
+			stage.getScene().setCursor(this.flowerCursor);
 	} 
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
