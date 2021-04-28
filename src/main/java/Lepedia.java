@@ -27,15 +27,25 @@ public class Lepedia extends View {
 	final int numLepImages = 117;
 	final int descFontSize = 20;
 	final int titleFontSize = 48;
+	
+	private Controller controller;
+	private Stage stage;
+	private ManageViews manageView;
+	private BorderPane border;
+	private BackgroundImage bgImg;
 
 	public Lepedia(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
+		//this.controller = c;
+		//this.stage = stage;
+		//this.manageView = manageView;
+		
 		border = new BorderPane();
-		Image bgimg = new Image("lepedia-background.jpg");
-		BackgroundImage bgImg = new BackgroundImage(bgimg, 
+		Image bg = new Image("lepedia-background.jpg");
+		this.bgImg = new BackgroundImage(bg, 
 			    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 			    BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-		border.setBackground(new Background(bgImg));
+		this.border.setBackground(new Background(this.bgImg));
 		
 		Label lepTitle = new Label("Lepedia");
 		lepTitle.setFont(new Font("Arial", titleFontSize));
@@ -44,9 +54,9 @@ public class Lepedia extends View {
 		Button back = addNextButton("Back", "Summary");
 		border.setBottom(back);
 		border.setAlignment(back, Pos.CENTER);
-		
+
 		ScrollPane sp = new ScrollPane();
-		sp.setBackground(new Background(bgImg));
+		sp.setBackground(new Background(this.bgImg));
 		sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);    // horizontal scroll bar
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
         sp.setFitToHeight(true);
@@ -62,11 +72,11 @@ public class Lepedia extends View {
 	    
 	    Map<String, Lep> info = c.getLepInfo();
 	    Map<String, ImageView> lepImages = manageView.getLepImages();
-	    ArrayList<PlacedPlant> plants = c.getGarden().getPlants();
+	    //ArrayList<PlacedPlant> plants = this.controller.getGarden().getPlants();
 	    Iterator lepIter = info.entrySet().iterator();
-	    Iterator plantIter = plants.iterator();
+	    //Iterator plantIter = plants.iterator();
 	    
-	    while (plantIter.hasNext()) {
+	    /*while (plantIter.hasNext()) {
 	    	PlacedPlant plant = (PlacedPlant)plantIter.next();
 	    	String plantGenus = plant.getSpecies().getGenusName();
 	    	
@@ -83,18 +93,18 @@ public class Lepedia extends View {
 	            }
 	    	}
             outerTile.setTileAlignment(Pos.CENTER);
-	    }
+	    }*/
 	    		
-	    		
-	   /* while (lepIter.hasNext()) {
+	   while (lepIter.hasNext()) {
 	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
             Lep lepObj = (Lep)lepElement.getValue();
             //outerTile.setPrefWidth(screenWidth);
             outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
             outerTile.setTileAlignment(Pos.CENTER);
-	    } */
+	    }
+	   
 		sp.setContent(outerTile);
-	    border.setCenter(sp);
+	    this.border.setCenter(sp);
 	} 
 	
 	public HBox getInfoTile(Map<String, ImageView> lepImages, Lep lep) {
