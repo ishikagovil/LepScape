@@ -115,6 +115,11 @@ public class ConditionScreen extends View {
 		return wrapperPane;
 	}
 	
+	/**
+	 * Creates the dropdown boxes for each condition
+	 * @return a Node containing those dropdowns
+	 * @author Jinay Jain
+	 */
 	private Node createConditionDropdowns() {
 		VBox box = new VBox(boxSpacing);
 		

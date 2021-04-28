@@ -17,7 +17,7 @@ public class Conditions {
 		this.sunlightType = sunlightType;
 	}
 	
-	//getters for attributes
+	//getters/setters for attributes
 	public SoilType getSoilType() {
 		return this.soilType;
 	}
@@ -48,6 +48,11 @@ public class Conditions {
 	public void setY(double y) {
 		this.y = y;
 	}
+	/**
+	 * Converts the conditions into a standard color on the plot
+	 * @return the corresponding color for this condition
+	 * @author Jinay Jain
+	 */
 	public Color toColor() {
 		return new Color(
 			soilType.getValue(), 
@@ -56,6 +61,13 @@ public class Conditions {
 			1.0);
 
 	}
+	
+	/**
+	 * Creates a Conditions from the color specified (used when user clicks on plot)
+	 * @param color the color to interpret
+	 * @return a created Conditions object for that color
+	 * @author Jinay Jain
+	 */
 	public static Conditions fromColor(Color color) {
 		double red = color.getRed();
 		double green = color.getGreen();
