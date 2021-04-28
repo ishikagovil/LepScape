@@ -160,7 +160,7 @@ public class Controller extends Application {
 	 * @param boolean startingInTile
 	 * @return EventHandler<MouseEvent>
 	 */
-	public EventHandler<MouseEvent> getHandlerforReleased(String key, Boolean startingInTile) {
+	public EventHandler<MouseEvent> getHandlerforReleased(String key, boolean startingInTile) {
 		return (e) -> { release(e,key,startingInTile);  };
 	}
 	
@@ -378,16 +378,16 @@ public class Controller extends Application {
 //			view.setX(n.getLayoutX(),n);
 //			view.setY(n.getLayoutY(),n);
 //			PlantSpecies plant = model.plantDirectory.get(name);
-			double heightWidth = scalePlantSpread(name);
-//			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
-// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
-			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
-			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-//			model.placePlant(model.getX(), model.getY(), name);
-//			view.addImageView(event.getSceneX(),event.getSceneY(), name);
- 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-//			model.placePlant(model.getX(), model.getY(), name);
-			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+//			double heightWidth = scalePlantSpread(name);
+////			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
+//// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
+//			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
+//			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
+////			model.placePlant(model.getX(), model.getY(), name);
+////			view.addImageView(event.getSceneX(),event.getSceneY(), name);
+// 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
+////			model.placePlant(model.getX(), model.getY(), name);
+//			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
 		else {
  			System.out.println("updating");
@@ -399,6 +399,45 @@ public class Controller extends Application {
 //			
 //		}
 	}
+	
+	public EventHandler<MouseDragEvent> getHandlerforReleased2(String key, boolean startingInTile) {
+		return (e) -> { release2(e,key,startingInTile);  };
+	}
+	
+	
+	public void release2(MouseDragEvent event, String name, boolean startingInTile) {
+		System.out.println("released");
+		Node n = (Node)event.getGestureSource();
+//		n.setMouseTransparent(false);
+		if(startingInTile) {
+//			view.setX(0,n);
+//			view.setY(0,n);
+//			view.setX(n.getLayoutX(),n);
+//			view.setY(n.getLayoutY(),n);
+//			PlantSpecies plant = model.plantDirectory.get(name);
+			name = ((GardenDesign) view.views.get("GardenDesign")).plants.get(n.getId());
+			double heightWidth = scalePlantSpread(name);
+//			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
+// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
+			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
+			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
+//			model.placePlant(model.getX(), model.getY(), name);
+//			view.addImageView(event.getSceneX(),event.getSceneY(), name);
+ 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
+//			model.placePlant(model.getX(), model.getY(), name);
+			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+		}
+//		else {
+// 			System.out.println("updating");
+// 			String id = ((Node) event.getSource()).getId();
+// 			model.updateXY(id);
+// 		}
+//		
+//		if(startingInTile) {
+//			
+//		}
+	}
+	
 	
 	/**
 	 * Called when a node is trying to be deleted

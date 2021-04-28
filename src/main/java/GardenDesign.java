@@ -47,6 +47,7 @@ public class GardenDesign extends View{
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 	ImageView c = new ImageView(compost);
 	Pane main;
+	Map<String, String> plants;
 	
 //	public ArrayList<ImageView> addedPlants;
 	
@@ -253,6 +254,7 @@ public class GardenDesign extends View{
 	 * @return the created pane
 	 */
 	public TilePane addTilePane() {
+		plants = new HashMap<>();
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
 		oblist.forEach((k,v)->{
@@ -266,14 +268,12 @@ public class GardenDesign extends View{
 					//System.out.println("drag detected");
 				}
 			});
-			main.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
-				@Override
-				public void handle(MouseDragEvent event) {
-					//System.out.println("entered the pane");
-				}
-			});
+			String uniqueID = UUID.randomUUID().toString();
+			v.setId(uniqueID);
+			plants.put(uniqueID, k);
 			tile.getChildren().add(v);
 		});
+		main.setOnMouseDragReleased(controller.getHandlerforReleased2("", true));
 		return tile;
 	}
 	
