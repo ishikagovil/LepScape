@@ -24,9 +24,9 @@
 - Better user interface
 
 # UML Diagrams
-![Class UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/finalclassUML.jpg?raw=true)
+![Class UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/finalUMLclass.jpg?raw=true)
 
-![Drag-n-Drop UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/finaldragNDropSeqUML.jpg?raw=true)
+![Drag-n-Drop UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/finalDragNDrop.jpg?raw=true)
 
-![Drawing plot UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/finalsectioningGardenSeqUML.jpg?raw=true)
+![Drawing plot UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/finalDrawPlot.jpg?raw=true)
 
