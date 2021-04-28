@@ -113,6 +113,10 @@ public class ManageViews {
 			this.currView = this.getView(next);
 	}
 	
+	/**
+	 * Makes data for savedImg
+	 * @return the matrix of data
+	 */
 	//for the next 2 methods
 	//https://stackoverflow.com/questions/33074774/javafx-image-serialization
 	public int[][] makeData() {
@@ -128,6 +132,12 @@ public class ManageViews {
         return data;
 	}
 	
+	/**
+	 * Makes the image for given information of an image
+	 * @param width the width of image
+	 * @param height the height of image
+	 * @param data the data for image
+	 */
 	public void makeImage(int width, int height, int[][] data) {
 		System.out.println(width);
 		System.out.println(height);
@@ -280,6 +290,10 @@ public class ManageViews {
 		this.currView = this.views.get("PlotDesign");
 	}
 	
+	/**
+	 * removed a given plant
+	 * @param node the plant that will be deleted
+	 */
 	public void removePlant(Node node) {
 		views.get("GardenDesign").removePlant(node);
 	}
@@ -293,6 +307,10 @@ public class ManageViews {
 			((PlotDesign) this.currView).validateSave();
 	}
 	
+	/**
+	 * Sets the image for plot
+	 * @param plot
+	 */
 	public void setPlot(WritableImage plot) {
 		this.plot = plot;
 	}
@@ -316,6 +334,11 @@ public class ManageViews {
 		currView.makeInfoPane(name, info);
 	}
 	
+	/**
+	 * updates the budget and lep count when plant added
+	 * @param cost the cost of plant
+	 * @param lepCount lep supported by plant
+	 */
 	public void updateBudgetandLep(double cost, int lepCount) {
 		((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);
 	}

@@ -275,6 +275,13 @@ public class Controller extends Application {
 		model.setEditGardenIndex(index);
 	}
 	
+	/**
+	 * Show the information of a savedGarden when user clicks on it
+	 * @param event the button click event
+	 * @param index index of the saved garden
+	 * @param dialog the popup stage
+	 * @author Arunima Dey
+	 */
 	public void showSummaryInfo(ActionEvent event, int index, Stage dialog) {
 		this.view.switchViews("Summary");
 		setTheStage();
@@ -397,6 +404,7 @@ public class Controller extends Application {
 	 * when it enters the compost nodee
 	 * @param event the drag event
 	 * @param key the name of the plant
+	 * @author Arunima Dey
 	 */
 	public void entered(MouseDragEvent event, String key) {
 		System.out.println(key);
@@ -408,6 +416,7 @@ public class Controller extends Application {
 	/**
 	 * when plant is added back from deleted pane it gets added back in the garden
 	 * @param plantName the name of the plant that is added back
+	 * @author Arunima Dey
 	 */
 	public void removeFromDeleted(String plantName) {
 		model.deleted.remove(plantName);
@@ -419,6 +428,7 @@ public class Controller extends Application {
 	 * The spread of a plant is calculated using the lengthPerPixel and spread of the plant
 	 * @param plantKey the name of the plant to get pixel spread for
 	 * @return double representing the number of pixels of the radius of the plant
+	 * @author Arunima Dey
 	 */
 	public double scalePlantSpread(String plantKey) {
 		PlantSpecies plant = model.plantDirectory.get(plantKey);
@@ -429,6 +439,7 @@ public class Controller extends Application {
 
 	/**
 	 * Everytime the application is started a read back all the saved gardens from previos sessions
+	 * @author Arunima Dey
 	 */
 	public void readBack() {
 		try {
@@ -455,6 +466,7 @@ public class Controller extends Application {
 	/**
 	 * Called when user saves garden from summary
 	 * @param event button pressed event
+	 * @author Arunima Dey
 	 */
 	public void summarySave(ActionEvent event) {
 		new File("src/main/resources/garden.ser").delete();
@@ -660,10 +672,18 @@ public class Controller extends Application {
 		 this.model.setLengthPerPixel(length/view.dimPixel);
 	}
 	
+	/**
+	 * Gets the lep directory
+	 * @return the map for info and lep
+	 */
 	public Map<String, Lep> getLepInfo() {
 		return this.model.getLepDirectory();
 	}
 	
+	/**
+	 * Gets the plant information
+	 * @return the information and the corresponding PlantSpecie
+	 */
 	public Map<String, PlantSpecies> getPlantInfo() {
 		return this.model.getPlantInfo();
 	}
@@ -714,11 +734,16 @@ public class Controller extends Application {
 	/**
 	 * Gets the initial budget set by user to be displayed in garden design screen
 	 * @return the budget
+	 * @author Arunima Det
 	 */
 	public double getBudget() {
 		return model.getBudget();
 	}
 	
+	/**
+	 * Gets the gardenMap from model
+	 * @return the garden
+	 */
 	public Garden getGarden() {
 		return this.model.getGarden();
 	}
@@ -753,12 +778,14 @@ public class Controller extends Application {
 	/**
 	 * Starting x location for a node
 	 * @return the x
+	 * @author Arunima Dey
 	 */
 	public double getStartingX() {return model.getX();}
 	
 	/**
 	 * starting y location of a node
 	 * @return the y
+	 * @author Arunima Dey
 	 */
 	public double getStartingY() {return model.getY();}
 

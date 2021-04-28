@@ -35,26 +35,49 @@ public class Model implements java.io.Serializable{
 		editGarden = false;
 
 	}
-
+	
+	/**
+	 * Sets editGarden based on if user is editing a saved garden or a new one
+	 */
 	public void setToEdit() {
 		this.editGarden = true;
 	}
 	
+	/**
+	 * gets editGarden
+	 * @return if user if editing
+	 */
 	public boolean editing() {
 		return this.editGarden;
 	}
 	
+	/**
+	 * if garden is being edited sets index to the savedgarden
+	 * @param index the index
+	 */
 	public void setEditGardenIndex(int index) {
 		editGardenIndex = index;
 	}
 	
+	/**
+	 * gets the index for a garden that is being edited
+	 * @return the index
+	 */
 	public int getEditGardenIndex() {
 		return this.editGardenIndex;
 	}
 	
+	/**
+	 * gets the garden
+	 * @return the garden
+	 */
 	public Garden getGarden() {
 		return this.gardenMap;
 	}
+	/**
+	 * sets the garden
+	 * @param garden
+	 */
 	public void setGarden(Garden garden) {
 		this.gardenMap = garden;
 	}
@@ -95,13 +118,23 @@ public class Model implements java.io.Serializable{
 		
 	}
 
-	// get plant's sphere
+	/**
+	 * get plant's information
+	 * @return the information and the corresponding plantSpecie
+	 */
 	public Map<String, PlantSpecies> getPlantInfo() {
 		return this.plantDirectory;
 	}
 	// check if plant is okay to be placed
 	public void validatePlacement() {}
-	// place down plants and updates budget and lep count
+	
+	/**
+	 * Place a plant in the garden. Adds it to placedPlants and the updated cost and leps supported.
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @param key the name of plant
+	 * @param nodeId the node of corresponding imageView
+	 */
 	public void placePlant(double x, double y, String key, String nodeId) {
 		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
@@ -113,6 +146,11 @@ public class Model implements java.io.Serializable{
 		gardenMap.setNumLeps(gardenMap.getNumLeps() + specie.getLepsSupported());
 	}
 	
+	/**
+	 * removes a plant from placedPlants and updates budgte and lep
+	 * @param key the name of the plant
+	 * @param nodeId the nodeId of corresponding imageView
+	 */
 	public void removePlant(String key, String nodeId) {
 		PlantSpecies specie = plantDirectory.get(key);
 		System.out.println("removing: "+key);
@@ -124,6 +162,10 @@ public class Model implements java.io.Serializable{
 		gardenMap.setNumLeps(gardenMap.getNumLeps() - specie.getLepsSupported());
 	}
 	
+	/**
+	 * Updated the x and y for placedplants when the a plants is moved in garden
+	 * @param nodeId the id for for the imageview that moved
+	 */
 	public void updateXY(String nodeId) {
  		PlacedPlant plant = gardenMap.placedPlants.get(nodeId);
  		plant.setX(x);
@@ -142,26 +184,54 @@ public class Model implements java.io.Serializable{
 	public void initializePlantDirectory() {
 	}
 	
+	/**
+	 * get budget remaining
+	 * @return the budget
+	 */
 	public double getBudget() {
 		return gardenMap.getCost();
 	}
+	/**
+	 * sets the budget
+	 * @param budget
+	 */
 	public void setBudget(double budget) {
 		gardenMap.setCost(budget);
 	}
 	
+	/**
+	 * gets the leps supported
+	 * @return the lepCount
+	 */
 	public int getLepCount() {
 		return gardenMap.getNumLeps();
 	}
 	
+	/**
+	 * sets the x location
+	 * @param x
+	 */
 	public void setX(double x) {
 		this.x = x;
 	}
+	/**
+	 * sets the y location
+	 * @param y
+	 */
 	public void setY(double y) {
 		this.y = y;
 	}
+	/**
+	 * gets the x location
+	 * @return x
+	 */
 	public double getX() {
 		return this.x;
 	}
+	/**
+	 * gets the y location
+	 * @return y
+	 */
 	public double getY() {
 		return this.y;
 	}

@@ -69,6 +69,7 @@ public class Garden implements java.io.Serializable {
 	 * @param width
 	 * @param height
 	 * @param data
+	 * @author Arunima Dey
 	 */
 	public void setGardenImageInfo(int width, int height, int[][] data){
 		//this.image = image;
@@ -79,14 +80,11 @@ public class Garden implements java.io.Serializable {
 	}
 	
 	/**
-<<<<<<< HEAD
-	 * Get the garden data of this garden
-	 * @return the garden data
-=======
 	 * Sets the width, height, and data attributes for plot image
 	 * @param width
 	 * @param height
 	 * @param data
+	 * @author Arunima Dey
 	 */
 	public void setPlotImageInfo(int width, int height, int[][] data){
 		//this.image = image;
@@ -99,18 +97,14 @@ public class Garden implements java.io.Serializable {
 	/**
 	 * getter for data of garden
 	 * @return the data
->>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
+	 * @author Arunima Dey
 	 */
 	public int[][] getGardenData(){
 		return this.data;
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * Get the width of this garden
-=======
-	 * getter for width of garden
->>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
 	 * @return the width
 	 */
 	public int getWidth() {
@@ -118,11 +112,7 @@ public class Garden implements java.io.Serializable {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * Get the height of this garden
-=======
-	 * getter for height of garden
->>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
 	 * @return the height
 	 */
 	public int getHeight() {
@@ -130,26 +120,16 @@ public class Garden implements java.io.Serializable {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * Get the number of leps for this garden
 	 * @return the number of leps supported
-=======
-	 * getter for number of leps supported
-	 * @return 
->>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
 	 */
 	public int getNumLeps() {
 		return this.numLeps;
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * Set the number of leps supported
 	 * @param x the new amount of leps supported
-=======
-	 * sets the number of leps supported
-	 * @param x
->>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
 	 */
 	public void setNumLeps(int x) {
 		this.numLeps = x;
@@ -244,13 +224,8 @@ public class Garden implements java.io.Serializable {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * Add a plant to the garden
 	 * @param plant the plant to be added
-=======
-	 * when plant is placed adds to garden
-	 * @param plant the PlacedPlant object that is placed
->>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
 	 */
 	public void addToGarden(PlacedPlant plant) {
 		System.out.println("adding to garden");
