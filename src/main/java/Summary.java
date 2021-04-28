@@ -154,7 +154,7 @@ public class Summary extends View {
 		canvas = new Canvas();
 		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		gc = canvas.getGraphicsContext2D();
-		gardenDesign.getChildren().add(canvas);
+//		gardenDesign.getChildren().add(canvas);
 	
 		canvas.widthProperty().bind(gardenDesign.widthProperty());
 		canvas.heightProperty().bind(gardenDesign.heightProperty());
