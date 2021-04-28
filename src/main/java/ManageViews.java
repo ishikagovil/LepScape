@@ -242,6 +242,9 @@ public class ManageViews {
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
 	}
+	/**
+	 * Calls validateSave() method in PlotDesign
+	 */
 	public void validateSave() {
 		if(this.currView instanceof PlotDesign)
 			((PlotDesign) this.currView).validateSave();

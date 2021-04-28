@@ -16,7 +16,6 @@ import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.*;
 
-
 public class PlotDesign extends View{
 	ArrayList<Button> drawSwitch; 
 	ArrayList<Button> dimSwitch;

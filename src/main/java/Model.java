@@ -94,17 +94,6 @@ public class Model implements java.io.Serializable{
 		
 	}
 
-	// create a new condition for the garden
-	public void createNewConditions() {}
-	
-	// update the outline to the condition that user wants
-	public void updateConditions() {}
-	// find dimension of the garden
-	public void findDimensions() {}
-	
-	// Methods to use in order to place down plants
-	//choose 2 plants to compare the number of leps they support
-	public void comparePlant() {}
 	// get plant's sphere
 	public Map<String, PlantSpecies> getPlantInfo() {
 		return this.plantDirectory;
@@ -161,12 +150,6 @@ public class Model implements java.io.Serializable{
 	public int getLepCount() {
 		return gardenMap.getNumLeps();
 	}
-	
-	/*@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}*/
 	
 	public void setX(double x) {
 		this.x = x;
@@ -241,6 +224,7 @@ public class Model implements java.io.Serializable{
 	 * 
 	 * @param double[] topLeft representing the topLeft coordinate to be scaled
 	 * @return double[] representing translate in the x direction and translate in the y direction
+	 * @author Ishika Govil
 	 */
 	public double[] translateScaledPlot(double[] topLeft) {
 		double translateX = topLeft[0] - this.getGarden().getExtremes().get(3)[0] * scale;
@@ -248,5 +232,26 @@ public class Model implements java.io.Serializable{
 		double[] translate = new double[]{translateX, translateY};
 		this.setTranslate(translate);
 		return translate;
+	}
+	
+	public ArrayList<String> getFilteredList(Conditions cond) {
+		ArrayList<String> names = new ArrayList<>();
+		plantDirectory.forEach((name, plant) -> {
+			boolean matchMoist = plant.getMoistureType() == MoistureType.ANY 
+					|| cond.getMoistureType() == MoistureType.ANY 
+					|| cond.getMoistureType() == plant.getMoistureType();
+			boolean matchDirt = plant.getSoilType() == SoilType.ANY 
+					|| cond.getSoilType() == SoilType.ANY 
+					|| cond.getSoilType() == plant.getSoilType();
+			boolean matchSun = plant.getLightType() == LightType.ANY 
+					|| cond.getSunlightType() == LightType.ANY 
+					|| cond.getSunlightType() == plant.getLightType();
+			
+			if(matchMoist && matchDirt && matchSun) {
+				names.add(name);
+			}
+		});
+		
+		return names;
 	}
 }

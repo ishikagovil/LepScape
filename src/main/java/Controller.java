@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -71,6 +72,10 @@ public class Controller extends Application {
 		this.stage.setFullScreen(true);
 		this.stage.show();
 	}
+	/**
+	 * main method to launch the software
+	 * @param String[] args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -205,6 +210,23 @@ public class Controller extends Application {
 	
 	public EventHandler<ActionEvent> getHandlerforEditSaved(int index, Stage dialog){
 		return (e) -> {editSavedGarden(e,index, dialog);};
+	}
+	
+	public EventHandler<MouseEvent> getHandlerForSectionClick(Canvas canvas) {
+		return (e) -> {sectionClicked(e, canvas);};
+	}
+	
+	private void sectionClicked(MouseEvent e, Canvas canvas) {
+		int newX = (int) e.getX();
+		int newY = (int) e.getY();
+
+		WritableImage img = canvas.snapshot(null, null);
+		PixelReader pr = img.getPixelReader();
+		Conditions cond = Conditions.fromColor(pr.getColor(newX, newY));
+		
+		ArrayList<String> filteredNames = model.getFilteredList(cond);		
+		GardenDesign gd = (GardenDesign) this.view.getView("GardenDesign");
+		gd.updateImageList(filteredNames);
 	}
 	
 	public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
@@ -604,6 +626,7 @@ public class Controller extends Application {
 		 } 
 		 else if(next.equals("Restart")) {
 			 this.model.getGarden().outline = new ArrayList<double[]>(); 
+			 this.model.getGarden().polygonCorners = new ArrayList<double[]>();
 			 this.view.restartPlot();
 			 setTheStage();
 		 }

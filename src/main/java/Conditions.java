@@ -56,5 +56,16 @@ public class Conditions {
 			1.0);
 
 	}
+	public static Conditions fromColor(Color color) {
+		double red = color.getRed();
+		double green = color.getGreen();
+		double blue = color.getBlue();
+		
+		SoilType soil = SoilType.fromValue(red);
+		MoistureType moisture = MoistureType.fromValue(green);
+		LightType light = LightType.fromValue(blue);
+		
+		return new Conditions(soil, moisture, light);
+	}
 }
 
