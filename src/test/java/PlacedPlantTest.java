@@ -8,10 +8,11 @@ class PlacedPlantTest {
 	private double epsilon = 0.00000001;
 	private float x = (float) 3.5;
 	private float y = (float) 4.5;
+	private PlantSpecies testSpecies = new PlantSpecies("a", "b", "c", 0, 0, 0, true, 0, 0, 0);
 	
 	private PlacedPlant p1 = new PlacedPlant();
 	//private PlacedPlant p2 = new PlacedPlant((float)3.5, (float)4.5, new PlantSpecies());
-	private PlacedPlant p2 = new PlacedPlant(x, y, new PlantSpecies());
+	private PlacedPlant p2 = new PlacedPlant(x, y, testSpecies);
 
 	@Test
 	void testGetX() {
@@ -44,13 +45,19 @@ class PlacedPlantTest {
 	@Test
 	void testGetSpecies() {
 		assertNull(p1.getSpecies());
-		fail("Not yet implemented");
+		assertEquals(p2.getSpecies(), testSpecies);
 	}
 
 	@Test
 	void testSetSpecies() {
-		p1.setSpecies(null);
-		fail("Not yet implemented");
+		p1.setSpecies(testSpecies);
+		assertEquals(p1.getSpecies(), testSpecies);
+	}
+	
+	@Test
+	void testGetName() {
+		String name = "a-b";
+		assertEquals(name, p2.getName());
 	}
 
 }

@@ -8,6 +8,9 @@ class GardenTest {
 	
 	private Garden g1 = new Garden(15, 20);
 	private Garden g2 = new Garden();
+	private PlantSpecies testSpecies = new PlantSpecies("a", "b", "c", 0, 0, 0, true, 0, 0, 0);
+	private PlacedPlant testPlant = new PlacedPlant(0, 0, testSpecies);
+	private Conditions c = new Conditions(SoilType.ANY, MoistureType.ANY, LightType.ANY);
 	
 	
 	@Test
@@ -72,13 +75,12 @@ class GardenTest {
 	@Test
 	void testGetLeps() {
 		assertNull(g1.getLeps());
-		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetCompostBin() {
 		assertTrue(g1.getCompostBin().isEmpty());
-		assertTrue(g1.getCompostBin().isEmpty());
+		assertTrue(g2.getCompostBin().isEmpty());
 	}
 	@Test
 	void testUpdateOutline() {
@@ -111,6 +113,36 @@ class GardenTest {
 		assertArrayEquals(new double[] {5,2}, extrema.get(1));
 		assertArrayEquals(new double[] {1,9}, extrema.get(2));
 		assertArrayEquals(new double[] {0,4}, extrema.get(3));
+	}
+	
+	@Test
+	void testAddSection() {
+		g1.addSection(c);
+		ArrayList<Conditions> temp = new ArrayList<>();
+		temp.add(c);
+		assertEquals(g1.getSections(), temp);
+	}
+	
+	@Test
+	void addToGarden() {
+		g1.addToGarden(testPlant);
+		assertFalse(g1.getPlants().isEmpty());
+	}
+	
+	@Test
+	void testSetGardenImageInfo() {
+		g1.setGardenImageInfo(0, 0, null);
+		assertNull(g1.getGardenData());
+		assertEquals(0, g1.getWidth());
+		assertEquals(0, g1.getHeight());
+	}
+	
+	@Test
+	void testSetPlotImageInfo() {
+		g1.setPlotImageInfo(0, 0, null);
+		assertNull(g1.plotData);
+		assertEquals(0, g1.plotWidth);
+		assertEquals(0, g1.plotHeight);
 	}
 	
 }
