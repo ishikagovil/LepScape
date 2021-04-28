@@ -17,7 +17,7 @@ import javafx.scene.layout.Pane;
 public class Garden implements java.io.Serializable {
 	
 	/**
-	 * 
+	 * Class represents the 
 	 */
 	private static final long serialVersionUID = 1L;
 	public int numLeps;

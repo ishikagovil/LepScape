@@ -71,6 +71,10 @@ public class Controller extends Application {
 		this.stage.setFullScreen(true);
 		this.stage.show();
 	}
+	/**
+	 * main method to launch the software
+	 * @param String[] args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
