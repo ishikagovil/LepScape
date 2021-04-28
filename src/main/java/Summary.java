@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -45,7 +46,6 @@ public class Summary extends View {
 		border.setBottom(addBottomHBox());
 		border.setLeft(addNavigationVBox());
 		border.setCenter(addCenterPane());
-		border.setRight(addInfoPane());
 		
 		/*
 	       // load butterfly animation
@@ -66,8 +66,6 @@ public class Summary extends View {
 		
        //main = addCanvas();
 		border.setCenter(main);  
-       
-       
     }
 	
 /**
@@ -128,6 +126,7 @@ public class Summary extends View {
         buttons.add(addNextButton("Lepedia", "Lepedia"));
         buttons.add(addNextButton("Learn More","LearnMore"));
         Button saveGarden = new Button("Save");
+        saveGarden.setPrefSize(buttonWidth, buttonHeight);
         saveGarden.setOnAction(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
         return buttons;
@@ -151,7 +150,6 @@ public class Summary extends View {
 	public void addCanvas() {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-<<<<<<< HEAD
 		canvas = new Canvas();
 		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		gc = canvas.getGraphicsContext2D();
@@ -162,8 +160,7 @@ public class Summary extends View {
 	
 		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
 		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
-		return gardenDesign;
-=======
+		
 //		canvas = new Canvas();
 //		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 //		gc = canvas.getGraphicsContext2D();
@@ -181,32 +178,38 @@ public class Summary extends View {
 		iv.fitHeightProperty().bind(gardenDesign.widthProperty());
 		gardenDesign.getChildren().add(iv);
 		border.setCenter(gardenDesign);
->>>>>>> ad7f7acd827b27ef9f3bdf4edda7850239b848d4
 	}
 	
 /**
- * create a tilepane to hold information about the garden
- * @return the tilepane created
+ * create a tilepane to hold information about the garden with updated cost and leps count
+ * @return
  */
-	public TilePane addInfoPane() {
-		TilePane rightPane = new TilePane();
+	public void updateLepandCost(double cost, int leps) {
+		VBox rightPane = new VBox();
 	    rightPane.setPadding(new Insets(10));
 	    rightPane.setStyle("-fx-background-color: lavender");
 	    Text title = new Text("Summary");
 	    title.setFont(Font.font(null, FontWeight.BOLD, 30));
-	  
+	    
+		HBox box1 = new HBox();
 	    Image lepCount = new Image(getClass().getResourceAsStream("/butterfly1.png"));
-		Image cost = new Image(getClass().getResourceAsStream("/dollar.png"));
-		ImageView lepIV = new ImageView(lepCount);
+	    ImageView lepIV = new ImageView(lepCount);
 		lepIV.setPreserveRatio(true);
 		lepIV.setFitHeight(20);
-		ImageView costIV = new ImageView(cost);
+		Label lep = new Label(""+ leps);
+		lep.setGraphic(lepIV);
+		box1.getChildren().addAll(lepIV, lep);
+		
+		HBox box = new HBox();
+		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+		ImageView costIV = new ImageView(dollar);
+		Label totalCost = new Label("" + cost);
+		totalCost.setGraphic(costIV);
 		costIV.setPreserveRatio(true);
 		costIV.setFitHeight(20);
-		rightPane.getChildren().addAll(title, lepIV, costIV);
-		return rightPane;
+		box.getChildren().addAll(costIV, totalCost);
+		
+		rightPane.getChildren().addAll(title, box1, box);
+		border.setRight(rightPane);
 	}
-
-
-	
 }

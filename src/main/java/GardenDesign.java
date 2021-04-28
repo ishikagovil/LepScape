@@ -64,7 +64,6 @@ public class GardenDesign extends View{
 	ImageView c = new ImageView(compost);
 	Pane main;
 	
-	
 //	public ArrayList<ImageView> addedPlants;
 	
 	/**
@@ -239,10 +238,8 @@ public class GardenDesign extends View{
 		if(l.getText()!=null) {
 			return l.getText();
 		}
-		return "";
-		
+		return "";	
 	}
-	
 	
 	/**
 	 * Makes the pane that holds all the ImageViews of the plants
@@ -261,21 +258,16 @@ public class GardenDesign extends View{
 				public void handle(MouseEvent event) {
 					v.startFullDrag();
 					//System.out.println("drag detected");
-					
 				}
 			});
 			main.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
 				@Override
 				public void handle(MouseDragEvent event) {
 					//System.out.println("entered the pane");
-					
 				}
-				
 			});
-			
 			tile.getChildren().add(v);
 		});
-		
 		return tile;
 	}
 	
@@ -340,7 +332,6 @@ public class GardenDesign extends View{
 		
 		budgetLepPane.setAlignment(Pos.CENTER);
 		border.setTop(budgetLepPane);
-		
 	}
 	
 	/**
@@ -372,27 +363,19 @@ public class GardenDesign extends View{
 			@Override
 			public void handle(MouseEvent event) {
 				iv2.startFullDrag();
-				
 			}
 		});
-		
 		c.setOnMouseDragEntered(controller.getHandlerforMouseEntered(key));
-		
 		main.getChildren().add(iv2);
 		return iv2.getId();
-		
-		
-		
 	}
 	
 	/**
 	 * Makes the pane will display information about a given plant when it is clicked
 	 */
-	public void makeInfoPane(String name,String info) {
+	public void makeInfoPane(String name, String info) {
 		BorderPane info1 = new BorderPane();
-		info = fitInfo(info);
-		info1.setPrefWidth(screenWidth/6);
-
+		info1.setPrefWidth(screenWidth / 6);
 		info1.setMinHeight(screenHeight-300);
 		info1.setStyle("-fx-background-color: LIGHTBLUE");
 		
@@ -409,7 +392,6 @@ public class GardenDesign extends View{
 		});
 		
 		HBox top = new HBox();
-//		top.setSpacing(80);
 		top.getChildren().add(toggle);
 		toggle.setAlignment(Pos.TOP_LEFT);
 		top.getChildren().add(title);
@@ -417,27 +399,30 @@ public class GardenDesign extends View{
 		
 		Text tf = new Text();
 		tf.setText(info);
-		
+		tf.setTextAlignment(TextAlignment.LEFT);
+		tf.setWrappingWidth(screenWidth / 6.5);;
+
 		info1.setTop(top);
 		info1.setCenter(tf);
 		info1.setAlignment(tf, Pos.CENTER);
-		
 		border.setRight(info1);
+		
 	}
+	
 	
 	/**
 	 * Starts a new paragraph after a few characters so the information can bettre fit into the pane
 	 * @param info the information that will be changed
 	 * @return the changed string
 	 */
-	public String fitInfo(String info) {
+	/*public String fitInfo(String info) {
 		StringBuilder sb = new StringBuilder(info);
-		for(int i = 20; i<info.length(); i+=30) {
+		for(int i = 20; i < info.length(); i += 30) {
 			if(info.charAt(i)==' ') {
 				sb.insert(i, "\n");
 			}
 			else {
-				for(int j = i; j<info.length(); j++) {
+				for(int j = i; j < info.length(); j++) {
 					if(info.charAt(j)==' ') {
 						sb.insert(j, "\n");
 						i = j;
@@ -449,7 +434,7 @@ public class GardenDesign extends View{
 		}
 		return sb.toString();
 	}
-	
+	*/
 	/**
 	 * Adds the navigation buttons to a pane. 
 	 * Back takes to the previous screen, next takes you to the next, learn more takes you to learn more page and save saves an image of the garden

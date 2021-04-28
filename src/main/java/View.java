@@ -50,7 +50,6 @@ public abstract class View{
 		this.flowerCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/flowerCursor.png"), 30,40,false,false));
 		//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
 		this.handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
-
 	}	
 	
 	public void setX(double x, Node n) {
@@ -77,6 +76,7 @@ public abstract class View{
 		else
 			stage.getScene().setCursor(this.flowerCursor);
 	} 
+	
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
 		b.setPrefSize(buttonWidth, buttonHeight);
@@ -88,7 +88,6 @@ public abstract class View{
 	public void setOnMouse(Button b) {
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
 		b.setOnMouseExited(controller.getHandlerforMouseExited());
-
 	}
 	
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
@@ -100,12 +99,14 @@ public abstract class View{
 		else
 			freeLines.add(line);
 	}
+	
 	public void removeLines() {
 			border.getChildren().removeAll(polygonLines);
 			polygonLines = new ArrayList<>();
 			border.getChildren().removeAll(freeLines);
 			freeLines = new ArrayList<>();
 	}
+	
 	public static double drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
 		double minX = extrema.get(3)[0];
 		double maxX = extrema.get(1)[0];
@@ -139,7 +140,6 @@ public abstract class View{
 			gc.save();
 			System.out.println("drawing cond at " + startX + " " + startY);
 		}
-		
 		return scale;
 	}
 	
@@ -194,12 +194,10 @@ public abstract class View{
 
 		
 		Color fillColor = conds.toColor();
-		
 		fillStack.push(new Point2D(startX, startY));
 		
 		while(!fillStack.empty()) {
 			Point2D curr = fillStack.pop();
-
 			int x = (int) curr.getX();
 			int y = (int) curr.getY();
 

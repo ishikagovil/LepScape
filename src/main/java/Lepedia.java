@@ -42,6 +42,7 @@ public class Lepedia extends View {
 		border.setTop(lepTitle);
 		border.setAlignment(lepTitle, Pos.CENTER);
 		Button back = addNextButton("Back", "Summary");
+		back.setPadding(new Insets(15));
 		border.setBottom(back);
 		border.setAlignment(back, Pos.CENTER);
 		
