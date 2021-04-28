@@ -62,19 +62,40 @@ public class Lepedia extends View {
 	    
 	    Map<String, Lep> info = c.getLepInfo();
 	    Map<String, ImageView> lepImages = manageView.getLepImages();
+	    ArrayList<PlacedPlant> plants = c.getGarden().getPlants();
 	    Iterator lepIter = info.entrySet().iterator();
+	    Iterator plantIter = plants.iterator();
 	    
-	    while (lepIter.hasNext()) {
+	    while (plantIter.hasNext()) {
+	    	PlacedPlant plant = (PlacedPlant)plantIter.next();
+	    	String plantGenus = plant.getSpecies().getGenusName();
+	    	
+	    	while (lepIter.hasNext()) {
+	    		Map.Entry lepElement = (Map.Entry)lepIter.next();
+	            Lep lepObj = (Lep)lepElement.getValue();
+	            
+	            Iterator genusIter = lepObj.getThrivesInGenus().iterator();
+	            while (genusIter.hasNext()) {
+	            	String lepGenus = (String)genusIter.next();
+	            	if (lepGenus.equals(plantGenus)) {
+	                    outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
+	            	}
+	            }
+	    	}
+            outerTile.setTileAlignment(Pos.CENTER);
+	    }
+	    		
+	    		
+	   /* while (lepIter.hasNext()) {
 	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
             Lep lepObj = (Lep)lepElement.getValue();
             //outerTile.setPrefWidth(screenWidth);
             outerTile.getChildren().add(getInfoTile(lepImages, lepObj));
             outerTile.setTileAlignment(Pos.CENTER);
-	    }
-	    
+	    } */
 		sp.setContent(outerTile);
 	    border.setCenter(sp);
-	}
+	} 
 	
 	public HBox getInfoTile(Map<String, ImageView> lepImages, Lep lep) {
 		String genusName = lep.getGenusName();
