@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class GardenTest {
@@ -13,10 +14,19 @@ class GardenTest {
 	private Conditions c = new Conditions(SoilType.ANY, MoistureType.ANY, LightType.ANY);
 	
 	
+	@BeforeEach
+	void beforeEach() {
+		g1 = new Garden(15, 20);
+		g2 = new Garden();
+		testSpecies = new PlantSpecies("a", "b", "c", 0, 0, 0, true, 0, 0, 0);
+		testPlant = new PlacedPlant(0, 0, testSpecies);
+		c = new Conditions(SoilType.ANY, MoistureType.ANY, LightType.ANY);
+	}
+	
 	@Test
 	void testGetNumLeps() {
 		assertEquals(15, g1.getNumLeps());
-		assertNull(g2.getNumLeps());
+		assertEquals(0, g2.getNumLeps());
 	}
 
 	@Test
@@ -30,15 +40,12 @@ class GardenTest {
 	@Test
 	void testAddNumLeps() {
 		g1.addNumLeps(15);
-		assertEquals(215, g1.getNumLeps());
-		g2.addNumLeps(-10);
-		assertEquals(5, g2.getNumLeps());
+		assertEquals(30, g1.getNumLeps());
 	}
 
 	@Test
 	void testGetCost() {
 		assertEquals(20, g1.getCost());
-		assertNull(g2.getCost());
 	}
 
 	@Test
@@ -52,29 +59,27 @@ class GardenTest {
 	@Test
 	void testAddCost() {
 		g1.addCost(250);
-		assertEquals(350, g1.getCost());
-		g2.addCost(-20);
-		assertEquals(10, g2.getCost());
+		assertEquals(270, g1.getCost());
 	}
 
 	@Test
 	void testGetOutline() {
-		assertNull(g1.getOutline());
+		assertTrue(g1.getOutline().isEmpty());
 	}
 
 	@Test
 	void testGetPlants() {
-		assertNull(g1.getPlants());
+		assertEquals(0, g1.getPlants().size());
 	}
 
 	@Test
 	void testGetSections() {
-		assertNull(g1.getSections());
+		assertEquals(g1.getSections().size(), 0);
 	}
 
 	@Test
 	void testGetLeps() {
-		assertNull(g1.getLeps());
+		assertEquals(0, g1.getLeps().size());
 	}
 
 	@Test

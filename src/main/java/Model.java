@@ -125,9 +125,7 @@ public class Model implements java.io.Serializable{
 	public Map<String, PlantSpecies> getPlantInfo() {
 		return this.plantDirectory;
 	}
-	// check if plant is okay to be placed
-	public void validatePlacement() {}
-	
+
 	/**
 	 * Place a plant in the garden. Adds it to placedPlants and the updated cost and leps supported.
 	 * @param x the x coordinate
@@ -174,14 +172,8 @@ public class Model implements java.io.Serializable{
  		System.out.println("plants: "+gardenMap.placedPlants);
  	}
 	
-	// update the cost every time a plant is placed
-	public void costUpdate() {}
-
 	public Map<String, Lep> getLepDirectory() {
 		return this.lepDirectory;
-	}
-	
-	public void initializePlantDirectory() {
 	}
 	
 	/**

@@ -1,60 +1,104 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.jupiter.api.Test;
 
 class ModelTest {
 	public int budget = 10;
 	public Garden garden = new Garden();
-	public Map<String, PlantSpecies> plantDirectory ;
+	public Map<String, PlantSpecies> plantDirectory = new HashMap<>();
+	public Map<String, Lep> lepDirectory = new HashMap<>();
 	public float x = (float) 10.0;
 	public float y = (float) 5.0;
-	public PlantSpecies plant1 = new PlantSpecies();
+	public PlantSpecies plant1 = new PlantSpecies("a", "b", "c", 0, 0, 0, false, 0, 0, 0);
 	public PlantSpecies plant2 = new PlantSpecies();
 	public int cost = 0;
 	
 	public Model m = new Model();
+	
+	@Test
+	void testSetEdit() {
+		m.setToEdit();
+		assertTrue(m.editing());
+	}
+	
+	@Test
+	void testEditGardenIndex() {
+		m.setEditGardenIndex(5);
+		assertEquals(m.getEditGardenIndex(), 5);
+	}
+	
 
 	@Test
 	void testSetGarden() {
 		m.setGarden(garden);
 		assertEquals(garden, m.getGarden());
 	}
+	
 	@Test
-	void testCreateNewConditions() {
-		m.createNewConditions();
-		fail("Not yet implemented");
+	void testPlantDirectory() {
+		m.setPlantDirectory(plantDirectory);
+		assertEquals(m.getPlantInfo(), plantDirectory);
 	}
-
+	
 	@Test
-	void testUpdateConditions() {
-		m.updateConditions();
-		fail("Not yet implemented");
+	void testLepDirectory() {
+		m.setLepDirectory(lepDirectory);
+		assertEquals(m.getLepDirectory(), lepDirectory);
+		
+		Lep lep = new Lep("a", "b", "c");
+		m.getLepDirectory().put("lep", lep);
+		ArrayList<PlantSpecies> thrives = new ArrayList<>();
+		thrives.add(plant1);
+		lep.setThrivesIn(thrives);
+
+		m.setLepDirectory(lepDirectory);
+
+		assertEquals(lep.getThrivesIn().get(0).getGenusName(), "b");
 	}
-
+	
 	@Test
-	void testFindDimensions() {
-		m.findDimensions();
-		fail("Not yet implemented");
+	void testPlaceAndRemovePlant() {
+		m.getPlantInfo().put("plant", plant1);
+		m.placePlant(0, 0, "plant", "id");
+		assertEquals(m.getGarden().getPlants().size(), 1);
+		m.removePlant("plant", "id");
+		assertEquals(m.deleted.size(), 1);
 	}
-
+	
 	@Test
-	void testComparePlant() {
-		m.comparePlant();
-		fail("Not yet implemented");
+	void testUpdateXY() {
+		m.getPlantInfo().put("plant2", plant2);
+		m.placePlant(0, 0, "plant2", "id2");
+		m.updateXY("id2");
+		assertEquals(m.getGarden().placedPlants.get("id2").getX(), m.getX());
+		assertEquals(m.getGarden().placedPlants.get("id2").getY(), m.getY());
 	}
-
+	
 	@Test
-	void testGetPlantInfo() {
-		m.getPlantInfo();
-		fail("Not yet implemented");
+	void testFilteredList() {
+		m.getPlantInfo().clear();
+		m.getPlantInfo().put("testPlant", new PlantSpecies("a", "b", "c", 3, 3, 3, false, 10, 10, 10));
+		Conditions c = new Conditions(SoilType.ROCK, MoistureType.WET, LightType.INTENSE);
+		ArrayList<String> list = m.getFilteredList(c);
+		assertEquals(list.size(), 1);
 	}
-
+	
 	@Test
-	void testValidatePlacement() {
-		m.validatePlacement();
-		fail("Not yet implemented");
+	void testBudget() {
+		m.setBudget(5);
+		assertEquals(m.getBudget(), 5);
+	}
+	
+	@Test
+	void testLepCount() {
+		m.getGarden().setNumLeps(30);
+		assertEquals(m.getLepCount(), 30);
 	}
 
 //	@Test
@@ -63,11 +107,6 @@ class ModelTest {
 //		fail("Not yet implemented");
 //	}
 
-	@Test
-	void testCostUpdate() {
-		m.costUpdate();
-		fail("Not yet implemented");
-	}
 	@Test
 	void testSetScale() {
 		m.setScale(5);

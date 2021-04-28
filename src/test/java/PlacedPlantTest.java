@@ -16,7 +16,6 @@ class PlacedPlantTest {
 
 	@Test
 	void testGetX() {
-		assertNull(p1.getX());
 		assertTrue(Math.abs(3.5 - p2.getX()) < epsilon);
 	}
 
@@ -30,7 +29,6 @@ class PlacedPlantTest {
 
 	@Test
 	void testGetY() {
-		assertNull(p1.getY());
 		assertTrue(Math.abs(4.5 - p2.getY()) < epsilon);
 	}
 
@@ -56,8 +54,13 @@ class PlacedPlantTest {
 	
 	@Test
 	void testGetName() {
-		String name = "a-b";
+		String name = "b-a";
 		assertEquals(name, p2.getName());
+	}
+	
+	@Test 
+	void testToString() {
+		assertEquals(p1.toString(), p1.getName());
 	}
 
 }

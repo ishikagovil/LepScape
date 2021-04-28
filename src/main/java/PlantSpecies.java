@@ -173,30 +173,6 @@ public class PlantSpecies implements Comparable<PlantSpecies> {
 		this.isWoody = isWoody;
 	}
 
-	public void setLightReq(int lightReq) {
-		this.lightReq = lightReq;
-	}
-	
-	public int getLightReq() {
-		return this.lightReq;
-	}
-
-	public void setSoilReq(int soilReq) {
-		this.soilReq = soilReq;
-	}
-
-	public int getSoilReq() {
-		return this.soilReq;
-	}
-
-	public void setMoistReq(int moistReq) {
-		this.moistReq = moistReq;
-	}
-
-	public int getMoistReq() {
-		return this.moistReq;
-	}
-
 	public String toString() {
 		return this.commonName;
 	}
