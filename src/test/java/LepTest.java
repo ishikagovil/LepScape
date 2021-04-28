@@ -39,5 +39,15 @@ class LepTest {
 		butterfly.setThrivesIn(x);
 		assertEquals(x,butterfly.getThrivesIn());
 	}
+	
+	@Test
+	void testSetThrivesInGenus() {
+		PlantSpecies ps = new PlantSpecies("Pinaceae","Pinus","Pine", 100, 5, 20, true, 5, 5, 5);
+		String genus1 = ps.getGenusName();
+		ArrayList<String> x = new ArrayList<>();
+		x.add(genus1);
+		butterfly.setThrivesInGenus(x);
+		assertEquals(x,butterfly.getThrivesInGenus());
+	}
 
 }
