@@ -33,6 +33,9 @@ public class Garden implements java.io.Serializable {
 	public int width;
 	public int height;
 	public int[][] data;
+	public int plotWidth;
+	public int plotHeight;
+	public int[][] plotData;
 	public double lengthPerPixel;
 	public double scale;
 	public transient HashMap<String, PlacedPlant> placedPlants;
@@ -55,6 +58,8 @@ public class Garden implements java.io.Serializable {
 		this.height = 0;
 		this.data = new int[width][height];
 		this.placedPlants= new HashMap<>();
+		System.out.println("outline: "+ outline);
+		System.out.println("polygonCorners"+polygonCorners);
 //		this.image = new BufferedImage (0,0,0);
 	}
 	
@@ -64,6 +69,12 @@ public class Garden implements java.io.Serializable {
 		this.cost = cost;
 	}
 	
+	/**
+	 * Sets the width, height and data attributes
+	 * @param width
+	 * @param height
+	 * @param data
+	 */
 	public void setGardenImageInfo(int width, int height, int[][] data){
 		//this.image = image;
 		this.width = width;
@@ -72,26 +83,61 @@ public class Garden implements java.io.Serializable {
 		//makeData();
 	}
 	
+	/**
+	 * Sets the width, height, and data attributes for plot image
+	 * @param width
+	 * @param height
+	 * @param data
+	 */
+	public void setPlotImageInfo(int width, int height, int[][] data){
+		//this.image = image;
+		this.plotWidth = width;
+		this.plotHeight = height;
+		this.plotData = data;
+		//makeData();
+	}
+	
+	/**
+	 * getter for data of garden
+	 * @return the data
+	 */
 	public int[][] getGardenData(){
 		return this.data;
 	}
 	
+	/**
+	 * getter for width of garden
+	 * @return the width
+	 */
 	public int getWidth() {
 		return this.width;
 	}
 	
+	/**
+	 * getter for height of garden
+	 * @return the height
+	 */
 	public int getHeight() {
 		return this.height;
 	}
 	
+	/**
+	 * getter for number of leps supported
+	 * @return 
+	 */
 	public int getNumLeps() {
 		return this.numLeps;
 	}
 	
+	/**
+	 * sets the number of leps supported
+	 * @param x
+	 */
 	public void setNumLeps(int x) {
 		this.numLeps = x;
 	}
 	
+
 	public void addNumLeps(int x) {
 		this.numLeps += x;
 	}
@@ -144,6 +190,10 @@ public class Garden implements java.io.Serializable {
 		return this.compostBin;
 	}
 	
+	/**
+	 * when plant is placed adds to garden
+	 * @param plant the PlacedPlant object that is placed
+	 */
 	public void addToGarden(PlacedPlant plant) {
 		System.out.println("adding to garden");
 		plants.add(plant);

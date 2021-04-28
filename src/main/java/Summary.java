@@ -107,8 +107,10 @@ public class Summary extends View {
         buttons.add(addNextButton("Lepedia", "Lepedia"));
         buttons.add(addNextButton("Learn More","LearnMore"));
         Button saveGarden = new Button("Save");
+        saveGarden.setPrefSize(buttonWidth, buttonHeight);
         saveGarden.setOnAction(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
+        buttons.add(addNextButton("Gallery","Gallery"));
         return buttons;
 	}
 	
