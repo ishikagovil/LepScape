@@ -48,9 +48,8 @@ public class Gallery extends View{
 		hb1.setPadding(new Insets(20));
 		back = new Button("Back");
 		back.setPrefSize(100, 30);;
-		setOnMouse(back);
-		back.setOnAction(controller.getHandlerforClicked("Back to Start"));
-		hb1.getChildren().add(back);
+//		back.setOnAction(controller.getHandlerforClicked("Back to Start"));
+		hb1.getChildren().add(addNextButton("Back","Start"));
 		border.setBottom(hb1);
 		
 		// get the summary pane on the right to display lep + cost
