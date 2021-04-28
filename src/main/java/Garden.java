@@ -263,6 +263,8 @@ public class Garden implements java.io.Serializable {
 	 * @author Ishika Govil 
 	 */
 	public ArrayList<double[]> getExtremes() {
+		System.out.println("outline: "+ outline);
+		System.out.println("polygon: "+ polygonCorners);
 		ArrayList<double[]> scaledOutlines = new ArrayList<>();
 		ArrayList<double[]> extrema = new ArrayList<>();
 		int lowestX = 0; 
@@ -271,6 +273,7 @@ public class Garden implements java.io.Serializable {
 		int highestY = 0;
 		scaledOutlines.addAll(outline);
 		scaledOutlines.addAll(polygonCorners);
+		System.out.println("scaled: " +scaledOutlines);
 		Iterator<double[]> itr = scaledOutlines.iterator();
 		int idx = 0;
 		while(itr.hasNext()) {

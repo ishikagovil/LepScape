@@ -258,7 +258,8 @@ public class Controller extends Application {
 	public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
 		this.view.switchViews("GardenDesign");
 		setTheStage();
-		Garden garden = model.savedGardens.get(index);
+		model.gardenMap = model.savedGardens.get(index);
+		Garden garden = model.gardenMap;
 		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
 		System.out.println("putline: "+garden.outline + " "+ garden.outline.size());
 		((GardenDesign) view.views.get("GardenDesign")).remakePane();
