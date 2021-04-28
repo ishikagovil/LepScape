@@ -1,5 +1,4 @@
 import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -36,8 +35,10 @@ public abstract class View{
 	GraphicsContext gc;
 	ArrayList<Line> polygonLines;
 	ArrayList<Line> freeLines;
-	ImageCursor flowerCursor;
-	ImageCursor handCursor;
+	//Image from: https://custom-cursor.com/en/collection/life-style/hand-painted-poppy-flower
+	ImageCursor flowerCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/flowerCursor.png"), 30,40,false,false));
+	//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
+	ImageCursor handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
 	/**
 	 * View class that is the super class for all View screens
 	 * @param Stage stage
@@ -51,10 +52,7 @@ public abstract class View{
 		this.freeLines = new ArrayList<>();
         this.controller = c;
 		this.stage.setTitle("Lepscape");
-		//Image from: https://custom-cursor.com/en/collection/life-style/hand-painted-poppy-flower
-		this.flowerCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/flowerCursor.png"), 30,40,false,false));
-		//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
-		this.handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
+		
 	}	
 	/**
 	 * Sets the translateX value of a node n

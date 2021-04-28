@@ -1,4 +1,3 @@
-import java.awt.image.BufferedImage;
 import java.util.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,7 +7,6 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class ManageViews {

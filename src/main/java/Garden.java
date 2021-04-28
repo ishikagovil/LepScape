@@ -1,23 +1,10 @@
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-
-import java.awt.image.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.*;
-import javax.imageio.ImageIO;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Pane;
+
 
 public class Garden implements java.io.Serializable {
 	
 	/**
-	 * Class represents the 
+	 * Class represents the Garden with its plants, boundaries, and conditions
 	 */
 	private static final long serialVersionUID = 1L;
 	public int numLeps;

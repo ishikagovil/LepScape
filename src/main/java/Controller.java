@@ -7,16 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,11 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import com.sun.javafx.application.HostServicesDelegate;
-
-import java.util.Set;
-
 import javafx.application.Application;
 
 /**
@@ -73,6 +64,8 @@ public class Controller extends Application {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.setFullScreen(true);
 		this.stage.show();
+		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited());
+		this.stage.getScene().setOnMouseExited(this.getHandlerforMouseEntered());
 	}
 	/**
 	 * main method to launch the software
