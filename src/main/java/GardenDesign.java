@@ -371,7 +371,7 @@ public class GardenDesign extends View{
 				iv2.startFullDrag();
 			}
 		});
-		c.setOnMouseDragEntered(controller.getHandlerforMouseEntered(key));
+		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
 		main.getChildren().add(iv2);
 		return iv2.getId();
 	}
