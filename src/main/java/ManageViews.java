@@ -43,7 +43,7 @@ public class ManageViews {
 	    this.stage = stage;
 	    this.sp = new Pane();
 		initializeViews();
-	    this.currView = this.getView("GardenDesign");
+	    this.currView = this.getView("Start");
 	}
 	
 	public void setPlantImg(Map<String, ImageView> imgs) {
