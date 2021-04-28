@@ -1,15 +1,17 @@
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.*;
 
 public class Start extends View {
 	public ArrayList<Button> buttons;
-	
+	Canvas canvas;
 	/**
 	 * @author Ishika Govil 
 	 */
@@ -22,28 +24,49 @@ public class Start extends View {
 	 */
 	public Start(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);     
-		Canvas canvas = new Canvas(screenWidth, screenHeight);
+		canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
 		border.getChildren().add(canvas);
-        border.setStyle("-fx-background-color: #94DF86");
+		
+        border.setCenter(addButtonPane());
+        addBackgroundImage();
+	}
 
-        VBox titleBox = new VBox(12);
-        border.setCenter(titleBox);
-        titleBox.setAlignment(Pos.CENTER);
-        Text title = new Text("LepScape");
-        title.setFont(new Font(32));
-
-        HBox box = new HBox();
-        box.setSpacing(15);
-
-        titleBox.getChildren().addAll(title, box);
- 
-        //Populate button array
+	public void addBackgroundImage() {
+		Image bgImage = new Image(getClass().getResourceAsStream("/lep-background.jpg"));
+        gc = canvas.getGraphicsContext2D();	
+        gc.getCanvas().setWidth(getScreenWidth());
+        gc.getCanvas().setHeight(getScreenHeight());
+        gc.drawImage(bgImage, 0, 0);
+	}
+	
+	/** 
+	 * make a pane to the title and the buttons on the start screen
+	 * @return a Vertical Box pane 
+	 */
+	public VBox addButtonPane() {
+        VBox box = new VBox();
+        box.setAlignment(Pos.CENTER);
+        box.setSpacing(10);
+        Text title = new Text("Lepscape");
+		title.setFont(Font.font("Segoe Script", FontWeight.EXTRA_BOLD, 100));
+        box.getChildren().addAll(title, makeButtons());
+        return box;
+	}
+	
+	/**
+	 * make buttons to go to gallery screen or start a new garden design
+	 * @return Horizontal Box pane
+	 */
+	public HBox makeButtons() {
+		HBox box = new HBox();
+		box.setSpacing(15);
+		box.setAlignment(Pos.CENTER);
 		buttons = new ArrayList<Button>();
 		buttons.add(addNextButton( "New Garden", "PlotDesign"));
 		buttons.add(addNextButton("My Gallery", "Gallery"));
-		box.getChildren().addAll(buttons); 
-		box.setAlignment(Pos.CENTER);
-
+		box.getChildren().addAll(buttons);
+		return box;
 	}
 }
+	

@@ -71,7 +71,7 @@ public class Gallery extends View{
 		
 		tile = new TilePane();
 		tile.setStyle("-fx-background-color: lightblue; -fx-border-color: chocolate; -fx-border-width: 5px");
-		tile.setPadding(new Insets(5, 5, 5, 5));
+		tile.setPadding(new Insets(5));
         tile.setVgap(4);
         tile.setHgap(4);
         tile.setPrefHeight(stage.getHeight());
@@ -136,6 +136,7 @@ public class Gallery extends View{
 	                BorderPane bp = new BorderPane();
 	                VBox vb = new VBox(20);
 	                Button edit = new Button("Edit");
+	                edit.setPrefSize(buttonWidth, buttonHeight);
 	                edit.setOnAction(c.getHandlerforEditSaved(index,dialog));
 	                vb.getChildren().add(edit);
 	                bp.setBottom(vb);

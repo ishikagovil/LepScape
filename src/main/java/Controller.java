@@ -7,16 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,9 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import javafx.application.Application;
 
 /**
@@ -71,6 +64,8 @@ public class Controller extends Application {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.setFullScreen(true);
 		this.stage.show();
+		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited());
+		this.stage.getScene().setOnMouseExited(this.getHandlerforMouseEntered());
 	}
 	/**
 	 * main method to launch the software
@@ -140,8 +135,7 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforDrag() {
 		return (e) -> {  drag(e); };
 	}
-	
-	
+
 	/** 
 	 * Calls drag when mouse is dragged, specifically when user is drawing
 	 * @param boolean describing whether mouse is pressed for the first time
@@ -151,6 +145,7 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerforDrawing(boolean isPressed) {
 		return (e) -> {  draw(e, isPressed); };
 	}
+	
 	/**
 	 * Calls drawBreak when the user lifts the mouse when freedrawing plot
 	 * @param EventHandler<MouseEvent>
@@ -197,21 +192,46 @@ public class Controller extends Application {
 		return (e) -> { fillRegion(canvas, e); };
 	}
 	
+	/**
+	 * Handler for compopst clicked
+	 * @return the MouseEvent
+	 */
 	public EventHandler<MouseEvent> getHandlerForCompostClicked(){
 		return (e) -> {showCompost(e);};
 	}
 	
+	/**
+	 * When compost is clicked, shows the deleted pane
+	 * @param event the mouse event
+	 */
 	public void showCompost(MouseEvent event) {
 		((GardenDesign) view.views.get("GardenDesign")).compostPopUp(model.deleted);
 	}
+	
+	/**
+	 * Handler for when save button pressed in summary
+	 * @return the event
+	 */
 	public EventHandler<ActionEvent> getHandlerforSummarySave(){
 		return (e) -> {summarySave(e);};
 	}
 	
+	/**
+	 * Handler for edit button pressed
+	 * @param index index of the garden with that index
+	 * @param dialog stage that holds the dit button
+	 * @return the action event
+	 */
 	public EventHandler<ActionEvent> getHandlerforEditSaved(int index, Stage dialog){
 		return (e) -> {editSavedGarden(e,index, dialog);};
 	}
 	
+	/**
+	 * Creates handler for when the user clicks on a section of the garden. Updates the list of plants to match those conditions.
+	 * @param canvas the Canvas that was clicked
+	 * @return the corresponding handler
+	 * @author Jinay Jain
+	 */
 	public EventHandler<MouseEvent> getHandlerForSectionClick(Canvas canvas) {
 		return (e) -> {sectionClicked(e, canvas);};
 	}
@@ -229,17 +249,38 @@ public class Controller extends Application {
 		gd.updateImageList(filteredNames);
 	}
 	
+	/**
+	 * when a user wants to edit a previously saved garden
+	 * @param event the edit button action
+	 * @param index index of saved garden
+	 * @param dialog the stage that contains edit button
+	 */
 	public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
 		this.view.switchViews("GardenDesign");
 		setTheStage();
 		Garden garden = model.savedGardens.get(index);
+		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
+		System.out.println("putline: "+garden.outline + " "+ garden.outline.size());
 		((GardenDesign) view.views.get("GardenDesign")).remakePane();
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
-		
+		model.scale = garden.scale;
+		model.lengthPerPixel = garden.lengthPerPixel;
 		garden.plants.forEach(plant->{
 			double heightWidth = scalePlantSpread(plant.getName());
-			((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			model.gardenMap.placedPlants.put(node, plant);
 		});
+		dialog.close();
+		model.setToEdit();
+		model.setEditGardenIndex(index);
+	}
+	
+	public void showSummaryInfo(ActionEvent event, int index, Stage dialog) {
+		this.view.switchViews("Summary");
+		setTheStage();
+		Garden garden = model.savedGardens.get(index);
+		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getNumLeps());
+		
 		dialog.close();
 		model.setToEdit();
 		model.setEditGardenIndex(index);
@@ -275,7 +316,9 @@ public class Controller extends Application {
 		if(key!=null) {
 			String name = model.plantDirectory.get(key).getCommonName();
 			String description = model.plantDirectory.get(key).getDescription();
-			view.makeInfoPane(name,description);
+			double cost = model.plantDirectory.get(key).getCost();
+			String info = description + " These cost " + cost + " US Dollars.";
+			view.makeInfoPane(name, info);
 		}
 		event.setDragDetect(true);
 	}
@@ -349,25 +392,32 @@ public class Controller extends Application {
 //		}
 	}
 	
+	/**
+	 * Called when a node is trying to be deleted
+	 * when it enters the compost nodee
+	 * @param event the drag event
+	 * @param key the name of the plant
+	 */
 	public void entered(MouseDragEvent event, String key) {
 		System.out.println(key);
 		((GardenDesign) view.views.get("GardenDesign")).removePlant((Node) event.getGestureSource());
  		model.removePlant(model.movedPlant,((Node)event.getGestureSource()).getId());
 		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
-		
-		
 	}
 	
+	/**
+	 * when plant is added back from deleted pane it gets added back in the garden
+	 * @param plantName the name of the plant that is added back
+	 */
 	public void removeFromDeleted(String plantName) {
 		model.deleted.remove(plantName);
 //		model.placePlant(0, 0, plantName);
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.getBudget(), model.getLepCount());
-		
 	}
 	
 	/**
 	 * The spread of a plant is calculated using the lengthPerPixel and spread of the plant
-	 * @param PlantSpecies plant
+	 * @param plantKey the name of the plant to get pixel spread for
 	 * @return double representing the number of pixels of the radius of the plant
 	 */
 	public double scalePlantSpread(String plantKey) {
@@ -377,6 +427,9 @@ public class Controller extends Application {
 		return numPixels;
 	}
 
+	/**
+	 * Everytime the application is started a read back all the saved gardens from previos sessions
+	 */
 	public void readBack() {
 		try {
 			System.out.println("reading");
@@ -388,6 +441,7 @@ public class Controller extends Application {
 //			gal.clearTilePane();
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				view.makeImage(model.savedGardens.get(i).getWidth(), model.savedGardens.get(i).getHeight(), model.savedGardens.get(i).data);
+				//view.makeImageforplot(model.savedGardens.get(i).plotWidth, model.savedGardens.get(i).plotHeight, model.savedGardens.get(i).plotData);
 				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).cost,(model.savedGardens.get(i)).numLeps);
 			}
 			ois.close();
@@ -396,16 +450,22 @@ public class Controller extends Application {
 			System.out.println("Nothing to readIn");
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
+	/**
+	 * Called when user saves garden from summary
+	 * @param event button pressed event
+	 */
 	public void summarySave(ActionEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
+		System.out.println("polygonCorners "+ model.gardenMap.polygonCorners+" "+ model.gardenMap.polygonCorners.size());
+		System.out.println("outline "+ model.gardenMap.outline+ " "+model.gardenMap.outline.size());
+		model.gardenMap.lengthPerPixel = model.lengthPerPixel;
+		model.gardenMap.scale = model.scale;
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
-		
 		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
+		model.gardenMap.setPlotImageInfo((int)view.plot.getWidth(), (int)view.plot.getHeight(), view.makeDataforPlot());
 		System.out.println("button works");
  		try {
 			Gallery gal = (Gallery) view.views.get("Gallery");
@@ -413,7 +473,7 @@ public class Controller extends Application {
 				System.out.println("editing");
 				model.savedGardens.remove(model.getEditGardenIndex());
 				model.savedGardens.add(model.getEditGardenIndex(),model.getGarden());
-				gal.loadScreen(view.savedImg,model.getEditGardenIndex(),(model.savedGardens.get(model.getEditGardenIndex())).cost,(model.savedGardens.get(model.getEditGardenIndex())).numLeps);
+				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),(model.savedGardens.get(model.getEditGardenIndex())).cost,(model.savedGardens.get(model.getEditGardenIndex())).numLeps);
 			}else {
 				System.out.println("add to the end of the arrayList");
 				model.savedGardens.add(model.getGarden());
@@ -422,8 +482,7 @@ public class Controller extends Application {
 			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(model.savedGardens);
-			oos.close();
-			
+			oos.close();	
 			
 		} catch (Exception e1) {
 			System.out.println("The error is here");
@@ -515,6 +574,10 @@ public class Controller extends Application {
 		iteratePlot(itr, model.getGarden().outline, false, scale);
 	}
 	
+	/**
+	 * Draws the garden onto any sized Canvas including plot boundaries and conditions
+	 * @param canvas the Canvas to draw onto
+	 */
 	public void drawToCanvas(Canvas canvas) {
 		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
 		ArrayList<double[]> points = this.model.getGarden().getOutline();
@@ -568,9 +631,6 @@ public class Controller extends Application {
 		drawPlot(scale);
 	}
 	
-	
-	
-	
 	/** 
 	 * Called when user is drawing. 
 	 * Updates the canvas of the relevant view and calculates the number of pixels from the starting and ending point of line
@@ -618,6 +678,9 @@ public class Controller extends Application {
 		 //Clears the canvas the user was drawing on. Also clears the ArrayList corresponding to the coordinates of the plot boundary
 		 if(next.equals("Clear")) {
 			 this.model.getGarden().clearOutline();
+			 this.view.views.remove("ConditionScreen");
+			 this.view.views.put("ConditionScreen", new ConditionScreen(stage,this,this.view));
+			 this.model.getGarden().sections = new ArrayList<Conditions>();
 		 }
 		 //Clears only the lines drawn after setting dimension. Also clears the ArrayList corresponding to the coordinates of the line
 		 else if(next.equals("ClearDim")) {
@@ -686,8 +749,17 @@ public class Controller extends Application {
 		this.drawToCanvas(canvas);
 	}
 	
-	
+
+	/**
+	 * Starting x location for a node
+	 * @return the x
+	 */
 	public double getStartingX() {return model.getX();}
+	
+	/**
+	 * starting y location of a node
+	 * @return the y
+	 */
 	public double getStartingY() {return model.getY();}
 
 }

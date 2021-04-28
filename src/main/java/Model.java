@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class Model implements java.io.Serializable{
+	
 	public Garden gardenMap;
 	public Map<String, PlantSpecies> plantDirectory;
 	public Map<String, Lep> lepDirectory;

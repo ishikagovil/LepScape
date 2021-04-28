@@ -1,5 +1,4 @@
 import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -36,8 +35,10 @@ public abstract class View{
 	GraphicsContext gc;
 	ArrayList<Line> polygonLines;
 	ArrayList<Line> freeLines;
-	ImageCursor flowerCursor;
-	ImageCursor handCursor;
+	//Image from: https://custom-cursor.com/en/collection/life-style/hand-painted-poppy-flower
+	ImageCursor flowerCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/flowerCursor.png"), 30,40,false,false));
+	//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
+	ImageCursor handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
 	/**
 	 * View class that is the super class for all View screens
 	 * @param Stage stage
@@ -51,11 +52,7 @@ public abstract class View{
 		this.freeLines = new ArrayList<>();
         this.controller = c;
 		this.stage.setTitle("Lepscape");
-		//Image from: https://custom-cursor.com/en/collection/life-style/hand-painted-poppy-flower
-		this.flowerCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/flowerCursor.png"), 30,40,false,false));
-		//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
-		this.handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
-
+		
 	}	
 	/**
 	 * Sets the translateX value of a node n
@@ -107,6 +104,7 @@ public abstract class View{
 		else
 			stage.getScene().setCursor(this.flowerCursor);
 	} 
+
 	/**
 	 * Adds a button with the correct size and actions
 	 * @param String text representing text to be displayed on the Button
@@ -128,7 +126,6 @@ public abstract class View{
 	public void setOnMouse(Button b) {
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
 		b.setOnMouseExited(controller.getHandlerforMouseExited());
-
 	}
 	/**
 	 * Adds a line between (x1,y1) and (x2,y2)
@@ -148,6 +145,7 @@ public abstract class View{
 			freeLines.add(line);
 	}
 	
+
 	/**
 	 * Removes all the lines drawn using the drawLine() method
 	 */
@@ -157,6 +155,7 @@ public abstract class View{
 			border.getChildren().removeAll(freeLines);
 			freeLines = new ArrayList<>();
 	}
+	
 	public static double drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
 		double minX = extrema.get(3)[0];
 		double maxX = extrema.get(1)[0];
@@ -190,7 +189,6 @@ public abstract class View{
 			gc.save();
 			System.out.println("drawing cond at " + startX + " " + startY);
 		}
-		
 		return scale;
 	}
 	
@@ -245,12 +243,10 @@ public abstract class View{
 
 		
 		Color fillColor = conds.toColor();
-		
 		fillStack.push(new Point2D(startX, startY));
 		
 		while(!fillStack.empty()) {
 			Point2D curr = fillStack.pop();
-
 			int x = (int) curr.getX();
 			int y = (int) curr.getY();
 

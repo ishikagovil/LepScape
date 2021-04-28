@@ -1,23 +1,9 @@
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-
-import java.awt.image.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.*;
-import javax.imageio.ImageIO;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Pane;
 
 public class Garden implements java.io.Serializable {
 	
 	/**
-	 * Class represents the 
+	 * Class represents the Garden with its plants, boundaries, and conditions
 	 */
 	private static final long serialVersionUID = 1L;
 	public int numLeps;
@@ -33,6 +19,11 @@ public class Garden implements java.io.Serializable {
 	public int width;
 	public int height;
 	public int[][] data;
+	public int plotWidth;
+	public int plotHeight;
+	public int[][] plotData;
+	public double lengthPerPixel;
+	public double scale;
 	public transient HashMap<String, PlacedPlant> placedPlants;
 //	public transient BufferedImage image;
 //	private transient SimpleDoubleProperty costForgallery;
@@ -40,6 +31,10 @@ public class Garden implements java.io.Serializable {
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh, Arunima Dey
+	 */
+
+	/**
+	 * Creates a default garden object
 	 */
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
@@ -53,15 +48,28 @@ public class Garden implements java.io.Serializable {
 		this.height = 0;
 		this.data = new int[width][height];
 		this.placedPlants= new HashMap<>();
+		System.out.println("outline: "+ outline);
+		System.out.println("polygonCorners"+polygonCorners);
 //		this.image = new BufferedImage (0,0,0);
 	}
 	
+	/**
+	 * Creates a Garden with starting leps and cost
+	 * @param numLeps the starting leps
+	 * @param cost the starting cost
+	 */
 	public Garden(int numLeps, int cost) {
 		this();
 		this.numLeps = numLeps;
 		this.cost = cost;
 	}
 	
+	/**
+	 * Sets the width, height and data attributes
+	 * @param width
+	 * @param height
+	 * @param data
+	 */
 	public void setGardenImageInfo(int width, int height, int[][] data){
 		//this.image = image;
 		this.width = width;
@@ -70,38 +78,111 @@ public class Garden implements java.io.Serializable {
 		//makeData();
 	}
 	
+	/**
+<<<<<<< HEAD
+	 * Get the garden data of this garden
+	 * @return the garden data
+=======
+	 * Sets the width, height, and data attributes for plot image
+	 * @param width
+	 * @param height
+	 * @param data
+	 */
+	public void setPlotImageInfo(int width, int height, int[][] data){
+		//this.image = image;
+		this.plotWidth = width;
+		this.plotHeight = height;
+		this.plotData = data;
+		//makeData();
+	}
+	
+	/**
+	 * getter for data of garden
+	 * @return the data
+>>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
+	 */
 	public int[][] getGardenData(){
 		return this.data;
 	}
 	
+	/**
+<<<<<<< HEAD
+	 * Get the width of this garden
+=======
+	 * getter for width of garden
+>>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
+	 * @return the width
+	 */
 	public int getWidth() {
 		return this.width;
 	}
 	
+	/**
+<<<<<<< HEAD
+	 * Get the height of this garden
+=======
+	 * getter for height of garden
+>>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
+	 * @return the height
+	 */
 	public int getHeight() {
 		return this.height;
 	}
 	
+	/**
+<<<<<<< HEAD
+	 * Get the number of leps for this garden
+	 * @return the number of leps supported
+=======
+	 * getter for number of leps supported
+	 * @return 
+>>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
+	 */
 	public int getNumLeps() {
 		return this.numLeps;
 	}
 	
+	/**
+<<<<<<< HEAD
+	 * Set the number of leps supported
+	 * @param x the new amount of leps supported
+=======
+	 * sets the number of leps supported
+	 * @param x
+>>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
+	 */
 	public void setNumLeps(int x) {
 		this.numLeps = x;
 	}
 	
+	/**
+	 * Add an amount to the number of leps in the garden
+	 * @param x the amount of leps to add
+	 */
 	public void addNumLeps(int x) {
 		this.numLeps += x;
 	}
 	
+	/**
+	 * Get the cost of the garden
+	 * @return the cost
+	 */
 	public double getCost() {
 		return this.cost;
 	}
 	
+	/**
+	 * Set the cost of the garden
+	 * @param d the new cost
+	 */
 	public void setCost(double d) {
 		this.cost = d;
 	}
 	
+	/**
+	 * Add an amount to the cost of this garden
+	 * @param x the amount to be added
+	 */
 	public void addCost(int x) {
 		this.cost += x;
 	}
@@ -122,26 +203,55 @@ public class Garden implements java.io.Serializable {
 		return this.polygonCorners;
 	}
 	
+	/**
+	 * Get the placed plants in this garden
+	 * @return the list of placed plants
+	 */
 	public ArrayList<PlacedPlant> getPlants() {
 		return this.plants;
 	}
 	
+	/**
+	 * Get the conditions for this garden
+	 * @return the conditions list
+	 */
 	public ArrayList<Conditions> getSections() {
 		return this.sections;
 	}
 	
+	/**
+	 * Add a section to the conditions for this garden
+	 * @param cond the Conditions to be added to this garden
+	 */
 	public void addSection(Conditions cond) {
 		this.sections.add(cond);
 	}
 	
+	/**
+	 * Get the leps of this garden
+	 * @return a Map of the leps in this garden
+	 */
 	public Map<String, Lep> getLeps() {
 		return this.leps;
 	}
 	
+	/**
+	 * Get the plants in the compost bin
+	 * @return the compost bin plants
+	 */
 	public Set<PlantSpecies> getCompostBin() {
 		return this.compostBin;
 	}
 	
+	/**
+<<<<<<< HEAD
+	 * Add a plant to the garden
+	 * @param plant the plant to be added
+=======
+	 * when plant is placed adds to garden
+	 * @param plant the PlacedPlant object that is placed
+>>>>>>> 79d850a9ae1a73b32776fdc6d4bfdf30e5dbf224
+	 */
 	public void addToGarden(PlacedPlant plant) {
 		System.out.println("adding to garden");
 		plants.add(plant);

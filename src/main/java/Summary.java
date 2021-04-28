@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -26,11 +27,18 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.swing.*;
 
+
 public class Summary extends View {
 	public Controller ic;
 	Pane main;
 	Canvas canvas;
-	
+
+/**
+ * set up a stage and border pane to hold other panes
+ * @param stage
+ * @param c
+ * @param manageView
+ */
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
 		super(stage, c, manageView);
@@ -38,7 +46,6 @@ public class Summary extends View {
 		border.setBottom(addBottomHBox());
 		border.setLeft(addNavigationVBox());
 		border.setCenter(addCenterPane());
-		border.setRight(addInfoPane());
 		
 		/*
 	       // load butterfly animation
@@ -59,10 +66,12 @@ public class Summary extends View {
 		
        //main = addCanvas();
 		border.setCenter(main);  
-       
-       
     }
 	
+/**
+ * add bottom pane to hold the buttons for create new garden and download
+ * @return the bottom pane created 
+ */
 	public HBox addBottomHBox() {
 		HBox box = new HBox();
         box.setStyle("-fx-background-color: steelblue");
@@ -70,10 +79,13 @@ public class Summary extends View {
         box.setPadding(new Insets(15, 12, 15, 12));
         box.setAlignment(Pos.CENTER_RIGHT);
         box.getChildren().addAll(addBottomButtons());
-        
         return box;
 	}
 	
+/**
+ * create an array list of buttons of download and create new garden
+ * @return an array list of buttons
+ */
 	public ArrayList<Button> addBottomButtons() {
 		// make buttons for Lepedia, Download and Create New Garden
         ArrayList <Button> bottomButtons = new ArrayList <Button>();
@@ -90,32 +102,44 @@ public class Summary extends View {
         return bottomButtons;
 	}
 	
+/**
+ * create a vertical box pane to hold the navigation buttons
+ * @return the vertical pane
+ */
 	public VBox addNavigationVBox() {
 		VBox sideVBox = new VBox();
         sideVBox.setStyle("-fx-background-color: lavender");
         sideVBox.setSpacing(15);
         sideVBox.setPadding(new Insets(20));
-        
         sideVBox.getChildren().addAll(addNavigationButtons());
         sideVBox.setAlignment(Pos.TOP_RIGHT);
         return sideVBox;
 	}
-	
+
+/**
+ * create an array list of navigation buttons
+ * @return an array list of buttons
+ */
 	public ArrayList<Button> addNavigationButtons() {
 		ArrayList <Button> buttons = new ArrayList<Button>();
         buttons.add(addNextButton("Back", "GardenDesign"));
         buttons.add(addNextButton("Lepedia", "Lepedia"));
         buttons.add(addNextButton("Learn More","LearnMore"));
         Button saveGarden = new Button("Save");
+        saveGarden.setPrefSize(buttonWidth, buttonHeight);
         saveGarden.setOnAction(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
+        buttons.add(addNextButton("Gallery","Gallery"));
         return buttons;
 	}
-	
+
+/**
+ * create a center pane to hold the garden design 
+ * @return the center pane
+ */
 	public StackPane addCenterPane() {
 		StackPane centerPane = new StackPane();
 		centerPane.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
-		
 		return centerPane;
 	}
 	
@@ -127,6 +151,17 @@ public class Summary extends View {
 	public void addCanvas() {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		canvas = new Canvas();
+		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		gc = canvas.getGraphicsContext2D();
+		gardenDesign.getChildren().add(canvas);
+	
+		canvas.widthProperty().bind(gardenDesign.widthProperty());
+		canvas.heightProperty().bind(gardenDesign.heightProperty());
+	
+		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
+		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
+		
 //		canvas = new Canvas();
 //		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 //		gc = canvas.getGraphicsContext2D();
@@ -146,27 +181,36 @@ public class Summary extends View {
 		border.setCenter(gardenDesign);
 	}
 	
-	public TilePane addInfoPane() {
-		TilePane rightPane = new TilePane();
+/**
+ * create a tilepane to hold information about the garden with updated cost and leps count
+ * @return
+ */
+	public void updateLepandCost(double cost, int leps) {
+		VBox rightPane = new VBox();
 	    rightPane.setPadding(new Insets(10));
 	    rightPane.setStyle("-fx-background-color: lavender");
-	    
 	    Text title = new Text("Summary");
 	    title.setFont(Font.font(null, FontWeight.BOLD, 30));
 	    
+		HBox box1 = new HBox();
 	    Image lepCount = new Image(getClass().getResourceAsStream("/butterfly1.png"));
-		Image cost = new Image(getClass().getResourceAsStream("/dollar.png"));
-		ImageView lepIV = new ImageView(lepCount);
+	    ImageView lepIV = new ImageView(lepCount);
 		lepIV.setPreserveRatio(true);
-		lepIV.setFitHeight(50);
-		ImageView costIV = new ImageView(cost);
-		costIV.setPreserveRatio(true);
-		costIV.setFitHeight(50);
+		lepIV.setFitHeight(20);
+		Label lep = new Label(""+ leps);
+		lep.setGraphic(lepIV);
+		box1.getChildren().addAll(lepIV, lep);
 		
-		rightPane.getChildren().addAll(title, lepIV, costIV);
-		return rightPane;
+		HBox box = new HBox();
+		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+		ImageView costIV = new ImageView(dollar);
+		Label totalCost = new Label("" + cost);
+		totalCost.setGraphic(costIV);
+		costIV.setPreserveRatio(true);
+		costIV.setFitHeight(20);
+		box.getChildren().addAll(costIV, totalCost);
+		
+		rightPane.getChildren().addAll(title, box1, box);
+		border.setRight(rightPane);
 	}
-
-
-	
 }
