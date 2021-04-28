@@ -33,6 +33,8 @@ import javafx.stage.Stage;
 public class GardenDesign extends View{
 //	public Controller ic;
 	final int STANDARD_IMAGEVIEW = 100;
+	final int NORMALCOMPOST = 75;
+	final int ENTERCOMPOST = 85;
 	Canvas canvas;
 	Stage stage;
 	//Panes
@@ -489,16 +491,16 @@ public class GardenDesign extends View{
 //			e.printStackTrace();
 //		}
 		c.setPreserveRatio(true);
-		c.setFitHeight(75);
+		c.setFitHeight(NORMALCOMPOST);
 
 		c.setTranslateX(screenWidth/110);
 
 		c.setTranslateY((screenHeight-200)/2);
 		c.setOnMouseExited(event->{
-			c.setFitHeight(75);
+			c.setFitHeight(NORMALCOMPOST);
 		});
 		c.setOnMouseEntered(event->{
-			c.setFitHeight(85);
+			c.setFitHeight(ENTERCOMPOST);
 			
 		});
 		
@@ -587,7 +589,7 @@ public class GardenDesign extends View{
 				Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
 				ImageView iv1 = new ImageView(im);
 				iv1.setPreserveRatio(true);
-				iv1.setFitHeight(75);
+				iv1.setFitHeight(NORMALCOMPOST);
 				oblist.put(k, iv1);
 				
 			}
@@ -633,16 +635,14 @@ public class GardenDesign extends View{
 	 */
 	public void showCompostBin() {
 		c.setPreserveRatio(true);
-		c.setFitHeight(75);
-
-		c.setTranslateX(screenWidth/110);
-
+		c.setFitHeight(NORMALCOMPOST);
+		c.setTranslateX(screenWidth/2+50);
 		c.setTranslateY((screenHeight-200)/2);
 		c.setOnMouseExited(event->{
-			c.setFitHeight(75);
+			c.setFitHeight(NORMALCOMPOST);
 		});
 		c.setOnMouseEntered(event->{
-			c.setFitHeight(85);
+			c.setFitHeight(ENTERCOMPOST);
 			
 		});
 		c.setOnMouseClicked(controller.getHandlerForCompostClicked());
