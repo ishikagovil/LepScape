@@ -667,6 +667,10 @@ public class Controller extends Application {
 		 }
 	}
 	
+	public Garden getGarden() {
+		return this.model.getGarden();
+	}
+	
 	/**
 	 * Gets the initial budget set by user to be displayed in garden design screen
 	 * @return the budget
