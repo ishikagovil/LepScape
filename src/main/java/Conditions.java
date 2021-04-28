@@ -18,33 +18,73 @@ public class Conditions {
 	}
 	
 	//getters/setters for attributes
+	/**
+	 * Get the soil type for this condition
+	 * @return the condition soil type
+	 */
 	public SoilType getSoilType() {
 		return this.soilType;
 	}
+	/**
+	 * Set the SoilType for this condition
+	 * @param type the new SoilType
+	 */
 	public void setSoilType(SoilType type) {
 		this.soilType = type;
 	}
+	/**
+	 * Get the condition moisture type
+	 * @return the moisture type
+	 */
 	public MoistureType getMoistureType() {
 		return this.moistureType;
 	}
+	/**
+	 * Set the MoistureType for this condition
+	 * @param type the new MoistureType
+	 */
 	public void setMoistureType(MoistureType moistureType) {
 		this.moistureType = moistureType;
 	}
+	/**
+	 * Get the light type of this condition
+	 * @return the light type
+	 */
 	public LightType getSunlightType() {
 		return this.sunlightType;
 	}
+	/**
+	 * Set the LightType for this condition
+	 * @param type the new LightType
+	 */
 	public void setSunlightType(LightType lightType) {
 		this.sunlightType = lightType;
 	}
+	/**
+	 * Get the X of where this condition was placed
+	 * @return the X coordinate
+	 */
 	public double getX() {
 		return this.x;
 	}
+	/**
+	 * Set the X of where this condition was placed
+	 * @param the X coordinate
+	 */
 	public void setX(double x) {
 		this.x = x;
 	}
+	/**
+	 * Get the Y of where this condition was placed
+	 * @return the Y coordinate
+	 */
 	public double getY() {
 		return this.y;
 	}
+	/**
+	 * Set the Y of where this condition was placed
+	 * @param the Y coordinate
+	 */
 	public void setY(double y) {
 		this.y = y;
 	}
