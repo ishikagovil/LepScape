@@ -178,10 +178,10 @@ public class Summary extends View {
 		Image cost = new Image(getClass().getResourceAsStream("/dollar.png"));
 		ImageView lepIV = new ImageView(lepCount);
 		lepIV.setPreserveRatio(true);
-		lepIV.setFitHeight(50);
+		lepIV.setFitHeight(20);
 		ImageView costIV = new ImageView(cost);
 		costIV.setPreserveRatio(true);
-		costIV.setFitHeight(50);
+		costIV.setFitHeight(20);
 		rightPane.getChildren().addAll(title, lepIV, costIV);
 		return rightPane;
 	}

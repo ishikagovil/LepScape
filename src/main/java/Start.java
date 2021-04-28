@@ -1,6 +1,7 @@
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -26,24 +27,24 @@ public class Start extends View {
 		border = new BorderPane();
 		border.getChildren().add(canvas);
         border.setStyle("-fx-background-color: #94DF86");
-
-        VBox titleBox = new VBox(12);
-        border.setCenter(titleBox);
-        titleBox.setAlignment(Pos.CENTER);
-        Text title = new Text("LepScape");
-        title.setFont(new Font(32));
-
-        HBox box = new HBox();
+        border.setCenter(addButtonPane());
+        
+        Image bg = new Image(getClass().getResourceAsStream(""));
+	}
+	
+	public HBox addButtonPane() {
+		HBox box = new HBox();
         box.setSpacing(15);
-
-        titleBox.getChildren().addAll(title, box);
- 
-        //Populate button array
+        box.getChildren().addAll(makeButtons());
+        box.setAlignment(Pos.CENTER);
+        return box;
+	}
+	
+	public ArrayList <Button> makeButtons() {
 		buttons = new ArrayList<Button>();
 		buttons.add(addNextButton( "New Garden", "PlotDesign"));
 		buttons.add(addNextButton("My Gallery", "Gallery"));
-		box.getChildren().addAll(buttons); 
-		box.setAlignment(Pos.CENTER);
-
+		return buttons;
 	}
 }
+	

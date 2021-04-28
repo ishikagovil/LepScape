@@ -356,17 +356,15 @@ public class GardenDesign extends View{
 		vb.setPrefWidth(screenHeight/4);
 		vb.setAlignment(Pos.CENTER);;
 		Button[] buttons = new Button[] {
-			addNextButton("Back","ConditionScreen"), addNextButton("Learn More", "LearnMore"), new Button("Clear"),addNextButton("Next","Summary")
+			addNextButton("Back","ConditionScreen"), addNextButton("Learn More", "LearnMore"), addNextButton("Lepedia", "Lepedia")
 		};
-		buttons[0].setPrefSize(100, 30);
-		buttons[1].setPrefSize(100, 30);
-		buttons[2].setPrefSize(100, 30);
-		buttons[3].setPrefSize(100, 30);
 		vb.getChildren().addAll(buttons);
-		Button save = new Button("Save");
-		save.setPrefSize(100, 30);
+		Button save = new Button("Next");
+		save.setPrefSize(buttonWidth, buttonHeight);
 		save.setOnAction(e->{
 			saveGardenImage();
+			setOnMouse(save);
+			save.setOnAction(controller.getHandlerforClicked("Summary"));
 		});
 		vb.getChildren().add(save);
 		return vb;
