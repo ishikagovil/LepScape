@@ -1,43 +1,26 @@
-import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
-import java.awt.AWTException;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.*;
-import java.util.Map.Entry;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -137,6 +120,8 @@ public class GardenDesign extends View{
 		
 		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
 		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
+		
+		canvas.setOnMouseClicked(controller.getHandlerForSectionClick(canvas));
 		
 		return gardenDesign;
 	}
@@ -638,6 +623,14 @@ public class GardenDesign extends View{
 		main.getChildren().add(c);
 		
 
+	}
+	
+	public void updateImageList(ArrayList<String> plantNames) {
+		tile.getChildren().clear();
+		
+		plantNames.forEach((name) -> {
+			tile.getChildren().add(oblist.get(name));
+		});
 	}
 	
 	//TODO: will make a list view of all the plants that are put in the compost.

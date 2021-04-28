@@ -105,6 +105,11 @@ public class ManageViews {
 			((PlotDesign) this.currView).validateSave();
 			((PlotDesign) this.currView).shapeClicked = true;
 		}
+		else if (next.equals("Lepedia")) {
+			this.currView = this.getView(next);
+			Lepedia temp = (Lepedia)this.currView;
+			temp.updateLepedia();
+		}
 		else
 			this.currView = this.getView(next);
 	}

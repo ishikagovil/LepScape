@@ -38,7 +38,12 @@ public abstract class View{
 	ArrayList<Line> freeLines;
 	ImageCursor flowerCursor;
 	ImageCursor handCursor;
-	
+	/**
+	 * View class that is the super class for all View screens
+	 * @param Stage stage
+	 * @param Controller c
+	 * @param ManageViews manageView
+	 */
 	public View(Stage stage, Controller c, ManageViews manageView) { 
 		this.manageView = manageView;
 		this.stage = stage;
@@ -51,24 +56,49 @@ public abstract class View{
 		//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
 		this.handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
 	}	
-	
+	/**
+	 * Sets the translateX value of a node n
+	 * @param double x
+	 * @param Node n
+	 */
 	public void setX(double x, Node n) {
 		n.setTranslateX(x);
 	}
+	/**
+	 * Gets the BorderPane
+	 * @return BorderPane
+	 */
 	public BorderPane getBorderPane() {
 		return border;
 	}
+	/**
+	 * Returns the screenWidth
+	 * @return int 
+	 */
 	public int getScreenWidth() {
 		return screenWidth;
 	}
+	/**
+	 * Returns the screenHeight
+	 * @return int 
+	 */
 	public int getScreenHeight() {
 		return screenHeight;
 	}
-
+	
+	/**
+	 * Sets the translateX value of a node n
+	 * @param double x
+	 * @param Node n
+	 */
 	public void setY(double y, Node n) {
 		n.setTranslateY(y);
 	}
 
+	/**
+	 * Updates the cursor to the different ImageCursors
+	 * @param boolean hand
+	 */
 	public void changeCursor(boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
 		//https://blog.idrsolutions.com/2014/05/tutorial-change-default-cursor-javafx/ 
 		if(hand)
@@ -76,7 +106,16 @@ public abstract class View{
 		else
 			stage.getScene().setCursor(this.flowerCursor);
 	} 
+<<<<<<< HEAD
 	
+=======
+	/**
+	 * Adds a button with the correct size and actions
+	 * @param String text representing text to be displayed on the Button
+	 * @param String next representing the action the button performs when clicked
+	 * @return Button
+	 */
+>>>>>>> c22161822afa58b8bfed021066e67d4975ec522e
 	public Button addNextButton(String text, String next) {
 		Button b = new Button(text);
 		b.setPrefSize(buttonWidth, buttonHeight);
@@ -85,11 +124,22 @@ public abstract class View{
 		return b;
 	}	
 
+	/**
+	 * Sets the MouseEntered and MouseExited handlers for Button
+	 * @param Button b
+	 */
 	public void setOnMouse(Button b) {
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
 		b.setOnMouseExited(controller.getHandlerforMouseExited());
 	}
-	
+	/**
+	 * Adds a line between (x1,y1) and (x2,y2)
+	 * @param double x1
+	 * @param double y1
+	 * @param double x2
+	 * @param double y2
+	 * @param boolean isPolygon
+	 */
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		Line line = new Line(x1, y1, x2, y2);
 		line.setStrokeWidth(2);
@@ -100,6 +150,12 @@ public abstract class View{
 			freeLines.add(line);
 	}
 	
+<<<<<<< HEAD
+=======
+	/**
+	 * Removes all the lines drawn using the drawLine() method
+	 */
+>>>>>>> c22161822afa58b8bfed021066e67d4975ec522e
 	public void removeLines() {
 			border.getChildren().removeAll(polygonLines);
 			polygonLines = new ArrayList<>();
