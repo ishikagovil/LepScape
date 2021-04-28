@@ -57,8 +57,8 @@ public class GardenDesign extends View{
 	 * @param c the controller
 	 * @param manageView view manager that stores shared information
 	 */
-	public GardenDesign(Stage stage, Controller c, ManageViews manageView) {
-		super(stage,c,manageView);
+	public GardenDesign(Stage stage, Controller controller, ManageViews manageView) {
+		super(stage,controller,manageView);
 		this.stage = stage;
 //		this.ic=c;
 		//oblist = initializeHashMap();
@@ -415,32 +415,6 @@ public class GardenDesign extends View{
 		
 	}
 	
-	
-	/**
-	 * Starts a new paragraph after a few characters so the information can bettre fit into the pane
-	 * @param info the information that will be changed
-	 * @return the changed string
-	 */
-	/*public String fitInfo(String info) {
-		StringBuilder sb = new StringBuilder(info);
-		for(int i = 20; i < info.length(); i += 30) {
-			if(info.charAt(i)==' ') {
-				sb.insert(i, "\n");
-			}
-			else {
-				for(int j = i; j < info.length(); j++) {
-					if(info.charAt(j)==' ') {
-						sb.insert(j, "\n");
-						i = j;
-						break;
-					}
-				}
-			}
-			sb.insert(i, "\n");
-		}
-		return sb.toString();
-	}
-	*/
 	/**
 	 * Adds the navigation buttons to a pane. 
 	 * Back takes to the previous screen, next takes you to the next, learn more takes you to learn more page and save saves an image of the garden
@@ -477,35 +451,11 @@ public class GardenDesign extends View{
 	 * Saves an image of the garden when save button is pressed
 	 */
 	public void saveGardenImage() {
-		main.getChildren().remove(c);
 		System.out.println("calling from in here");
 		this.manageView.setSavedImage(main.snapshot(null, null));
-//		try {
-//			Robot robot = new Robot();
-//			Rectangle rect = new Rectangle((int)main.getHeight(), (int)main.getWidth());
-//			BufferedImage image = robot.createScreenCapture(rect);
-//			manageView.image = image;
-//		} catch (AWTException e) {
-//			// TODO Auto-generated catch block
-//			System.out.println("is the error here?");
-//			e.printStackTrace();
-//		}
-		c.setPreserveRatio(true);
-		c.setFitHeight(NORMALCOMPOST);
-
-		c.setTranslateX(screenWidth/2);
-		c.setTranslateY((screenHeight-200)/2 + 70);
-		c.setOnMouseExited(event->{
-			c.setFitHeight(NORMALCOMPOST);
-		});
-		c.setOnMouseEntered(event->{
-			c.setFitHeight(ENTERCOMPOST);
-			
-		});
 		
 		this.manageView.sp = main;
 		((Summary) this.manageView.views.get("Summary")).addCanvas();
-		main.getChildren().add(c);
 		
 	}
 	
@@ -569,32 +519,6 @@ public class GardenDesign extends View{
 		return stack;
 	}
 	
-	/**
-	 * Makes an observable hashmap for all the images of the pants that go into the tile pane 
-	 * @return the created hashmap
-	 */
-	/*public Map<String,ImageView> initializeHashMap(){
-//		oblist = FXCollections.observableHashMap();
-		oblist = new HashMap<>();
-		manageView.plantImages.forEach((k,v)->{
-			try {
-				saveImage(v,"src/"+k+".jpg");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(getClass().getResourceAsStream("/"+k+".jpg")!=null) {
-				//System.out.println(k);
-				Image im = new Image(getClass().getResourceAsStream("/"+k+".jpg"));
-				ImageView iv1 = new ImageView(im);
-				iv1.setPreserveRatio(true);
-				iv1.setFitHeight(NORMALCOMPOST);
-				oblist.put(k, iv1);
-				
-			}
-		});
-		return oblist;
-	}*/
 	
 	/**
 	 * This method saves the Image that comes from a given url into a filea
@@ -635,8 +559,8 @@ public class GardenDesign extends View{
 	public void showCompostBin() {
 		c.setPreserveRatio(true);
 		c.setFitHeight(NORMALCOMPOST);
-		c.setTranslateX(screenWidth/2);
-		c.setTranslateY((screenHeight-200)/2 + 70);
+		c.setTranslateX(60);
+		c.setTranslateY((screenHeight-200)/2 + 100);
 		c.setOnMouseExited(event->{
 			c.setFitHeight(NORMALCOMPOST);
 		});
@@ -646,7 +570,7 @@ public class GardenDesign extends View{
 		});
 		c.setOnMouseClicked(controller.getHandlerForCompostClicked());
 
-		main.getChildren().add(c);
+		border.getChildren().add(c);
 		
 
 	}
