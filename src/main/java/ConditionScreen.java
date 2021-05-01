@@ -1,10 +1,10 @@
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -62,13 +62,12 @@ public class ConditionScreen extends View {
 		});
 		
 		HBox buttons = new HBox(boxSpacing);
-		Button back = new Button("Back");
-		back.setPrefSize(buttonWidth, buttonHeight);
-		setOnMouse(back);
-		back.setOnAction(controller.getHandlerforClicked("PlotDesign"));
-		Button next = new Button("Next");
-		next.setPrefSize(buttonWidth, buttonHeight);
-		next.setOnAction((e) -> {
+		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
+		setOnMouse(back, "back");
+		back.setOnMouseClicked(controller.getHandlerforClicked("PlotDesign"));
+		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
+		setOnMouse(next, "next");
+		next.setOnMouseClicked((e) -> {
 			GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
 			gd.addBudgetLepPane();
 			controller.switchViews("GardenDesign");

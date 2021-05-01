@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -17,8 +19,8 @@ import javafx.stage.Stage;
 import java.util.*;
 
 public class PlotDesign extends View{
-	ArrayList<Button> drawSwitch; 
-	ArrayList<Button> dimSwitch;
+	ArrayList<ImageView> drawSwitch; 
+	ArrayList<ImageView> dimSwitch;
 	HBox box;
 	GridPane grid; //added to contain the TextField
 	ToolBar toolbar;
@@ -69,17 +71,17 @@ public class PlotDesign extends View{
 		//Add editing button and functionality
         toolbar = new ToolBar();
         toolbar.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
-        toolbar.getItems().add(addNextButton("Freehand","Drawing"));
+        toolbar.getItems().add(addNextButton("back","Drawing"));
         //Make sure the anchors cannot be dragged when freehand is selected
-        toolbar.getItems().get(0).addEventHandler(ActionEvent.ACTION, (e)-> {
+        toolbar.getItems().get(0).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
         	dragAnchor = false;    	
         	toggleAnchorHandler();
         });
-        toolbar.getItems().add(addNextButton("Polygon","Shape"));
+        toolbar.getItems().add(addNextButton("next","Shape"));
         disableDrawing(toolbar.getItems().get(1));
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
-        drawSwitch = new ArrayList<Button>();
-        dimSwitch = new ArrayList<Button>();
+        drawSwitch = new ArrayList<>();
+        dimSwitch = new ArrayList<>();
         border.setTop(toolbar);
 	}
 	/**
@@ -87,40 +89,36 @@ public class PlotDesign extends View{
 	 */
 	public void backButtons() {
 		//Adding Back buttons
-        drawSwitch.add(addNextButton("Back", "Start"));
+        drawSwitch.add(addNextButton("back", "Start"));
         disableDrawing(drawSwitch.get(0));
         
         //Adding second Back button on dimensions screen
-        dimSwitch.add(new Button("Back"));
-        dimSwitch.get(0).setPrefSize(buttonWidth, buttonHeight);
-        setOnMouse(dimSwitch.get(0));
+        dimSwitch.add(new ImageView(this.manageView.buttonImages.get("back")));
+        setOnMouse(dimSwitch.get(0), "back");
         disableDrawing(dimSwitch.get(0));
-        dimSwitch.get(0).setOnAction(new EventHandler<ActionEvent>() {
-            @Override 
-            public void handle(ActionEvent e) {
-            	//Remove the lines on the current screen and polygon points
-            	removeLines();
-            	controller.restartPolygonBoundary();
-            	gc.clearRect(0,0, screenWidth, screenHeight);
-            	border.setOnMouseReleased(null);
+        dimSwitch.get(0).setOnMouseClicked((e) -> {
+            //Remove the lines on the current screen and polygon points
+           	removeLines();
+           	controller.restartPolygonBoundary();
+           	gc.clearRect(0,0, screenWidth, screenHeight);
+           	border.setOnMouseReleased(null);
+           	
+           	//Enable toolbar buttons
+           	toolbar.getItems().get(0).setDisable(false);
+           	toolbar.getItems().get(1).setDisable(false);
+           	dragAnchor = true;
+           	toggleAnchorHandler();
             	
-            	//Enable toolbar buttons
-            	toolbar.getItems().get(0).setDisable(false);
-            	toolbar.getItems().get(1).setDisable(false);
-            	dragAnchor = true;
-            	toggleAnchorHandler();
-            	
-            	//Add back the polygon and freehand plot
-            	border.getChildren().add(poly);
-            	border.getChildren().addAll(anchors);
-            	shapeClicked = poly.getPoints().size() != 0;
-            	controller.drawFreehandPart(1);
-            	
-            	//Change border design
-            	border.getChildren().remove(grid);
-            	gc.drawImage(plotInstructions, 0, 0);
-            	createHBox(drawSwitch);	
-            }
+           	//Add back the polygon and freehand plot
+           	border.getChildren().add(poly);
+           	border.getChildren().addAll(anchors);
+           	shapeClicked = poly.getPoints().size() != 0;
+           	controller.drawFreehandPart(1);
+           	
+           	//Change border design
+           	border.getChildren().remove(grid);
+           	gc.drawImage(plotInstructions, 0, 0);
+           	createHBox(drawSwitch);	       
         });
 	}
 	/**
@@ -128,8 +126,8 @@ public class PlotDesign extends View{
 	 */
 	public void clearButtons() {
         //Adding Clear button
-        Button clear = addNextButton("Clear", "Clear");
-        clear.addEventHandler(ActionEvent.ACTION, (e)-> {
+		ImageView clear = addNextButton("clear", "Clear");
+        clear.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
         	shapeClicked = false;
        		border.getChildren().removeAll(anchors);             		
        		Iterator<Node> itr = border.getChildren().iterator();
@@ -140,7 +138,7 @@ public class PlotDesign extends View{
        				break;
        			}
         	}  		
-        	drawSwitch.get(2).setOnAction(null);
+        	drawSwitch.get(2).setOnMouseClicked(null);
         	poly = new Polygon();
         	anchors = FXCollections.observableArrayList();
         	removeLines();
@@ -149,9 +147,9 @@ public class PlotDesign extends View{
         drawSwitch.add(clear);
         
         //Adding Undo button
-        Button undo = addNextButton("Undo", "ClearDim");
+        ImageView undo = addNextButton("undo", "ClearDim");
         dimSwitch.add(undo);
-        dimSwitch.get(1).addEventHandler(ActionEvent.ACTION, (event)-> {
+        dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (event)-> {
             gc.clearRect(0,0, screenWidth, screenHeight);
            	onSettingDimensions(); 
         });
@@ -163,14 +161,12 @@ public class PlotDesign extends View{
 	 */
 	public void saveButtons() {
 		//Adding Save button
-        drawSwitch.add(new Button("Save"));
-        drawSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
-        setOnMouse(drawSwitch.get(2));
+        drawSwitch.add(new ImageView(this.manageView.buttonImages.get("next")));
+        setOnMouse(drawSwitch.get(2), "next");
         
         //Adding Next button
-        dimSwitch.add(new Button("Next"));
-        dimSwitch.get(2).setPrefSize(buttonWidth, buttonHeight);
-        setOnMouse(dimSwitch.get(2));
+        dimSwitch.add(new ImageView(this.manageView.buttonImages.get("next")));
+        setOnMouse(dimSwitch.get(2), "next");
 	}
 	
 	/**
@@ -178,27 +174,25 @@ public class PlotDesign extends View{
 	 * Switches to the dimension setting screen
 	 */
 	public void validateSave() {
-		drawSwitch.get(2).setOnAction(new EventHandler<ActionEvent>() {
-            @Override 
-            public void handle(ActionEvent e) {
-            	toolbar.getItems().get(0).setDisable(true);
-            	toolbar.getItems().get(1).setDisable(true);
+		drawSwitch.get(2).setOnMouseClicked((e) -> {        
+           	toolbar.getItems().get(0).setDisable(true);
+           	toolbar.getItems().get(1).setDisable(true);
             	
-            	//set the outline of the polygon in model
-            	if(border.getChildren().contains(poly)) 
-            		controller.enterPolygonBoundary(poly);    
-            	
-            	//Clear everything on this screen
-            	border.getChildren().remove(poly);
-            	border.getChildren().removeAll(anchors);
-            	gc.clearRect(0,0, screenWidth, screenHeight);
-            	shapeClicked = true;
-            	
-            	//Start the next screen for dimensions 
-            	onSettingDimensions();      	
-            	removeLines();
-            	controller.drawPlot(1);
-            }
+           	//set the outline of the polygon in model
+           	if(border.getChildren().contains(poly)) 
+           		controller.enterPolygonBoundary(poly);    
+           	
+           	//Clear everything on this screen
+           	border.getChildren().remove(poly);
+           	border.getChildren().removeAll(anchors);
+           	gc.clearRect(0,0, screenWidth, screenHeight);
+          	shapeClicked = true;
+           	
+           	//Start the next screen for dimensions 
+           	onSettingDimensions();      	
+           	removeLines();
+          	controller.drawPlot(1);
+            
         });
 	}
 	/**
@@ -218,7 +212,7 @@ public class PlotDesign extends View{
 	    //Input value box
 	    TextField dimension = new TextField();
 	    dimension.setPromptText("Enter dimension (ft)");
-	    dimSwitch.get(2).addEventHandler(ActionEvent.ACTION, (event)-> {
+	    dimSwitch.get(2).addEventHandler(MouseEvent.MOUSE_CLICKED, (event)-> {
 	    	String length = dimension.getText();
 	    	try{
 	    		controller.settingLength(Double.parseDouble(length));
@@ -239,7 +233,7 @@ public class PlotDesign extends View{
 	 * Allows for transition of buttons between two screens (plotting and setting dimensions)
 	 * @param ArrayList<Button> representing which buttons to add to the HBox
 	 */
-	public void createHBox(ArrayList<Button> list) {
+	public void createHBox(ArrayList<ImageView> list) {
 		if(border.getChildren().contains(box))
 			border.getChildren().remove(box);
 		box = new HBox();
@@ -265,7 +259,7 @@ public class PlotDesign extends View{
 	 * @param Button that disables drawing when pressed
 	 */
 	public void disableDrawing(Node n) {
-		n.addEventHandler(ActionEvent.ACTION, (e)-> {
+		n.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
             border.setOnMousePressed(null);
             border.setOnMouseDragged(null);
             border.setOnMouseReleased(null);

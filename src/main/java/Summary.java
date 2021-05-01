@@ -86,19 +86,17 @@ public class Summary extends View {
  * create an array list of buttons of download and create new garden
  * @return an array list of buttons
  */
-	public ArrayList<Button> addBottomButtons() {
+	public ArrayList<ImageView> addBottomButtons() {
 		// make buttons for Lepedia, Download and Create New Garden
-        ArrayList <Button> bottomButtons = new ArrayList <Button>();
-        Button download = new Button("Download");
-        download.setPrefSize(buttonWidth, buttonHeight);
-        download.setOnAction(e -> {
+        ArrayList <ImageView> bottomButtons = new ArrayList <>();
+        ImageView download = new ImageView(this.manageView.buttonImages.get("download"));
+        download.setOnMouseClicked(e -> {
         	FileChooser file = new FileChooser();
         	file.setTitle("Download File");
         	File file1 = file.showSaveDialog(stage);
         });
         bottomButtons.add(download);
-        bottomButtons.add(addNextButton("Create New Garden", "Restart"));
-        bottomButtons.get(1).setPrefSize(120, buttonHeight);
+        bottomButtons.add(addNextButton("next", "Restart"));
         return bottomButtons;
 	}
 	
@@ -111,7 +109,7 @@ public class Summary extends View {
         sideVBox.setStyle("-fx-background-color: lavender");
         sideVBox.setSpacing(15);
         sideVBox.setPadding(new Insets(20));
-        sideVBox.getChildren().addAll(addNavigationButtons());
+       // sideVBox.getChildren().addAll(addNavigationButtons()); //uncomment
         sideVBox.setAlignment(Pos.TOP_RIGHT);
         return sideVBox;
 	}
@@ -120,16 +118,15 @@ public class Summary extends View {
  * create an array list of navigation buttons
  * @return an array list of buttons
  */
-	public ArrayList<Button> addNavigationButtons() {
-		ArrayList <Button> buttons = new ArrayList<Button>();
-        buttons.add(addNextButton("Back", "GardenDesign"));
-        buttons.add(addNextButton("Lepedia", "Lepedia"));
-        buttons.add(addNextButton("Learn More","LearnMore"));
-        Button saveGarden = new Button("Save");
-        saveGarden.setPrefSize(buttonWidth, buttonHeight);
-        saveGarden.setOnAction(controller.getHandlerforSummarySave());
+	public ArrayList<ImageView> addNavigationButtons() {
+		ArrayList <ImageView> buttons = new ArrayList<>();
+        buttons.add(addNextButton("back", "GardenDesign"));
+        buttons.add(addNextButton("clear", "Lepedia"));
+        buttons.add(addNextButton("download","LearnMore"));
+        ImageView saveGarden = new ImageView(this.manageView.buttonImages.get("next"));
+        saveGarden.setOnMouseClicked(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
-        buttons.add(addNextButton("Gallery","Gallery"));
+        buttons.add(addNextButton("next","Gallery"));
         return buttons;
 	}
 

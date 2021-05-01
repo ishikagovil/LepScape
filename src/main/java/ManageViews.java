@@ -22,7 +22,7 @@ public class ManageViews {
 	Stage stage;
 	public Map<String, ImageView> plantImages;
 	public Map<String, ImageView> lepImages;
-	public Map<String, ImageView> buttonImages;
+	public Map<String, Image> buttonImages;
 	public Pane sp;
 	public WritableImage savedImg;
 	public WritableImage plot;
@@ -45,19 +45,18 @@ public class ManageViews {
 		this.controller = c;
 	    this.stage = stage;
 	    this.sp = new Pane();
-		initializeViews();
 		importButtonImages();
+		initializeViews();
 	    this.currView = this.getView("Start");
 	}
 	public void importButtonImages() {
 		File[] file;
-		buttonImages = new HashMap<>();
+		this.buttonImages = new HashMap<>();
 		try {
 			file = (new File(getClass().getResource("/Buttons").toURI())).listFiles();
 			if (file != null) {
 				for (File child : file) {
-					this.buttonImages.put(child.getName().substring(0, child.getName().length()-4), new ImageView(new Image(getClass().getResourceAsStream("/Buttons/" + child.getName()),100,100,false,false)));
-					System.out.println(child.getName().substring(0, child.getName().length()-4));
+					this.buttonImages.put(child.getName().substring(0, child.getName().length()-4), new Image(getClass().getResourceAsStream("/Buttons/" + child.getName()),100,100,false,false));
 			    }
 			}
 		} catch (URISyntaxException e) {
@@ -299,8 +298,8 @@ public class ManageViews {
 	 * @param boolean describing if the cursor to be shown is a hand or not 
 	 * @author Ishika Govil 
 	 */
-	public void onChangeCursor(boolean hand) {
-		this.currView.changeCursor(hand);
+	public void onChangeCursor(boolean hand, String key, ImageView b) {
+		this.currView.changeCursor(hand,key,b);
 	}
 	
 	// restart the plot, clear all lines so user can draw a new garden design

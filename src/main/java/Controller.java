@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
@@ -64,9 +65,9 @@ public class Controller extends Application {
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.show();
-		this.stage.getScene().setOnMouseMoved(this.getHandlerforMouseExited());
-		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited());
-		this.stage.getScene().setOnMouseExited(this.getHandlerforMouseEntered());
+		this.stage.getScene().setOnMouseMoved(this.getHandlerforMouseExited("", null));
+		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited("", null));
+		this.stage.getScene().setOnMouseExited(this.getHandlerforMouseEntered("", null));
 	}
 	/**
 	 * main method to launch the software
@@ -79,10 +80,10 @@ public class Controller extends Application {
 	/** 
 	 * Calls switchViews when a button is clicked
 	 * @param String describing the next action to be shown
-	 * @return EventHandler<ActionEvent>
+	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<ActionEvent> getHandlerforClicked(String next) { 
+	public EventHandler<MouseEvent> getHandlerforClicked(String next) { 
 		return (e) -> { switchViews(next); };
 	}
 	
@@ -91,8 +92,8 @@ public class Controller extends Application {
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
-		return (e) -> {view.onChangeCursor(true);};
+	public EventHandler<MouseEvent> getHandlerforMouseEntered(String key, ImageView b) { //Sets cursor to hand  (calls changeCursor with true)
+		return (e) -> {view.onChangeCursor(true, key, b);};
 	}
 	
 	/** 
@@ -100,8 +101,8 @@ public class Controller extends Application {
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
-		return (e) -> { view.onChangeCursor(false);  };
+	public EventHandler<MouseEvent> getHandlerforMouseExited(String key, ImageView b) { //Changes cursor back (calls changeCursor with false)
+		return (e) -> { view.onChangeCursor(false, key, b);  };
 
 	}
 	/** 
@@ -213,7 +214,7 @@ public class Controller extends Application {
 	 * Handler for when save button pressed in summary
 	 * @return the event
 	 */
-	public EventHandler<ActionEvent> getHandlerforSummarySave(){
+	public EventHandler<MouseEvent> getHandlerforSummarySave(){
 		return (e) -> {summarySave(e);};
 	}
 	
@@ -510,7 +511,7 @@ public class Controller extends Application {
 	 * @param event button pressed event
 	 * @author Arunima Dey
 	 */
-	public void summarySave(ActionEvent event) {
+	public void summarySave(MouseEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
 		System.out.println("polygonCorners "+ model.gardenMap.polygonCorners+" "+ model.gardenMap.polygonCorners.size());

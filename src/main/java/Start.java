@@ -2,6 +2,7 @@ import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -10,10 +11,10 @@ import javafx.stage.Stage;
 import java.util.*;
 
 public class Start extends View {
-	public ArrayList<Button> buttons;
+	public ArrayList<ImageView> buttons;
 	Canvas canvas;
 	/**
-	 * @author Ishika Govil 
+	 * @author Kimmy Huynh
 	 */
 	
 	/**
@@ -27,9 +28,8 @@ public class Start extends View {
 		canvas = new Canvas(screenWidth, screenHeight);
 		border = new BorderPane();
 		border.getChildren().add(canvas);
-		
-        border.setCenter(addButtonPane());
         addBackgroundImage();
+        border.setCenter(addButtonPane());
 	}
 
 	public void addBackgroundImage() {
@@ -62,9 +62,9 @@ public class Start extends View {
 		HBox box = new HBox();
 		box.setSpacing(15);
 		box.setAlignment(Pos.CENTER);
-		buttons = new ArrayList<Button>();
-		buttons.add(addNextButton( "New Garden", "PlotDesign"));
-		buttons.add(addNextButton("My Gallery", "Gallery"));
+		buttons = new ArrayList<>();
+		buttons.add(addNextButton( "back", "PlotDesign"));
+		buttons.add(addNextButton("next", "Gallery"));
 		box.getChildren().addAll(buttons);
 		return box;
 	}
