@@ -15,8 +15,6 @@ import javafx.stage.Stage;
 import java.util.*;
 
 public abstract class View{
-	public Map<String, Image> plantImages;
-	
 	private static final int lineWidth = 3;
 	private static final double fillThreshold = 0.95;
 	

@@ -1,6 +1,7 @@
 import java.util.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -8,6 +9,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import java.io.File;
+import java.net.URISyntaxException;
 
 public class ManageViews {
 	public double dimPixel; //Used when setting the dimensions of the garden
@@ -19,6 +22,7 @@ public class ManageViews {
 	Stage stage;
 	public Map<String, ImageView> plantImages;
 	public Map<String, ImageView> lepImages;
+	public Map<String, ImageView> buttonImages;
 	public Pane sp;
 	public WritableImage savedImg;
 	public WritableImage plot;
@@ -42,7 +46,23 @@ public class ManageViews {
 	    this.stage = stage;
 	    this.sp = new Pane();
 		initializeViews();
+		importButtonImages();
 	    this.currView = this.getView("Start");
+	}
+	public void importButtonImages() {
+		File[] file;
+		buttonImages = new HashMap<>();
+		try {
+			file = (new File(getClass().getResource("/Buttons").toURI())).listFiles();
+			if (file != null) {
+				for (File child : file) {
+					this.buttonImages.put(child.getName().substring(0, child.getName().length()-4), new ImageView(new Image(getClass().getResourceAsStream("/Buttons/" + child.getName()),100,100,false,false)));
+					System.out.println(child.getName().substring(0, child.getName().length()-4));
+			    }
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setPlantImg(Map<String, ImageView> imgs) {
