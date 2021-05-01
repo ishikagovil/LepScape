@@ -303,6 +303,7 @@ public class Controller extends Application {
 			view.makeInfoPane(name,description);
 		}
 		event.setDragDetect(true);
+		n.toFront();
 	}
 	
 	/**
@@ -333,6 +334,7 @@ public class Controller extends Application {
 //		}
 		
 		event.setDragDetect(false);
+		n.toFront();
 	}
 	
 	/**
@@ -366,7 +368,7 @@ public class Controller extends Application {
 		else {
  			System.out.println("updating");
  			String id = ((Node) event.getSource()).getId();
- 			model.updateXY(id);
+// 			model.updateXY(id);
  		}
 //		
 //		if(startingInTile) {
@@ -379,6 +381,7 @@ public class Controller extends Application {
 		((GardenDesign) view.views.get("GardenDesign")).removePlant((Node) event.getGestureSource());
  		model.removePlant(model.movedPlant,((Node)event.getGestureSource()).getId());
 		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+		event.consume();
 		
 		
 	}

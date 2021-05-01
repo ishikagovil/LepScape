@@ -198,10 +198,13 @@ public class GardenDesign extends View{
 	        @Override
 	        public void handle(MouseEvent event) {
 	        	if(event.getClickCount()==2) {
+	        		int index = list.getSelectionModel().getSelectedIndex();
 	        		System.out.println("clicked on " + getDisplayText(list.getSelectionModel().getSelectedItem()));
 	        		String name = getDisplayText(list.getSelectionModel().getSelectedItem());
 	        		addImageView(main.getLayoutX(),main.getLayoutY(),name,controller.scalePlantSpread(name));
 	        		controller.removeFromDeleted(name);
+	        		list.getItems().remove(index);
+	        		event.consume();
 	        	}
 	            
 	        }
@@ -377,7 +380,7 @@ public class GardenDesign extends View{
 			}
 		});
 		
-		c.setOnMouseDragEntered(controller.getHandlerforMouseEntered(key));
+		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
 		
 		main.getChildren().add(iv2);
 		return iv2.getId();
