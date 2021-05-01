@@ -156,11 +156,11 @@ public abstract class View{
 			freeLines = new ArrayList<>();
 	}
 	
-	public static double drawOnCanvas(Canvas canvas, ArrayList<double[]> points, ArrayList<double[]> extrema, ArrayList<Conditions> conditions) {
-		double minX = extrema.get(3)[0];
-		double maxX = extrema.get(1)[0];
-		double minY = extrema.get(0)[1];
-		double maxY = extrema.get(2)[1];
+	public static double drawOnCanvas(Canvas canvas, ArrayList<Vector2> points, ArrayList<Vector2> extrema, ArrayList<Conditions> conditions) {
+		double minX = extrema.get(3).getX();
+		double maxX = extrema.get(1).getX();
+		double minY = extrema.get(0).getY();
+		double maxY = extrema.get(2).getY();
 		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.setLineWidth(lineWidth);
@@ -202,16 +202,16 @@ public abstract class View{
 		return Math.min(xScale, yScale);
 	}
 	
-	private static void drawOutlines(GraphicsContext gc, ArrayList<double[]> points, double scale, double minX, double minY) {
-		Iterator<double[]> pointIter = points.iterator();
+	private static void drawOutlines(GraphicsContext gc, ArrayList<Vector2> points, double scale, double minX, double minY) {
+		Iterator<Vector2> pointIter = points.iterator();
 
 		boolean isNewLine = true;
 		
 		while(pointIter.hasNext()) {
 
-			double[] point = pointIter.next();
-			double x = (point[0] - minX) * scale;
-			double y = (point[1] - minY) * scale;
+			Vector2 point = pointIter.next();
+			double x = (point.getX() - minX) * scale;
+			double y = (point.getY() - minY) * scale;
 			
 //			System.out.println("x: " + x + " y: " + y);
 

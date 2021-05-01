@@ -231,8 +231,8 @@ public class ManageViews {
 	 * Returns the top left corner of the garden view frame
 	 * @return int 
 	 */
-	public double[] getGardenTopLeft() {
-		return new double[]{this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY};
+	public Vector2 getGardenTopLeft() {
+		return new Vector2(this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY);
 	}
 
 	/** 

@@ -115,9 +115,9 @@ class ModelTest {
 
 	@Test
 	void testSetTranslate() {
-		m.setTranslate(new double[]{2.1, 4.3});
-		assertEquals(2.1, m.getTranslate()[0]);
-		assertEquals(4.3, m.getTranslate()[1]);
+		m.setTranslate(new Vector2(2.1, 4.3));
+		assertEquals(2.1, m.getTranslate().getX());
+		assertEquals(4.3, m.getTranslate().getY());
 	}
 
 	@Test
@@ -143,9 +143,9 @@ class ModelTest {
 		m.getGarden().setPolygonCorners(1, 4);
 		m.getGarden().setPolygonCorners(4, 4);
 		m.setScale(5);
-		double[] modelTranslations = m.translateScaledPlot(new double[] {5,2});
-		assertEquals(0, modelTranslations[0]);
-		assertEquals(2, modelTranslations[1]);
+		Vector2 modelTranslations = m.translateScaledPlot(new Vector2(5,2));
+		assertEquals(0, modelTranslations.getX());
+		assertEquals(2, modelTranslations.getY());
 	}
 	
 	@Test
