@@ -90,6 +90,7 @@ public class Summary extends View {
 		// make buttons for Lepedia, Download and Create New Garden
         ArrayList <ImageView> bottomButtons = new ArrayList <>();
         ImageView download = new ImageView(this.manageView.buttonImages.get("download"));
+        setOnMouse(download, "download");
         download.setOnMouseClicked(e -> {
         	FileChooser file = new FileChooser();
         	file.setTitle("Download File");
@@ -109,7 +110,7 @@ public class Summary extends View {
         sideVBox.setStyle("-fx-background-color: lavender");
         sideVBox.setSpacing(15);
         sideVBox.setPadding(new Insets(20));
-       // sideVBox.getChildren().addAll(addNavigationButtons()); //uncomment
+        sideVBox.getChildren().addAll(addNavigationButtons()); 
         sideVBox.setAlignment(Pos.TOP_RIGHT);
         return sideVBox;
 	}
@@ -123,7 +124,8 @@ public class Summary extends View {
         buttons.add(addNextButton("back", "GardenDesign"));
         buttons.add(addNextButton("lepedia", "Lepedia"));
         buttons.add(addNextButton("learnmore","LearnMore"));
-        ImageView saveGarden = new ImageView(this.manageView.buttonImages.get("next"));
+        ImageView saveGarden = new ImageView(this.manageView.buttonImages.get("save"));
+        setOnMouse(saveGarden, "save");
         saveGarden.setOnMouseClicked(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
         buttons.add(addNextButton("gallery","Gallery"));

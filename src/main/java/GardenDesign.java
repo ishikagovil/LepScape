@@ -63,7 +63,7 @@ public class GardenDesign extends View{
 //		this.ic=c;
 		//oblist = initializeHashMap();
 		oblist = manageView.getPlantImages();					// loading in plantImages
-		vb = addVBox();
+		vb = addGridPane();
 		border = new BorderPane();
 		try {
 			main = addCanvas();
@@ -420,10 +420,9 @@ public class GardenDesign extends View{
 	 * Back takes to the previous screen, next takes you to the next, learn more takes you to learn more page and save saves an image of the garden
 	 * @return the new pane 
 	 */
-	public VBox addVBox() {
+	public VBox addGridPane() {
 		VBox vb = new VBox();
 		vb.setStyle("-fx-background-color: LIGHTBLUE");
-		vb.setSpacing(10);
 		vb.setMinHeight(screenHeight/4);
 		vb.setPrefWidth(screenHeight/4);
 		vb.setAlignment(Pos.CENTER);;
@@ -431,11 +430,12 @@ public class GardenDesign extends View{
 			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "LearnMore"),addNextButton("next","Summary")
 		}; 
 
-		//vb.getChildren().addAll(buttons); //uncomment
+		vb.getChildren().addAll(buttons); 
 		ImageView save = new ImageView(this.manageView.buttonImages.get("save"));
+		setOnMouse(save, "save");
 		save.setOnMouseClicked(e->{
 			saveGardenImage();
-			setOnMouse(save, "next");
+			setOnMouse(save, "save");
 			save.setOnMouseClicked(controller.getHandlerforClicked("Summary"));
 		});
 		vb.getChildren().add(save);

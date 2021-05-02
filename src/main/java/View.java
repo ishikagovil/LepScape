@@ -34,7 +34,7 @@ public abstract class View{
 	ArrayList<Line> polygonLines;
 	ArrayList<Line> freeLines;
 	//Image from: https://custom-cursor.com/en/collection/simpsons/sps-willie-shovel
-	ImageCursor shovelCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/shovelCursor.png"), 50,0,false,false));
+	ImageCursor shovelCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/shovelCursor.png"), 50,50,false,false));
 	//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
 	ImageCursor handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
 	/**
