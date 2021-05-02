@@ -57,9 +57,6 @@ public class ConditionScreen extends View {
 		TextField budgetField = new TextField();
 		Label budgetLabel = new Label("Budget ($): ");
 		budgetRow.getChildren().addAll(budgetLabel, budgetField);
-		budgetField.setOnKeyReleased(e -> {
-			controller.updateBudget(budgetField.getText());
-		});
 		
 		HBox buttons = new HBox(boxSpacing);
 		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
@@ -67,11 +64,18 @@ public class ConditionScreen extends View {
 		back.setOnMouseClicked(controller.getHandlerforClicked("PlotDesign"));
 		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
 		setOnMouse(next, "next");
-		next.setOnMouseClicked((e) -> {
-			GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
-			gd.addBudgetLepPane();
-			controller.switchViews("GardenDesign");
-			this.manageView.setPlot(gd.main.snapshot(null, null));
+		next.setOnMouseClicked((event) -> {
+			try{
+	    		controller.updateBudget(Double.parseDouble(budgetField.getText()));
+	    		GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
+				gd.addBudgetLepPane();
+				controller.switchViews("GardenDesign");
+				this.manageView.setPlot(gd.main.snapshot(null, null));
+	    	}
+	    	catch(NumberFormatException e){
+	    		//not a double
+	   			budgetField.clear();
+	   		}         
 		});
 		buttons.getChildren().addAll(back, next);
 		

@@ -301,13 +301,8 @@ public class Controller extends Application {
 	 * @param budgetString the String with the user's budget input
 	 * @author Jinay Jain
 	 */
-	public void updateBudget(String budgetString) {
-		try {
-			double newBudget = Integer.parseInt(budgetString);
-			this.model.setBudget(newBudget);
-		} catch(Exception e) {
-			
-		}
+	public void updateBudget(Double newBudget) {
+		this.model.setBudget(newBudget);
 	}
 	
 	/**
