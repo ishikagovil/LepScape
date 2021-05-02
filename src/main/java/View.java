@@ -1,9 +1,11 @@
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -13,6 +15,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.util.*;
 
 public abstract class View{
@@ -102,13 +106,31 @@ public abstract class View{
 		if(hand) {
 			stage.getScene().setCursor(this.handCursor);
 			b.setImage(this.manageView.buttonImages.get(key + "_h"));
+			hoverTooltip(key, b);
 		}
 		else {
 			stage.getScene().setCursor(this.shovelCursor);
 			b.setImage(this.manageView.buttonImages.get(key));
 		}
 	} 
+	/**
+	 * Adding tooltip to each ImageView that displays the text to the user and gives information about the ImageView
+	 * @param String text
+	 * @param ImageView iv
+	 */
+	public void hoverTooltip(String text, ImageView iv) {
+		Tooltip tip = new Tooltip(text);
+		tip.setShowDelay(Duration.seconds(0.5));
+		tip.setOnShowing(s->{
+			//https://stackoverflow.com/questions/24621133/javafx-how-to-set-tooltip-location-relative-to-the-mouse-cursor
+		    //Get button current bounds on computer screen
+		    Bounds bounds = iv.localToScreen(iv.getBoundsInLocal());
+		    tip.setX(bounds.getMaxX());
+		    tip.setY(bounds.getMinY());
 
+		});
+		Tooltip.install(iv, tip);
+	}
 	/**
 	 * Adds a button with the correct size and actions
 	 * @param String key representing key of the Image in ManageView's buttonImages HashMap
