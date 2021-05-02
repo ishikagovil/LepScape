@@ -296,6 +296,8 @@ public class ManageViews {
 	/** 
 	 * Called when mouse enters or exits a button
 	 * @param boolean describing if the cursor to be shown is a hand or not 
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
 	 * @author Ishika Govil 
 	 */
 	public void onChangeCursor(boolean hand, String key, ImageView b) {

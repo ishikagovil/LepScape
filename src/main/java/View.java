@@ -94,18 +94,18 @@ public abstract class View{
 	/**
 	 * Updates the cursor to the different ImageCursors
 	 * @param boolean hand
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
+	 * @author Ishika Govil
 	 */
 	public void changeCursor(boolean hand, String key, ImageView b) { //Changes cursor to either a hand if true is passed, or pointer if false
-		//https://blog.idrsolutions.com/2014/05/tutorial-change-default-cursor-javafx/ 
 		if(hand) {
 			stage.getScene().setCursor(this.handCursor);
-			if(!key.equals(""))
-				b.setImage(this.manageView.buttonImages.get(key + "_h"));
+			b.setImage(this.manageView.buttonImages.get(key + "_h"));
 		}
 		else {
 			stage.getScene().setCursor(this.shovelCursor);
-			if(!key.equals(""))
-				b.setImage(this.manageView.buttonImages.get(key));
+			b.setImage(this.manageView.buttonImages.get(key));
 		}
 	} 
 
@@ -114,6 +114,7 @@ public abstract class View{
 	 * @param String key representing key of the Image in ManageView's buttonImages HashMap
 	 * @param String next representing the action the button performs when clicked
 	 * @return Button
+	 * @author Ishika Govil
 	 */
 	public ImageView addNextButton(String key, String next) {
 		ImageView b = new ImageView(this.manageView.buttonImages.get(key));
@@ -126,6 +127,7 @@ public abstract class View{
 	 * Sets the MouseEntered and MouseExited handlers for ImageView
 	 * @param Button b
 	 * @param String key
+	 * @author Ishika Govil
 	 */
 	public void setOnMouse(ImageView b, String key) {
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered(key, b));
@@ -138,6 +140,7 @@ public abstract class View{
 	 * @param double x2
 	 * @param double y2
 	 * @param boolean isPolygon
+	 * @author Ishika Govil
 	 */
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		Line line = new Line(x1, y1, x2, y2);

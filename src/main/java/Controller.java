@@ -65,9 +65,6 @@ public class Controller extends Application {
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.show();
-		this.stage.getScene().setOnMouseMoved(this.getHandlerforMouseExited("", null));
-		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited("", null));
-		this.stage.getScene().setOnMouseExited(this.getHandlerforMouseEntered("", null));
 	}
 	/**
 	 * main method to launch the software
@@ -76,6 +73,7 @@ public class Controller extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+
 
 	/** 
 	 * Calls switchViews when a button is clicked
@@ -89,6 +87,8 @@ public class Controller extends Application {
 	
 	/** 
 	 * Calls onChangeCursor in view when mouse enters the button frame
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
@@ -98,6 +98,8 @@ public class Controller extends Application {
 	
 	/** 
 	 * Calls onChangeCursor in view when mouse exits the button frame
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
@@ -297,11 +299,11 @@ public class Controller extends Application {
 	}
 	
 	/**
-	 * Updates the budget based on the String in a TextField
+	 * Updates the budget based on the double passed from a TextField
 	 * @param budgetString the String with the user's budget input
 	 * @author Jinay Jain
 	 */
-	public void updateBudget(Double newBudget) {
+	public void updateBudget(double newBudget) {
 		this.model.setBudget(newBudget);
 	}
 	
@@ -772,7 +774,7 @@ public class Controller extends Application {
 	/**
 	 * Gets the initial budget set by user to be displayed in garden design screen
 	 * @return the budget
-	 * @author Arunima Det
+	 * @author Arunima Dey
 	 */
 	public double getBudget() {
 		return model.getBudget();
