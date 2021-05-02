@@ -428,11 +428,11 @@ public class GardenDesign extends View{
 		vb.setPrefWidth(screenHeight/4);
 		vb.setAlignment(Pos.CENTER);;
 		ImageView[] buttons = new ImageView[] {
-			addNextButton("back","ConditionScreen"), addNextButton("back", "LearnMore"),addNextButton("next","Summary")
+			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "LearnMore"),addNextButton("next","Summary")
 		}; 
 
 		//vb.getChildren().addAll(buttons); //uncomment
-		ImageView save = new ImageView(this.manageView.buttonImages.get("next"));
+		ImageView save = new ImageView(this.manageView.buttonImages.get("save"));
 		save.setOnMouseClicked(e->{
 			saveGardenImage();
 			setOnMouse(save, "next");

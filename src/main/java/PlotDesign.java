@@ -71,13 +71,13 @@ public class PlotDesign extends View{
 		//Add editing button and functionality
         toolbar = new ToolBar();
         toolbar.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
-        toolbar.getItems().add(addNextButton("back","Drawing"));
+        toolbar.getItems().add(addNextButton("draw","Drawing"));
         //Make sure the anchors cannot be dragged when freehand is selected
         toolbar.getItems().get(0).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
         	dragAnchor = false;    	
         	toggleAnchorHandler();
         });
-        toolbar.getItems().add(addNextButton("next","Shape"));
+        toolbar.getItems().add(addNextButton("polygon","Shape"));
         disableDrawing(toolbar.getItems().get(1));
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
         drawSwitch = new ArrayList<>();

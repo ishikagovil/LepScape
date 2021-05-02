@@ -121,12 +121,12 @@ public class Summary extends View {
 	public ArrayList<ImageView> addNavigationButtons() {
 		ArrayList <ImageView> buttons = new ArrayList<>();
         buttons.add(addNextButton("back", "GardenDesign"));
-        buttons.add(addNextButton("clear", "Lepedia"));
-        buttons.add(addNextButton("download","LearnMore"));
+        buttons.add(addNextButton("lepedia", "Lepedia"));
+        buttons.add(addNextButton("learnmore","LearnMore"));
         ImageView saveGarden = new ImageView(this.manageView.buttonImages.get("next"));
         saveGarden.setOnMouseClicked(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
-        buttons.add(addNextButton("next","Gallery"));
+        buttons.add(addNextButton("gallery","Gallery"));
         return buttons;
 	}
 

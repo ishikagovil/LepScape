@@ -33,8 +33,8 @@ public abstract class View{
 	GraphicsContext gc;
 	ArrayList<Line> polygonLines;
 	ArrayList<Line> freeLines;
-	//Image from: https://custom-cursor.com/en/collection/life-style/hand-painted-poppy-flower
-	ImageCursor shovelCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/shovelCursor.png"), 50,50,false,false));
+	//Image from: https://custom-cursor.com/en/collection/simpsons/sps-willie-shovel
+	ImageCursor shovelCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/shovelCursor.png"), 50,0,false,false));
 	//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
 	ImageCursor handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
 	/**
@@ -111,7 +111,7 @@ public abstract class View{
 
 	/**
 	 * Adds a button with the correct size and actions
-	 * @param String text representing text to be displayed on the Button
+	 * @param String key representing key of the Image in ManageView's buttonImages HashMap
 	 * @param String next representing the action the button performs when clicked
 	 * @return Button
 	 */
@@ -123,8 +123,9 @@ public abstract class View{
 	}	
 
 	/**
-	 * Sets the MouseEntered and MouseExited handlers for Button
+	 * Sets the MouseEntered and MouseExited handlers for ImageView
 	 * @param Button b
+	 * @param String key
 	 */
 	public void setOnMouse(ImageView b, String key) {
 		b.setOnMouseEntered(controller.getHandlerforMouseEntered(key, b));

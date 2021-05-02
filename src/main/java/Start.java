@@ -63,8 +63,8 @@ public class Start extends View {
 		box.setSpacing(15);
 		box.setAlignment(Pos.CENTER);
 		buttons = new ArrayList<>();
-		buttons.add(addNextButton( "back", "PlotDesign"));
-		buttons.add(addNextButton("next", "Gallery"));
+		buttons.add(addNextButton( "new", "PlotDesign"));
+		buttons.add(addNextButton("gallery", "Gallery"));
 		box.getChildren().addAll(buttons);
 		return box;
 	}
