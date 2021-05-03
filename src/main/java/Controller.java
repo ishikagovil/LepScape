@@ -323,8 +323,7 @@ public class Controller extends Application {
 		if(key!=null) {
 			String name = model.plantDirectory.get(key).getCommonName();
 			String description = model.plantDirectory.get(key).getDescription();
-			double cost = model.plantDirectory.get(key).getCost();
-			String info = description + " These cost " + cost + " US Dollars.";
+			String info = description;
 			view.makeInfoPane(name, info);
 		}
 		event.setDragDetect(true);

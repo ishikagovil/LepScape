@@ -386,6 +386,9 @@ public class GardenDesign extends View{
 		info1.setStyle("-fx-background-color: LIGHTBLUE");
 		
 		Label title = new Label(name);
+		title.setFont(new Font("Andale Mono", 20));
+		title.setWrapText(true);
+		title.setMaxWidth(screenWidth/6);
 		
 		Button toggle = new Button();
 		Image toggleIM = new Image(getClass().getResourceAsStream("/toggle.png"));
@@ -397,16 +400,20 @@ public class GardenDesign extends View{
 			border.getChildren().remove(border.getRight());
 		});
 		
-		HBox top = new HBox();
+		//HBox top = new HBox();
+		VBox top = new VBox();
 		top.getChildren().add(toggle);
 		toggle.setAlignment(Pos.TOP_LEFT);
-		top.getChildren().add(title);
 		title.setAlignment(Pos.CENTER);
+		title.setTextAlignment(TextAlignment.CENTER);
+		top.getChildren().add(title);
+		
 		
 		Text tf = new Text();
 		tf.setText(info);
-		tf.setTextAlignment(TextAlignment.LEFT);
+		tf.setTextAlignment(TextAlignment.CENTER);
 		tf.setWrappingWidth(screenWidth / 6.5);;
+		tf.setFont(new Font("Andale Mono", 14));
 
 		info1.setTop(top);
 		info1.setCenter(tf);
