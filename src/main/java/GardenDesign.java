@@ -63,7 +63,7 @@ public class GardenDesign extends View{
 //		this.ic=c;
 		//oblist = initializeHashMap();
 		oblist = manageView.getPlantImages();					// loading in plantImages
-		vb = addVBox();
+		vb = addGridPane();
 		border = new BorderPane();
 		try {
 			main = addCanvas();
@@ -420,27 +420,23 @@ public class GardenDesign extends View{
 	 * Back takes to the previous screen, next takes you to the next, learn more takes you to learn more page and save saves an image of the garden
 	 * @return the new pane 
 	 */
-	public VBox addVBox() {
+	public VBox addGridPane() {
 		VBox vb = new VBox();
 		vb.setStyle("-fx-background-color: LIGHTBLUE");
-		vb.setSpacing(10);
 		vb.setMinHeight(screenHeight/4);
 		vb.setPrefWidth(screenHeight/4);
 		vb.setAlignment(Pos.CENTER);;
-		Button[] buttons = new Button[] {
-			addNextButton("Back","ConditionScreen"), addNextButton("Learn More", "LearnMore"),addNextButton("Next","Summary")
-		}; //, new Button("Clear")
-		buttons[0].setPrefSize(100, 30);
-		buttons[1].setPrefSize(100, 30);
-		buttons[2].setPrefSize(100, 30);
-//		buttons[3].setPrefSize(100, 30);
-		vb.getChildren().addAll(buttons);
-		Button save = new Button("Save");
-		save.setPrefSize(buttonWidth, buttonHeight);
-		save.setOnAction(e->{
+		ImageView[] buttons = new ImageView[] {
+			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "LearnMore"),addNextButton("next","Summary")
+		}; 
+
+		vb.getChildren().addAll(buttons); 
+		ImageView save = new ImageView(this.manageView.buttonImages.get("save"));
+		setOnMouse(save, "save");
+		save.setOnMouseClicked(e->{
 			saveGardenImage();
-			setOnMouse(save);
-			save.setOnAction(controller.getHandlerforClicked("Summary"));
+			setOnMouse(save, "save");
+			save.setOnMouseClicked(controller.getHandlerforClicked("Summary"));
 		});
 		vb.getChildren().add(save);
 		return vb;

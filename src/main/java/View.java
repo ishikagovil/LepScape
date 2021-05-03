@@ -1,10 +1,13 @@
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -12,11 +15,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.util.*;
 
 public abstract class View{
-	public Map<String, Image> plantImages;
-	
 	private static final int lineWidth = 3;
 	private static final double fillThreshold = 0.95;
 	
@@ -26,8 +29,7 @@ public abstract class View{
 	public double gardenHeight = 0.5*screenHeight;
 	public double gardenTopLeftX = 0.3*screenWidth;
 	public double gardenTopLeftY = 0.2*screenHeight;
-	public int buttonWidth = 100;
-	public int buttonHeight = 30;
+
 	BorderPane border;
 	Stage stage;
 	Controller controller;
@@ -35,8 +37,8 @@ public abstract class View{
 	GraphicsContext gc;
 	ArrayList<Line> polygonLines;
 	ArrayList<Line> freeLines;
-	//Image from: https://custom-cursor.com/en/collection/life-style/hand-painted-poppy-flower
-	ImageCursor flowerCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/flowerCursor.png"), 30,40,false,false));
+	//Image from: https://custom-cursor.com/en/collection/simpsons/sps-willie-shovel
+	ImageCursor shovelCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/shovelCursor.png"), 50,50,false,false));
 	//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
 	ImageCursor handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
 	/**
@@ -96,36 +98,62 @@ public abstract class View{
 	/**
 	 * Updates the cursor to the different ImageCursors
 	 * @param boolean hand
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
+	 * @author Ishika Govil
 	 */
-	public void changeCursor(boolean hand) { //Changes cursor to either a hand if true is passed, or pointer if false
-		//https://blog.idrsolutions.com/2014/05/tutorial-change-default-cursor-javafx/ 
-		if(hand)
+	public void changeCursor(boolean hand, String key, ImageView b) { //Changes cursor to either a hand if true is passed, or pointer if false
+		if(hand) {
 			stage.getScene().setCursor(this.handCursor);
-		else
-			stage.getScene().setCursor(this.flowerCursor);
+			b.setImage(this.manageView.buttonImages.get(key + "_h"));
+			hoverTooltip(key, b);
+		}
+		else {
+			stage.getScene().setCursor(this.shovelCursor);
+			b.setImage(this.manageView.buttonImages.get(key));
+		}
 	} 
+	/**
+	 * Adding tooltip to each ImageView that displays the text to the user and gives information about the ImageView
+	 * @param String text
+	 * @param ImageView iv
+	 */
+	public void hoverTooltip(String text, Node node) {
+		Tooltip tip = new Tooltip(text);
+		tip.setShowDelay(Duration.seconds(0.5));
+		tip.setOnShowing(s->{
+			//https://stackoverflow.com/questions/24621133/javafx-how-to-set-tooltip-location-relative-to-the-mouse-cursor
+		    //Get button current bounds on computer screen
+		    Bounds bounds = node.localToScreen(node.getBoundsInLocal());
+		    tip.setX(bounds.getMaxX());
+		    tip.setY(bounds.getMinY());
 
+		});
+		Tooltip.install(node, tip);
+	}
 	/**
 	 * Adds a button with the correct size and actions
-	 * @param String text representing text to be displayed on the Button
+	 * @param String key representing key of the Image in ManageView's buttonImages HashMap
 	 * @param String next representing the action the button performs when clicked
 	 * @return Button
+	 * @author Ishika Govil
 	 */
-	public Button addNextButton(String text, String next) {
-		Button b = new Button(text);
-		b.setPrefSize(buttonWidth, buttonHeight);
-		setOnMouse(b);
-		b.setOnAction(controller.getHandlerforClicked(next));
+	public ImageView addNextButton(String key, String next) {
+		ImageView b = new ImageView(this.manageView.buttonImages.get(key));
+		setOnMouse(b, key);
+		b.setOnMouseClicked(controller.getHandlerforClicked(next));
 		return b;
 	}	
 
 	/**
-	 * Sets the MouseEntered and MouseExited handlers for Button
+	 * Sets the MouseEntered and MouseExited handlers for ImageView
 	 * @param Button b
+	 * @param String key
+	 * @author Ishika Govil
 	 */
-	public void setOnMouse(Button b) {
-		b.setOnMouseEntered(controller.getHandlerforMouseEntered());
-		b.setOnMouseExited(controller.getHandlerforMouseExited());
+	public void setOnMouse(ImageView b, String key) {
+		b.setOnMouseEntered(controller.getHandlerforMouseEntered(key, b));
+		b.setOnMouseExited(controller.getHandlerforMouseExited(key, b));
 	}
 	/**
 	 * Adds a line between (x1,y1) and (x2,y2)
@@ -134,6 +162,7 @@ public abstract class View{
 	 * @param double x2
 	 * @param double y2
 	 * @param boolean isPolygon
+	 * @author Ishika Govil
 	 */
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		Line line = new Line(x1, y1, x2, y2);

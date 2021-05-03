@@ -49,7 +49,7 @@ public class Gallery extends View{
 		back = new Button("Back");
 		back.setPrefSize(100, 30);;
 //		back.setOnAction(controller.getHandlerforClicked("Back to Start"));
-		hb1.getChildren().add(addNextButton("Back","Start"));
+		hb1.getChildren().add(addNextButton("back","Start"));
 		border.setBottom(hb1);
 		
 		// get the summary pane on the right to display lep + cost
@@ -136,7 +136,6 @@ public class Gallery extends View{
 	                BorderPane bp = new BorderPane();
 	                VBox vb = new VBox(20);
 	                Button edit = new Button("Edit");
-	                edit.setPrefSize(buttonWidth, buttonHeight);
 	                edit.setOnAction(c.getHandlerforEditSaved(index,dialog));
 	                vb.getChildren().add(edit);
 	                bp.setBottom(vb);

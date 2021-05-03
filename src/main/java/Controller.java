@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
@@ -64,9 +65,6 @@ public class Controller extends Application {
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.show();
-		this.stage.getScene().setOnMouseMoved(this.getHandlerforMouseExited());
-		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited());
-		this.stage.getScene().setOnMouseExited(this.getHandlerforMouseEntered());
 	}
 	/**
 	 * main method to launch the software
@@ -76,32 +74,37 @@ public class Controller extends Application {
 		launch(args);
 	}
 
+
 	/** 
 	 * Calls switchViews when a button is clicked
 	 * @param String describing the next action to be shown
-	 * @return EventHandler<ActionEvent>
+	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<ActionEvent> getHandlerforClicked(String next) { 
+	public EventHandler<MouseEvent> getHandlerforClicked(String next) { 
 		return (e) -> { switchViews(next); };
 	}
 	
 	/** 
 	 * Calls onChangeCursor in view when mouse enters the button frame
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
-		return (e) -> {view.onChangeCursor(true);};
+	public EventHandler<MouseEvent> getHandlerforMouseEntered(String key, ImageView b) { //Sets cursor to hand  (calls changeCursor with true)
+		return (e) -> {view.onChangeCursor(true, key, b);};
 	}
 	
 	/** 
 	 * Calls onChangeCursor in view when mouse exits the button frame
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
-		return (e) -> { view.onChangeCursor(false);  };
+	public EventHandler<MouseEvent> getHandlerforMouseExited(String key, ImageView b) { //Changes cursor back (calls changeCursor with false)
+		return (e) -> { view.onChangeCursor(false, key, b);  };
 
 	}
 	/** 
@@ -213,7 +216,7 @@ public class Controller extends Application {
 	 * Handler for when save button pressed in summary
 	 * @return the event
 	 */
-	public EventHandler<ActionEvent> getHandlerforSummarySave(){
+	public EventHandler<MouseEvent> getHandlerforSummarySave(){
 		return (e) -> {summarySave(e);};
 	}
 	
@@ -296,17 +299,12 @@ public class Controller extends Application {
 	}
 	
 	/**
-	 * Updates the budget based on the String in a TextField
+	 * Updates the budget based on the double passed from a TextField
 	 * @param budgetString the String with the user's budget input
 	 * @author Jinay Jain
 	 */
-	public void updateBudget(String budgetString) {
-		try {
-			double newBudget = Integer.parseInt(budgetString);
-			this.model.setBudget(newBudget);
-		} catch(Exception e) {
-			
-		}
+	public void updateBudget(double newBudget) {
+		this.model.setBudget(newBudget);
 	}
 	
 	/**
@@ -510,7 +508,7 @@ public class Controller extends Application {
 	 * @param event button pressed event
 	 * @author Arunima Dey
 	 */
-	public void summarySave(ActionEvent event) {
+	public void summarySave(MouseEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
 		System.out.println("polygonCorners "+ model.gardenMap.polygonCorners+" "+ model.gardenMap.polygonCorners.size());
@@ -776,7 +774,7 @@ public class Controller extends Application {
 	/**
 	 * Gets the initial budget set by user to be displayed in garden design screen
 	 * @return the budget
-	 * @author Arunima Det
+	 * @author Arunima Dey
 	 */
 	public double getBudget() {
 		return model.getBudget();
