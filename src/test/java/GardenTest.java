@@ -90,10 +90,10 @@ class GardenTest {
 	@Test
 	void testUpdateOutline() {
 		g1.updateOutline(0, 0);
-		assertArrayEquals(new double[]{0,0}, g1.outline.get(0));
+		assertEquals(new Vector2(0,0), g1.outline.get(0));
 		g2.updateOutline(5, 5);
 		g2.updateOutline(5, 10);
-		assertArrayEquals(new double[]{5,10}, g2.outline.get(1));
+		assertEquals(new Vector2(5, 10), g2.outline.get(1));
 		
 	}
 	@Test
@@ -113,11 +113,11 @@ class GardenTest {
 		g1.setPolygonCorners(4, 1);
 		g1.setPolygonCorners(0, 4);
 		g1.setPolygonCorners(4, 4);
-		ArrayList<double[]> extrema = g1.getExtremes();
-		assertArrayEquals(new double[] {1,0}, extrema.get(0));
-		assertArrayEquals(new double[] {5,2}, extrema.get(1));
-		assertArrayEquals(new double[] {1,9}, extrema.get(2));
-		assertArrayEquals(new double[] {0,4}, extrema.get(3));
+		ArrayList<Vector2> extrema = g1.getExtremes();
+		assertEquals(new Vector2(1,0), extrema.get(0));
+		assertEquals(new Vector2(5,2), extrema.get(1));
+		assertEquals(new Vector2(1,9), extrema.get(2));
+		assertEquals(new Vector2(0,4), extrema.get(3));
 	}
 	
 	@Test

@@ -9,8 +9,8 @@ public class Garden implements java.io.Serializable {
 	public int numLeps;
 	public double cost;
 	public ArrayList<PlacedPlant> plants;
-	public ArrayList<double[]> outline;
-	public ArrayList<double[]> polygonCorners;
+	public ArrayList<Vector2> outline;
+	public ArrayList<Vector2> polygonCorners;
 	public ArrayList<Conditions> sections;
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
@@ -38,8 +38,8 @@ public class Garden implements java.io.Serializable {
 	 */
 	public Garden() {
 		this.plants = new ArrayList<PlacedPlant>();
-		this.outline = new ArrayList<double[]>();
-		this.polygonCorners = new ArrayList<double[]>();
+		this.outline = new ArrayList<Vector2>();
+		this.polygonCorners = new ArrayList<Vector2>();
 		this.sections = new ArrayList<Conditions>();
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();
@@ -171,7 +171,7 @@ public class Garden implements java.io.Serializable {
 	 * Returns the list of coordinates of freedrawn piece of boundary set by user
 	 * @return ArrayList<double[]> representing list of all free drawn plot's boundary coordinates
 	 */
-	public ArrayList<double[]> getOutline() {
+	public ArrayList<Vector2> getOutline() {
 		return this.outline;
 	}
 	
@@ -179,7 +179,7 @@ public class Garden implements java.io.Serializable {
 	 * Returns the list of coordinates of the polygon piece of boundary set by user
 	 * @return ArrayList<double[]> representing list of all polygon's boundary coordinates
 	 */
-	public ArrayList<double[]> getPolygonCorners() {
+	public ArrayList<Vector2> getPolygonCorners() {
 		return this.polygonCorners;
 	}
 	
@@ -238,8 +238,8 @@ public class Garden implements java.io.Serializable {
 	 * @param double y representing y coordinate
 	 */
 	public void updateOutline(double x, double y) { 
-		double[] arr = {x,y};
-		this.outline.add(arr);
+		Vector2 v = new Vector2(x, y);
+		this.outline.add(v);
 	}
 	/**
 	 * Called after user is done moving anchors to set plot boundary shape
@@ -247,26 +247,26 @@ public class Garden implements java.io.Serializable {
 	 * @param double y representing y coordinate
 	 */
 	public void setPolygonCorners(double x, double y) {
-		double[] arr = {x,y};
-		this.polygonCorners.add(arr);
+		Vector2 v = new Vector2(x, y);
+		this.polygonCorners.add(v);
 	}
 	/**
 	 * Clears all plot boundary coordinates, and called when user clears their plot
 	 */
 	public void clearOutline() {
-		this.outline = new ArrayList<double[]>(); 
-		this.polygonCorners = new ArrayList<double[]>(); 
+		this.outline = new ArrayList<Vector2>(); 
+		this.polygonCorners = new ArrayList<Vector2>(); 
 	}
 	/**
 	 * Finds the extreme values of the plot 
 	 * @return ArrayList<double[]> of extreme values clockwise starting from the top
 	 * @author Ishika Govil 
 	 */
-	public ArrayList<double[]> getExtremes() {
+	public ArrayList<Vector2> getExtremes() {
 		System.out.println("outline: "+ outline);
 		System.out.println("polygon: "+ polygonCorners);
-		ArrayList<double[]> scaledOutlines = new ArrayList<>();
-		ArrayList<double[]> extrema = new ArrayList<>();
+		ArrayList<Vector2> scaledOutlines = new ArrayList<>();
+		ArrayList<Vector2> extrema = new ArrayList<>();
 		int lowestX = 0; 
 		int lowestY = 0; 
 		int highestX = 0; 
@@ -274,17 +274,17 @@ public class Garden implements java.io.Serializable {
 		scaledOutlines.addAll(outline);
 		scaledOutlines.addAll(polygonCorners);
 		System.out.println("scaled: " +scaledOutlines);
-		Iterator<double[]> itr = scaledOutlines.iterator();
+		Iterator<Vector2> itr = scaledOutlines.iterator();
 		int idx = 0;
 		while(itr.hasNext()) {
-			double[] point = (double[])itr.next();
-			if(point[0] <  scaledOutlines.get(lowestX)[0] && point[0]!= -1)
+			Vector2 point = itr.next();
+			if(point.getX() < scaledOutlines.get(lowestX).getX() && point.getX()!= -1)
 				lowestX = idx;
-			if(point[0] > scaledOutlines.get(highestX)[0] && point[0]!= -1)
+			if(point.getX() > scaledOutlines.get(highestX).getX() && point.getX()!= -1)
 				highestX = idx;
-			if(point[1] <  scaledOutlines.get(lowestY)[1] && point[1]!= -1)
+			if(point.getY() <  scaledOutlines.get(lowestY).getY() && point.getY()!= -1)
 				lowestY = idx;
-			if(point[1] > scaledOutlines.get(highestY)[1] && point[1]!= -1)
+			if(point.getY() > scaledOutlines.get(highestY).getY() && point.getY()!= -1)
 				highestY = idx;	
 			idx++;
 		}

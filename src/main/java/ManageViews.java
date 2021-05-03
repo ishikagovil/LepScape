@@ -1,6 +1,7 @@
 import java.util.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -8,6 +9,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import java.io.File;
+import java.net.URISyntaxException;
 
 public class ManageViews {
 	public double dimPixel; //Used when setting the dimensions of the garden
@@ -19,6 +22,7 @@ public class ManageViews {
 	Stage stage;
 	public Map<String, ImageView> plantImages;
 	public Map<String, ImageView> lepImages;
+	public Map<String, Image> buttonImages;
 	public Pane sp;
 	public WritableImage savedImg;
 	public WritableImage plot;
@@ -41,8 +45,23 @@ public class ManageViews {
 		this.controller = c;
 	    this.stage = stage;
 	    this.sp = new Pane();
+		importButtonImages();
 		initializeViews();
 	    this.currView = this.getView("Start");
+	}
+	public void importButtonImages() {
+		File[] file;
+		this.buttonImages = new HashMap<>();
+		try {
+			file = (new File(getClass().getResource("/Buttons").toURI())).listFiles();
+			if (file != null) {
+				for (File child : file) {
+					this.buttonImages.put(child.getName().substring(0, child.getName().length()-4), new Image(getClass().getResourceAsStream("/Buttons/" + child.getName()),100,100,false,false));
+			    }
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setPlantImg(Map<String, ImageView> imgs) {
@@ -231,8 +250,8 @@ public class ManageViews {
 	 * Returns the top left corner of the garden view frame
 	 * @return int 
 	 */
-	public double[] getGardenTopLeft() {
-		return new double[]{this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY};
+	public Vector2 getGardenTopLeft() {
+		return new Vector2(this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY);
 	}
 
 	/** 
@@ -277,10 +296,12 @@ public class ManageViews {
 	/** 
 	 * Called when mouse enters or exits a button
 	 * @param boolean describing if the cursor to be shown is a hand or not 
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
 	 * @author Ishika Govil 
 	 */
-	public void onChangeCursor(boolean hand) {
-		this.currView.changeCursor(hand);
+	public void onChangeCursor(boolean hand, String key, ImageView b) {
+		this.currView.changeCursor(hand,key,b);
 	}
 	
 	// restart the plot, clear all lines so user can draw a new garden design

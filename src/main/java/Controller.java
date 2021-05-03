@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
@@ -64,9 +65,6 @@ public class Controller extends Application {
 	public void setTheStage() {
 		this.stage.getScene().setRoot(this.view.getBorderPane());
 		this.stage.show();
-		this.stage.getScene().setOnMouseMoved(this.getHandlerforMouseExited());
-		this.stage.getScene().setOnMouseEntered(this.getHandlerforMouseExited());
-		this.stage.getScene().setOnMouseExited(this.getHandlerforMouseEntered());
 	}
 	/**
 	 * main method to launch the software
@@ -76,32 +74,37 @@ public class Controller extends Application {
 		launch(args);
 	}
 
+
 	/** 
 	 * Calls switchViews when a button is clicked
 	 * @param String describing the next action to be shown
-	 * @return EventHandler<ActionEvent>
+	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<ActionEvent> getHandlerforClicked(String next) { 
+	public EventHandler<MouseEvent> getHandlerforClicked(String next) { 
 		return (e) -> { switchViews(next); };
 	}
 	
 	/** 
 	 * Calls onChangeCursor in view when mouse enters the button frame
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<MouseEvent> getHandlerforMouseEntered() { //Sets cursor to hand  (calls changeCursor with true)
-		return (e) -> {view.onChangeCursor(true);};
+	public EventHandler<MouseEvent> getHandlerforMouseEntered(String key, ImageView b) { //Sets cursor to hand  (calls changeCursor with true)
+		return (e) -> {view.onChangeCursor(true, key, b);};
 	}
 	
 	/** 
 	 * Calls onChangeCursor in view when mouse exits the button frame
+	 * @param String key representing key for the ImageView
+	 * @param ImageView b representing the ImageView being hovered
 	 * @return EventHandler<MouseEvent>
 	 * @author Ishika Govil 
 	 */
-	public EventHandler<MouseEvent> getHandlerforMouseExited() { //Changes cursor back (calls changeCursor with false)
-		return (e) -> { view.onChangeCursor(false);  };
+	public EventHandler<MouseEvent> getHandlerforMouseExited(String key, ImageView b) { //Changes cursor back (calls changeCursor with false)
+		return (e) -> { view.onChangeCursor(false, key, b);  };
 
 	}
 	/** 
@@ -213,7 +216,7 @@ public class Controller extends Application {
 	 * Handler for when save button pressed in summary
 	 * @return the event
 	 */
-	public EventHandler<ActionEvent> getHandlerforSummarySave(){
+	public EventHandler<MouseEvent> getHandlerforSummarySave(){
 		return (e) -> {summarySave(e);};
 	}
 	
@@ -296,17 +299,12 @@ public class Controller extends Application {
 	}
 	
 	/**
-	 * Updates the budget based on the String in a TextField
+	 * Updates the budget based on the double passed from a TextField
 	 * @param budgetString the String with the user's budget input
 	 * @author Jinay Jain
 	 */
-	public void updateBudget(String budgetString) {
-		try {
-			double newBudget = Integer.parseInt(budgetString);
-			this.model.setBudget(newBudget);
-		} catch(Exception e) {
-			
-		}
+	public void updateBudget(double newBudget) {
+		this.model.setBudget(newBudget);
 	}
 	
 	/**
@@ -510,7 +508,7 @@ public class Controller extends Application {
 	 * @param event button pressed event
 	 * @author Arunima Dey
 	 */
-	public void summarySave(ActionEvent event) {
+	public void summarySave(MouseEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
 		System.out.println("polygonCorners "+ model.gardenMap.polygonCorners+" "+ model.gardenMap.polygonCorners.size());
@@ -589,7 +587,7 @@ public class Controller extends Application {
 	 * When user hits clear on the polygon boundary, polygonCorners ArrayList in the Garden is reset
 	 */
 	public void restartPolygonBoundary() {
-		this.model.getGarden().polygonCorners = new ArrayList<double[]>();
+		this.model.getGarden().polygonCorners = new ArrayList<Vector2>();
 	}
 	
 	/**
@@ -612,7 +610,7 @@ public class Controller extends Application {
 	 * @author Ishika Govil
 	 */
 	public void drawPlot(double scale) {
-		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
+		ListIterator<Vector2> itr = model.getGarden().outline.listIterator();
 		iteratePlot(itr, model.getGarden().outline, false, scale);
 		itr = model.getGarden().polygonCorners.listIterator();
 		iteratePlot(itr, model.getGarden().polygonCorners, true, scale);
@@ -624,7 +622,7 @@ public class Controller extends Application {
 	 * @author Ishika Govil
 	 */
 	public void drawFreehandPart(double scale) {
-		ListIterator<double[]> itr = model.getGarden().outline.listIterator();
+		ListIterator<Vector2> itr = model.getGarden().outline.listIterator();
 		iteratePlot(itr, model.getGarden().outline, false, scale);
 	}
 	
@@ -633,8 +631,8 @@ public class Controller extends Application {
 	 * @param canvas the Canvas to draw onto
 	 */
 	public void drawToCanvas(Canvas canvas) {
-		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
-		ArrayList<double[]> points = this.model.getGarden().getOutline();
+		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
+		ArrayList<Vector2> points = this.model.getGarden().getOutline();
 		ArrayList<Conditions> conds = this.model.getGarden().getSections();
 		points.addAll(this.model.getGarden().getPolygonCorners());
 		
@@ -650,23 +648,23 @@ public class Controller extends Application {
 	 * @param double scale 
 	 * @author Ishika Govil
 	 */
-	public void iteratePlot(ListIterator<double[]> itr, ArrayList<double[]> list, boolean isPolygon, double scale) {
-		double[] translate;
+	public void iteratePlot(ListIterator<Vector2> itr, ArrayList<Vector2> list, boolean isPolygon, double scale) {
+		Vector2 translate;
 		if(scale == 1)
-			translate = new double[] {0, 0};
+			translate = new Vector2(0, 0);
 		else
 			translate = this.model.translateScaledPlot(this.view.getGardenTopLeft());		
 		while(itr.hasNext()) {
-			double[] point1 = (double[])itr.next();
-			double[] point2;
+			Vector2 point1 = itr.next();
+			Vector2 point2;
 			if(itr.hasNext())
 				point2 = list.get(itr.nextIndex());	
 			else if(isPolygon)
 				point2 = list.get(0);
 			else 
 				return;
-			if(point2[0] != -1 && point1[0]!= -1)
-				this.view.drawLine(point1[0]*scale + translate[0], point1[1]*scale + translate[1], point2[0]*scale + translate[0], point2[1]*scale + translate[1], isPolygon);
+			if(point2.getX() != -1 && point1.getX()!= -1)
+				this.view.drawLine(point1.getX()*scale + translate.getX(), point1.getY()*scale + translate.getY(), point2.getX()*scale + translate.getX(), point2.getY()*scale + translate.getY(), isPolygon);
 		}
 	}
 	
@@ -677,9 +675,9 @@ public class Controller extends Application {
 	 * @author Ishika Govil
 	 */
 	public void scalePlot() {
-		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
-		double scaleY = this.view.getGardenHeight() / Math.abs(extrema.get(0)[1] -  extrema.get(2)[1]);
-		double scaleX = this.view.getGardenWidth() / Math.abs(extrema.get(1)[0] -  extrema.get(3)[0]);
+		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
+		double scaleY = this.view.getGardenHeight() / Math.abs(extrema.get(0).getY() -  extrema.get(2).getY());
+		double scaleX = this.view.getGardenWidth() / Math.abs(extrema.get(1).getX() -  extrema.get(3).getX());
 		double scale =  Math.min(scaleX, scaleY);
 		this.model.setScale(scale);
 		drawPlot(scale);
@@ -750,8 +748,8 @@ public class Controller extends Application {
 			 this.view.dimLen = new ArrayList<>();
 		 } 
 		 else if(next.equals("Restart")) {
-			 this.model.getGarden().outline = new ArrayList<double[]>(); 
-			 this.model.getGarden().polygonCorners = new ArrayList<double[]>();
+			 this.model.getGarden().outline = new ArrayList<Vector2>(); 
+			 this.model.getGarden().polygonCorners = new ArrayList<Vector2>();
 			 this.view.restartPlot();
 			 setTheStage();
 		 }
@@ -776,7 +774,7 @@ public class Controller extends Application {
 	/**
 	 * Gets the initial budget set by user to be displayed in garden design screen
 	 * @return the budget
-	 * @author Arunima Det
+	 * @author Arunima Dey
 	 */
 	public double getBudget() {
 		return model.getBudget();
@@ -791,12 +789,12 @@ public class Controller extends Application {
 	}
 
 	private void fillRegion(Canvas canvas, MouseEvent e) {
-		ArrayList<double[]> extrema = this.model.getGarden().getExtremes();
+		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
 
-		double minX = extrema.get(3)[0];
-		double maxX = extrema.get(1)[0];
-		double minY = extrema.get(0)[1];
-		double maxY = extrema.get(2)[1];
+		double minX = extrema.get(3).getX();
+		double maxX = extrema.get(1).getX();
+		double minY = extrema.get(0).getY();
+		double maxY = extrema.get(2).getY();
 
 		double scale = View.findScale(minX, maxX, minY, maxY, canvas.getWidth(), canvas.getHeight());
 		double newX = (e.getX() / scale) + minX;

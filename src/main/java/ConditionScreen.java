@@ -1,10 +1,10 @@
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -57,22 +57,25 @@ public class ConditionScreen extends View {
 		TextField budgetField = new TextField();
 		Label budgetLabel = new Label("Budget ($): ");
 		budgetRow.getChildren().addAll(budgetLabel, budgetField);
-		budgetField.setOnKeyReleased(e -> {
-			controller.updateBudget(budgetField.getText());
-		});
 		
 		HBox buttons = new HBox(boxSpacing);
-		Button back = new Button("Back");
-		back.setPrefSize(buttonWidth, buttonHeight);
-		setOnMouse(back);
-		back.setOnAction(controller.getHandlerforClicked("PlotDesign"));
-		Button next = new Button("Next");
-		next.setPrefSize(buttonWidth, buttonHeight);
-		next.setOnAction((e) -> {
-			GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
-			gd.addBudgetLepPane();
-			controller.switchViews("GardenDesign");
-			this.manageView.setPlot(gd.main.snapshot(null, null));
+		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
+		setOnMouse(back, "back");
+		back.setOnMouseClicked(controller.getHandlerforClicked("PlotDesign"));
+		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
+		setOnMouse(next, "next");
+		next.setOnMouseClicked((event) -> {
+			try{
+	    		controller.updateBudget(Double.parseDouble(budgetField.getText()));
+	    		GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
+				gd.addBudgetLepPane();
+				controller.switchViews("GardenDesign");
+				this.manageView.setPlot(gd.main.snapshot(null, null));
+	    	}
+	    	catch(NumberFormatException e){
+	    		//not a double
+	   			budgetField.clear();
+	   		}         
 		});
 		buttons.getChildren().addAll(back, next);
 		

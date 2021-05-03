@@ -8,7 +8,7 @@ public class Model implements java.io.Serializable{
 	public ArrayList<Garden> savedGardens;
 	public double lengthPerPixel;
 	public double scale;
-	public double[] translate;
+	public Vector2 translate;
 	public double x;
 	public double y;
 	public int lepCount;
@@ -239,7 +239,7 @@ public class Model implements java.io.Serializable{
 	 * Sets the translate of boundary
 	 * @param double array representing the x and y direction translations
 	 */
-	public void setTranslate(double[] translate) {
+	public void setTranslate(Vector2 translate) {
 		this.translate = translate;
 	}
 	/**
@@ -253,7 +253,7 @@ public class Model implements java.io.Serializable{
 	 * Sets the translate of boundary
 	 * @return double array representing the x and y direction translations
 	 */
-	public double[] getTranslate() {
+	public Vector2 getTranslate() {
 		return this.translate;
 	}
 	/**
@@ -290,10 +290,10 @@ public class Model implements java.io.Serializable{
 	 * @return double[] representing translate in the x direction and translate in the y direction
 	 * @author Ishika Govil
 	 */
-	public double[] translateScaledPlot(double[] topLeft) {
-		double translateX = topLeft[0] - this.getGarden().getExtremes().get(3)[0] * scale;
-		double translateY = topLeft[1] - this.getGarden().getExtremes().get(0)[1] * scale;
-		double[] translate = new double[]{translateX, translateY};
+	public Vector2 translateScaledPlot(Vector2 topLeft) {
+		double translateX = topLeft.getX() - this.getGarden().getExtremes().get(3).getX() * scale;
+		double translateY = topLeft.getY() - this.getGarden().getExtremes().get(0).getY() * scale;
+		Vector2 translate = new Vector2(translateX, translateY);
 		this.setTranslate(translate);
 		return translate;
 	}
