@@ -65,14 +65,7 @@ public class GardenDesign extends View{
 		oblist = manageView.getPlantImages();					// loading in plantImages
 		vb = addGridPane();
 		border = new BorderPane();
-		try {
-			main = addCanvas();
-		}catch(Exception e) {
-//			ImageView iv = new ImageView(manageView.plot);
-//			iv.setPreserveRatio(true);
-//			main.getChildren().add(iv);
-			System.out.println("error in making canvas");
-		}
+		main = addCanvas();
 		
 		border.setCenter(main);
 		
@@ -109,10 +102,13 @@ public class GardenDesign extends View{
 	public void remakePane() {
 		border.getChildren().remove(border.getCenter());
 		this.main = addCanvas();
-		showCompostBin();
 		border.setCenter(main);
 		border.getChildren().remove(border.getRight());
 		makeInfoPane("Information","");
+		main.setOnMouseDragReleased(event->{
+			System.out.println("(remakePane) will read when plant enters main");
+			controller.inMain = true;
+		});
 	}
 	
 	/**
@@ -200,8 +196,8 @@ public class GardenDesign extends View{
 	        	if(event.getClickCount()==2) {
 	        		System.out.println("clicked on " + getDisplayText(list.getSelectionModel().getSelectedItem()));
 	        		String name = getDisplayText(list.getSelectionModel().getSelectedItem());
-	        		addImageView(main.getLayoutX(),main.getLayoutY(),name,controller.scalePlantSpread(name));
-	        		controller.removeFromDeleted(name);
+	        		String node = addImageView(main.getLayoutX(),main.getLayoutY(),name,controller.scalePlantSpread(name));
+	        		controller.removeFromDeleted(name, node,main.getLayoutX(),main.getLayoutY() );
 	        	}
 	            
 	        }
@@ -214,24 +210,9 @@ public class GardenDesign extends View{
 			System.out.println("dsiplayText: "+displayText);
 		}
 		
-		
-		
-//		Iterator<String> iter = plant.iterator();
-//		while(iter.hasNext()) {
-//			System.out.println("adding plant to popUp");
-//			System.out.println(iter.toString());
-			
-//		}
-//		list.setItems(images);
-		
-				
-		//bp.setCenter(list);
-		//bp.setBottom(plantName);
-		//bp.setCenter(list);
 		Scene del = new Scene(box,400,700);
 		deleted.setScene(del);
 		deleted.show();
-		//return deleted;
 		
 	}
 	
@@ -273,7 +254,10 @@ public class GardenDesign extends View{
 			plants.put(uniqueID, k);
 			tile.getChildren().add(v);
 		});
-		main.setOnMouseDragReleased(controller.getHandlerforReleased2("", true));
+		main.setOnMouseDragReleased(event->{
+			System.out.println("(remakePane) will read when plant enters main");
+			controller.inMain = true;
+		});
 		return tile;
 	}
 	
@@ -371,7 +355,7 @@ public class GardenDesign extends View{
 				iv2.startFullDrag();
 			}
 		});
-		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
+//		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
 		main.getChildren().add(iv2);
 		return iv2.getId();
 	}
@@ -543,6 +527,7 @@ public class GardenDesign extends View{
 	 * removed the copy of the plant imageView that is dragged over compost 
 	 */
 	public void removePlant(Node n) {
+		System.out.println("removing plant");
 		main.getChildren().remove(n);
 	}
 	
@@ -558,15 +543,20 @@ public class GardenDesign extends View{
 		c.setTranslateX(60);
 		c.setTranslateY((screenHeight-200)/2 + 100);
 		c.setOnMouseExited(event->{
+			System.out.println("set on mouse exited");
 			c.setFitHeight(NORMALCOMPOST);
 		});
 		c.setOnMouseEntered(event->{
+			System.out.println("set on mouse entered");
 			c.setFitHeight(ENTERCOMPOST);
 			
 		});
 		c.setOnMouseClicked(controller.getHandlerForCompostClicked());
-
-		border.getChildren().add(c);
+//		c.setOnMouseDragReleased(event->{
+//			System.out.println("set on mouse released");
+//		});
+		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(""));
+		border.getChildren().add(c); 
 		
 
 	}
