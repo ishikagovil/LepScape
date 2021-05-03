@@ -118,18 +118,18 @@ public abstract class View{
 	 * @param String text
 	 * @param ImageView iv
 	 */
-	public void hoverTooltip(String text, ImageView iv) {
+	public void hoverTooltip(String text, Node node) {
 		Tooltip tip = new Tooltip(text);
 		tip.setShowDelay(Duration.seconds(0.5));
 		tip.setOnShowing(s->{
 			//https://stackoverflow.com/questions/24621133/javafx-how-to-set-tooltip-location-relative-to-the-mouse-cursor
 		    //Get button current bounds on computer screen
-		    Bounds bounds = iv.localToScreen(iv.getBoundsInLocal());
+		    Bounds bounds = node.localToScreen(node.getBoundsInLocal());
 		    tip.setX(bounds.getMaxX());
 		    tip.setY(bounds.getMinY());
 
 		});
-		Tooltip.install(iv, tip);
+		Tooltip.install(node, tip);
 	}
 	/**
 	 * Adds a button with the correct size and actions
