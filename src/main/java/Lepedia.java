@@ -118,7 +118,7 @@ public class Lepedia extends View {
 		String commonName = lep.getCommonName();
 		ArrayList<String> thrivesIn = lep.getThrivesInGenus();
 		ImageView lepImg = lepImages.get(genusName + "-" + speciesName);
-		Label description = new Label(genusName + " " + speciesName + ". Also known as the " + commonName + ". Thrives in " + thrivesIn.toString());
+		Label description = new Label(genusName + " " + speciesName + ". Also known as the " + commonName + ". Feeds off " + thrivesIn.toString());
 		description.setFont(new Font("Arial", descFontSize));
 		
 		HBox lepTile = new HBox();
