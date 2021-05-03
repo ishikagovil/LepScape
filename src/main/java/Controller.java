@@ -827,6 +827,15 @@ public class Controller extends Application {
 		this.drawToCanvas(canvas);
 	}
 	
+	public String tooltipInfo(String plantName) {
+		String info = "";
+		PlantSpecies s = model.plantDirectory.get(plantName);
+		info = plantName;
+		info += "\nCost: $"+s.getCost();
+		info += "\nLeps supported: "+s.getLepsSupported();
+		return info;
+	}
+	
 
 	/**
 	 * Starting x location for a node
