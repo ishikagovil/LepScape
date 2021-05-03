@@ -249,10 +249,12 @@ public class GardenDesign extends View{
 					//System.out.println("drag detected");
 				}
 			});
-			Tooltip t = new Tooltip(k);
+			Tooltip t = new Tooltip(controller.tooltipInfo(k));
 			t.setOnShowing(e->{
 				System.out.println("Showing");
 			});
+			t.setX(v.getX());
+			t.setY(v.getY());
 			Tooltip.install(v, t);
 			String uniqueID = UUID.randomUUID().toString();
 			v.setId(uniqueID);
