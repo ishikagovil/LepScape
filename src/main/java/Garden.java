@@ -6,8 +6,6 @@ public class Garden implements java.io.Serializable {
 	 * Class represents the Garden with its plants, boundaries, and conditions
 	 */
 	private static final long serialVersionUID = 1L;
-	public int numLeps;
-	public double cost;
 	public ArrayList<PlacedPlant> plants;
 	public ArrayList<Vector2> outline;
 	public ArrayList<Vector2> polygonCorners;
@@ -25,6 +23,7 @@ public class Garden implements java.io.Serializable {
 	public double lengthPerPixel;
 	public double scale;
 	public transient HashMap<String, PlacedPlant> placedPlants;
+	public double budget;
 //	public transient BufferedImage image;
 //	private transient SimpleDoubleProperty costForgallery;
 
@@ -58,10 +57,35 @@ public class Garden implements java.io.Serializable {
 	 * @param numLeps the starting leps
 	 * @param cost the starting cost
 	 */
-	public Garden(int numLeps, int cost) {
+	public Garden(double budget) {
 		this();
-		this.numLeps = numLeps;
-		this.cost = cost;
+		this.budget = budget;
+	}
+	
+	/**
+	 * Iterates through all the placed plants to find the total cost of all the plants in the garden
+	 * @return the cost
+	 */
+	public double getCost() {
+		Iterator<PlacedPlant> iter = placedPlants.values().iterator();
+		double cost =0;
+		while(iter.hasNext()) {
+			cost+=iter.next().getSpecies().getCost();
+		}
+		return cost;
+	}
+	
+	/**
+	 * Iteratates through all the placed plants to find the total number of leps supported by the creeated garden
+	 * @return the number of the leps supported
+	 */
+	public int getLepCount() {
+		int leps = 0;
+		Iterator<PlacedPlant> iter = placedPlants.values().iterator();
+		while(iter.hasNext()) {
+			leps+=iter.next().getSpecies().getLepsSupported();
+		}
+		return leps;
 	}
 	
 	/**
@@ -119,53 +143,23 @@ public class Garden implements java.io.Serializable {
 		return this.height;
 	}
 	
-	/**
-	 * Get the number of leps for this garden
-	 * @return the number of leps supported
-	 */
-	public int getNumLeps() {
-		return this.numLeps;
-	}
-	
-	/**
-	 * Set the number of leps supported
-	 * @param x the new amount of leps supported
-	 */
-	public void setNumLeps(int x) {
-		this.numLeps = x;
-	}
-	
-	/**
-	 * Add an amount to the number of leps in the garden
-	 * @param x the amount of leps to add
-	 */
-	public void addNumLeps(int x) {
-		this.numLeps += x;
-	}
 	
 	/**
 	 * Get the cost of the garden
 	 * @return the cost
 	 */
-	public double getCost() {
-		return this.cost;
+	public double getBudget() {
+		return this.budget;
 	}
 	
 	/**
 	 * Set the cost of the garden
 	 * @param d the new cost
 	 */
-	public void setCost(double d) {
-		this.cost = d;
+	public void setBudget(double d) {
+		this.budget = d;
 	}
 	
-	/**
-	 * Add an amount to the cost of this garden
-	 * @param x the amount to be added
-	 */
-	public void addCost(int x) {
-		this.cost += x;
-	}
 	
 	/**
 	 * Returns the list of coordinates of freedrawn piece of boundary set by user

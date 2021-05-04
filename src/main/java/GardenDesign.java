@@ -267,66 +267,40 @@ public class GardenDesign extends View{
 		});
 		return tile;
 	}
-	
-	/**
-	 * Adds the pane that hols the lep count and the budget
-	 * Called from previous screen after user has set a budget
-	 */
-	public void addBudgetLepPane() {
-		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
-		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
-		
-		HBox blPane = new HBox();
-		blPane.setSpacing(20);
-		
-		ImageView lepIv= new ImageView(lep);
-		lepIv.setPreserveRatio(true);
-		lepIv.setFitHeight(50);
-		ImageView budget = new ImageView(dollar);
-		budget.setPreserveRatio(true);
-		budget.setFitHeight(50);
-		Label lepCount = new Label("0");
-		lepCount.setFont(new Font("Arial", 16));
-		Label budgetCount = new Label(""+controller.getBudget());
-		budgetCount.setFont(new Font("Arial", 16));
-		lepCount.setGraphic(lepIv);
-		budgetCount.setGraphic(budget);
-		
-		blPane.getChildren().add(lepCount);
-		blPane.getChildren().add(budgetCount);
-		
-		blPane.setAlignment(Pos.CENTER);
-		border.setTop(blPane);
-		border.setAlignment(blPane, Pos.CENTER);
-
-	}
 
 	/**
 	 * Everytime a plant is placed onto or removed the garden the lep count and budget is updated
 	 */
-	public void updateBudgetandLep(double cost, int lepCount) {
+	public void updateBudgetandLep(double cost, int lepCount, double budget) {
 		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
 		
-		border.getChildren().remove(border.getTop());
+		if(border.getTop()!=null) {
+			border.getChildren().remove(border.getTop());
+		}
 		
 		HBox budgetLepPane = new HBox();
 		budgetLepPane.setSpacing(20);
 		ImageView lepIv= new ImageView(lep);
 		lepIv.setPreserveRatio(true);
 		lepIv.setFitHeight(50);
-		ImageView budget = new ImageView(dollar);
-		budget.setPreserveRatio(true);
-		budget.setFitHeight(50);
+		ImageView budgetIv = new ImageView(dollar);
+		budgetIv.setPreserveRatio(true);
+		budgetIv.setFitHeight(50);
 		Label leps = new Label(""+lepCount);
 		leps.setFont(new Font("Arial", 16));
 		Label budgetCount = new Label(""+cost);
 		budgetCount.setFont(new Font("Arial", 16));
 		leps.setGraphic(lepIv);
-		budgetCount.setGraphic(budget);
+		budgetCount.setGraphic(budgetIv);
 		budgetLepPane.getChildren().add(leps);
 		budgetLepPane.getChildren().add(budgetCount);
-		
+		ProgressBar costBar = new ProgressBar((budget-cost)/budget);
+		if((budget-cost)/budget<=0.1) {
+			costBar.setStyle("-fx-accent: red");
+		}
+		budgetLepPane.getChildren().add(costBar);
+		hoverTooltip((int)cost+"/"+(int)budget, costBar);
 		budgetLepPane.setAlignment(Pos.CENTER);
 		border.setTop(budgetLepPane);
 	}

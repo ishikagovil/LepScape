@@ -266,7 +266,7 @@ public class Controller extends Application {
 		this.view.switchViews("Summary");
 		setTheStage();
 		Garden garden = model.savedGardens.get(index);
-		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getNumLeps());
+		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getLepCount());
 		
 		dialog.close();
 		model.setToEdit();
@@ -354,7 +354,7 @@ public class Controller extends Application {
 				double heightWidth = scalePlantSpread(name);
 				String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
 				model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-				view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+				((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 			}
 //			view.setX(n.getLayoutX(),n);
 //			view.setY(n.getLayoutY(),n);
@@ -407,7 +407,7 @@ public class Controller extends Application {
 //			view.addImageView(event.getSceneX(),event.getSceneY(), name);
  			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
 //			model.placePlant(model.getX(), model.getY(), name);
-			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+ 			((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 		}
 //		else {
 // 			System.out.println("updating");
@@ -433,7 +433,7 @@ public class Controller extends Application {
 		System.out.println(key);
 		((GardenDesign) view.views.get("GardenDesign")).removePlant((Node) event.getGestureSource());
  		model.removePlant(model.movedPlant,((Node)event.getGestureSource()).getId());
-		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+ 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 	}
 	
 	/**
@@ -445,7 +445,7 @@ public class Controller extends Application {
 		model.deleted.remove(plantName);
 //		model.placePlant(0, 0, plantName);
 		model.placePlant(x, y, plantName, nodeId);
-		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.getBudget(), model.getLepCount());
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 	}
 	
 	/**
@@ -476,7 +476,7 @@ public class Controller extends Application {
 		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
 		System.out.println("putline: "+garden.outline + " "+ garden.outline.size());
 		((GardenDesign) view.views.get("GardenDesign")).remakePane();
-		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getLepCount(),garden.getBudget());
 		model.scale = garden.scale;
 		model.lengthPerPixel = garden.lengthPerPixel;
 		garden.plants.forEach(plant->{
@@ -505,7 +505,7 @@ public class Controller extends Application {
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				view.makeImage(model.savedGardens.get(i).getWidth(), model.savedGardens.get(i).getHeight(), model.savedGardens.get(i).data);
 				//view.makeImageforplot(model.savedGardens.get(i).plotWidth, model.savedGardens.get(i).plotHeight, model.savedGardens.get(i).plotData);
-				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).cost,(model.savedGardens.get(i)).numLeps);
+				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).getCost(),(model.savedGardens.get(i)).getLepCount());
 			}
 			ois.close();
 		} catch (Exception e) {
@@ -538,11 +538,11 @@ public class Controller extends Application {
 				System.out.println("editing");
 				model.savedGardens.remove(model.getEditGardenIndex());
 				model.savedGardens.add(model.getEditGardenIndex(),model.getGarden());
-				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),(model.savedGardens.get(model.getEditGardenIndex())).cost,(model.savedGardens.get(model.getEditGardenIndex())).numLeps);
+				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),(model.savedGardens.get(model.getEditGardenIndex())).getCost(),(model.savedGardens.get(model.getEditGardenIndex())).getLepCount());
 			}else {
 				System.out.println("add to the end of the arrayList");
 				model.savedGardens.add(model.getGarden());
-				gal.loadScreen(view.savedImg,model.savedGardens.size()-1,(model.savedGardens.get(model.savedGardens.size()-1)).cost,(model.savedGardens.get(model.savedGardens.size()-1)).numLeps);
+				gal.loadScreen(view.savedImg,model.savedGardens.size()-1,(model.savedGardens.get(model.savedGardens.size()-1)).getCost(),(model.savedGardens.get(model.savedGardens.size()-1)).getLepCount());
 			}
 			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
