@@ -446,6 +446,7 @@ public class Controller extends Application {
 //		model.placePlant(0, 0, plantName);
 		model.placePlant(x, y, plantName, nodeId);
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
+
 	}
 	
 	/**
