@@ -354,6 +354,7 @@ public class Controller extends Application {
 			model.setY(model.getY() + event.getY());
 			view.setX(model.getX(),n);
 			view.setY(model.getY(),n);
+			
 //		}
 		
 		event.setDragDetect(false);
@@ -390,6 +391,11 @@ public class Controller extends Application {
 		else {
  			System.out.println("updating");
  			String id = ((Node) event.getSource()).getId();
+ 			
+ 			// validate upon release; if it overlaps with another node, then snap back to original position
+ 			
+ 			
+ 			
  			model.updateXY(id);
  		}
 //		

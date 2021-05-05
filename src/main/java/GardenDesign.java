@@ -372,8 +372,53 @@ public class GardenDesign extends View{
 			}
 		});
 		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
+		if (validatePlantPlacement(x, y, heightWidth)) {
+			System.out.println("collided!");
+		} else {
+			System.out.println("no collide?");
+		}
 		main.getChildren().add(iv2);
 		return iv2.getId();
+	}
+	
+	public boolean validatePlantPlacement(double x, double y, double heightWidth) {
+		
+		boolean isCollide = false;
+		
+		ObservableList<Node> children = main.getChildren();
+		
+		for (Node plantImg :children) {
+			// assuming x & y are top left
+			
+			double compHeight = plantImg.getBoundsInParent().getHeight();		// the height of the ImageView
+			double compWidth = plantImg.getBoundsInParent().getWidth();			// the width of the ImageView
+			
+			// compHeight should be equal to compWidth (because circle duh)
+			// => radius is equal to compHeight / 2 or compWidth / 2
+			
+			// circle collision defined by
+			// distance between centers of obj < radii of two circles
+			
+			double xCoord = plantImg.getBoundsInParent().getCenterX();	
+			double yCoord = plantImg.getBoundsInParent().getCenterY();
+			
+			double xCoord2 = x + heightWidth/2;
+			double yCoord2 = y - heightWidth/2;
+			
+			double shoulderLengthApart = (heightWidth/2) + (compHeight/2);
+			
+			double distance = Math.sqrt(Math.pow(xCoord2 - xCoord, 2) + Math.pow(yCoord2 - yCoord, 2));
+			
+			if (distance < shoulderLengthApart) {
+				isCollide = true;	
+			}
+		}
+		
+		if (isCollide) {
+			return true;
+		}
+		return false;
+		
 	}
 	
 	/**
