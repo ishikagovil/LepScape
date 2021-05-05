@@ -44,6 +44,7 @@ public class GardenDesign extends View{
 	public BorderPane comparePane = new BorderPane();
 	public StackPane info = new StackPane();
 	Map<String,ImageView> oblist;
+	ArrayList<ImageView> placed = new ArrayList<>();
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 	ImageView c = new ImageView(compost);
 	Pane main;
@@ -378,6 +379,7 @@ public class GardenDesign extends View{
 			System.out.println("no collide?");
 		}
 		main.getChildren().add(iv2);
+		placed.add(iv2);
 		return iv2.getId();
 	}
 	
@@ -385,9 +387,10 @@ public class GardenDesign extends View{
 		
 		boolean isCollide = false;
 		
-		ObservableList<Node> children = main.getChildren();
+		//ObservableList<Node> children = main.getChildren();
+		ArrayList<ImageView> children = placed;
 		
-		for (Node plantImg :children) {
+		for (ImageView plantImg : children) {
 			// assuming x & y are top left
 			
 			double compHeight = plantImg.getBoundsInParent().getHeight();		// the height of the ImageView
@@ -402,16 +405,27 @@ public class GardenDesign extends View{
 			double xCoord = plantImg.getBoundsInParent().getCenterX();	
 			double yCoord = plantImg.getBoundsInParent().getCenterY();
 			
+			System.out.println("x: " + xCoord + ", y: " + yCoord);
+			
 			double xCoord2 = x + heightWidth/2;
 			double yCoord2 = y - heightWidth/2;
 			
+			System.out.println("x2: " + xCoord2 + ", y2: " + yCoord2);
+			
 			double shoulderLengthApart = (heightWidth/2) + (compHeight/2);
+			System.out.println("heightWidth: " + heightWidth/2);
+			System.out.println("radius: " + compHeight/2);
+			System.out.println("shoulderLengthApart: " + shoulderLengthApart);
 			
 			double distance = Math.sqrt(Math.pow(xCoord2 - xCoord, 2) + Math.pow(yCoord2 - yCoord, 2));
+			System.out.println("distance: " + distance);
+			//double dis = dist(xCoord2, yCoord2, xCoord, yCoord);
 			
 			if (distance < shoulderLengthApart) {
 				isCollide = true;	
 			}
+			
+			System.out.println("---");
 		}
 		
 		if (isCollide) {
