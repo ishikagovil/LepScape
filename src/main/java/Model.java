@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javafx.scene.Node;
+
 public class Model implements java.io.Serializable{
 	
 	public Garden gardenMap;
@@ -32,6 +34,10 @@ public class Model implements java.io.Serializable{
 		this.deleted = new HashSet<>();
 		editGarden = false;
 
+	}
+	
+	public int getLepCount() {
+		return this.lepCount;
 	}
 	
 	/**
