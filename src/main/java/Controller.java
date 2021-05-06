@@ -428,85 +428,9 @@ public class Controller extends Application {
 	}
 	
 	public double plantCollideSnap(double distance) {
-		
 		double coord = Math.sqrt(Math.pow(distance, 2) / 2);
-		
 		return coord;
 	}
-	
-	public EventHandler<MouseDragEvent> getHandlerforReleased2(String key, boolean startingInTile) {
-		return (e) -> { release2(e,key,startingInTile);  };
-	}
-	
-	
-	public void release2(MouseDragEvent event, String name, boolean startingInTile) {
-		System.out.println("released");
-		Node n = (Node)event.getGestureSource();
-		if(startingInTile) {
-			System.out.println("making new one?");
-			name = ((GardenDesign) view.views.get("GardenDesign")).plants.get(n.getId());
-			System.out.println("name in release2: " + name);
-			if (name != null) {
-				double heightWidth = scalePlantSpread(name);
-				String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-				if (nodeId != null) {
-					model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-					//view.updateBudgetandLep(model.getBudget(), model.getLepCount());
-				}
-			}
-		}
-		else {
-			System.out.println("updating PART TWO");
- 			String id = ((Node) event.getSource()).getId();
- 			ImageView plant = ((ImageView) event.getSource());
- 			double plantX = plant.getBoundsInParent().getCenterX();
- 			double plantY = plant.getBoundsInParent().getCenterY();
- 			double plantRadius = plant.getBoundsInParent().getHeight();
- 			
- 			double plantXFixed = plantX - plantRadius/2 + XDISPLACE;
- 			double plantYFixed = plantY - plantRadius/2 + YDISPLACE;
- 			
- 			System.out.println("x: " + plantX + ", y: " + plantY + ", radius: " + plantRadius);
- 			
- 			double[] collidingInfo = ((GardenDesign)(view.views.get("GardenDesign"))).validatePlantPlacement(plantXFixed, plantYFixed, plantRadius);
- 			
- 			if ( collidingInfo[0] > THRESHOLD ) {
- 	 			// updates the location haha gang gang
- 				model.updateXY(id);
- 	 			System.out.println("updated and moved PART TWO!");
- 			} else {
- 				// make it SNAP BACK
- 				
- 				double coordSnap = plantCollideSnap(collidingInfo[0]);
- 				
- 				int collideNumber = (int)collidingInfo[1];
- 				
- 				switch(collideNumber) {
- 					case 1:
- 						plantX-=coordSnap;
- 						plantY-=coordSnap;
- 						break;
- 					case 2:
- 						plantX+=coordSnap;
- 						plantY-=coordSnap;
- 						break;
- 					case 3:
- 						plantX+=coordSnap;
- 						plantY+=coordSnap;
- 						break;
- 					case 4:
- 						plantX-=coordSnap;
- 						plantY+=coordSnap;
- 						break;
- 				}
- 				view.setX(plantX,n);
- 				view.setY(plantY,n);
- 				model.updateXY(id);
- 				System.out.println("cannot move, collided PART TWO!");
-			}
- 		}
-	}
-	
 	
 	/**
 	 * Called when a node is trying to be deleted

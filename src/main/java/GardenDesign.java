@@ -274,10 +274,6 @@ public class GardenDesign extends View{
 		});
 		return tile;
 	}
-		// creates a new ImageView 
-		//main.setOnMouseDragReleased(controller.getHandlerforReleased2("", true));
-		//return tile;
-	//}
 	
 	/**
 	 * Adds the pane that hols the lep count and the budget
