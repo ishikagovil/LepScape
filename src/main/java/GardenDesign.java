@@ -246,23 +246,16 @@ public class GardenDesign extends View{
 				@Override
 				public void handle(MouseEvent event) {
 					v.startFullDrag();
-					//System.out.println("drag detected");
 				}
 			});
-			Tooltip t = new Tooltip(controller.tooltipInfo(k));
-			t.setOnShowing(e->{
-				System.out.println("Showing");
-			});
-			t.setX(v.getX());
-			t.setY(v.getY());
-			Tooltip.install(v, t);
+			hoverTooltip(controller.tooltipInfo(k),v);
 			String uniqueID = UUID.randomUUID().toString();
 			v.setId(uniqueID);
 			plants.put(uniqueID, k);
 			tile.getChildren().add(v);
 		});
 		main.setOnMouseDragReleased(event->{
-			System.out.println("(remakePane) will read when plant enters main");
+			System.out.println("entered main");
 			controller.inMain = true;
 		});
 		return tile;
