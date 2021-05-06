@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
@@ -22,7 +23,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+
 
 /**
  * This class sets the main screen
@@ -35,6 +38,11 @@ public class GardenDesign extends View{
 	final int STANDARD_IMAGEVIEW = 100;
 	final int NORMALCOMPOST = 75;
 	final int ENTERCOMPOST = 85;
+	final int XDISPLACE = 200;
+	final int YDISPLACE = 50;
+	final int POPUPWIDTH = 100;
+	final int POPUPHEIGHT = 50;
+	final double THRESHOLD = 0.00001;
 	Canvas canvas;
 	Stage stage;
 	//Panes
@@ -49,7 +57,10 @@ public class GardenDesign extends View{
 	ImageView c = new ImageView(compost);
 	Pane main;
 	Map<String, String> plants;
-	
+	Label plantLarge = new Label("Can't fit in garden!");
+	Label collisionDetected = new Label("Plants overlapping!");
+	Label emptyLabel = new Label();
+	Label fillMe = new Label();
 //	public ArrayList<ImageView> addedPlants;
 	
 	/**
@@ -103,6 +114,7 @@ public class GardenDesign extends View{
 
 		showCompostBin();
 	}
+
 	
 	/**
 	 * Remakes the main pane when user tries to edit a saved garden
@@ -261,6 +273,7 @@ public class GardenDesign extends View{
 		oblist.forEach((k,v)->{
 			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
 			v.setOnMouseDragged(controller.getHandlerforDrag());
+			// returns image back to original TilePane location
 			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
 			v.setOnDragDetected(new EventHandler<MouseEvent>() {
 				@Override
@@ -274,6 +287,7 @@ public class GardenDesign extends View{
 			plants.put(uniqueID, k);
 			tile.getChildren().add(v);
 		});
+		// creates a new ImageView 
 		main.setOnMouseDragReleased(controller.getHandlerforReleased2("", true));
 		return tile;
 	}
@@ -304,6 +318,7 @@ public class GardenDesign extends View{
 		
 		blPane.getChildren().add(lepCount);
 		blPane.getChildren().add(budgetCount);
+		blPane.getChildren().add(fillMe);
 		
 		blPane.setAlignment(Pos.CENTER);
 		border.setTop(blPane);
@@ -373,19 +388,33 @@ public class GardenDesign extends View{
 			}
 		});
 		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
-		if (validatePlantPlacement(x, y, heightWidth)) {
+		if (validatePlantPlacement(x, y, heightWidth)[0] > THRESHOLD) {
+			// if collided, don't add ImageView to Pane
 			System.out.println("collided!");
+			// add pop up window to display "too big"
+			//popup1.show(popup1);
+			controller.showPopupMessage("Cannot place plant there!", stage);
+			return null;
 		} else {
+			// if no collision detected, add ImageView to Pane and add to overall plantlist
 			System.out.println("no collide?");
+			main.getChildren().add(iv2);
+			placed.add(iv2);
+			System.out.println("placed plant!");
+			return iv2.getId();
 		}
-		main.getChildren().add(iv2);
-		placed.add(iv2);
-		return iv2.getId();
 	}
 	
-	public boolean validatePlantPlacement(double x, double y, double heightWidth) {
+	public double[] validatePlantPlacement(double x, double y, double heightWidth) {
+		
+		double[] returnThis = new double[5];
 		
 		boolean isCollide = false;
+		returnThis[0] = 0;				// the distance
+		returnThis[1] = 0;				// whether it's top left(1), top right(2), bottom right(3), bottom left(4)
+		returnThis[2] = 0;
+		returnThis[3] = 0;
+		returnThis[4] = 0;
 		
 		//ObservableList<Node> children = main.getChildren();
 		ArrayList<ImageView> children = placed;
@@ -407,8 +436,8 @@ public class GardenDesign extends View{
 			
 			System.out.println("x: " + xCoord + ", y: " + yCoord);
 			
-			double xCoord2 = x + heightWidth/2;
-			double yCoord2 = y - heightWidth/2;
+			double xCoord2 = x + heightWidth/2 - XDISPLACE;
+			double yCoord2 = y + heightWidth/2 - YDISPLACE;
 			
 			System.out.println("x2: " + xCoord2 + ", y2: " + yCoord2);
 			
@@ -419,19 +448,32 @@ public class GardenDesign extends View{
 			
 			double distance = Math.sqrt(Math.pow(xCoord2 - xCoord, 2) + Math.pow(yCoord2 - yCoord, 2));
 			System.out.println("distance: " + distance);
-			//double dis = dist(xCoord2, yCoord2, xCoord, yCoord);
 			
-			if (distance < shoulderLengthApart) {
-				isCollide = true;	
+			// threshold number accounting for if they are comparing the same image
+			if (distance < shoulderLengthApart && distance > 0.0001) {
+				
+				if (xCoord2 < xCoord) {
+					if (yCoord2 < yCoord) {
+						returnThis[1] = 1;
+					} else {
+						returnThis[1] = 4;
+					}
+				} else {
+					if (yCoord2 < yCoord) {
+						returnThis[1] = 2;
+					} else {
+						returnThis[1] = 3;
+					}
+				}
+				returnThis[0] = distance;
+				returnThis[2] = xCoord;
+				returnThis[3] = yCoord;
+				returnThis[4] = shoulderLengthApart;
 			}
-			
 			System.out.println("---");
 		}
 		
-		if (isCollide) {
-			return true;
-		}
-		return false;
+		return returnThis;
 		
 	}
 	
@@ -609,6 +651,7 @@ public class GardenDesign extends View{
 	 * removed the copy of the plant imageView that is dragged over compost 
 	 */
 	public void removePlant(Node n) {
+		placed.remove(n);
 		main.getChildren().remove(n);
 	}
 	

@@ -5,13 +5,18 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,6 +40,11 @@ public class Controller extends Application {
 	String lepFile = "src/main/resources/finalLepList.csv";
 	Model model;
 	Stage stage;
+	final int XDISPLACE = 200;
+	final int YDISPLACE = 50;
+	final double THRESHOLD = 0.00001;
+	final int XSNAPDISPLACE = 12;
+	final int YSNAPDISPLACE = 12;
 	
 	/** 
 	 * Override for the Application start method. Instantiates all fields
@@ -368,40 +378,76 @@ public class Controller extends Application {
 	 * @author Arunima Dey
 	 */
 	public void release(MouseEvent event, String name, boolean startingInTile) {
-		System.out.println("released");
+		System.out.println("released PART TWO");
 		Node n = (Node)event.getSource();
 		n.setMouseTransparent(false);
 		if(startingInTile) {
+			System.out.println("resetting parent image");
 			view.setX(0,n);
 			view.setY(0,n);
-//			view.setX(n.getLayoutX(),n);
-//			view.setY(n.getLayoutY(),n);
-//			PlantSpecies plant = model.plantDirectory.get(name);
-//			double heightWidth = scalePlantSpread(name);
-////			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
-//// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
-//			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
-//			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-////			model.placePlant(model.getX(), model.getY(), name);
-////			view.addImageView(event.getSceneX(),event.getSceneY(), name);
-// 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-////			model.placePlant(model.getX(), model.getY(), name);
-//			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
 		else {
- 			System.out.println("updating");
+ 			System.out.println("updating PART TWO");
  			String id = ((Node) event.getSource()).getId();
+ 			ImageView plant = ((ImageView) event.getSource());
+ 			double plantX = plant.getBoundsInParent().getCenterX();
+ 			double plantY = plant.getBoundsInParent().getCenterY();
+ 			double plantRadius = plant.getBoundsInParent().getHeight();
  			
- 			// validate upon release; if it overlaps with another node, then snap back to original position
+ 			double plantXFixed = plantX - plantRadius/2 + XDISPLACE;
+ 			double plantYFixed = plantY - plantRadius/2 + YDISPLACE;
  			
+ 			System.out.println("x: " + plantX + ", y: " + plantY + ", radius: " + plantRadius);
  			
+ 			double[] collidingInfo = ((GardenDesign)(view.views.get("GardenDesign"))).validatePlantPlacement(plantXFixed, plantYFixed, plantRadius);
+			int collideNumber = (int)collidingInfo[1];
+ 			System.out.println(collidingInfo[0]);
+ 			System.out.println(collideNumber);
  			
- 			model.updateXY(id);
- 		}
-//		
-//		if(startingInTile) {
-//			
-//		}
+ 			if (collideNumber == 0) {
+ 	 			// updates the location haha gang gang
+ 				model.updateXY(id);
+ 	 			System.out.println("updated and moved PART TWO!");
+ 			} else {
+ 				// make it SNAP BACK
+ 				
+ 				double coordSnap = plantCollideSnap(collidingInfo[4]);
+ 				
+ 				double parentX = collidingInfo[2];
+ 				double parentY = collidingInfo[3];
+ 				//double totalDist = collidingInfo[4];
+ 				
+ 				switch(collideNumber) {
+ 					case 1:
+ 						plantX = parentX - coordSnap;
+ 						plantY = parentY - coordSnap;
+ 						break;
+ 					case 2:
+ 						plantX = parentX + coordSnap;
+ 						plantY = parentY - coordSnap;
+ 						break;
+ 					case 3:
+ 						plantX = parentX + coordSnap;
+ 						plantY = parentY + coordSnap;
+ 						break;
+ 					case 4:
+ 						plantX = parentX - coordSnap;
+ 						plantY = parentY + coordSnap;
+ 						break;
+ 				}
+ 				
+ 				view.setX(plantX - XSNAPDISPLACE,n);
+ 				view.setY(plantY - YSNAPDISPLACE,n);
+ 				System.out.println("cannot move, collided PART TWO!");
+			}
+ 		}	
+	}
+	
+	public double plantCollideSnap(double distance) {
+		
+		double coord = Math.sqrt(Math.pow(distance, 2) / 2);
+		
+		return coord;
 	}
 	
 	public EventHandler<MouseDragEvent> getHandlerforReleased2(String key, boolean startingInTile) {
@@ -414,32 +460,68 @@ public class Controller extends Application {
 		Node n = (Node)event.getGestureSource();
 //		n.setMouseTransparent(false);
 		if(startingInTile) {
-//			view.setX(0,n);
-//			view.setY(0,n);
-//			view.setX(n.getLayoutX(),n);
-//			view.setY(n.getLayoutY(),n);
-//			PlantSpecies plant = model.plantDirectory.get(name);
+			System.out.println("making new one?");
 			name = ((GardenDesign) view.views.get("GardenDesign")).plants.get(n.getId());
-			double heightWidth = scalePlantSpread(name);
-//			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
-// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
-			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
-			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-//			model.placePlant(model.getX(), model.getY(), name);
-//			view.addImageView(event.getSceneX(),event.getSceneY(), name);
- 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-//			model.placePlant(model.getX(), model.getY(), name);
-			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+			System.out.println("name in release2: " + name);
+			if (name != null) {
+				double heightWidth = scalePlantSpread(name);
+				String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
+				if (nodeId != null) {
+					model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
+					view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+				}
+			}
 		}
-//		else {
-// 			System.out.println("updating");
-// 			String id = ((Node) event.getSource()).getId();
-// 			model.updateXY(id);
-// 		}
-//		
-//		if(startingInTile) {
-//			
-//		}
+		else {
+			System.out.println("updating PART TWO");
+ 			String id = ((Node) event.getSource()).getId();
+ 			ImageView plant = ((ImageView) event.getSource());
+ 			double plantX = plant.getBoundsInParent().getCenterX();
+ 			double plantY = plant.getBoundsInParent().getCenterY();
+ 			double plantRadius = plant.getBoundsInParent().getHeight();
+ 			
+ 			double plantXFixed = plantX - plantRadius/2 + XDISPLACE;
+ 			double plantYFixed = plantY - plantRadius/2 + YDISPLACE;
+ 			
+ 			System.out.println("x: " + plantX + ", y: " + plantY + ", radius: " + plantRadius);
+ 			
+ 			double[] collidingInfo = ((GardenDesign)(view.views.get("GardenDesign"))).validatePlantPlacement(plantXFixed, plantYFixed, plantRadius);
+ 			
+ 			if ( collidingInfo[0] > THRESHOLD ) {
+ 	 			// updates the location haha gang gang
+ 				model.updateXY(id);
+ 	 			System.out.println("updated and moved PART TWO!");
+ 			} else {
+ 				// make it SNAP BACK
+ 				
+ 				double coordSnap = plantCollideSnap(collidingInfo[0]);
+ 				
+ 				int collideNumber = (int)collidingInfo[1];
+ 				
+ 				switch(collideNumber) {
+ 					case 1:
+ 						plantX-=coordSnap;
+ 						plantY-=coordSnap;
+ 						break;
+ 					case 2:
+ 						plantX+=coordSnap;
+ 						plantY-=coordSnap;
+ 						break;
+ 					case 3:
+ 						plantX+=coordSnap;
+ 						plantY+=coordSnap;
+ 						break;
+ 					case 4:
+ 						plantX-=coordSnap;
+ 						plantY+=coordSnap;
+ 						break;
+ 				}
+ 				view.setX(plantX,n);
+ 				view.setY(plantY,n);
+ 				model.updateXY(id);
+ 				System.out.println("cannot move, collided PART TWO!");
+			}
+ 		}
 	}
 	
 	
@@ -506,6 +588,36 @@ public class Controller extends Application {
 			System.out.println("Nothing to readIn");
 			e.printStackTrace();
 		}
+	}
+	
+	// https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message
+	public static Popup createPopup(final String message) {
+	    final Popup popup = new Popup();
+	    popup.setAutoFix(true);
+	    popup.setAutoHide(true);
+	    popup.setHideOnEscape(true);
+	    Label label = new Label(message);
+	    label.setOnMouseReleased(new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent e) {
+	            popup.hide();
+	        }
+	    });
+	    label.setStyle(" -fx-background-color: #8C6057; -fx-padding: 10; -fx-border-color: #5C5346; -fx-border-width: 5; -fx-font-size: 16; -fx-text-fill: white");
+	    popup.getContent().add(label);
+	    return popup;
+	}
+
+	public static void showPopupMessage(final String message, final Stage stage) {
+	    final Popup popup = createPopup(message);
+	    popup.setOnShown(new EventHandler<WindowEvent>() {
+	        @Override
+	        public void handle(WindowEvent e) {
+	            popup.setX(stage.getX() + stage.getWidth()/2 - popup.getWidth()/2);
+	            popup.setY(stage.getY() + stage.getHeight()/2 - popup.getHeight()/2);
+	        }
+	    });        
+	    popup.show(stage);
 	}
 	
 	/**
