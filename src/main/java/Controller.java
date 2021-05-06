@@ -290,6 +290,7 @@ public class Controller extends Application {
 	 */
 	public void pressed(MouseEvent event, String key, boolean inMain) {
 		Node n = (Node) event.getSource();
+		n.toFront();
 		n.setMouseTransparent(true);
 		System.out.println("Clicked");
 		model.movedPlant = key;
@@ -315,6 +316,7 @@ public class Controller extends Application {
 			System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
 			System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
 		}
+		n.toFront();
 //		System.out.println("drag. x: "+model.getX()+" y: "+model.getY());
 		String id = ((Node) event.getSource()).getId();
 //		if(model.gardenMap.placedPlants.get(id)!=null) {
@@ -355,19 +357,6 @@ public class Controller extends Application {
 				model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
 				((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 			}
-//			view.setX(n.getLayoutX(),n);
-//			view.setY(n.getLayoutY(),n);
-//			PlantSpecies plant = model.plantDirectory.get(name);
-//			double heightWidth = scalePlantSpread(name);
-////			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
-//// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
-//			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
-//			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-////			model.placePlant(model.getX(), model.getY(), name);
-////			view.addImageView(event.getSceneX(),event.getSceneY(), name);
-// 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-////			model.placePlant(model.getX(), model.getY(), name);
-//			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
 		}
 		else {
  			System.out.println("updating");
@@ -380,45 +369,6 @@ public class Controller extends Application {
 //			
 //		}
 	}
-	
-	public EventHandler<MouseDragEvent> getHandlerforReleased2(String key, boolean startingInTile) {
-		return (e) -> { release2(e,key,startingInTile);  };
-	}
-	
-	
-	public void release2(MouseDragEvent event, String name, boolean startingInTile) {
-		System.out.println("released");
-		Node n = (Node)event.getGestureSource();
-//		n.setMouseTransparent(false);
-		if(startingInTile) {
-//			view.setX(0,n);
-//			view.setY(0,n);
-//			view.setX(n.getLayoutX(),n);
-//			view.setY(n.getLayoutY(),n);
-//			PlantSpecies plant = model.plantDirectory.get(name);
-			name = ((GardenDesign) view.views.get("GardenDesign")).plants.get(n.getId());
-			double heightWidth = scalePlantSpread(name);
-//			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
-// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
-			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
-			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-//			model.placePlant(model.getX(), model.getY(), name);
-//			view.addImageView(event.getSceneX(),event.getSceneY(), name);
- 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-//			model.placePlant(model.getX(), model.getY(), name);
- 			((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
-		}
-//		else {
-// 			System.out.println("updating");
-// 			String id = ((Node) event.getSource()).getId();
-// 			model.updateXY(id);
-// 		}
-//		
-//		if(startingInTile) {
-//			
-//		}
-	}
-	
 	
 	/**
 	 * Called when a node is trying to be deleted

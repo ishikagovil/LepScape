@@ -2,12 +2,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.*;
+import javax.imageio.ImageIO;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -15,6 +18,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
@@ -23,6 +27,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.embed.swing.SwingFXUtils;
 
 /**
  * This class sets the main screen
@@ -108,6 +113,9 @@ public class GardenDesign extends View{
 		main.setOnMouseDragReleased(event->{
 			System.out.println("(remakePane) will read when plant enters main");
 			controller.inMain = true;
+		});
+		c.setOnMouseDragReleased(event->{
+			System.out.println("trying to remove");
 		});
 	}
 	
@@ -239,16 +247,16 @@ public class GardenDesign extends View{
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
 		oblist.forEach((k,v)->{
-			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
-			v.setOnMouseDragged(controller.getHandlerforDrag());
-			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
-			v.setOnDragDetected(new EventHandler<MouseEvent>() {
+			tile.setOnDragDetected(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
-					v.startFullDrag();
+					tile.startFullDrag();
 					//System.out.println("drag detected");
 				}
 			});
+			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
+			v.setOnMouseDragged(controller.getHandlerforDrag());
+			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
 			Tooltip t = new Tooltip(controller.tooltipInfo(k));
 			t.setOnShowing(e->{
 				System.out.println("Showing");
@@ -262,7 +270,6 @@ public class GardenDesign extends View{
 			tile.getChildren().add(v);
 		});
 		main.setOnMouseDragReleased(event->{
-			System.out.println("(remakePane) will read when plant enters main");
 			controller.inMain = true;
 		});
 		return tile;
@@ -300,7 +307,7 @@ public class GardenDesign extends View{
 			costBar.setStyle("-fx-accent: red");
 		}
 		budgetLepPane.getChildren().add(costBar);
-		hoverTooltip((int)cost+"/"+(int)budget, costBar);
+		hoverTooltip("$ "+(int)cost+"/"+(int)budget, costBar);
 		budgetLepPane.setAlignment(Pos.CENTER);
 		border.setTop(budgetLepPane);
 	}
@@ -421,7 +428,15 @@ public class GardenDesign extends View{
 	public void saveGardenImage() {
 		System.out.println("calling from in here");
 		this.manageView.setSavedImage(main.snapshot(null, null));
-		
+		WritableImage wim = manageView.savedImg;
+		File f = new File("src/main/resources/gardenImage");
+		//BufferedImage b = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
+		try {
+			ImageIO.write(SwingFXUtils.fromFXImage(wim,null),"png", f);
+		}
+		catch (Exception s){
+			
+		}
 		this.manageView.sp = main;
 		((Summary) this.manageView.views.get("Summary")).addCanvas();
 		
