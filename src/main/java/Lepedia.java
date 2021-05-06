@@ -22,7 +22,8 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage; 
 
-/* Creating the Lepedia screen showcasing the directory of leps associated with PlacedPlants of Garden
+/**
+ * Creating the Lepedia screen showcasing the directory of leps associated with PlacedPlants of Garden
  * @author Dea Harjianto
  */
 
@@ -50,7 +51,8 @@ public class Lepedia extends View {
 		border.setAlignment(back, Pos.CENTER);
 	}
 	
-	/* Gathers information from completed Garden and updates it based on the plants available
+	/**
+	 *  Gathers information from completed Garden and updates it based on the plants available
 	 */
 		
 	public void updateLepedia() {
@@ -103,10 +105,11 @@ public class Lepedia extends View {
 	    border.setCenter(sp);
 	}
 	
-	/* Create each row in the Lepedia consisting of ImageViw (if avail) and information of specific Lep
-	 * @param Map<String, ImageView>
-	 * @param Lep
-	 * @return HBox
+	/**
+	 * Create each row in the Lepedia consisting of ImageViw (if avail) and information of specific Lep
+	 * @param lepImages
+	 * @param lep
+	 * @return
 	 */
 	
 	public HBox getInfoTile(Map<String, ImageView> lepImages, Lep lep) {
@@ -115,7 +118,7 @@ public class Lepedia extends View {
 		String commonName = lep.getCommonName();
 		ArrayList<String> thrivesIn = lep.getThrivesInGenus();
 		ImageView lepImg = lepImages.get(genusName + "-" + speciesName);
-		Label description = new Label(genusName + " " + speciesName + ". Also known as the " + commonName + ". Thrives in " + thrivesIn.toString());
+		Label description = new Label(genusName + " " + speciesName + ". Also known as the " + commonName + ". Feeds off " + thrivesIn.toString());
 		description.setFont(new Font("Arial", descFontSize));
 		
 		HBox lepTile = new HBox();

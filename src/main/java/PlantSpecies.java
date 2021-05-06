@@ -102,7 +102,7 @@ public class PlantSpecies {
 		} else {
 			plantType = "herbaceous";
 		}
-		this.description = "Also known as " + this.commonName +  "\nThis " +  plantType + " plant attracts a total of " + this.lepsSupported + " leps.";
+		this.description = "Also known as " + this.genusName + "-" + this.speciesName +  ".\n\nThis " +  plantType + " plant attracts a total of " + this.lepsSupported + " leps.\n\nThese cost " + this.cost + " US Dollars.";
 	}
 
 	public String getDescription() {
