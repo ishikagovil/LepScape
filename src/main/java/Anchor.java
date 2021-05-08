@@ -1,5 +1,4 @@
 import javafx.beans.property.DoubleProperty;
-import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;

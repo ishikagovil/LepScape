@@ -12,11 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
-import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

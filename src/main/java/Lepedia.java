@@ -1,13 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-
 import java.util.Map;
-
-import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
