@@ -1,4 +1,6 @@
 import java.util.*;
+
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -70,11 +72,17 @@ public class ManageViews {
 
 	public void importImages(String fileName, String fileName2) {
 		plantImages = new HashMap<>();
-		System.out.println("setting plant images");
-		plantImages = CSVtoPlants.readFileForImg(fileName);
 		lepImages = new HashMap<>();
-		System.out.println("setting lep images");
-		lepImages = CSVtoLeps.readFileForImg(fileName2);
+		new Thread() {
+			public void run() {
+				System.out.println("setting plant images");
+				plantImages = CSVtoPlants.readFileForImg(fileName);
+				System.out.println("setting lep images");
+				lepImages = CSVtoLeps.readFileForImg(fileName2);
+				controller.refreshImages();
+			}
+		}.start();
+		
 	}
 
 	public Map<String, ImageView> getPlantImages() {

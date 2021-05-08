@@ -51,6 +51,7 @@ public class GardenDesign extends View{
 	public TilePane tile = new TilePane();
 	public BorderPane comparePane = new BorderPane();
 	public StackPane info = new StackPane();
+	ScrollPane scroll;
 	Map<String,ImageView> oblist;
 	ArrayList<ImageView> placed = new ArrayList<>();
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
@@ -81,18 +82,17 @@ public class GardenDesign extends View{
 		
 		border.setCenter(main);
 		
-		ScrollPane scroll = new ScrollPane();
 		tile.setMaxWidth(screenHeight);
 		tile.setMaxHeight(200);
 		tile = addTilePane();
 		
+		scroll = new ScrollPane();
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
 //        scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
         //scroll.setMaxWidth(screenWidth);
         scroll.setMaxHeight(300);						// needed to initialize a dimension for scrollpane; leave in
-		scroll.setContent(tile);
 		border.setBottom(scroll);
 		//border.setBottom(tile);
 		//comparePane = addBorderPane();
@@ -248,6 +248,7 @@ public class GardenDesign extends View{
 	 * @return the created pane
 	 */
 	public TilePane addTilePane() {
+		oblist = manageView.getPlantImages();
 		plants = new HashMap<>();
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
@@ -681,6 +682,8 @@ public class GardenDesign extends View{
 	 * @param plantNames the plants that are placed
 	 */
 	public void updateImageList(ArrayList<String> plantNames) {
+		tile = addTilePane();
+		scroll.setContent(tile);
 		tile.getChildren().clear();
 		
 		plantNames.forEach((name) -> {
