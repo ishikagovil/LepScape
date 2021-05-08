@@ -340,6 +340,14 @@ public class ManageViews {
 		currView.makeInfoPane(name, info);
 	}
 	
+	public boolean getCalledFromStart() {
+		return ((Gallery) views.get("Gallery")).calledFromStart;
+	}
+	
+	public void setCalledFromStart(boolean called) {
+		((Gallery) views.get("Gallery")).calledFromStart = called;
+		((Gallery) views.get("Gallery")).setBackButton();
+	}
 	/**
 	 * updates the budget and lep count when plant added
 	 * @param cost the cost of plant

@@ -2,6 +2,7 @@ import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -64,6 +65,10 @@ public class Start extends View {
 		buttons = new ArrayList<>();
 		buttons.add(addNextButton( "new", "PlotDesign"));
 		buttons.add(addNextButton("gallery", "Gallery"));
+		buttons.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
+			System.out.println(this.manageView.getCalledFromStart());
+	       	this.manageView.setCalledFromStart(true);
+	    });
 		box.getChildren().addAll(buttons);
 		return box;
 	}

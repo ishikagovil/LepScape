@@ -26,6 +26,7 @@ public class Gallery extends View{
 	public Button sort;
 	public TextField search;
 	public TilePane tile;
+	boolean calledFromStart;
 	Stage stage;
 	
 	public Gallery(Stage stage, Controller c, ManageViews manageView) {
@@ -34,14 +35,9 @@ public class Gallery extends View{
 		this.stage = stage;
 		this.c = c;
 		// back button 
-		HBox hb1 = new HBox();
-		hb1.setAlignment(Pos.BASELINE_LEFT);
-		hb1.setPadding(new Insets(20));
-		back = new Button("Back");
-		back.setPrefSize(100, 30);;
+		
 //		back.setOnAction(controller.getHandlerforClicked("Back to Start"));
-		hb1.getChildren().add(addNextButton("back","Start"));
-		border.setBottom(hb1);
+		setBackButton();
 		
 		// get the summary pane on the right to display lep + cost
 		VBox vb1 = new VBox();
@@ -86,7 +82,21 @@ public class Gallery extends View{
 		title.setFont(Font.font(null, FontWeight.BOLD, 40));
 		hb2.getChildren().add(title);
 		border.setTop(hb2);
-		
+		this.calledFromStart = true;
+	}
+	
+	public void setBackButton(){
+		HBox hb1 = new HBox();
+		hb1.setAlignment(Pos.BASELINE_LEFT);
+		hb1.setPadding(new Insets(20));
+		back = new Button("Back");
+		back.setPrefSize(100, 30);
+
+		if(calledFromStart)
+			hb1.getChildren().add(addNextButton("back","Start"));
+		else
+			hb1.getChildren().add(addNextButton("back","Summary"));
+		border.setBottom(hb1);
 	}
 
 	//https://stackoverflow.com/questions/22166610/how-to-create-a-popup-windows-in-javafx
