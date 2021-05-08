@@ -40,7 +40,7 @@ public class PlotDesign extends View{
 	 */
 	public PlotDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
-		Canvas canvas = new Canvas(screenWidth, screenHeight);
+		Canvas canvas = new Canvas(this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
 		//Loading Images
 		dimInstructions = new ImageView(new Image(getClass().getResourceAsStream("/dimensions.jpg")));
 		dimInstructions.setFitWidth(this.manageView.getScreenWidth());
@@ -101,7 +101,7 @@ public class PlotDesign extends View{
             //Remove the lines on the current screen and polygon points
            	removeLines();
            	controller.restartPolygonBoundary();
-           	gc.clearRect(0,0, screenWidth, screenHeight);
+           	gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
            	border.setOnMouseReleased(null);
            	
            	//Enable toolbar buttons
@@ -114,7 +114,7 @@ public class PlotDesign extends View{
            	border.getChildren().add(poly);
            	border.getChildren().addAll(anchors);
            	shapeClicked = poly.getPoints().size() != 0;
-           	controller.drawFreehandPart(1);
+           	controller.drawFreehandPart();
            	
            	//Change border design
            	border.getChildren().remove(grid);
@@ -155,7 +155,7 @@ public class PlotDesign extends View{
         ImageView undo = addNextButton("undo", "ClearDim");
         dimSwitch.add(undo);
         dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (event)-> {
-            gc.clearRect(0,0, screenWidth, screenHeight);
+            gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
            	onSettingDimensions(); 
         	event.consume();
         });
@@ -193,13 +193,13 @@ public class PlotDesign extends View{
            	//Clear everything on this screen
            	border.getChildren().remove(poly);
            	border.getChildren().removeAll(anchors);
-           	gc.clearRect(0,0, screenWidth, screenHeight);
+           	gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
           	shapeClicked = true;
            	
            	//Start the next screen for dimensions 
            	onSettingDimensions();      	
            	removeLines();
-          	controller.drawPlot(1);
+          	controller.drawPlot();
         });
 	}
 	/**
@@ -293,8 +293,8 @@ public class PlotDesign extends View{
 		//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
 
 		//Initializes the points clockwise starting from top left corner of box
-		double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
-	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
+		double[] x = new double[]{this.manageView.getScreenWidth()/2-100, this.manageView.getScreenWidth()/2+100, this.manageView.getScreenWidth()/2+100, this.manageView.getScreenWidth()/2-100};
+	    double[] y = new double[]{this.manageView.getScreenHeight()/2-100, this.manageView.getScreenHeight()/2-100, this.manageView.getScreenHeight()/2+100, this.manageView.getScreenHeight()/2+100};  
 		List<Double> values = new ArrayList<Double>();
         for(int i = 0; i < x.length; i++) {
         	values.add(x[i]);

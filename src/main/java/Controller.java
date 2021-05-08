@@ -666,11 +666,11 @@ public class Controller extends Application {
 	 * @param double scale 
 	 * @author Ishika Govil
 	 */
-	public void drawPlot(double scale) {
+	public void drawPlot() {
 		ListIterator<Vector2> itr = model.getGarden().outline.listIterator();
-		iteratePlot(itr, model.getGarden().outline, false, scale);
+		iteratePlot(itr, model.getGarden().outline, false);
 		itr = model.getGarden().polygonCorners.listIterator();
-		iteratePlot(itr, model.getGarden().polygonCorners, true, scale);
+		iteratePlot(itr, model.getGarden().polygonCorners, true);
 	}
 	
 	/**
@@ -678,9 +678,9 @@ public class Controller extends Application {
 	 * @param double scale
 	 * @author Ishika Govil
 	 */
-	public void drawFreehandPart(double scale) {
+	public void drawFreehandPart() {
 		ListIterator<Vector2> itr = model.getGarden().outline.listIterator();
-		iteratePlot(itr, model.getGarden().outline, false, scale);
+		iteratePlot(itr, model.getGarden().outline, false);
 	}
 	
 	/**
@@ -705,12 +705,7 @@ public class Controller extends Application {
 	 * @param double scale 
 	 * @author Ishika Govil
 	 */
-	public void iteratePlot(ListIterator<Vector2> itr, ArrayList<Vector2> list, boolean isPolygon, double scale) {
-		Vector2 translate;
-		if(scale == 1)
-			translate = new Vector2(0, 0);
-		else
-			translate = this.model.translateScaledPlot(this.view.getGardenTopLeft());		
+	public void iteratePlot(ListIterator<Vector2> itr, ArrayList<Vector2> list, boolean isPolygon) {
 		while(itr.hasNext()) {
 			Vector2 point1 = itr.next();
 			Vector2 point2;
@@ -721,7 +716,7 @@ public class Controller extends Application {
 			else 
 				return;
 			if(point2.getX() != -1 && point1.getX()!= -1)
-				this.view.drawLine(point1.getX()*scale + translate.getX(), point1.getY()*scale + translate.getY(), point2.getX()*scale + translate.getX(), point2.getY()*scale + translate.getY(), isPolygon);
+				this.view.drawLine(point1.getX(), point1.getY(), point2.getX(), point2.getY(), isPolygon);
 		}
 	}
 	

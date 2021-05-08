@@ -20,13 +20,6 @@ import java.util.*;
 public abstract class View{
 	private static final int lineWidth = 3;
 	private static final double fillThreshold = 0.95;
-	
-	public double screenWidth;
-	public double screenHeight;
-	
-	public double gardenTopLeftX = 0.3*screenWidth;
-	public double gardenTopLeftY = 0.2*screenHeight;
-
 	BorderPane border;
 	Stage stage;
 	Controller controller;
@@ -46,8 +39,6 @@ public abstract class View{
 	 */
 	public View(Stage stage, Controller c, ManageViews manageView) { 
 		this.manageView = manageView;
-		this.screenHeight = manageView.screenHeight;
-		this.screenWidth = manageView.screenWidth;
 		this.stage = stage;
 		this.polygonLines = new ArrayList<>();
 		this.freeLines = new ArrayList<>();
@@ -71,21 +62,7 @@ public abstract class View{
 	public BorderPane getBorderPane() {
 		return border;
 	}
-	/**
-	 * Returns the screenWidth
-	 * @return double 
-	 */
-	public double getScreenWidth() {
-		return screenWidth;
-	}
-	/**
-	 * Returns the screenHeight
-	 * @return double 
-	 */
-	public double getScreenHeight() {
-		return screenHeight;
-	}
-	
+
 	/**
 	 * Sets the translateX value of a node n
 	 * @param double x

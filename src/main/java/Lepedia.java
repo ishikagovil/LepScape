@@ -57,7 +57,7 @@ public class Lepedia extends View {
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
         sp.setFitToHeight(true);
         sp.setFitToWidth(true);
-        sp.setMaxHeight(screenHeight);						// needed to initialize a dimension for scrollpane; leave in
+        sp.setMaxHeight(this.manageView.getScreenHeight());						// needed to initialize a dimension for scrollpane; leave in
 		
 	    TilePane outerTile = new TilePane(Orientation.HORIZONTAL);
 	    //outerTile.setTileAlignment(Pos.CENTER);

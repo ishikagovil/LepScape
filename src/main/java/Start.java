@@ -24,7 +24,7 @@ public class Start extends View {
 	 */
 	public Start(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);     
-		canvas = new Canvas(screenWidth, screenHeight);
+		canvas = new Canvas(this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
 		border = new BorderPane();
 		border.getChildren().add(canvas);
         addBackgroundImage();
@@ -34,8 +34,8 @@ public class Start extends View {
 	public void addBackgroundImage() {
 		Image bgImage = new Image(getClass().getResourceAsStream("/lep-background.jpg"));
         gc = canvas.getGraphicsContext2D();	
-        gc.getCanvas().setWidth(getScreenWidth());
-        gc.getCanvas().setHeight(getScreenHeight());
+        gc.getCanvas().setWidth(this.manageView.getScreenWidth());
+        gc.getCanvas().setHeight(this.manageView.getScreenHeight());
         gc.drawImage(bgImage, 0, 0);
 	}
 	

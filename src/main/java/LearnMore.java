@@ -81,7 +81,7 @@ public class LearnMore extends View{
 		ImageView l1IV = new ImageView(l1);
 		Text d2 = new Text("Click on freehand button to start designing your plot however you want.");
 		d2.setFont(Font.font(30));
-		d2.setWrappingWidth(screenWidth - 290);
+		d2.setWrappingWidth(this.manageView.getScreenWidth() - 290);
 		b1.getChildren().addAll(l1IV, d2);
 		return b1;
 	}
@@ -92,7 +92,7 @@ public class LearnMore extends View{
 		ImageView lIV = new ImageView(l);
 		Text d = new Text("Click on polygon button to start designing your plot using polygon tool, you can move the vertices to change the shape of the garden.");
 		d.setFont(Font.font(30));
-		d.setWrappingWidth(screenWidth - 290);
+		d.setWrappingWidth(this.manageView.getScreenWidth() - 290);
 		b.getChildren().addAll(lIV, d);
 		return b;
 	}
@@ -114,7 +114,7 @@ public class LearnMore extends View{
 		ImageView lIV = new ImageView(l);
 		Text d = new Text("Choose \"Gallery\" to view your saved gardens.");
 		d.setFont(Font.font(30));
-		d.setWrappingWidth(screenWidth - 290);
+		d.setWrappingWidth(this.manageView.getScreenWidth() - 290);
 		b.getChildren().addAll(lIV, d);
 		return b;
 	}

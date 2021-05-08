@@ -238,14 +238,6 @@ public class ManageViews {
 		return this.screenHeight;
 	}
 
-	
-	/** 
-	 * Returns the top left corner of the garden view frame
-	 * @return int 
-	 */
-	public Vector2 getGardenTopLeft() {
-		return new Vector2(this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY);
-	}
 
 	/** 
 	 * Returns the GraphicsContext associated with the current View
