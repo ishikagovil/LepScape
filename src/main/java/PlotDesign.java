@@ -22,8 +22,8 @@ public class PlotDesign extends View{
 	GridPane grid; //added to contain the TextField
 	ToolBar toolbar;
 	Polygon poly;
-	Image plotInstructions;
-	Image dimInstructions;
+	ImageView plotInstructions;
+	ImageView dimInstructions;
     boolean shapeClicked = false;
     boolean dragAnchor = false;
     ObservableList<Anchor> anchors;
@@ -42,14 +42,18 @@ public class PlotDesign extends View{
 		super(stage, c, manageView);
 		Canvas canvas = new Canvas(screenWidth, screenHeight);
 		//Loading Images
-		dimInstructions = new Image(getClass().getResourceAsStream("/dimensions.jpg"));
-		plotInstructions = new Image(getClass().getResourceAsStream("/drawPlot.jpg"));
+		dimInstructions = new ImageView(new Image(getClass().getResourceAsStream("/dimensions.jpg")));
+		dimInstructions.setFitWidth(this.manageView.getScreenWidth());
+		dimInstructions.setFitHeight(this.manageView.getScreenHeight());
+		plotInstructions = new ImageView(new Image(getClass().getResourceAsStream("/drawPlot.jpg")));
+		plotInstructions.setFitWidth(this.manageView.getScreenWidth());
+		plotInstructions.setFitHeight(this.manageView.getScreenHeight());
 		//Set canvas for drawing: https://www.youtube.com/watch?v=gjZQB6BmyK4
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
         gc.setLineWidth(2);
-        gc.drawImage(plotInstructions, 0, 0);
+        gc.drawImage(plotInstructions.getImage(), 0, 0);
         
         //Creating buttons on the screen
         toolbarButtons();        
@@ -114,7 +118,7 @@ public class PlotDesign extends View{
            	
            	//Change border design
            	border.getChildren().remove(grid);
-           	gc.drawImage(plotInstructions, 0, 0);
+           	gc.drawImage(plotInstructions.getImage(), 0, 0);
            	createHBox(drawSwitch);	       
            	
            	e.consume();
@@ -141,7 +145,7 @@ public class PlotDesign extends View{
         	poly = new Polygon();
         	anchors = FXCollections.observableArrayList();
         	removeLines();
-        	gc.drawImage(plotInstructions, 0, 0);
+        	gc.drawImage(plotInstructions.getImage(), 0, 0);
         	
         	e.consume();
         });
@@ -203,7 +207,7 @@ public class PlotDesign extends View{
 	 * Saves the inputed value and calls settingLength in controller to calculate length per pixel
 	 */
 	public void onSettingDimensions() {
-        gc.drawImage(dimInstructions, 0, 0);
+        gc.drawImage(dimInstructions.getImage(), 0, 0);
 		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
         border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
         border.setOnMouseReleased(event -> {

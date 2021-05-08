@@ -1,4 +1,5 @@
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
@@ -13,6 +14,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Popup;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import java.io.File;
@@ -58,9 +60,11 @@ public class Controller extends Application {
 		this.model.setPlantDirectory(CSVtoPlants.readFile(plantFile));
 		System.out.println("setting lep directory");
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
-	    view = new ManageViews(stage,this, plantFile, lepFile);
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+	    view = new ManageViews(stage,this, plantFile, lepFile, screenBounds.getWidth(), screenBounds.getHeight());
+	    System.out.println(screenBounds);
 	    this.stage = stage;
-//		this.stage.setFullScreen(true);
+		this.stage.setFullScreen(true);
 	    readBack();
 
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
@@ -721,20 +725,6 @@ public class Controller extends Application {
 		}
 	}
 	
-	/**
-	 * Using the extreme x and y coordinates, the pixel lengths of the maximum minus minimum are determined.
-	 * Then, these lengths are divided by desired lengths to determine scale.
-	 * The minimum is used as the scale and drawPlot is called
-	 * @author Ishika Govil
-	 */
-	public void scalePlot() {
-		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
-		double scaleY = this.view.getGardenHeight() / Math.abs(extrema.get(0).getY() -  extrema.get(2).getY());
-		double scaleX = this.view.getGardenWidth() / Math.abs(extrema.get(1).getX() -  extrema.get(3).getX());
-		double scale =  Math.min(scaleX, scaleY);
-		this.model.setScale(scale);
-		drawPlot(scale);
-	}
 	
 	/** 
 	 * Called when user is drawing. 
