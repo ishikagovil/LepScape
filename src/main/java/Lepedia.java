@@ -95,29 +95,6 @@ public class Lepedia extends View {
 
 	    });
 	    
-	   /* Iterator lepIter = info.entrySet().iterator();
-	    
-	    while(lepIter.hasNext()) {
-	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
-	    	Lep lepObj = (Lep)lepElement.getValue();
-	    	
-	    	
-	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
-	    	System.out.println(thrivesIn);
-	    	for (PlacedPlant plant: plants) {
-	    		String genus = plant.getSpecies().getGenusName();
-	    		System.out.println(genus);
-	    		for (String genusReqs: thrivesIn) {
-	    			System.out.println(genusReqs);
-	    			if (genus.equals(genusReqs)) {
-	    				if (!(lepsInGarden.contains(lepObj))) {
-	    					lepsInGarden.add(lepObj);
-	    				}
-	    			}
-	    		}
-	    	}
-	    }*/
-	    
 	    for (Lep lepInfo : lepsInGarden) {
 	    	outerTile.getChildren().add(getInfoTile(lepImages, lepInfo));
 			outerTile.setTileAlignment(Pos.CENTER);
