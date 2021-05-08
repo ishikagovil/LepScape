@@ -36,6 +36,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 
+
 public class Summary extends View {
 	public Controller ic;
 	Pane main;

@@ -13,17 +13,14 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 
@@ -82,7 +79,7 @@ public class GardenDesign extends View{
 		border.setCenter(main);
 		
 		ScrollPane scroll = new ScrollPane();
-		tile.setMaxWidth(screenHeight);
+		tile.setMaxWidth(this.manageView.getScreenHeight());
 		tile.setMaxHeight(200);
 		tile = addTilePane();
 		
@@ -472,14 +469,14 @@ public class GardenDesign extends View{
 	 */
 	public void makeInfoPane(String name, String info) {
 		BorderPane info1 = new BorderPane();
-		info1.setPrefWidth(screenWidth / 6);
-		info1.setMinHeight(screenHeight-300);
+		info1.setPrefWidth(this.manageView.getScreenWidth() / 6);
+		info1.setMinHeight(this.manageView.getScreenHeight()-300);
 		info1.setStyle("-fx-background-color: LIGHTBLUE");
 		
 		Label title = new Label(name);
 		title.setFont(new Font("Andale Mono", 20));
 		title.setWrapText(true);
-		title.setMaxWidth(screenWidth/6);
+		title.setMaxWidth(this.manageView.getScreenWidth()/6);
 		
 		Button toggle = new Button();
 		Image toggleIM = new Image(getClass().getResourceAsStream("/toggle.png"));
@@ -503,7 +500,7 @@ public class GardenDesign extends View{
 		Text tf = new Text();
 		tf.setText(info);
 		tf.setTextAlignment(TextAlignment.CENTER);
-		tf.setWrappingWidth(screenWidth / 6.5);;
+		tf.setWrappingWidth(this.manageView.getScreenWidth() / 6.5);;
 		tf.setFont(new Font("Andale Mono", 14));
 
 		info1.setTop(top);
@@ -521,8 +518,8 @@ public class GardenDesign extends View{
 	public VBox addGridPane() {
 		VBox vb = new VBox();
 		vb.setStyle("-fx-background-color: LIGHTBLUE");
-		vb.setMinHeight(screenHeight/4);
-		vb.setPrefWidth(screenHeight/4);
+		vb.setMinHeight(this.manageView.getScreenHeight()/4);
+		vb.setPrefWidth(this.manageView.getScreenHeight()/4);
 		vb.setAlignment(Pos.CENTER);;
 		ImageView[] buttons = new ImageView[] {
 			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "ComparePlants"),addNextButton("next","Summary")
@@ -567,8 +564,8 @@ public class GardenDesign extends View{
 	public BorderPane addBorderPane() {
 		BorderPane border = new BorderPane();
 		border.setStyle("-fx-background-color: LIGHTBLUE");
-		border.setMinHeight(screenHeight/3);
-		border.setMaxWidth(screenHeight/4);
+		border.setMinHeight(this.manageView.getScreenHeight()/3);
+		border.setMaxWidth(this.manageView.getScreenHeight()/4);
 		StackPane s1 = addStackPane("-fx-background-color: ALICEBLUE");
 		StackPane s2 = addStackPane("-fx-background-color: LAVENDER");
 		Label l = new Label("Compare");
@@ -609,7 +606,7 @@ public class GardenDesign extends View{
 	public StackPane addStackPane(String background) {
 		StackPane stack = new StackPane();
 		stack.setStyle("-fx-border-color:GREY; -fx-border-width:1px; "+background);
-		stack.setMinWidth(screenHeight/8);
+		stack.setMinWidth(this.manageView.getScreenHeight()/8);
 		return stack;
 	}
 	
@@ -656,7 +653,7 @@ public class GardenDesign extends View{
 		c.setPreserveRatio(true);
 		c.setFitHeight(NORMALCOMPOST);
 		c.setTranslateX(60);
-		c.setTranslateY((screenHeight-200)/2 + 100);
+		c.setTranslateY((this.manageView.getScreenHeight()-200)/2 + 100);
 		c.setOnMouseExited(event->{
 			System.out.println("set on mouse exited");
 			c.setFitHeight(NORMALCOMPOST);

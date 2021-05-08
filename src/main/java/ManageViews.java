@@ -16,6 +16,8 @@ public class ManageViews {
 	public double dimPixel; //Used when setting the dimensions of the garden
 	public ArrayList<double[]> dimLen; //Used when setting the dimensions of the garden
 	public WritableImage img; //sets the image from PlotDesign
+	public double screenWidth;
+	public double screenHeight;
 	Map<String,View> views;
 	View currView;
 	Controller controller;
@@ -38,10 +40,12 @@ public class ManageViews {
 	 * @param Controller
 	 * @author Ishika Govil
 	 */
-	public ManageViews(Stage stage, Controller c, String fileName, String fileName2) {
+	public ManageViews(Stage stage, Controller c, String fileName, String fileName2, double width, double height) {
 		importImages(fileName, fileName2);
 		dimLen = new ArrayList<>();
 		dimPixel = -1;
+		this.screenWidth = width;
+		this.screenHeight = height;
 		this.controller = c;
 	    this.stage = stage;
 	    this.sp = new Pane();
@@ -49,6 +53,8 @@ public class ManageViews {
 		initializeViews();
 	    this.currView = this.getView("Start");
 	}
+	
+	
 	public void importButtonImages() {
 		File[] file;
 		this.buttonImages = new HashMap<>();
@@ -219,40 +225,19 @@ public class ManageViews {
 	}
 	/** 
 	 * Returns the screen width associated with the current View
-	 * @return int 
+	 * @return double 
 	 */
-	public int getScreenWidth() {
-		return this.currView.screenWidth;
+	public double getScreenWidth() {
+		return this.screenWidth;
 	}
 	/** 
 	 * Returns the screen height associated with the current View
-	 * @return int 
+	 * @return double 
 	 */
-	public int getScreenHeight() {
-		return this.currView.screenHeight;
+	public double getScreenHeight() {
+		return this.screenHeight;
 	}
-	/** 
-	 * Returns the garden width associated with the current View
-	 * @return int 
-	 */
-	public double getGardenWidth() {
-		return this.currView.gardenWidth;
-	}
-	/** 
-	 * Returns the garden height associated with the current View
-	 * @return int 
-	 */
-	public double getGardenHeight() {
-		return this.currView.gardenHeight;
-	}
-	
-	/** 
-	 * Returns the top left corner of the garden view frame
-	 * @return int 
-	 */
-	public Vector2 getGardenTopLeft() {
-		return new Vector2(this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY);
-	}
+
 
 	/** 
 	 * Returns the GraphicsContext associated with the current View

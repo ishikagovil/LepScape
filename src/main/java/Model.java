@@ -1,7 +1,5 @@
 import java.util.*;
 
-import javafx.scene.Node;
-
 public class Model implements java.io.Serializable{
 	
 	public Garden gardenMap;

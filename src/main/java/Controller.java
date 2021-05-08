@@ -1,4 +1,5 @@
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
@@ -12,11 +13,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
-import javafx.scene.text.Font;
 import javafx.stage.Popup;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -60,9 +60,11 @@ public class Controller extends Application {
 		this.model.setPlantDirectory(CSVtoPlants.readFile(plantFile));
 		System.out.println("setting lep directory");
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
-	    view = new ManageViews(stage,this, plantFile, lepFile);
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+	    view = new ManageViews(stage,this, plantFile, lepFile, screenBounds.getWidth(), screenBounds.getHeight());
+	    System.out.println(screenBounds);
 	    this.stage = stage;
-//		this.stage.setFullScreen(true);
+		this.stage.setFullScreen(true);
 	    readBack();
 
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
@@ -692,11 +694,11 @@ public class Controller extends Application {
 	 * @param double scale 
 	 * @author Ishika Govil
 	 */
-	public void drawPlot(double scale) {
+	public void drawPlot() {
 		ListIterator<Vector2> itr = model.getGarden().outline.listIterator();
-		iteratePlot(itr, model.getGarden().outline, false, scale);
+		iteratePlot(itr, model.getGarden().outline, false);
 		itr = model.getGarden().polygonCorners.listIterator();
-		iteratePlot(itr, model.getGarden().polygonCorners, true, scale);
+		iteratePlot(itr, model.getGarden().polygonCorners, true);
 	}
 	
 	/**
@@ -704,9 +706,9 @@ public class Controller extends Application {
 	 * @param double scale
 	 * @author Ishika Govil
 	 */
-	public void drawFreehandPart(double scale) {
+	public void drawFreehandPart() {
 		ListIterator<Vector2> itr = model.getGarden().outline.listIterator();
-		iteratePlot(itr, model.getGarden().outline, false, scale);
+		iteratePlot(itr, model.getGarden().outline, false);
 	}
 	
 	/**
@@ -731,12 +733,7 @@ public class Controller extends Application {
 	 * @param double scale 
 	 * @author Ishika Govil
 	 */
-	public void iteratePlot(ListIterator<Vector2> itr, ArrayList<Vector2> list, boolean isPolygon, double scale) {
-		Vector2 translate;
-		if(scale == 1)
-			translate = new Vector2(0, 0);
-		else
-			translate = this.model.translateScaledPlot(this.view.getGardenTopLeft());		
+	public void iteratePlot(ListIterator<Vector2> itr, ArrayList<Vector2> list, boolean isPolygon) {
 		while(itr.hasNext()) {
 			Vector2 point1 = itr.next();
 			Vector2 point2;
@@ -747,24 +744,10 @@ public class Controller extends Application {
 			else 
 				return;
 			if(point2.getX() != -1 && point1.getX()!= -1)
-				this.view.drawLine(point1.getX()*scale + translate.getX(), point1.getY()*scale + translate.getY(), point2.getX()*scale + translate.getX(), point2.getY()*scale + translate.getY(), isPolygon);
+				this.view.drawLine(point1.getX(), point1.getY(), point2.getX(), point2.getY(), isPolygon);
 		}
 	}
 	
-	/**
-	 * Using the extreme x and y coordinates, the pixel lengths of the maximum minus minimum are determined.
-	 * Then, these lengths are divided by desired lengths to determine scale.
-	 * The minimum is used as the scale and drawPlot is called
-	 * @author Ishika Govil
-	 */
-	public void scalePlot() {
-		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
-		double scaleY = this.view.getGardenHeight() / Math.abs(extrema.get(0).getY() -  extrema.get(2).getY());
-		double scaleX = this.view.getGardenWidth() / Math.abs(extrema.get(1).getX() -  extrema.get(3).getX());
-		double scale =  Math.min(scaleX, scaleY);
-		this.model.setScale(scale);
-		drawPlot(scale);
-	}
 	
 	/** 
 	 * Called when user is drawing. 
