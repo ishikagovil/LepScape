@@ -140,7 +140,7 @@ public class GardenDesign extends View{
 	}
 	
 	/**
-	 * Makes the popup pane for all the deleted p;ants
+	 * Makes the popup pane for all the deleted plants
 	 * @param plant all the plants that have been deleted 
 	 */
 	//https://docs.oracle.com/javafx/2/ui_controls/list-view.htm

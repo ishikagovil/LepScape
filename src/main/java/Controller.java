@@ -265,7 +265,7 @@ public class Controller extends Application {
 		model.gardenMap = model.savedGardens.get(index);
 		Garden garden = model.gardenMap;
 		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
-		System.out.println("putline: "+garden.outline + " "+ garden.outline.size());
+		System.out.println("outline: "+garden.outline + " "+ garden.outline.size());
 		((GardenDesign) view.views.get("GardenDesign")).remakePane();
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
 		model.scale = garden.scale;
@@ -811,6 +811,10 @@ public class Controller extends Application {
 		
 		this.model.getGarden().addSection(conditions);
 		this.drawToCanvas(canvas);
+	}
+	
+	public void saveGardenToPDF() {
+		
 	}
 	
 

@@ -9,11 +9,12 @@ repositories {
 
 javafx {
     version = "12"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing']
 }
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    compile 'com.itextpdf:itextpdf:5.5.5'
 }
 
 test {
