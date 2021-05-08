@@ -27,8 +27,6 @@ public class ManageViews {
 	public Map<String, Image> buttonImages;
 	public Pane sp;
 	public WritableImage savedImg;
-	public WritableImage plot;
-
 	/**
 	 * @author Ishika Govil
 	 */
@@ -176,45 +174,6 @@ public class ManageViews {
 	    setSavedImage(img);
 	}
 	
-	/**
-	 * Makes the image data for the a garden
-	 * @return the int matrix
-	 */
-	public int[][] makeDataforPlot() {
-		int width = (int)plot.getWidth();
-		int height = (int)plot.getHeight();
-		int[][] data = new int[width][height];
-		PixelReader r = plot.getPixelReader();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                data[i][j] = r.getArgb(i, j);
-            }
-        }
-        return data;
-	}
-	
-	/**
-	 * with data makes the image of a garden
-	 * @param width the width of garden
-	 * @param height height of garden
-	 * @param data imageData for garden
-	 */
-	public void makeImageforplot(int width, int height, int[][] data) {
-		System.out.println(width);
-		System.out.println(height);
-		if(width<=0 && height<=0) {
-			width = 1;
-			height=1;
-		}
-		WritableImage img = new WritableImage(width, height);
-	    PixelWriter w = img.getPixelWriter();
-	    for (int i = 0; i < width; i++) {
-	    	for (int j = 0; j < height; j++) {
-	    		w.setArgb(i, j, data[i][j]);
-	    	}
-	    }
-	    setPlot(img);
-	}
 	
 	/** 
 	 * Returns the BorderPane associated with the current View
@@ -296,14 +255,6 @@ public class ManageViews {
 		this.currView = this.views.get("PlotDesign");
 	}
 	
-	/**
-	 * removed a given plant
-	 * @param node the plant that will be deleted
-	 */
-	public void removePlant(Node node) {
-		views.get("GardenDesign").removePlant(node);
-	}
-	
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
 	}
@@ -311,14 +262,6 @@ public class ManageViews {
 	public void validateSave() {
 		if(this.currView instanceof PlotDesign)
 			((PlotDesign) this.currView).validateSave();
-	}
-	
-	/**
-	 * Sets the image for plot
-	 * @param plot
-	 */
-	public void setPlot(WritableImage plot) {
-		this.plot = plot;
 	}
 	
 	//methods only used by garden design
@@ -330,16 +273,6 @@ public class ManageViews {
 		currView.setX(x, n);
 	}
 	
-	public void addImageView(double x, double y, String key, double heightWidth) {
-		((GardenDesign) views.get("GardenDesign")).addImageView(x,y,key,heightWidth);
-//		currView.addImageView(x, y, key);
-	}
-	
-//	public void removePlant(Node n) {currView.removePlant(n);}
-	public void makeInfoPane(String name, String info) {
-		currView.makeInfoPane(name, info);
-	}
-	
 	public boolean getCalledFromStart() {
 		return ((Gallery) views.get("Gallery")).calledFromStart;
 	}
@@ -348,14 +281,6 @@ public class ManageViews {
 		((Gallery) views.get("Gallery")).calledFromStart = called;
 		((Gallery) views.get("Gallery")).setBackButton();
 	}
-	/**
-	 * updates the budget and lep count when plant added
-	 * @param cost the cost of plant
-	 * @param lepCount lep supported by plant
-	 */
-//	public void updateBudgetandLep(double cost, int lepCount) {
-//		((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);
-//	}
 	
 	public void updateLepandCost(double cost, int lepCount) {
 		((Summary) views.get("Summary")).updateLepandCost(cost, lepCount);

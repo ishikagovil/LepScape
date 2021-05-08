@@ -49,11 +49,6 @@ public class Gallery extends View{
 		summary.setFont(Font.font(null, FontWeight.BOLD, 30));
 		vb1.getChildren().add(summary);
 		border.setRight(vb1);
-		
-		
-		//make scrollable screen with scroll bar
-//		ScrollBar scroll = new ScrollBar();
-//		scroll.setOrientation(Orientation.VERTICAL);
 		ScrollPane root = new ScrollPane();
 		
 		tile = new TilePane();
@@ -67,11 +62,6 @@ public class Gallery extends View{
         root.setFitToHeight(true);
         root.setFitToWidth(true);
         root.setContent(tile);  
-//		ap1.getChildren().add(scroll);
-//		
-//		AnchorPane.setTopAnchor(scroll, 0d);
-//		AnchorPane.setRightAnchor(scroll, 0d);
-//		AnchorPane.setBottomAnchor(scroll, 0d);
 		border.setCenter(root);
 		
 		// make title of the page
@@ -102,29 +92,6 @@ public class Gallery extends View{
 	//https://stackoverflow.com/questions/22166610/how-to-create-a-popup-windows-in-javafx
 	public void loadScreen(WritableImage gardenImage, int index, double cost, int lep) {
 		System.out.println("in here");
-//		try {
-//			FileInputStream fis = new FileInputStream("garden1.ser");
-//			ObjectInputStream ois = new ObjectInputStream(fis);
-//			Garden g = (Garden) ois.readObject();
-//			g.getPlants().forEach(k->{
-//				System.out.println(k.getName());
-//			});
-//			ois.close();
-////			canvas = g.getCanvas();
-////			if(g.getPane()==null) {
-////				System.out.println("not set");
-////			}
-////			StackPane sp = (StackPane) g.getPane();
-//			System.out.println(g.getCost());
-//			System.out.println(g.getNumLeps());
-//			new File("garden1.ser").delete();
-//			ArrayList<ImageView> m = new ArrayList<>();
-//			for(int i = 0; i<100; i++) {
-//				ImageView iv = new ImageView(g.image);
-//				iv.setPreserveRatio(true);
-//				iv.setFitHeight(150);
-//				m.add(iv);
-//			}
 			ImageView iv = new ImageView(gardenImage);
 			iv.setPreserveRatio(true);
 			iv.setFitHeight(100);
@@ -159,27 +126,6 @@ public class Gallery extends View{
 			});
 			tile.getChildren().add(iv);
 			
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			System.out.println("No the error is here");
-//			e.printStackTrace();
-//		}
 	}
-	
-	
-	
-//	public void clearTilePane() {
-//		tile.getChildren().forEach(children->{
-//			tile.getChildren().remove(children);
-//		});
-//	}
-	
-	public VBox makeSummary(double cost, int lep) {
-		VBox vb1 = new VBox();
-		
-		return vb1;
-	}
-
-	
 	
 }

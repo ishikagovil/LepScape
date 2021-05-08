@@ -58,7 +58,6 @@ public class GardenDesign extends View{
 	Label collisionDetected = new Label("Plants overlapping!");
 	Label emptyLabel = new Label();
 	Label fillMe = new Label();
-//	public ArrayList<ImageView> addedPlants;
 	
 	/**
 	 * Initializes an instance of GardenDesign
@@ -349,19 +348,14 @@ public class GardenDesign extends View{
 	 */
 	public String addImageView(double x, double y, String key, double heightWidth) {
 		System.out.println("in the inner addImageView");
-//		ImageView iv2 = oblist.get(key);
 		System.out.println("key: "+key);
-//		Image im = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
-//		iv2.setFitHeight(100);
 		iv2.setFitHeight(heightWidth);
 		iv2.setFitWidth(heightWidth);
 		String uniqueID = UUID.randomUUID().toString();
  		iv2.setId(uniqueID);
-// 		iv2.setX(x);
-// 		iv2.setY(y);
 		iv2.setTranslateX(x-main.getLayoutX());
 		iv2.setTranslateY(y-main.getLayoutY());
 
@@ -551,13 +545,6 @@ public class GardenDesign extends View{
 	}
 	
 	/**
-	 * returns the center pane in borderPane
-	 * @return the pane
-	 */
-	public Pane mainPane(){
-		return main;
-	}
-	/**
 	 * Makes the compare pane where plants can be placed and compared 
 	 * @return the created pane
 	 */
@@ -610,30 +597,6 @@ public class GardenDesign extends View{
 		return stack;
 	}
 	
-	
-	/**
-	 * This method saves the Image that comes from a given url into a filea
-	 * @param imageUrl the url for the image
-	 * @param destinationFile the file where it will get saved
-	 * @throws IOException the possible exception that may occur
-	 */
-	//https://stackoverflow.com/questions/10292792/getting-image-from-url-java
-	public static void saveImage(String imageUrl, String destinationFile) throws IOException {
-	    URL url = new URL(imageUrl);
-	    InputStream is = url.openStream();
-	    OutputStream os = new FileOutputStream(destinationFile);
-
-	    byte[] b = new byte[2048];
-	    int length;
-
-	    while ((length = is.read(b)) != -1) {
-	        os.write(b, 0, length);
-	    }
-
-	    is.close();
-	    os.close();
-	}
-	
 	/**
 	 * removed the copy of the plant imageView that is dragged over compost 
 	 */
@@ -664,9 +627,6 @@ public class GardenDesign extends View{
 			
 		});
 		c.setOnMouseClicked(controller.getHandlerForCompostClicked());
-//		c.setOnMouseDragReleased(event->{
-//			System.out.println("set on mouse released");
-//		});
 		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(""));
 		border.getChildren().add(c); 
 		

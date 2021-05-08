@@ -280,10 +280,6 @@ public abstract class View{
 		}
 	}
 	
-	//Used only in gardenDesign. In here because need to called by controller
-	public void removePlant(Node n) {}
-	public void makeInfoPane(String name, String info) {}
-	public void updateBudgetandLep(int cost, int lepCount) {}
 
 
 }
