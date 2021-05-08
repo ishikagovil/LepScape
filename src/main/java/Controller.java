@@ -266,6 +266,34 @@ public class Controller extends Application {
 	}
 	
 	/**
+	 * when a user wants to edit a previously saved garden
+	 * @param event the edit button action
+	 * @param index index of saved garden
+	 * @param dialog the stage that contains edit button
+	 */
+/*public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
+		this.view.switchViews("GardenDesign");
+		setTheStage();
+		model.gardenMap = model.savedGardens.get(index);
+		Garden garden = model.gardenMap;
+		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
+		System.out.println("outline: "+garden.outline + " "+ garden.outline.size());
+		((GardenDesign) view.views.get("GardenDesign")).remakePane();
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
+		model.scale = garden.scale;
+		model.lengthPerPixel = garden.lengthPerPixel;
+		garden.plants.forEach(plant->{
+			double heightWidth = scalePlantSpread(plant.getName());
+			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			model.gardenMap.placedPlants.put(node, plant);
+		});
+		dialog.close();
+		model.setToEdit();
+		model.setEditGardenIndex(index);
+	}
+*/
+	/**
+
 	 * Show the information of a savedGarden when user clicks on it
 	 * @param event the button click event
 	 * @param index index of the saved garden
@@ -868,7 +896,7 @@ public class Controller extends Application {
 		this.model.getGarden().addSection(conditions);
 		this.drawToCanvas(canvas);
 	}
-	
+
 	public String tooltipInfo(String plantName) {
 		String info = "";
 		PlantSpecies s = model.plantDirectory.get(plantName);
