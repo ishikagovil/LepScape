@@ -70,7 +70,6 @@ public class ConditionScreen extends View {
 	    		GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
 				gd.updateBudgetandLep(0.0, 0, Double.parseDouble(budgetField.getText()));;
 				controller.switchViews("GardenDesign");
-				this.manageView.setPlot(gd.main.snapshot(null, null));
 	    	}
 	    	catch(NumberFormatException e){
 	    		//not a double

@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -53,8 +54,7 @@ public class GardenDesign extends View{
 	ImageView c = new ImageView(compost);
 	Pane main;
 	Map<String, String> plants;
-	
-//	public ArrayList<ImageView> addedPlants;
+
 	
 	/**
 	 * Initializes an instance of GardenDesign
@@ -99,6 +99,37 @@ public class GardenDesign extends View{
 		border.setLeft(bd2);
 
 		showCompostBin();
+	}
+	
+	public void budgetExceededPopup() {
+		final Stage budgetExceeded = new Stage();
+		budgetExceeded.initModality(Modality.APPLICATION_MODAL);
+		budgetExceeded.initOwner(stage);
+		budgetExceeded.setTitle("YOU HAVE EXCEEDED YOUR BUDGET!");
+		Label text = new Label("To continue adding more to your garden increase your budget");
+		TextField budgetField = new TextField("Enter new budget");
+		budgetField.setMaxWidth(100);
+		BorderPane border = new BorderPane();
+		border.setTop(text);
+		border.setAlignment(text,Pos.CENTER);
+		border.setCenter(budgetField);
+//		HBox buttons = new HBox();
+		Button setNewBudget = new Button("Set New Budget");
+		border.setBottom(setNewBudget);
+		border.setAlignment(setNewBudget, Pos.BOTTOM_CENTER);
+		setNewBudget.setOnAction(event->{
+			try {
+				controller.updateBudget(Double.parseDouble(budgetField.getText()));
+				budgetExceeded.close();
+				controller.updateBudgetandLep();
+			}catch (NumberFormatException e) {
+				budgetField.clear();
+			}
+			
+		});
+		Scene popUpScene = new Scene(border,400,100);
+		budgetExceeded.setScene(popUpScene);
+		budgetExceeded.show();
 	}
 	
 	/**
@@ -211,7 +242,6 @@ public class GardenDesign extends View{
 	        }
 	    });
 		
-//		System.out.println(list.getSelectionModel().getSelectedItem().toString());
 		Label item = list.getSelectionModel().getSelectedItem();
 		if(item!=null) {
 			String displayText = getDisplayText(item);
@@ -247,11 +277,11 @@ public class GardenDesign extends View{
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
 		oblist.forEach((k,v)->{
-			tile.setOnDragDetected(new EventHandler<MouseEvent>() {
+			v.setOnDragDetected(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
-					tile.startFullDrag();
-					//System.out.println("drag detected");
+					v.startFullDrag();
+					v.startDragAndDrop(TransferMode.ANY);
 				}
 			});
 			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
@@ -318,9 +348,7 @@ public class GardenDesign extends View{
 	 */
 	public String addImageView(double x, double y, String key, double heightWidth) {
 		System.out.println("in the inner addImageView");
-//		ImageView iv2 = oblist.get(key);
 		System.out.println("key: "+key);
-//		Image im = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
@@ -329,8 +357,6 @@ public class GardenDesign extends View{
 		iv2.setFitWidth(heightWidth);
 		String uniqueID = UUID.randomUUID().toString();
  		iv2.setId(uniqueID);
-// 		iv2.setX(x);
-// 		iv2.setY(y);
 		iv2.setTranslateX(x-main.getLayoutX());
 		iv2.setTranslateY(y-main.getLayoutY());
 
@@ -343,7 +369,7 @@ public class GardenDesign extends View{
 				iv2.startFullDrag();
 			}
 		});
-//		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
+		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
 		main.getChildren().add(iv2);
 		return iv2.getId();
 	}
@@ -371,8 +397,7 @@ public class GardenDesign extends View{
 		toggle.setOnAction(event->{
 			border.getChildren().remove(border.getRight());
 		});
-		
-		//HBox top = new HBox();
+
 		VBox top = new VBox();
 		top.getChildren().add(toggle);
 		toggle.setAlignment(Pos.TOP_LEFT);
@@ -502,30 +527,6 @@ public class GardenDesign extends View{
 		return stack;
 	}
 	
-	
-	/**
-	 * This method saves the Image that comes from a given url into a filea
-	 * @param imageUrl the url for the image
-	 * @param destinationFile the file where it will get saved
-	 * @throws IOException the possible exception that may occur
-	 */
-	//https://stackoverflow.com/questions/10292792/getting-image-from-url-java
-	public static void saveImage(String imageUrl, String destinationFile) throws IOException {
-	    URL url = new URL(imageUrl);
-	    InputStream is = url.openStream();
-	    OutputStream os = new FileOutputStream(destinationFile);
-
-	    byte[] b = new byte[2048];
-	    int length;
-
-	    while ((length = is.read(b)) != -1) {
-	        os.write(b, 0, length);
-	    }
-
-	    is.close();
-	    os.close();
-	}
-	
 	/**
 	 * removed the copy of the plant imageView that is dragged over compost 
 	 */
@@ -533,9 +534,6 @@ public class GardenDesign extends View{
 		System.out.println("removing plant");
 		main.getChildren().remove(n);
 	}
-	
-	public void showPlantInfo(String plantInfo) {} //Shows plant information when clicked
-	public void showPlantGallery() {} //Shows plants based on conditions
 	
 	/**
 	 * Adds a compost to the screen that is used to remove copies of plant imageViews
@@ -555,9 +553,6 @@ public class GardenDesign extends View{
 			
 		});
 		c.setOnMouseClicked(controller.getHandlerForCompostClicked());
-//		c.setOnMouseDragReleased(event->{
-//			System.out.println("set on mouse released");
-//		});
 		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(""));
 		border.getChildren().add(c); 
 		

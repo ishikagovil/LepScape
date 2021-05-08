@@ -1,15 +1,10 @@
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
@@ -22,9 +17,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.util.*;
 
 //https://stackoverflow.com/questions/44841329/how-to-implement-serializable-for-my-project-to-have-persistence
@@ -99,31 +91,8 @@ public class Gallery extends View{
 	}
 
 	//https://stackoverflow.com/questions/22166610/how-to-create-a-popup-windows-in-javafx
-	public void loadScreen(WritableImage gardenImage, int index, double cost, int lep) {
+	public void loadScreen(WritableImage gardenImage, int index, double cost, double leps) {
 		System.out.println("in here");
-//		try {
-//			FileInputStream fis = new FileInputStream("garden1.ser");
-//			ObjectInputStream ois = new ObjectInputStream(fis);
-//			Garden g = (Garden) ois.readObject();
-//			g.getPlants().forEach(k->{
-//				System.out.println(k.getName());
-//			});
-//			ois.close();
-////			canvas = g.getCanvas();
-////			if(g.getPane()==null) {
-////				System.out.println("not set");
-////			}
-////			StackPane sp = (StackPane) g.getPane();
-//			System.out.println(g.getCost());
-//			System.out.println(g.getNumLeps());
-//			new File("garden1.ser").delete();
-//			ArrayList<ImageView> m = new ArrayList<>();
-//			for(int i = 0; i<100; i++) {
-//				ImageView iv = new ImageView(g.image);
-//				iv.setPreserveRatio(true);
-//				iv.setFitHeight(150);
-//				m.add(iv);
-//			}
 			ImageView iv = new ImageView(gardenImage);
 			iv.setPreserveRatio(true);
 			iv.setFitHeight(100);
@@ -141,7 +110,7 @@ public class Gallery extends View{
 	                bp.setBottom(vb);
 	                vb.setAlignment(Pos.CENTER);
 	                bp.setAlignment(vb, Pos.CENTER);
-	                Label information= new Label("Cost: "+cost+" Leps Supported "+lep);
+	                Label information= new Label("Cost: "+cost+" Leps Supported "+leps);
 	                information.setFont(new Font("Arial", 24));
 	                information.setAlignment(Pos.CENTER);
 	                bp.setTop(information);
@@ -157,26 +126,7 @@ public class Gallery extends View{
 	            
 			});
 			tile.getChildren().add(iv);
-			
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			System.out.println("No the error is here");
-//			e.printStackTrace();
-//		}
-	}
-	
-	
-	
-//	public void clearTilePane() {
-//		tile.getChildren().forEach(children->{
-//			tile.getChildren().remove(children);
-//		});
-//	}
-	
-	public VBox makeSummary(double cost, int lep) {
-		VBox vb1 = new VBox();
-		
-		return vb1;
+
 	}
 
 	

@@ -134,10 +134,35 @@ public class Model implements java.io.Serializable{
 	public void placePlant(double x, double y, String key, String nodeId) {
 		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
-		gardenMap.plants.add(new PlacedPlant(x,y,specie));
+		//gardenMap.plants.add(new PlacedPlant(x,y,specie));
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
  		System.out.println("plants: "+gardenMap.placedPlants);
 //		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
+	}
+	
+	public double getCostforGallery(Garden garden) {
+		Iterator<PlacedPlant> iter = garden.plants.iterator();
+		double cost = 0;
+		while(iter.hasNext()) {
+			System.out.println(iter.next().getName());
+			System.out.println(plantDirectory.size());
+			System.out.println(plantDirectory.get("Rhus-glabra"));
+//			PlantSpecies plant = plantDirectory.get(iter.next().get);
+//			plantDirectory.get(iter.next().getName());
+//			cost+=plant.getCost();
+		}
+		return cost;
+	}
+	
+	public int getLepsforGallery(Garden garden) {
+		Iterator<PlacedPlant> iter = garden.plants.iterator();
+		int lep = 0;
+//		while(iter.hasNext()) {
+//			System.out.println(iter.next());
+//			PlantSpecies plant = plantDirectory.get(iter.next().getName());
+//			lep+=plant.getLepsSupported();
+//		}
+		return lep;
 	}
 	
 	/**
