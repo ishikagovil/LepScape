@@ -20,7 +20,10 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage; 
 
 /**
@@ -33,23 +36,43 @@ public class Lepedia extends View {
 	final int numLepImages = 117;
 	final int descFontSize = 20;
 	final int titleFontSize = 48;
+	final int ins = 10;
+	final int spc = 40;
+	final int centerThis = screenWidth/2 - 350;
+	final int boxWidth = 900;
 
 	public Lepedia(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		border = new BorderPane();
-		Image bgimg = new Image("lepedia-background.jpg");
-		BackgroundImage bgImg = new BackgroundImage(bgimg, 
-			    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-			    BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-		border.setBackground(new Background(bgImg));
+		border.setStyle("-fx-background-color: #AFD5AA");
 		
-		Label lepTitle = new Label("Lepedia");
-		lepTitle.setFont(new Font("Arial", titleFontSize));
-		border.setTop(lepTitle);
-		border.setAlignment(lepTitle, Pos.CENTER);
+		border.setTop(makeHeader());
+		//border.setAlignment(lepTitle, Pos.CENTER);
 		ImageView back = addNextButton("back", "Summary");
 		border.setBottom(back);
 		border.setAlignment(back, Pos.CENTER);
+	}
+	
+	public VBox makeHeader() {
+		VBox header = new VBox();
+		
+		Label lepTitle = new Label("Lepedia");
+		lepTitle.setFont(new Font("Andale Mono", titleFontSize));
+		lepTitle.setStyle("-fx-text-fill: #ffffff");
+		
+		Text description = new Text("Learn more about the butterflies dwelling in your garden!");
+		description.setFont(new Font("Andale Mono", descFontSize));
+		description.setStyle("-fx-text-fill: #ffffff");
+		
+		header.getChildren().add(lepTitle);
+		header.getChildren().add(description);
+		
+		header.setAlignment(Pos.CENTER);
+		
+		header.setPadding(new Insets(ins, ins, ins, ins));
+		header.setSpacing(spc);
+		
+		return header;
 	}
 	
 	/**
@@ -95,36 +118,18 @@ public class Lepedia extends View {
 
 	    });
 	    
-	   /* Iterator lepIter = info.entrySet().iterator();
-	    
-	    while(lepIter.hasNext()) {
-	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
-	    	Lep lepObj = (Lep)lepElement.getValue();
-	    	
-	    	
-	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
-	    	System.out.println(thrivesIn);
-	    	for (PlacedPlant plant: plants) {
-	    		String genus = plant.getSpecies().getGenusName();
-	    		System.out.println(genus);
-	    		for (String genusReqs: thrivesIn) {
-	    			System.out.println(genusReqs);
-	    			if (genus.equals(genusReqs)) {
-	    				if (!(lepsInGarden.contains(lepObj))) {
-	    					lepsInGarden.add(lepObj);
-	    				}
-	    			}
-	    		}
-	    	}
-	    }*/
-	    
 	    for (Lep lepInfo : lepsInGarden) {
 	    	outerTile.getChildren().add(getInfoTile(lepImages, lepInfo));
 			outerTile.setTileAlignment(Pos.CENTER);
 	    }
 	    
 		sp.setContent(outerTile);
+		
 	    border.setCenter(sp);
+	    
+	    sp.setFitToWidth(true);
+	    sp.setFitToHeight(true);
+	    
 	}
 	
 	/**
@@ -139,12 +144,21 @@ public class Lepedia extends View {
 		String speciesName = lep.getSpeciesName();
 		String commonName = lep.getCommonName();
 		ArrayList<String> thrivesIn = lep.getThrivesInGenus();
+		String feedsOff = thrivesIn.get(0);
+		thrivesIn.remove(0);
+		for (String gen : thrivesIn) {
+			feedsOff += ", " + gen;
+		}
 		ImageView lepImg = lepImages.get(genusName + "-" + speciesName);
-		Label description = new Label(genusName + " " + speciesName + ". Also known as the " + commonName + ". Feeds off " + thrivesIn.toString());
-		description.setFont(new Font("Arial", descFontSize));
+		Label description = new Label("Scientific Name: " + genusName + " " + speciesName + "\nCommon Name: " + commonName + "\nFeeds off genera: " + feedsOff);
+		description.setFont(new Font("Andale Mono", descFontSize));
+		description.setWrapText(true);
 		
 		HBox lepTile = new HBox();
+		lepTile.setMaxWidth(boxWidth);
 		lepTile.getChildren().addAll(lepImg, description);
+		lepTile.setPadding(new Insets(ins, ins, ins, centerThis));
+		lepTile.setSpacing(spc);
 		
 		return lepTile;
 	}

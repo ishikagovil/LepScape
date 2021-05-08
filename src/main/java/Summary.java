@@ -25,7 +25,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javafx.embed.swing.SwingFXUtils;
 
 
 public class Summary extends View {
@@ -65,7 +68,7 @@ public class Summary extends View {
 	       */
 		
        //main = addCanvas();
-		border.setCenter(main);  
+		border.setCenter(main);  		
     }
 	
 /**
