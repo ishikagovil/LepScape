@@ -525,7 +525,7 @@ public class GardenDesign extends View{
 		vb.setPrefWidth(screenHeight/4);
 		vb.setAlignment(Pos.CENTER);;
 		ImageView[] buttons = new ImageView[] {
-			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "LearnMore"),addNextButton("next","Summary")
+			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "ComparePlants"),addNextButton("next","Summary")
 		}; 
 
 		vb.getChildren().addAll(buttons); 
