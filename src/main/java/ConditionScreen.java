@@ -68,7 +68,7 @@ public class ConditionScreen extends View {
 			try{
 	    		controller.updateBudget(Double.parseDouble(budgetField.getText()));
 	    		GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
-				gd.addBudgetLepPane();
+				gd.updateBudgetandLep(0.0, 0, Double.parseDouble(budgetField.getText()));;
 				controller.switchViews("GardenDesign");
 				this.manageView.setPlot(gd.main.snapshot(null, null));
 	    	}

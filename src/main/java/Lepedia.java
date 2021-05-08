@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import java.util.Map;
@@ -72,14 +73,35 @@ public class Lepedia extends View {
 	    ArrayList<PlacedPlant> plants = controller.getGarden().getPlants();
 	    Map<String, Lep> info = controller.getLepInfo();
 	    Map<String, ImageView> lepImages = manageView.getLepImages();
-	    Iterator plantIter = plants.iterator();
+	    HashSet<String> plantToLep = new HashSet<>();
+	    
+	    plants.forEach(plant -> {
+	    	plantToLep.add(plant.getSpecies().getGenusName());
+	    });
 	    
 	    ArrayList<Lep> lepsInGarden = new ArrayList<>();
-	    Iterator lepIter = info.entrySet().iterator();
+	    
+	    info.forEach((lepKey, lepObj) -> {
+	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
+	    	System.out.println(thrivesIn);
+	    	for (String genusReqs: thrivesIn) {
+	    		System.out.println(genusReqs);
+	    		if (plantToLep.contains(genusReqs)) {
+	    			if (!(lepsInGarden.contains(lepObj))) {
+	    				lepsInGarden.add(lepObj);
+	    			}
+	    		}
+	    	}
+
+	    });
+	    
+	   /* Iterator lepIter = info.entrySet().iterator();
 	    
 	    while(lepIter.hasNext()) {
 	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
 	    	Lep lepObj = (Lep)lepElement.getValue();
+	    	
+	    	
 	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
 	    	System.out.println(thrivesIn);
 	    	for (PlacedPlant plant: plants) {
@@ -94,7 +116,7 @@ public class Lepedia extends View {
 	    			}
 	    		}
 	    	}
-	    }
+	    }*/
 	    
 	    for (Lep lepInfo : lepsInGarden) {
 	    	outerTile.getChildren().add(getInfoTile(lepImages, lepInfo));

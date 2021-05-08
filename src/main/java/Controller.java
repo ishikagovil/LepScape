@@ -5,13 +5,18 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
 import javafx.application.Application;
@@ -35,6 +41,12 @@ public class Controller extends Application {
 	String lepFile = "src/main/resources/finalLepList.csv";
 	Model model;
 	Stage stage;
+	boolean inMain = false;
+	final int XDISPLACE = 200;
+	final int YDISPLACE = 50;
+	final double THRESHOLD = 0.00001;
+	final int XSNAPDISPLACE = 12;
+	final int YSNAPDISPLACE = 12;
 	
 	/** 
 	 * Override for the Application start method. Instantiates all fields
@@ -50,7 +62,7 @@ public class Controller extends Application {
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
 	    view = new ManageViews(stage,this, plantFile, lepFile);
 	    this.stage = stage;
-		this.stage.setFullScreen(true);
+//		this.stage.setFullScreen(true);
 	    readBack();
 
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
@@ -254,6 +266,7 @@ public class Controller extends Application {
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * when a user wants to edit a previously saved garden
 	 * @param event the edit button action
 	 * @param index index of saved garden
@@ -281,6 +294,8 @@ public class Controller extends Application {
 	}
 	
 	/**
+=======
+>>>>>>> 7c49d6cd292674537686b6aa9280222afd32de97
 	 * Show the information of a savedGarden when user clicks on it
 	 * @param event the button click event
 	 * @param index index of the saved garden
@@ -291,7 +306,7 @@ public class Controller extends Application {
 		this.view.switchViews("Summary");
 		setTheStage();
 		Garden garden = model.savedGardens.get(index);
-		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getNumLeps());
+		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getLepCount());
 		
 		dialog.close();
 		model.setToEdit();
@@ -354,6 +369,7 @@ public class Controller extends Application {
 			model.setY(model.getY() + event.getY());
 			view.setX(model.getX(),n);
 			view.setY(model.getY(),n);
+			
 //		}
 		
 		event.setDragDetect(false);
@@ -367,75 +383,84 @@ public class Controller extends Application {
 	 * @author Arunima Dey
 	 */
 	public void release(MouseEvent event, String name, boolean startingInTile) {
-		System.out.println("released");
+		System.out.println("released PART TWO");
 		Node n = (Node)event.getSource();
 		n.setMouseTransparent(false);
 		if(startingInTile) {
+			System.out.println("resetting parent image");
 			view.setX(0,n);
 			view.setY(0,n);
-//			view.setX(n.getLayoutX(),n);
-//			view.setY(n.getLayoutY(),n);
-//			PlantSpecies plant = model.plantDirectory.get(name);
-//			double heightWidth = scalePlantSpread(name);
-////			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
-//// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
-//			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
-//			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-////			model.placePlant(model.getX(), model.getY(), name);
-////			view.addImageView(event.getSceneX(),event.getSceneY(), name);
-// 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-////			model.placePlant(model.getX(), model.getY(), name);
-//			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+			if(inMain) {
+				System.out.println("in main ready to place");
+				double heightWidth = scalePlantSpread(name);
+				String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
+				model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
+				((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
+			}
 		}
 		else {
- 			System.out.println("updating");
+ 			System.out.println("updating PART TWO");
  			String id = ((Node) event.getSource()).getId();
  			model.updateXY(id);
+ 			ImageView plant = ((ImageView) event.getSource());
+ 			double plantX = plant.getBoundsInParent().getCenterX();
+ 			double plantY = plant.getBoundsInParent().getCenterY();
+ 			double plantRadius = plant.getBoundsInParent().getHeight();
+ 			
+ 			double plantXFixed = plantX - plantRadius/2 + XDISPLACE;
+ 			double plantYFixed = plantY - plantRadius/2 + YDISPLACE;
+ 			
+ 			System.out.println("x: " + plantX + ", y: " + plantY + ", radius: " + plantRadius);
+ 			
+ 			double[] collidingInfo = ((GardenDesign)(view.views.get("GardenDesign"))).validatePlantPlacement(plantXFixed, plantYFixed, plantRadius);
+			int collideNumber = (int)collidingInfo[1];
+ 			System.out.println(collidingInfo[0]);
+ 			System.out.println(collideNumber);
+ 			
+ 			if (collideNumber == 0) {
+ 	 			// updates the location haha gang gang
+ 				model.updateXY(id);
+ 	 			System.out.println("updated and moved PART TWO!");
+ 			} else {
+ 				// make it SNAP BACK
+ 				
+ 				double coordSnap = plantCollideSnap(collidingInfo[4]);
+ 				
+ 				double parentX = collidingInfo[2];
+ 				double parentY = collidingInfo[3];
+ 				//double totalDist = collidingInfo[4];
+ 				
+ 				switch(collideNumber) {
+ 					case 1:
+ 						plantX = parentX - coordSnap;
+ 						plantY = parentY - coordSnap;
+ 						break;
+ 					case 2:
+ 						plantX = parentX + coordSnap;
+ 						plantY = parentY - coordSnap;
+ 						break;
+ 					case 3:
+ 						plantX = parentX + coordSnap;
+ 						plantY = parentY + coordSnap;
+ 						break;
+ 					case 4:
+ 						plantX = parentX - coordSnap;
+ 						plantY = parentY + coordSnap;
+ 						break;
+ 				}
+ 				
+ 				view.setX(plantX - XSNAPDISPLACE,n);
+ 				view.setY(plantY - YSNAPDISPLACE,n);
+ 				System.out.println("cannot move, collided PART TWO!");
+			}
  		}
-//		
-//		if(startingInTile) {
-//			
-//		}
+		inMain = false;		
 	}
 	
-	public EventHandler<MouseDragEvent> getHandlerforReleased2(String key, boolean startingInTile) {
-		return (e) -> { release2(e,key,startingInTile);  };
+	public double plantCollideSnap(double distance) {
+		double coord = Math.sqrt(Math.pow(distance, 2) / 2);
+		return coord;
 	}
-	
-	
-	public void release2(MouseDragEvent event, String name, boolean startingInTile) {
-		System.out.println("released");
-		Node n = (Node)event.getGestureSource();
-//		n.setMouseTransparent(false);
-		if(startingInTile) {
-//			view.setX(0,n);
-//			view.setY(0,n);
-//			view.setX(n.getLayoutX(),n);
-//			view.setY(n.getLayoutY(),n);
-//			PlantSpecies plant = model.plantDirectory.get(name);
-			name = ((GardenDesign) view.views.get("GardenDesign")).plants.get(n.getId());
-			double heightWidth = scalePlantSpread(name);
-//			double deltaX = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutX();
-// 			double deltaY = ((GardenDesign) view.views.get("GardenDesign")).main.getLayoutY();
-			//String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX()-deltaX,event.getSceneY()-deltaY, name,heightWidth);
-			String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-//			model.placePlant(model.getX(), model.getY(), name);
-//			view.addImageView(event.getSceneX(),event.getSceneY(), name);
- 			model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-//			model.placePlant(model.getX(), model.getY(), name);
-			view.updateBudgetandLep(model.getBudget(), model.getLepCount());
-		}
-//		else {
-// 			System.out.println("updating");
-// 			String id = ((Node) event.getSource()).getId();
-// 			model.updateXY(id);
-// 		}
-//		
-//		if(startingInTile) {
-//			
-//		}
-	}
-	
 	
 	/**
 	 * Called when a node is trying to be deleted
@@ -445,10 +470,11 @@ public class Controller extends Application {
 	 * @author Arunima Dey
 	 */
 	public void entered(MouseDragEvent event, String key) {
+		System.out.println("trying to drag into compost");
 		System.out.println(key);
 		((GardenDesign) view.views.get("GardenDesign")).removePlant((Node) event.getGestureSource());
  		model.removePlant(model.movedPlant,((Node)event.getGestureSource()).getId());
-		view.updateBudgetandLep(model.getBudget(), model.getLepCount());
+ 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 	}
 	
 	/**
@@ -456,10 +482,12 @@ public class Controller extends Application {
 	 * @param plantName the name of the plant that is added back
 	 * @author Arunima Dey
 	 */
-	public void removeFromDeleted(String plantName) {
+	public void removeFromDeleted(String plantName, String nodeId, double x, double y) {
 		model.deleted.remove(plantName);
 //		model.placePlant(0, 0, plantName);
-		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.getBudget(), model.getLepCount());
+		model.placePlant(x, y, plantName, nodeId);
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
+
 	}
 	
 	/**
@@ -474,6 +502,34 @@ public class Controller extends Application {
 		double numPixels = plant.getSpreadRadius() / (this.model.getLengthPerPixel() * this.model.getScale());
 		return numPixels;
 	}
+	
+	/**
+	 * when a user wants to edit a previously saved garden
+	 * @param event the edit button action
+	 * @param index index of saved garden
+	 * @param dialog the stage that contains edit button
+	 */
+	public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
+		this.view.switchViews("GardenDesign");
+		setTheStage();
+		model.gardenMap = model.savedGardens.get(index);
+		Garden garden = model.gardenMap;
+		garden.placedPlants = new HashMap<>();
+		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
+		System.out.println("putline: "+garden.outline + " "+ garden.outline.size());
+		((GardenDesign) view.views.get("GardenDesign")).remakePane();
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getLepCount(),garden.getBudget());
+		model.scale = garden.scale;
+		model.lengthPerPixel = garden.lengthPerPixel;
+		garden.plants.forEach(plant->{
+			double heightWidth = scalePlantSpread(plant.getName());
+			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			model.gardenMap.placedPlants.put(node, plant);
+		});
+		dialog.close();
+		model.setToEdit();
+		model.setEditGardenIndex(index);
+	}
 
 	/**
 	 * Everytime the application is started a read back all the saved gardens from previos sessions
@@ -486,13 +542,12 @@ public class Controller extends Application {
 			ObjectInputStream ois = new ObjectInputStream(fis);
 //			ObjectInputStream ois = new ObjectInputStream(getClass().getResourceAsStream("/garden1.ser"));
 			model.savedGardens = (ArrayList<Garden>) ois.readObject();
-			model.savedGardens.clear();
 			Gallery gal = (Gallery) view.views.get("Gallery");
 //			gal.clearTilePane();
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				view.makeImage(model.savedGardens.get(i).getWidth(), model.savedGardens.get(i).getHeight(), model.savedGardens.get(i).data);
 				//view.makeImageforplot(model.savedGardens.get(i).plotWidth, model.savedGardens.get(i).plotHeight, model.savedGardens.get(i).plotData);
-				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).cost,(model.savedGardens.get(i)).numLeps);
+				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).getCost(),(model.savedGardens.get(i)).getLepCount());
 			}
 			ois.close();
 		} catch (Exception e) {
@@ -500,6 +555,36 @@ public class Controller extends Application {
 			System.out.println("Nothing to readIn");
 			e.printStackTrace();
 		}
+	}
+	
+	// https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message
+	public static Popup createPopup(final String message) {
+	    final Popup popup = new Popup();
+	    popup.setAutoFix(true);
+	    popup.setAutoHide(true);
+	    popup.setHideOnEscape(true);
+	    Label label = new Label(message);
+	    label.setOnMouseReleased(new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent e) {
+	            popup.hide();
+	        }
+	    });
+	    label.setStyle(" -fx-background-color: #8C6057; -fx-padding: 10; -fx-border-color: #5C5346; -fx-border-width: 5; -fx-font-size: 16; -fx-text-fill: white");
+	    popup.getContent().add(label);
+	    return popup;
+	}
+
+	public static void showPopupMessage(final String message, final Stage stage) {
+	    final Popup popup = createPopup(message);
+	    popup.setOnShown(new EventHandler<WindowEvent>() {
+	        @Override
+	        public void handle(WindowEvent e) {
+	            popup.setX(stage.getX() + stage.getWidth()/2 - popup.getWidth()/2);
+	            popup.setY(stage.getY() + stage.getHeight()/2 - popup.getHeight()/2);
+	        }
+	    });        
+	    popup.show(stage);
 	}
 	
 	/**
@@ -514,6 +599,7 @@ public class Controller extends Application {
 		System.out.println("outline "+ model.gardenMap.outline+ " "+model.gardenMap.outline.size());
 		model.gardenMap.lengthPerPixel = model.lengthPerPixel;
 		model.gardenMap.scale = model.scale;
+		
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
 		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
 		model.gardenMap.setPlotImageInfo((int)view.plot.getWidth(), (int)view.plot.getHeight(), view.makeDataforPlot());
@@ -524,11 +610,11 @@ public class Controller extends Application {
 				System.out.println("editing");
 				model.savedGardens.remove(model.getEditGardenIndex());
 				model.savedGardens.add(model.getEditGardenIndex(),model.getGarden());
-				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),(model.savedGardens.get(model.getEditGardenIndex())).cost,(model.savedGardens.get(model.getEditGardenIndex())).numLeps);
+				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),(model.savedGardens.get(model.getEditGardenIndex())).getCost(),(model.savedGardens.get(model.getEditGardenIndex())).getLepCount());
 			}else {
 				System.out.println("add to the end of the arrayList");
 				model.savedGardens.add(model.getGarden());
-				gal.loadScreen(view.savedImg,model.savedGardens.size()-1,(model.savedGardens.get(model.savedGardens.size()-1)).cost,(model.savedGardens.get(model.savedGardens.size()-1)).numLeps);
+				gal.loadScreen(view.savedImg,model.savedGardens.size()-1,(model.savedGardens.get(model.savedGardens.size()-1)).getCost(),(model.savedGardens.get(model.savedGardens.size()-1)).getLepCount());
 			}
 			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -813,8 +899,18 @@ public class Controller extends Application {
 		this.drawToCanvas(canvas);
 	}
 	
+<<<<<<< HEAD
 	public void saveGardenToPDF() {
 		
+=======
+	public String tooltipInfo(String plantName) {
+		String info = "";
+		PlantSpecies s = model.plantDirectory.get(plantName);
+		info = plantName;
+		info += "\nCost: $"+s.getCost();
+		info += "\nLeps supported: "+s.getLepsSupported();
+		return info;
+>>>>>>> 7c49d6cd292674537686b6aa9280222afd32de97
 	}
 	
 

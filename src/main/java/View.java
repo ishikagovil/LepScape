@@ -1,5 +1,4 @@
 import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -261,7 +260,7 @@ public abstract class View{
 
 	private static void floodFill(Canvas canvas, Conditions conds, int startX, int startY, int width, int height) {
 		// Inspired by the flood fill example https://stackoverflow.com/questions/23983465/is-there-a-fill-function-for-arbitrary-shapes-in-javafx
-		Stack<Point2D> fillStack = new Stack<>();
+		Stack<Vector2> fillStack = new Stack<>();
 
 		WritableImage snapshot = canvas.snapshot(null, null);
 		PixelReader pr = snapshot.getPixelReader();
@@ -272,10 +271,10 @@ public abstract class View{
 
 		
 		Color fillColor = conds.toColor();
-		fillStack.push(new Point2D(startX, startY));
+		fillStack.push(new Vector2(startX, startY));
 		
 		while(!fillStack.empty()) {
-			Point2D curr = fillStack.pop();
+			Vector2 curr = fillStack.pop();
 			int x = (int) curr.getX();
 			int y = (int) curr.getY();
 
@@ -285,19 +284,19 @@ public abstract class View{
 			imgPW.setColor(x, y, Color.BLACK);
 
 			if(x > 0) {
-				fillStack.push(new Point2D(x-1, y));
+				fillStack.push(new Vector2(x-1, y));
 			}
 			
 			if(x < width - 1) {
-				fillStack.push(new Point2D(x+1, y));
+				fillStack.push(new Vector2(x+1, y));
 			}
 
 			if(y > 0) {
-				fillStack.push(new Point2D(x, y-1));
+				fillStack.push(new Vector2(x, y-1));
 			}
 
 			if(y < height - 1) {
-				fillStack.push(new Point2D(x, y+1));
+				fillStack.push(new Vector2(x, y+1));
 			}
 				
 		}

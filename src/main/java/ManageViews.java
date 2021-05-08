@@ -360,9 +360,9 @@ public class ManageViews {
 	 * @param cost the cost of plant
 	 * @param lepCount lep supported by plant
 	 */
-	public void updateBudgetandLep(double cost, int lepCount) {
-		((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);
-	}
+//	public void updateBudgetandLep(double cost, int lepCount) {
+//		((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);
+//	}
 	
 	public void updateLepandCost(double cost, int lepCount) {
 		((Summary) views.get("Summary")).updateLepandCost(cost, lepCount);

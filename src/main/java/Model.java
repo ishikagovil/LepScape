@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javafx.scene.Node;
+
 public class Model implements java.io.Serializable{
 	
 	public Garden gardenMap;
@@ -18,7 +20,6 @@ public class Model implements java.io.Serializable{
 	public HashSet<String> deleted;
 	public Boolean editGarden;
 	public int editGardenIndex;
-	public int budget;
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh
@@ -28,12 +29,15 @@ public class Model implements java.io.Serializable{
 		this.gardenMap = new Garden();
 		this.plantDirectory = new HashMap<>();
 		this.lepDirectory = new HashMap<>();
-		this.budget = 0;
 		this.lengthPerPixel = -1;
 		this.movedPlant = "";
 		this.deleted = new HashSet<>();
 		editGarden = false;
 
+	}
+	
+	public int getLepCount() {
+		return this.lepCount;
 	}
 	
 	/**
@@ -140,8 +144,6 @@ public class Model implements java.io.Serializable{
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
  		System.out.println("plants: "+gardenMap.placedPlants);
 //		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
-		gardenMap.setCost(gardenMap.getCost() - specie.getCost()); 
-		gardenMap.setNumLeps(gardenMap.getNumLeps() + specie.getLepsSupported());
 	}
 	
 	/**
@@ -156,8 +158,6 @@ public class Model implements java.io.Serializable{
 		System.out.println(deleted);
 		gardenMap.placedPlants.remove(nodeId);
  		System.out.println("plants: "+gardenMap.placedPlants);
-		gardenMap.setCost(gardenMap.getCost() + specie.getCost()); 
-		gardenMap.setNumLeps(gardenMap.getNumLeps() - specie.getLepsSupported());
 	}
 	
 	/**
@@ -188,15 +188,7 @@ public class Model implements java.io.Serializable{
 	 * @param budget
 	 */
 	public void setBudget(double budget) {
-		gardenMap.setCost(budget);
-	}
-	
-	/**
-	 * gets the leps supported
-	 * @return the lepCount
-	 */
-	public int getLepCount() {
-		return gardenMap.getNumLeps();
+		gardenMap.setBudget(budget);
 	}
 	
 	/**
