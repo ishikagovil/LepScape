@@ -2,10 +2,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -14,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.*;
@@ -25,8 +23,9 @@ public class PlotDesign extends View{
 	GridPane grid; //added to contain the TextField
 	ToolBar toolbar;
 	Polygon poly;
-	Image plotInstructions;
-	Image dimInstructions;
+	ImageView plotInstructions;
+	ImageView dimInstructions;
+	Line dimLine;
     boolean shapeClicked = false;
     boolean dragAnchor = false;
     ObservableList<Anchor> anchors;
@@ -43,16 +42,20 @@ public class PlotDesign extends View{
 	 */
 	public PlotDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
-		Canvas canvas = new Canvas(screenWidth, screenHeight);
+		Canvas canvas = new Canvas(this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
 		//Loading Images
-		dimInstructions = new Image(getClass().getResourceAsStream("/dimensions.jpg"));
-		plotInstructions = new Image(getClass().getResourceAsStream("/drawPlot.jpg"));
+		dimInstructions = new ImageView(new Image(getClass().getResourceAsStream("/dimensions.jpg")));
+		dimInstructions.setFitWidth(this.manageView.getScreenWidth());
+		dimInstructions.setFitHeight(this.manageView.getScreenHeight());
+		plotInstructions = new ImageView(new Image(getClass().getResourceAsStream("/drawPlot.jpg")));
+		plotInstructions.setFitWidth(this.manageView.getScreenWidth());
+		plotInstructions.setFitHeight(this.manageView.getScreenHeight());
 		//Set canvas for drawing: https://www.youtube.com/watch?v=gjZQB6BmyK4
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
         gc.setLineWidth(2);
-        gc.drawImage(plotInstructions, 0, 0);
+        gc.drawImage(plotInstructions.getImage(), 0, 0);
         
         //Creating buttons on the screen
         toolbarButtons();        
@@ -100,7 +103,7 @@ public class PlotDesign extends View{
             //Remove the lines on the current screen and polygon points
            	removeLines();
            	controller.restartPolygonBoundary();
-           	gc.clearRect(0,0, screenWidth, screenHeight);
+           	gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
            	border.setOnMouseReleased(null);
            	
            	//Enable toolbar buttons
@@ -113,11 +116,17 @@ public class PlotDesign extends View{
            	border.getChildren().add(poly);
            	border.getChildren().addAll(anchors);
            	shapeClicked = poly.getPoints().size() != 0;
-           	controller.drawFreehandPart(1);
+           	controller.drawFreehandPart();
+           	
+           	//Removing the dimension line
+           	if(dimLine != null) {
+            	border.getChildren().remove(dimLine);
+            	dimLine = null;
+            }
            	
            	//Change border design
            	border.getChildren().remove(grid);
-           	gc.drawImage(plotInstructions, 0, 0);
+           	gc.drawImage(plotInstructions.getImage(), 0, 0);
            	createHBox(drawSwitch);	       
            	
            	e.consume();
@@ -144,8 +153,7 @@ public class PlotDesign extends View{
         	poly = new Polygon();
         	anchors = FXCollections.observableArrayList();
         	removeLines();
-        	gc.drawImage(plotInstructions, 0, 0);
-        	
+        	gc.drawImage(plotInstructions.getImage(), 0, 0);
         	e.consume();
         });
         drawSwitch.add(clear);
@@ -153,10 +161,14 @@ public class PlotDesign extends View{
         //Adding Undo button
         ImageView undo = addNextButton("undo", "ClearDim");
         dimSwitch.add(undo);
-        dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (event)-> {
-            gc.clearRect(0,0, screenWidth, screenHeight);
+        dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
+            gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
+            if(dimLine != null) {
+            	border.getChildren().remove(dimLine);
+            	dimLine = null;
+            }
            	onSettingDimensions(); 
-        	event.consume();
+        	e.consume();
         });
   
 	}
@@ -181,7 +193,6 @@ public class PlotDesign extends View{
 	public void validateSave() {
 		drawSwitch.get(2).setOnMouseClicked((e) -> {        
 			e.consume();
-
            	toolbar.getItems().get(0).setDisable(true);
            	toolbar.getItems().get(1).setDisable(true);
             	
@@ -192,13 +203,13 @@ public class PlotDesign extends View{
            	//Clear everything on this screen
            	border.getChildren().remove(poly);
            	border.getChildren().removeAll(anchors);
-           	gc.clearRect(0,0, screenWidth, screenHeight);
+           	gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
           	shapeClicked = true;
            	
            	//Start the next screen for dimensions 
            	onSettingDimensions();      	
            	removeLines();
-          	controller.drawPlot(1);
+          	controller.drawPlot();
         });
 	}
 	/**
@@ -206,12 +217,19 @@ public class PlotDesign extends View{
 	 * Saves the inputed value and calls settingLength in controller to calculate length per pixel
 	 */
 	public void onSettingDimensions() {
-        gc.drawImage(dimInstructions, 0, 0);
+        gc.drawImage(dimInstructions.getImage(), 0, 0);
 		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
         border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
         border.setOnMouseReleased(event -> {
         	border.setOnMousePressed(null);
 		    border.setOnMouseDragged(null);
+		    border.setOnMouseReleased(null);
+		    gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
+		    dimLine = new Line(manageView.dimLen.get(0)[0], manageView.dimLen.get(0)[1], manageView.dimLen.get(manageView.dimLen.size()-1)[0], manageView.dimLen.get(manageView.dimLen.size()-1)[1]);
+		    dimLine.setStrokeWidth(3);
+		    dimLine.setStroke(Color.PALEVIOLETRED);
+			border.getChildren().add(dimLine);
+			gc.drawImage(dimInstructions.getImage(), 0, 0);
 		});	
 		createHBox(dimSwitch);
 	    
@@ -292,8 +310,8 @@ public class PlotDesign extends View{
 		//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
 
 		//Initializes the points clockwise starting from top left corner of box
-		double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
-	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
+		double[] x = new double[]{this.manageView.getScreenWidth()/2-100, this.manageView.getScreenWidth()/2+100, this.manageView.getScreenWidth()/2+100, this.manageView.getScreenWidth()/2-100};
+	    double[] y = new double[]{this.manageView.getScreenHeight()/2-100, this.manageView.getScreenHeight()/2-100, this.manageView.getScreenHeight()/2+100, this.manageView.getScreenHeight()/2+100};  
 		List<Double> values = new ArrayList<Double>();
         for(int i = 0; i < x.length; i++) {
         	values.add(x[i]);

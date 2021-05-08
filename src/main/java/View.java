@@ -3,7 +3,6 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,14 +20,6 @@ import java.util.*;
 public abstract class View{
 	private static final int lineWidth = 3;
 	private static final double fillThreshold = 0.95;
-	
-	public int screenWidth = 1290;
-	public int screenHeight = 800;
-	public double gardenWidth = 0.5*screenWidth;
-	public double gardenHeight = 0.5*screenHeight;
-	public double gardenTopLeftX = 0.3*screenWidth;
-	public double gardenTopLeftY = 0.2*screenHeight;
-
 	BorderPane border;
 	Stage stage;
 	Controller controller;
@@ -55,6 +46,7 @@ public abstract class View{
 		this.stage.setTitle("Lepscape");
 		
 	}	
+	
 	/**
 	 * Sets the translateX value of a node n
 	 * @param double x
@@ -70,21 +62,7 @@ public abstract class View{
 	public BorderPane getBorderPane() {
 		return border;
 	}
-	/**
-	 * Returns the screenWidth
-	 * @return int 
-	 */
-	public int getScreenWidth() {
-		return screenWidth;
-	}
-	/**
-	 * Returns the screenHeight
-	 * @return int 
-	 */
-	public int getScreenHeight() {
-		return screenHeight;
-	}
-	
+
 	/**
 	 * Sets the translateX value of a node n
 	 * @param double x

@@ -1,13 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-
 import java.util.Map;
-
-import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -62,7 +57,7 @@ public class Lepedia extends View {
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
         sp.setFitToHeight(true);
         sp.setFitToWidth(true);
-        sp.setMaxHeight(screenHeight);						// needed to initialize a dimension for scrollpane; leave in
+        sp.setMaxHeight(this.manageView.getScreenHeight());						// needed to initialize a dimension for scrollpane; leave in
 		
 	    TilePane outerTile = new TilePane(Orientation.HORIZONTAL);
 	    //outerTile.setTileAlignment(Pos.CENTER);
