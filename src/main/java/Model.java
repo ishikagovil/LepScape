@@ -290,20 +290,10 @@ public class Model implements java.io.Serializable{
 		return translate;
 	}
 	
-	public ArrayList<String> getFilteredList(Conditions cond) {
+	public ArrayList<String> getFilteredList(PlantFilter filter) {
 		ArrayList<String> names = new ArrayList<>();
 		plantDirectory.forEach((name, plant) -> {
-			boolean matchMoist = plant.getMoistureType() == MoistureType.ANY 
-					|| cond.getMoistureType() == MoistureType.ANY 
-					|| cond.getMoistureType() == plant.getMoistureType();
-			boolean matchDirt = plant.getSoilType() == SoilType.ANY 
-					|| cond.getSoilType() == SoilType.ANY 
-					|| cond.getSoilType() == plant.getSoilType();
-			boolean matchSun = plant.getLightType() == LightType.ANY 
-					|| cond.getSunlightType() == LightType.ANY 
-					|| cond.getSunlightType() == plant.getLightType();
-			
-			if(matchMoist && matchDirt && matchSun) {
+			if(filter.include(plant)) {
 				names.add(name);
 			}
 		});

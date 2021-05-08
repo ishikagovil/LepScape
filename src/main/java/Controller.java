@@ -260,7 +260,7 @@ public class Controller extends Application {
 		PixelReader pr = img.getPixelReader();
 		Conditions cond = Conditions.fromColor(pr.getColor(newX, newY));
 		
-		ArrayList<String> filteredNames = model.getFilteredList(cond);		
+		ArrayList<String> filteredNames = model.getFilteredList(new ConditionFilter(cond));		
 		GardenDesign gd = (GardenDesign) this.view.getView("GardenDesign");
 		gd.updateImageList(filteredNames);
 	}
