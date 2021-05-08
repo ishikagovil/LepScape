@@ -32,7 +32,7 @@ public class Start extends View {
 	}
 
 	public void addBackgroundImage() {
-		Image bgImage = new Image(getClass().getResourceAsStream("/lep-background.jpg"));
+		Image bgImage = new Image(getClass().getResourceAsStream("/lep-background.jpg"),  this.manageView.getScreenWidth(), this.manageView.getScreenHeight(), false, false);
         gc = canvas.getGraphicsContext2D();	
         gc.getCanvas().setWidth(this.manageView.getScreenWidth());
         gc.getCanvas().setHeight(this.manageView.getScreenHeight());
