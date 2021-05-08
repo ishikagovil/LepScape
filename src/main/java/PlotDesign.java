@@ -21,7 +21,7 @@ import java.util.*;
 public class PlotDesign extends View{
 	ArrayList<ImageView> drawSwitch; 
 	ArrayList<ImageView> dimSwitch;
-	HBox box;
+	ToolBar box;
 	GridPane grid; //added to contain the TextField
 	ToolBar toolbar;
 	Polygon poly;
@@ -119,6 +119,8 @@ public class PlotDesign extends View{
            	border.getChildren().remove(grid);
            	gc.drawImage(plotInstructions, 0, 0);
            	createHBox(drawSwitch);	       
+           	
+           	e.consume();
         });
 	}
 	/**
@@ -143,6 +145,8 @@ public class PlotDesign extends View{
         	anchors = FXCollections.observableArrayList();
         	removeLines();
         	gc.drawImage(plotInstructions, 0, 0);
+        	
+        	e.consume();
         });
         drawSwitch.add(clear);
         
@@ -152,6 +156,7 @@ public class PlotDesign extends View{
         dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (event)-> {
             gc.clearRect(0,0, screenWidth, screenHeight);
            	onSettingDimensions(); 
+        	event.consume();
         });
   
 	}
@@ -175,6 +180,8 @@ public class PlotDesign extends View{
 	 */
 	public void validateSave() {
 		drawSwitch.get(2).setOnMouseClicked((e) -> {        
+			e.consume();
+
            	toolbar.getItems().get(0).setDisable(true);
            	toolbar.getItems().get(1).setDisable(true);
             	
@@ -192,7 +199,6 @@ public class PlotDesign extends View{
            	onSettingDimensions();      	
            	removeLines();
           	controller.drawPlot(1);
-            
         });
 	}
 	/**
@@ -222,6 +228,8 @@ public class PlotDesign extends View{
 	   			dimension.clear();
 	   		}         
 	    	controller.switchViews("ConditionScreen");          
+	    	
+	    	event.consume();
 	    });	
 	    grid = new GridPane();
 	    grid.getChildren().add(dimension);
@@ -236,13 +244,22 @@ public class PlotDesign extends View{
 	public void createHBox(ArrayList<ImageView> list) {
 		if(border.getChildren().contains(box))
 			border.getChildren().remove(box);
-		box = new HBox();
-		box.setSpacing(10);
+		box = new ToolBar();
+//		box.setSpacing(10);
 		box.setPadding(new Insets(20));
-		box.setAlignment(Pos.TOP_CENTER);
+//		box.setAlignment(Pos.TOP_CENTER);
 		box.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
-		box.getChildren().addAll(list);
+		box.getItems().add(createSpacer());
+		box.getItems().addAll(list);
+		box.getItems().add(createSpacer());
 		border.setBottom(box);
+	}
+	
+	private Node createSpacer() {
+		Pane spacer = new Pane();
+		HBox.setHgrow(spacer, Priority.SOMETIMES);
+		
+		return spacer;
 	}
 	
 	/**
@@ -263,6 +280,8 @@ public class PlotDesign extends View{
             border.setOnMousePressed(null);
             border.setOnMouseDragged(null);
             border.setOnMouseReleased(null);
+            
+            e.consume();
         });
 	}
 	
