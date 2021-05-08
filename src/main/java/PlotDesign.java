@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.*;
@@ -24,6 +25,7 @@ public class PlotDesign extends View{
 	Polygon poly;
 	ImageView plotInstructions;
 	ImageView dimInstructions;
+	Line dimLine;
     boolean shapeClicked = false;
     boolean dragAnchor = false;
     ObservableList<Anchor> anchors;
@@ -116,6 +118,12 @@ public class PlotDesign extends View{
            	shapeClicked = poly.getPoints().size() != 0;
            	controller.drawFreehandPart();
            	
+           	//Removing the dimension line
+           	if(dimLine != null) {
+            	border.getChildren().remove(dimLine);
+            	dimLine = null;
+            }
+           	
            	//Change border design
            	border.getChildren().remove(grid);
            	gc.drawImage(plotInstructions.getImage(), 0, 0);
@@ -146,7 +154,6 @@ public class PlotDesign extends View{
         	anchors = FXCollections.observableArrayList();
         	removeLines();
         	gc.drawImage(plotInstructions.getImage(), 0, 0);
-        	
         	e.consume();
         });
         drawSwitch.add(clear);
@@ -154,10 +161,14 @@ public class PlotDesign extends View{
         //Adding Undo button
         ImageView undo = addNextButton("undo", "ClearDim");
         dimSwitch.add(undo);
-        dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (event)-> {
+        dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
             gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
+            if(dimLine != null) {
+            	border.getChildren().remove(dimLine);
+            	dimLine = null;
+            }
            	onSettingDimensions(); 
-        	event.consume();
+        	e.consume();
         });
   
 	}
@@ -182,7 +193,6 @@ public class PlotDesign extends View{
 	public void validateSave() {
 		drawSwitch.get(2).setOnMouseClicked((e) -> {        
 			e.consume();
-
            	toolbar.getItems().get(0).setDisable(true);
            	toolbar.getItems().get(1).setDisable(true);
             	
@@ -213,6 +223,13 @@ public class PlotDesign extends View{
         border.setOnMouseReleased(event -> {
         	border.setOnMousePressed(null);
 		    border.setOnMouseDragged(null);
+		    border.setOnMouseReleased(null);
+		    gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
+		    dimLine = new Line(manageView.dimLen.get(0)[0], manageView.dimLen.get(0)[1], manageView.dimLen.get(manageView.dimLen.size()-1)[0], manageView.dimLen.get(manageView.dimLen.size()-1)[1]);
+		    dimLine.setStrokeWidth(3);
+		    dimLine.setStroke(Color.PALEVIOLETRED);
+			border.getChildren().add(dimLine);
+			gc.drawImage(dimInstructions.getImage(), 0, 0);
 		});	
 		createHBox(dimSwitch);
 	    
