@@ -224,7 +224,7 @@ public class PlotDesign extends View{
 		    gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
 		    dimLine = new Line(manageView.dimLen.get(0)[0], manageView.dimLen.get(0)[1], manageView.dimLen.get(manageView.dimLen.size()-1)[0], manageView.dimLen.get(manageView.dimLen.size()-1)[1]);
 		    dimLine.setStrokeWidth(3);
-		    dimLine.setStroke(Color.PALEVIOLETRED);
+		    dimLine.setStroke(Color.DARKGREEN);
 			border.getChildren().add(dimLine);
 			gc.drawImage(dimInstructions, 0, 0);
 		});	
