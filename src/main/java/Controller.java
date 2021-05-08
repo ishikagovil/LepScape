@@ -266,13 +266,12 @@ public class Controller extends Application {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * when a user wants to edit a previously saved garden
 	 * @param event the edit button action
 	 * @param index index of saved garden
 	 * @param dialog the stage that contains edit button
 	 */
-	public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
+/*public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
 		this.view.switchViews("GardenDesign");
 		setTheStage();
 		model.gardenMap = model.savedGardens.get(index);
@@ -292,10 +291,9 @@ public class Controller extends Application {
 		model.setToEdit();
 		model.setEditGardenIndex(index);
 	}
-	
+*/
 	/**
-=======
->>>>>>> 7c49d6cd292674537686b6aa9280222afd32de97
+
 	 * Show the information of a savedGarden when user clicks on it
 	 * @param event the button click event
 	 * @param index index of the saved garden
@@ -898,11 +896,7 @@ public class Controller extends Application {
 		this.model.getGarden().addSection(conditions);
 		this.drawToCanvas(canvas);
 	}
-	
-<<<<<<< HEAD
-	public void saveGardenToPDF() {
-		
-=======
+
 	public String tooltipInfo(String plantName) {
 		String info = "";
 		PlantSpecies s = model.plantDirectory.get(plantName);
@@ -910,7 +904,6 @@ public class Controller extends Application {
 		info += "\nCost: $"+s.getCost();
 		info += "\nLeps supported: "+s.getLepsSupported();
 		return info;
->>>>>>> 7c49d6cd292674537686b6aa9280222afd32de97
 	}
 	
 
