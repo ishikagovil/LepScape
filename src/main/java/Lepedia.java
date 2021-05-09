@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
+
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -33,13 +35,15 @@ public class Lepedia extends View {
 	final int titleFontSize = 48;
 	final int ins = 10;
 	final int spc = 40;
-	final int centerThis = screenWidth/2 - 350;
+	int centerThis;
 	final int boxWidth = 900;
 
 	public Lepedia(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		border = new BorderPane();
 		border.setStyle("-fx-background-color: #AFD5AA");
+		
+		centerThis = (int) (manageView.screenWidth / 2 - 350);
 		
 		border.setTop(makeHeader());
 		//border.setAlignment(lepTitle, Pos.CENTER);
