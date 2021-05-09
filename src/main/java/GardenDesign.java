@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -106,28 +107,32 @@ public class GardenDesign extends View{
 		budgetExceeded.initModality(Modality.APPLICATION_MODAL);
 		budgetExceeded.initOwner(stage);
 		budgetExceeded.setTitle("YOU HAVE EXCEEDED YOUR BUDGET!");
-		Label text = new Label("To continue adding more to your garden increase your budget");
+		Label text = new Label("To continue adding to your garden increase your budget");
+		text.setFont(new Font("Andale Mono", 20));
+		text.setStyle("-fx-font-size: 16; -fx-text-fill: white");
+		Label instruction = new Label("Press enter to set new budget or the X if you are done");
 		TextField budgetField = new TextField("Enter new budget");
 		budgetField.setMaxWidth(100);
 		BorderPane border = new BorderPane();
 		border.setTop(text);
-		border.setAlignment(text,Pos.CENTER);
+		BorderPane.setAlignment(text,Pos.CENTER);
 		border.setCenter(budgetField);
 //		HBox buttons = new HBox();
-		Button setNewBudget = new Button("Set New Budget");
-		border.setBottom(setNewBudget);
-		border.setAlignment(setNewBudget, Pos.BOTTOM_CENTER);
-		setNewBudget.setOnAction(event->{
-			try {
-				controller.updateBudget(Double.parseDouble(budgetField.getText()));
-				budgetExceeded.close();
-				controller.updateBudgetandLep();
-			}catch (NumberFormatException e) {
-				budgetField.clear();
+		border.setBottom(instruction);
+		BorderPane.setAlignment(instruction,Pos.CENTER);
+		budgetField.setOnKeyReleased(event->{
+			if(event.getCode()==KeyCode.ENTER) {
+				try {
+					controller.updateBudget(Double.parseDouble(budgetField.getText()));
+					budgetExceeded.close();
+					controller.updateBudgetandLep();
+				}catch (NumberFormatException e) {
+					budgetField.clear();
+				}
 			}
-			
 		});
-		Scene popUpScene = new Scene(border,400,100);
+		border.setStyle(" -fx-background-color: #8C6057; -fx-padding: 10; -fx-border-color: #5C5346; -fx-border-width: 5;");
+		Scene popUpScene = new Scene(border,450,100);
 		budgetExceeded.setScene(popUpScene);
 		budgetExceeded.show();
 	}
