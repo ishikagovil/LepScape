@@ -261,6 +261,11 @@ public class Garden implements java.io.Serializable {
 		return extrema;
 	}
 	
+	public void addToGarden(PlacedPlant plant) {
+ 		System.out.println("adding to garden");
+ 		plants.add(plant);
+ 	}
+	
 
 
 }

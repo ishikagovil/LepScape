@@ -131,6 +131,7 @@ public class Model implements java.io.Serializable{
 		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
+		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
  		System.out.println("plants: "+gardenMap.placedPlants);
 	}
 	
