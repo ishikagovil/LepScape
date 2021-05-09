@@ -63,8 +63,7 @@ public class Summary extends View {
 	       sp1.getChildren().add(iv1);
 	       translation.play();
 	       */
-		
-       //main = addCanvas();
+
 		border.setCenter(main);  
     }
 	
@@ -160,17 +159,6 @@ public class Summary extends View {
 	
 		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
 		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
-		
-//		canvas = new Canvas();
-//		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
-//		gc = canvas.getGraphicsContext2D();
-//		gardenDesign.getChildren().add(canvas);
-//	
-//		canvas.widthProperty().bind(gardenDesign.widthProperty());
-//		canvas.heightProperty().bind(gardenDesign.heightProperty());
-//	
-//		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
-//		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
 		
 		ImageView iv = new ImageView(manageView.savedImg);
 		iv.setPreserveRatio(true);

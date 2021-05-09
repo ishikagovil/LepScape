@@ -67,8 +67,7 @@ public class ConditionScreen extends View {
 		next.setOnMouseClicked((event) -> {
 			try{
 	    		controller.updateBudget(Double.parseDouble(budgetField.getText()));
-	    		GardenDesign gd = (GardenDesign) manageView.getView("GardenDesign");
-				gd.updateBudgetandLep(0.0, 0, Double.parseDouble(budgetField.getText()));;
+				controller.updateBudgetandLep();
 				controller.switchViews("GardenDesign");
 	    	}
 	    	catch(NumberFormatException e){

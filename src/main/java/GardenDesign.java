@@ -77,7 +77,7 @@ public class GardenDesign extends View{
 		
 		ScrollPane scroll = new ScrollPane();
 		tile.setMaxWidth(screenHeight);
-		tile.setMaxHeight(200);
+		tile.setMaxHeight(2*STANDARD_IMAGEVIEW);
 		tile = addTilePane();
 		
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
@@ -85,7 +85,7 @@ public class GardenDesign extends View{
 //        scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
         //scroll.setMaxWidth(screenWidth);
-        scroll.setMaxHeight(300);						// needed to initialize a dimension for scrollpane; leave in
+        scroll.setMaxHeight(2*STANDARD_IMAGEVIEW);						// needed to initialize a dimension for scrollpane; leave in
 		scroll.setContent(tile);
 		border.setBottom(scroll);
 		//border.setBottom(tile);
@@ -117,7 +117,6 @@ public class GardenDesign extends View{
 		border.setTop(text);
 		BorderPane.setAlignment(text,Pos.CENTER);
 		border.setCenter(budgetField);
-//		HBox buttons = new HBox();
 		border.setBottom(instruction);
 		BorderPane.setAlignment(instruction,Pos.CENTER);
 		budgetField.setOnKeyReleased(event->{
@@ -161,6 +160,7 @@ public class GardenDesign extends View{
 	 * @return the created pane
 	 */
 	public Pane addCanvas() {
+		System.out.println("in addCanvas");
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		canvas = new Canvas();
@@ -265,7 +265,6 @@ public class GardenDesign extends View{
 	 * @return the plant name
 	 */
 	private String getDisplayText(Label l) {
-//		return "";
 		if(l.getText()!=null) {
 			return l.getText();
 		}
@@ -436,18 +435,28 @@ public class GardenDesign extends View{
 		vb.setPrefWidth(screenHeight/4);
 		vb.setAlignment(Pos.CENTER);;
 		ImageView[] buttons = new ImageView[] {
-			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "LearnMore"),addNextButton("next","Summary")
+			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "LearnMore")
 		}; 
 
 		vb.getChildren().addAll(buttons); 
-		ImageView save = new ImageView(this.manageView.buttonImages.get("save"));
-		setOnMouse(save, "save");
-		save.setOnMouseClicked(e->{
+		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
+		setOnMouse(next, "next");
+		next.setOnMouseClicked(e->{
 			saveGardenImage();
-			setOnMouse(save, "save");
-			save.setOnMouseClicked(controller.getHandlerforClicked("Summary"));
+			controller.switchViews("Summary");
+			
 		});
-		vb.getChildren().add(save);
+		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
+		setOnMouse(clear, "clear");
+		clear.setOnMouseClicked(e->{
+			//setOnMouse(clear, "clear");
+			main.getChildren().clear();
+			controller.getHandlerForGardenClear();
+			main = addCanvas();
+			border.setCenter(main);
+		});
+		vb.getChildren().add(next);
+		vb.getChildren().add(clear);
 		return vb;
 		
 	}

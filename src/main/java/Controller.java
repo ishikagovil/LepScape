@@ -243,6 +243,17 @@ public class Controller extends Application {
 	public EventHandler<MouseEvent> getHandlerForSectionClick(Canvas canvas) {
 		return (e) -> {sectionClicked(e, canvas);};
 	}
+	
+	public EventHandler<MouseEvent> getHandlerForGardenClear(){
+		return (e) -> {clearGarden(e);};
+	}
+	
+	public void clearGarden(MouseEvent e) {
+		Garden garden = model.gardenMap;
+		garden.placedPlants.clear();
+		this.updateBudgetandLep();
+		
+	}
 
 	private void sectionClicked(MouseEvent e, Canvas canvas) {
 		int newX = (int) e.getX();
@@ -264,16 +275,16 @@ public class Controller extends Application {
 	 * @param dialog the popup stage
 	 * @author Arunima Dey
 	 */
-	public void showSummaryInfo(ActionEvent event, int index, Stage dialog) {
-		this.view.switchViews("Summary");
-		setTheStage();
-		Garden garden = model.savedGardens.get(index);
-		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getLepCount());
-		
-		dialog.close();
-		model.setToEdit();
-		model.setEditGardenIndex(index);
-	}
+//	public void showSummaryInfo(ActionEvent event, int index, Stage dialog) {
+//		this.view.switchViews("Summary");
+//		setTheStage();
+//		Garden garden = model.savedGardens.get(index);
+//		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getLepCount());
+//		
+//		dialog.close();
+//		model.setToEdit();
+//		model.setEditGardenIndex(index);
+//	}
 	
 	/**
 	 * Updates the budget based on the double passed from a TextField
