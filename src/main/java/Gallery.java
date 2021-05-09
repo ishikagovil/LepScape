@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
@@ -21,6 +22,9 @@ import java.util.*;
 
 //https://stackoverflow.com/questions/44841329/how-to-implement-serializable-for-my-project-to-have-persistence
 public class Gallery extends View{
+	final int GARDEN_IMAGEVIEW_HEIGHT=100;
+	final int HBOX_SPACING = 20;
+	final int INFO_IV_SIZE = 50;
 	Controller c;
 	public ArrayList<Button> multiview;
 	public Button back;
@@ -95,31 +99,53 @@ public class Gallery extends View{
 		System.out.println("in here");
 			ImageView iv = new ImageView(gardenImage);
 			iv.setPreserveRatio(true);
-			iv.setFitHeight(100);
+			iv.setFitHeight(GARDEN_IMAGEVIEW_HEIGHT);
 			iv.setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
 					final Stage dialog = new Stage();
 	                dialog.initModality(Modality.APPLICATION_MODAL);
 	                dialog.initOwner(stage);
+	                
+	                Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+	        		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+	        		
+	        		ImageView lepIv= new ImageView(lep);
+	        		ImageView budgetIv = new ImageView(dollar);
+	        		lepIv.setPreserveRatio(true);
+	        		lepIv.setFitHeight(INFO_IV_SIZE);
+	        		budgetIv.setPreserveRatio(true);
+	        		budgetIv.setFitHeight(INFO_IV_SIZE);
+	        		
+	        		Label lepLabel = new Label(""+leps);
+	        		lepLabel.setFont(new Font("Arial", 16));
+	        		Label costLabel = new Label(""+cost);
+	        		costLabel.setFont(new Font("Arial", 16));
+	        		lepLabel.setGraphic(lepIv);
+	        		costLabel.setGraphic(budgetIv);
+	        		
+	        		HBox information = new HBox(HBOX_SPACING);
+	        		information.setAlignment(Pos.CENTER);
+	        		information.getChildren().add(lepLabel);
+	        		information.getChildren().add(costLabel);
+	        		
 	                BorderPane bp = new BorderPane();
-	                VBox vb = new VBox(20);
+	                
+	                HBox hb = new HBox(HBOX_SPACING);
 	                Button edit = new Button("Edit");
 	                edit.setOnAction(c.getHandlerforEditSaved(index,dialog));
-	                vb.getChildren().add(edit);
-	                bp.setBottom(vb);
-	                vb.setAlignment(Pos.CENTER);
-	                bp.setAlignment(vb, Pos.CENTER);
-	                Label information= new Label("Cost: "+cost+" Leps Supported "+leps);
-	                information.setFont(new Font("Arial", 24));
-	                information.setAlignment(Pos.CENTER);
+	                hb.getChildren().add(edit);
+	                bp.setBottom(hb);
+	                hb.setAlignment(Pos.CENTER);
+	                bp.setAlignment(hb, Pos.CENTER);
+	                
 	                bp.setTop(information);
 	                bp.setAlignment(information, Pos.CENTER);
 	                ImageView garden = new ImageView(gardenImage);
 	                garden.setPreserveRatio(true);
-	                garden.setFitHeight(500);
+	                garden.setFitHeight(5*GARDEN_IMAGEVIEW_HEIGHT);
 	                bp.setCenter(garden);
-	                Scene dialogScene = new Scene(bp, 700, 600);
+	                Scene dialogScene = new Scene(bp);
 	                dialog.setScene(dialogScene);
 					dialog.show();
 				}

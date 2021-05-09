@@ -42,6 +42,9 @@ public class GardenDesign extends View{
 	final int STANDARD_IMAGEVIEW = 100;
 	final int NORMALCOMPOST = 75;
 	final int ENTERCOMPOST = 85;
+	final int INFO_IV_SIZE = 50;
+	final int HBOX_SPACING = 20;
+	final int FONTSIZE = 20;
 	Canvas canvas;
 	Stage stage;
 	//Panes
@@ -66,8 +69,6 @@ public class GardenDesign extends View{
 	public GardenDesign(Stage stage, Controller controller, ManageViews manageView) {
 		super(stage,controller,manageView);
 		this.stage = stage;
-//		this.ic=c;
-		//oblist = initializeHashMap();
 		oblist = manageView.getPlantImages();					// loading in plantImages
 		vb = addGridPane();
 		border = new BorderPane();
@@ -82,13 +83,10 @@ public class GardenDesign extends View{
 		
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
-//        scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
-        //scroll.setMaxWidth(screenWidth);
         scroll.setMaxHeight(2*STANDARD_IMAGEVIEW);						// needed to initialize a dimension for scrollpane; leave in
 		scroll.setContent(tile);
 		border.setBottom(scroll);
-		//border.setBottom(tile);
 		//comparePane = addBorderPane();
 		
 		BorderPane bd2= new BorderPane();
@@ -108,11 +106,11 @@ public class GardenDesign extends View{
 		budgetExceeded.initOwner(stage);
 		budgetExceeded.setTitle("YOU HAVE EXCEEDED YOUR BUDGET!");
 		Label text = new Label("To continue adding to your garden increase your budget");
-		text.setFont(new Font("Andale Mono", 20));
+		text.setFont(new Font("Andale Mono", FONTSIZE));
 		text.setStyle("-fx-font-size: 16; -fx-text-fill: white");
 		Label instruction = new Label("Press enter to set new budget or the X if you are done");
 		TextField budgetField = new TextField("Enter new budget");
-		budgetField.setMaxWidth(100);
+		budgetField.setMaxWidth(STANDARD_IMAGEVIEW);
 		BorderPane border = new BorderPane();
 		border.setTop(text);
 		BorderPane.setAlignment(text,Pos.CENTER);
@@ -131,7 +129,7 @@ public class GardenDesign extends View{
 			}
 		});
 		border.setStyle(" -fx-background-color: #8C6057; -fx-padding: 10; -fx-border-color: #5C5346; -fx-border-width: 5;");
-		Scene popUpScene = new Scene(border,450,100);
+		Scene popUpScene = new Scene(border,450,STANDARD_IMAGEVIEW);
 		budgetExceeded.setScene(popUpScene);
 		budgetExceeded.show();
 	}
@@ -180,7 +178,7 @@ public class GardenDesign extends View{
 	}
 	
 	/**
-	 * Makes the popup pane for all the deleted p;ants
+	 * Makes the popup pane for all the deleted plants
 	 * @param plant all the plants that have been deleted 
 	 */
 	//https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
@@ -197,7 +195,7 @@ public class GardenDesign extends View{
 		VBox.setVgrow(list, Priority.ALWAYS);
 		plantName.setLayoutX(10);
 		plantName.setLayoutY(115);
-		plantName.setFont(Font.font("Verdana", 20));
+		plantName.setFont(Font.font("Verdana", FONTSIZE));
 		ObservableList<Label> images = FXCollections.observableArrayList();
 		plant.forEach(v->{
 			System.out.println("adding plant to popUp");
@@ -321,13 +319,13 @@ public class GardenDesign extends View{
 		}
 		
 		HBox budgetLepPane = new HBox();
-		budgetLepPane.setSpacing(20);
+		budgetLepPane.setSpacing(HBOX_SPACING);
 		ImageView lepIv= new ImageView(lep);
-		lepIv.setPreserveRatio(true);
-		lepIv.setFitHeight(50);
 		ImageView budgetIv = new ImageView(dollar);
+		lepIv.setPreserveRatio(true);
+		lepIv.setFitHeight(INFO_IV_SIZE);
 		budgetIv.setPreserveRatio(true);
-		budgetIv.setFitHeight(50);
+		budgetIv.setFitHeight(INFO_IV_SIZE);
 		Label leps = new Label(""+lepCount);
 		leps.setFont(new Font("Arial", 16));
 		Label budgetCount = new Label(""+cost);
@@ -356,7 +354,6 @@ public class GardenDesign extends View{
 		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
 		ImageView iv2 = new ImageView(im);
 		iv2.setPreserveRatio(true);
-//		iv2.setFitHeight(100);
 		iv2.setFitHeight(heightWidth);
 		iv2.setFitWidth(heightWidth);
 		String uniqueID = UUID.randomUUID().toString();
@@ -388,7 +385,7 @@ public class GardenDesign extends View{
 		info1.setStyle("-fx-background-color: LIGHTBLUE");
 		
 		Label title = new Label(name);
-		title.setFont(new Font("Andale Mono", 20));
+		title.setFont(new Font("Andale Mono", FONTSIZE));
 		title.setWrapText(true);
 		title.setMaxWidth(screenWidth/6);
 		
