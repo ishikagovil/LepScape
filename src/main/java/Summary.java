@@ -173,6 +173,9 @@ public class Summary extends View {
         saveGarden.setOnMouseClicked(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
         buttons.add(addNextButton("gallery","Gallery"));
+        buttons.get(4).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
+        	this.manageView.setCalledFromStart(false);
+        });
         return buttons;
 	}
 

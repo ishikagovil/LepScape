@@ -17,9 +17,6 @@ public class Garden implements java.io.Serializable {
 	public int width;
 	public int height;
 	public int[][] data;
-	public int plotWidth;
-	public int plotHeight;
-	public int[][] plotData;
 	public double lengthPerPixel;
 	public double scale;
 	public transient HashMap<String, PlacedPlant> placedPlants;
@@ -102,22 +99,6 @@ public class Garden implements java.io.Serializable {
 		this.data = data;
 		//makeData();
 	}
-	
-	/**
-	 * Sets the width, height, and data attributes for plot image
-	 * @param width
-	 * @param height
-	 * @param data
-	 * @author Arunima Dey
-	 */
-	public void setPlotImageInfo(int width, int height, int[][] data){
-		//this.image = image;
-		this.plotWidth = width;
-		this.plotHeight = height;
-		this.plotData = data;
-		//makeData();
-	}
-	
 	/**
 	 * getter for data of garden
 	 * @return the data
@@ -215,15 +196,6 @@ public class Garden implements java.io.Serializable {
 	 */
 	public Set<PlantSpecies> getCompostBin() {
 		return this.compostBin;
-	}
-	
-	/**
-	 * Add a plant to the garden
-	 * @param plant the plant to be added
-	 */
-	public void addToGarden(PlacedPlant plant) {
-		System.out.println("adding to garden");
-		plants.add(plant);
 	}
 
 	/**

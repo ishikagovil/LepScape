@@ -33,7 +33,6 @@ import javafx.application.Application;
  * @author Ishika Govil, Arunima Dey, Dea Harjianto, Jinay Jain, Kimmy Huynh
  */
 public class Controller extends Application {
-	private final boolean DEBUG = true;
 	ManageViews view;
 	// reading plant information
 	String plantFile = "src/main/resources/finalPlantListWithInfo.csv";
@@ -66,7 +65,6 @@ public class Controller extends Application {
 	    this.stage = stage;
 		this.stage.setFullScreen(true);
 	    readBack();
-
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
@@ -339,7 +337,7 @@ public class Controller extends Application {
 			String name = model.plantDirectory.get(key).getCommonName();
 			String description = model.plantDirectory.get(key).getDescription();
 			String info = description;
-			view.makeInfoPane(name, info);
+			((GardenDesign)view.views.get("GardenDesign")).makeInfoPane(name, info);
 		}
 		event.setDragDetect(true);
 	}
@@ -351,27 +349,11 @@ public class Controller extends Application {
 	 */
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
-		if (!DEBUG) {
-			System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
-			System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
-		}
-//		System.out.println("drag. x: "+model.getX()+" y: "+model.getY());
-		String id = ((Node) event.getSource()).getId();
-//		if(model.gardenMap.placedPlants.get(id)!=null) {
-//			PlacedPlant plant = model.gardenMap.placedPlants.get(id);
-//			model.setX(plant.getX());
-//			model.setY(plant.getY());
-//			view.setX(model.getX(),n);
-//			view.setY(model.getY(),n);
-//		}
-//		else {
-			model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
-			model.setY(model.getY() + event.getY());
-			view.setX(model.getX(),n);
-			view.setY(model.getY(),n);
-			
-//		}
-		
+		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
+		model.setY(model.getY() + event.getY());
+		view.setX(model.getX(),n);
+		view.setY(model.getY(),n);
+
 		event.setDragDetect(false);
 	}
 	
@@ -535,18 +517,17 @@ public class Controller extends Application {
 	 * Everytime the application is started a read back all the saved gardens from previos sessions
 	 * @author Arunima Dey
 	 */
+	@SuppressWarnings("unchecked")
 	public void readBack() {
 		try {
 			System.out.println("reading");
 			FileInputStream fis = new FileInputStream("src/main/resources/garden.ser");
 			ObjectInputStream ois = new ObjectInputStream(fis);
-//			ObjectInputStream ois = new ObjectInputStream(getClass().getResourceAsStream("/garden1.ser"));
 			model.savedGardens = (ArrayList<Garden>) ois.readObject();
 			Gallery gal = (Gallery) view.views.get("Gallery");
 //			gal.clearTilePane();
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				view.makeImage(model.savedGardens.get(i).getWidth(), model.savedGardens.get(i).getHeight(), model.savedGardens.get(i).data);
-				//view.makeImageforplot(model.savedGardens.get(i).plotWidth, model.savedGardens.get(i).plotHeight, model.savedGardens.get(i).plotData);
 				gal.loadScreen(view.savedImg,i,(model.savedGardens.get(i)).getCost(),(model.savedGardens.get(i)).getLepCount());
 			}
 			ois.close();
@@ -602,7 +583,6 @@ public class Controller extends Application {
 		
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
 		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
-		model.gardenMap.setPlotImageInfo((int)view.plot.getWidth(), (int)view.plot.getHeight(), view.makeDataforPlot());
 		System.out.println("button works");
  		try {
 			Gallery gal = (Gallery) view.views.get("Gallery");
@@ -888,20 +868,5 @@ public class Controller extends Application {
 		info += "\nLeps supported: "+s.getLepsSupported();
 		return info;
 	}
-	
-
-	/**
-	 * Starting x location for a node
-	 * @return the x
-	 * @author Arunima Dey
-	 */
-	public double getStartingX() {return model.getX();}
-	
-	/**
-	 * starting y location of a node
-	 * @return the y
-	 * @author Arunima Dey
-	 */
-	public double getStartingY() {return model.getY();}
 
 }

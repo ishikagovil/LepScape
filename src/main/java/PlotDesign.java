@@ -23,8 +23,8 @@ public class PlotDesign extends View{
 	GridPane grid; //added to contain the TextField
 	ToolBar toolbar;
 	Polygon poly;
-	ImageView plotInstructions;
-	ImageView dimInstructions;
+	Image plotInstructions;
+	Image dimInstructions;
 	Line dimLine;
     boolean shapeClicked = false;
     boolean dragAnchor = false;
@@ -44,18 +44,15 @@ public class PlotDesign extends View{
 		super(stage, c, manageView);
 		Canvas canvas = new Canvas(this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
 		//Loading Images
-		dimInstructions = new ImageView(new Image(getClass().getResourceAsStream("/dimensions.jpg")));
-		dimInstructions.setFitWidth(this.manageView.getScreenWidth());
-		dimInstructions.setFitHeight(this.manageView.getScreenHeight());
-		plotInstructions = new ImageView(new Image(getClass().getResourceAsStream("/drawPlot.jpg")));
-		plotInstructions.setFitWidth(this.manageView.getScreenWidth());
-		plotInstructions.setFitHeight(this.manageView.getScreenHeight());
+		dimInstructions = new Image(getClass().getResourceAsStream("/dimensions.jpg"), this.manageView.getScreenWidth(), this.manageView.getScreenHeight(), false, false);
+		plotInstructions = new Image(getClass().getResourceAsStream("/drawPlot.jpg"),  this.manageView.getScreenWidth(), this.manageView.getScreenHeight(), false, false);
+
 		//Set canvas for drawing: https://www.youtube.com/watch?v=gjZQB6BmyK4
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
         gc = canvas.getGraphicsContext2D();	
         gc.setLineWidth(2);
-        gc.drawImage(plotInstructions.getImage(), 0, 0);
+        gc.drawImage(plotInstructions, 0, 0);
         
         //Creating buttons on the screen
         toolbarButtons();        
@@ -126,7 +123,7 @@ public class PlotDesign extends View{
            	
            	//Change border design
            	border.getChildren().remove(grid);
-           	gc.drawImage(plotInstructions.getImage(), 0, 0);
+           	gc.drawImage(plotInstructions, 0, 0);
            	createHBox(drawSwitch);	       
            	
            	e.consume();
@@ -153,7 +150,7 @@ public class PlotDesign extends View{
         	poly = new Polygon();
         	anchors = FXCollections.observableArrayList();
         	removeLines();
-        	gc.drawImage(plotInstructions.getImage(), 0, 0);
+        	gc.drawImage(plotInstructions, 0, 0);
         	e.consume();
         });
         drawSwitch.add(clear);
@@ -217,7 +214,7 @@ public class PlotDesign extends View{
 	 * Saves the inputed value and calls settingLength in controller to calculate length per pixel
 	 */
 	public void onSettingDimensions() {
-        gc.drawImage(dimInstructions.getImage(), 0, 0);
+        gc.drawImage(dimInstructions, 0, 0);
 		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
         border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
         border.setOnMouseReleased(event -> {
@@ -227,9 +224,9 @@ public class PlotDesign extends View{
 		    gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
 		    dimLine = new Line(manageView.dimLen.get(0)[0], manageView.dimLen.get(0)[1], manageView.dimLen.get(manageView.dimLen.size()-1)[0], manageView.dimLen.get(manageView.dimLen.size()-1)[1]);
 		    dimLine.setStrokeWidth(3);
-		    dimLine.setStroke(Color.PALEVIOLETRED);
+		    dimLine.setStroke(Color.DARKGREEN);
 			border.getChildren().add(dimLine);
-			gc.drawImage(dimInstructions.getImage(), 0, 0);
+			gc.drawImage(dimInstructions, 0, 0);
 		});	
 		createHBox(dimSwitch);
 	    

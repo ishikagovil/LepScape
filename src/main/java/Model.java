@@ -11,10 +11,7 @@ public class Model implements java.io.Serializable{
 	public Vector2 translate;
 	public double x;
 	public double y;
-	public int lepCount;
 	public String movedPlant;
-	public double initialX;
-	public double initialY;
 	public HashSet<String> deleted;
 	public Boolean editGarden;
 	public int editGardenIndex;
@@ -32,10 +29,6 @@ public class Model implements java.io.Serializable{
 		this.deleted = new HashSet<>();
 		editGarden = false;
 
-	}
-	
-	public int getLepCount() {
-		return this.lepCount;
 	}
 	
 	/**
@@ -111,7 +104,6 @@ public class Model implements java.io.Serializable{
 						lepObj.getThrivesIn().add(plantObj);
 					}
 				}
-				
 			}
 			
 			System.out.println(lepObj.getThrivesIn());
@@ -138,10 +130,8 @@ public class Model implements java.io.Serializable{
 	public void placePlant(double x, double y, String key, String nodeId) {
 		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
-		gardenMap.plants.add(new PlacedPlant(x,y,specie));
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
  		System.out.println("plants: "+gardenMap.placedPlants);
-//		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
 	}
 	
 	/**
