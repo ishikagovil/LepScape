@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -25,7 +27,9 @@ public class ConditionScreen extends View {
 	private final int boxPadding = 12;
 	private final int largeFontSize = 20;
 	private final int fontSize = 16;
-	private final double wrappingWidth = 200;
+	private final double wrappingWidth = 350;
+	private final int INS = 10;
+	private final int SPAC = 50;
 	
 	private Canvas canvas;
 
@@ -51,12 +55,14 @@ public class ConditionScreen extends View {
 	private Node createSidebar() {
 		VBox sidebar = new VBox(boxSpacing);
 		sidebar.setPadding(new Insets(boxPadding));
-		sidebar.setStyle("-fx-background-color: #f0ebdd");
+		sidebar.setStyle("-fx-background-color: #afd5aa");
 		
 		HBox budgetRow = new HBox();
 		TextField budgetField = new TextField();
 		Label budgetLabel = new Label("Budget ($): ");
 		budgetRow.getChildren().addAll(budgetLabel, budgetField);
+		budgetLabel.setFont(new Font("Andale Mono", fontSize));
+		budgetLabel.setStyle("-fx-text-fill: #5c5346");
 		
 		HBox buttons = new HBox(boxSpacing);
 		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
@@ -82,13 +88,23 @@ public class ConditionScreen extends View {
 		Text title = new Text("Plot Conditions");
 		Text info = new Text("Set the conditions of your garden by selecting them from the dropdowns.");
 		Text info2 = new Text("Then, select any region of your garden to fill the conditions in!");
-		title.setFont(new Font(largeFontSize));
-		info.setFont(new Font(fontSize));
-		info2.setFont(new Font(fontSize));
+		
+		title.setFont(new Font("Andale Mono", largeFontSize));
+		info.setFont(new Font("Andale Mono", fontSize));
+		info2.setFont(new Font("Andale Mono", fontSize));
+		
+		title.setFill(Color.web("#5c5346"));
+		info.setFill(Color.web("#5c5346"));
+		info2.setFill(Color.web("#5c5346"));
+		
 		info.setWrappingWidth(wrappingWidth);
 		info2.setWrappingWidth(wrappingWidth);
 		title.setWrappingWidth(wrappingWidth);
+		title.setUnderline(true);
+		
 		sidebar.getChildren().addAll(title, info, info2, budgetRow, dropdowns, buttons);
+		
+		sidebar.setSpacing(SPAC);
 		
 		return sidebar;
 	}
@@ -100,7 +116,7 @@ public class ConditionScreen extends View {
 	private Node createCanvasPane() {
 	    Pane wrapperPane = new Pane();
 
-		wrapperPane.setStyle("-fx-background-color: #c9deff");
+		wrapperPane.setStyle("-fx-background-color: #fof2ef");
 	    // Put canvas in the center of the window
 	    canvas = new Canvas();
 	    gc = canvas.getGraphicsContext2D();
@@ -142,6 +158,14 @@ public class ConditionScreen extends View {
 		sunlightDropdown.getItems().addAll(LightType.values());
 		sunlightDropdown.getItems().remove(0);
 		sunlightDropdown.getSelectionModel().select(1);
+		
+		soilLabel.setFont(new Font("Andale Mono", fontSize));
+		moistLabel.setFont(new Font("Andale Mono", fontSize));
+		sunLabel.setFont(new Font("Andale Mono", fontSize));
+		soilLabel.setStyle("-fx-text-fill: #5c5346");
+		moistLabel.setStyle("-fx-text-fill: #5c5346");
+		sunLabel.setStyle("-fx-text-fill: #5c5346");
+
 
 		box.getChildren().addAll(soilLabel, soilDropdown, moistLabel, moistureDropdown, sunLabel, sunlightDropdown);
 		
