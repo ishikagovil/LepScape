@@ -1,5 +1,8 @@
 import java.util.*;
 
+/**
+ * @author Ishika Govil, Kimmy Huynh, Arunima Dey
+ */
 public class Garden implements java.io.Serializable {
 	
 	/**
@@ -12,8 +15,7 @@ public class Garden implements java.io.Serializable {
 	public ArrayList<Conditions> sections;
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
-	public ArrayList<String> plant;
-//	public transient WritableImage image;
+//	public ArrayList<String> plant;
 	public int width;
 	public int height;
 	public int[][] data;
@@ -21,13 +23,6 @@ public class Garden implements java.io.Serializable {
 	public double scale;
 	public transient HashMap<String, PlacedPlant> placedPlants;
 	public double budget;
-//	public transient BufferedImage image;
-//	private transient SimpleDoubleProperty costForgallery;
-
-	
-	/**
-	 * @author Ishika Govil, Kimmy Huynh, Arunima Dey
-	 */
 
 	/**
 	 * Creates a default garden object
@@ -39,7 +34,7 @@ public class Garden implements java.io.Serializable {
 		this.sections = new ArrayList<Conditions>();
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();
-		this.plant = new ArrayList<>();
+		//this.plant = new ArrayList<>();
 		this.width = 0;
 		this.height = 0;
 		this.data = new int[width][height];
@@ -65,11 +60,12 @@ public class Garden implements java.io.Serializable {
 	 */
 	public double getCost() {
 		Iterator<PlacedPlant> iter = placedPlants.values().iterator();
-		double cost =0;
+		double cost = 0;
 		while(iter.hasNext()) {
 			cost+=iter.next().getSpecies().getCost();
 		}
 		return cost;
+		
 	}
 	
 	/**
@@ -83,6 +79,7 @@ public class Garden implements java.io.Serializable {
 			leps+=iter.next().getSpecies().getLepsSupported();
 		}
 		return leps;
+		
 	}
 	
 	/**

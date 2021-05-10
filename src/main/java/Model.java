@@ -135,6 +135,31 @@ public class Model implements java.io.Serializable{
  		System.out.println("plants: "+gardenMap.placedPlants);
 	}
 	
+	public double getCostforGallery(Garden garden) {
+		Iterator<PlacedPlant> iter = garden.plants.iterator();
+		double cost = 0;
+		while(iter.hasNext()) {
+			System.out.println(iter.next().getName());
+			System.out.println(plantDirectory.size());
+			System.out.println(plantDirectory.get("Rhus-glabra"));
+//			PlantSpecies plant = plantDirectory.get(iter.next().get);
+//			plantDirectory.get(iter.next().getName());
+//			cost+=plant.getCost();
+		}
+		return cost;
+	}
+	
+	public int getLepsforGallery(Garden garden) {
+		Iterator<PlacedPlant> iter = garden.plants.iterator();
+		int lep = 0;
+//		while(iter.hasNext()) {
+//			System.out.println(iter.next());
+//			PlantSpecies plant = plantDirectory.get(iter.next().getName());
+//			lep+=plant.getLepsSupported();
+//		}
+		return lep;
+	}
+	
 	/**
 	 * removes a plant from placedPlants and updates budgte and lep
 	 * @param key the name of the plant

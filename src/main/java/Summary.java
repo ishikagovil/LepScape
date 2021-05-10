@@ -72,9 +72,7 @@ public class Summary extends View {
 	       sp1.getChildren().add(iv1);
 	       translation.play();
 	       */
-		
-       //main = addCanvas();
-		border.setCenter(main);  		
+		border.setCenter(main);  
     }
 	
 /**
