@@ -1,12 +1,10 @@
 import java.util.ArrayList;
-import java.util.Iterator;
-
+import java.util.HashSet;
 import java.util.Map;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -19,7 +17,10 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage; 
 
 /**
@@ -32,23 +33,45 @@ public class Lepedia extends View {
 	final int numLepImages = 117;
 	final int descFontSize = 20;
 	final int titleFontSize = 48;
+	final int ins = 10;
+	final int spc = 40;
+	int centerThis;
+	final int boxWidth = 900;
 
 	public Lepedia(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		border = new BorderPane();
-		Image bgimg = new Image("lepedia-background.jpg");
-		BackgroundImage bgImg = new BackgroundImage(bgimg, 
-			    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-			    BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-		border.setBackground(new Background(bgImg));
+		border.setStyle("-fx-background-color: #AFD5AA");
 		
-		Label lepTitle = new Label("Lepedia");
-		lepTitle.setFont(new Font("Arial", titleFontSize));
-		border.setTop(lepTitle);
-		border.setAlignment(lepTitle, Pos.CENTER);
+		centerThis = (int) (manageView.screenWidth / 2 - 350);
+		
+		border.setTop(makeHeader());
+		//border.setAlignment(lepTitle, Pos.CENTER);
 		ImageView back = addNextButton("back", "Summary");
 		border.setBottom(back);
 		border.setAlignment(back, Pos.CENTER);
+	}
+	
+	public VBox makeHeader() {
+		VBox header = new VBox();
+		
+		Label lepTitle = new Label("Lepedia");
+		lepTitle.setFont(new Font("Andale Mono", titleFontSize));
+		lepTitle.setStyle("-fx-text-fill: #ffffff");
+		
+		Text description = new Text("Learn more about the butterflies dwelling in your garden!");
+		description.setFont(new Font("Andale Mono", descFontSize));
+		description.setStyle("-fx-text-fill: #ffffff");
+		
+		header.getChildren().add(lepTitle);
+		header.getChildren().add(description);
+		
+		header.setAlignment(Pos.CENTER);
+		
+		header.setPadding(new Insets(ins, ins, ins, ins));
+		header.setSpacing(spc);
+		
+		return header;
 	}
 	
 	/**
@@ -61,7 +84,7 @@ public class Lepedia extends View {
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
         sp.setFitToHeight(true);
         sp.setFitToWidth(true);
-        sp.setMaxHeight(screenHeight);						// needed to initialize a dimension for scrollpane; leave in
+        sp.setMaxHeight(this.manageView.getScreenHeight());						// needed to initialize a dimension for scrollpane; leave in
 		
 	    TilePane outerTile = new TilePane(Orientation.HORIZONTAL);
 	    //outerTile.setTileAlignment(Pos.CENTER);
@@ -72,29 +95,27 @@ public class Lepedia extends View {
 	    ArrayList<PlacedPlant> plants = controller.getGarden().getPlants();
 	    Map<String, Lep> info = controller.getLepInfo();
 	    Map<String, ImageView> lepImages = manageView.getLepImages();
-	    Iterator plantIter = plants.iterator();
+	    HashSet<String> plantToLep = new HashSet<>();
+	    
+	    plants.forEach(plant -> {
+	    	plantToLep.add(plant.getSpecies().getGenusName());
+	    });
 	    
 	    ArrayList<Lep> lepsInGarden = new ArrayList<>();
-	    Iterator lepIter = info.entrySet().iterator();
 	    
-	    while(lepIter.hasNext()) {
-	    	Map.Entry lepElement = (Map.Entry)lepIter.next();
-	    	Lep lepObj = (Lep)lepElement.getValue();
+	    info.forEach((lepKey, lepObj) -> {
 	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
 	    	System.out.println(thrivesIn);
-	    	for (PlacedPlant plant: plants) {
-	    		String genus = plant.getSpecies().getGenusName();
-	    		System.out.println(genus);
-	    		for (String genusReqs: thrivesIn) {
-	    			System.out.println(genusReqs);
-	    			if (genus.equals(genusReqs)) {
-	    				if (!(lepsInGarden.contains(lepObj))) {
-	    					lepsInGarden.add(lepObj);
-	    				}
+	    	for (String genusReqs: thrivesIn) {
+	    		System.out.println(genusReqs);
+	    		if (plantToLep.contains(genusReqs)) {
+	    			if (!(lepsInGarden.contains(lepObj))) {
+	    				lepsInGarden.add(lepObj);
 	    			}
 	    		}
 	    	}
-	    }
+
+	    });
 	    
 	    for (Lep lepInfo : lepsInGarden) {
 	    	outerTile.getChildren().add(getInfoTile(lepImages, lepInfo));
@@ -102,7 +123,12 @@ public class Lepedia extends View {
 	    }
 	    
 		sp.setContent(outerTile);
+		
 	    border.setCenter(sp);
+	    
+	    sp.setFitToWidth(true);
+	    sp.setFitToHeight(true);
+	    
 	}
 	
 	/**
@@ -117,12 +143,21 @@ public class Lepedia extends View {
 		String speciesName = lep.getSpeciesName();
 		String commonName = lep.getCommonName();
 		ArrayList<String> thrivesIn = lep.getThrivesInGenus();
+		String feedsOff = thrivesIn.get(0);
+		thrivesIn.remove(0);
+		for (String gen : thrivesIn) {
+			feedsOff += ", " + gen;
+		}
 		ImageView lepImg = lepImages.get(genusName + "-" + speciesName);
-		Label description = new Label(genusName + " " + speciesName + ". Also known as the " + commonName + ". Feeds off " + thrivesIn.toString());
-		description.setFont(new Font("Arial", descFontSize));
+		Label description = new Label("Scientific Name: " + genusName + " " + speciesName + "\nCommon Name: " + commonName + "\nFeeds off genera: " + feedsOff);
+		description.setFont(new Font("Andale Mono", descFontSize));
+		description.setWrapText(true);
 		
 		HBox lepTile = new HBox();
+		lepTile.setMaxWidth(boxWidth);
 		lepTile.getChildren().addAll(lepImg, description);
+		lepTile.setPadding(new Insets(ins, ins, ins, centerThis));
+		lepTile.setSpacing(spc);
 		
 		return lepTile;
 	}

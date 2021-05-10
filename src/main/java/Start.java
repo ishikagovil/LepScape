@@ -1,8 +1,8 @@
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -25,7 +25,7 @@ public class Start extends View {
 	 */
 	public Start(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);     
-		canvas = new Canvas(screenWidth, screenHeight);
+		canvas = new Canvas(this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
 		border = new BorderPane();
 		border.getChildren().add(canvas);
         addBackgroundImage();
@@ -33,10 +33,10 @@ public class Start extends View {
 	}
 
 	public void addBackgroundImage() {
-		Image bgImage = new Image(getClass().getResourceAsStream("/lep-background.jpg"));
+		Image bgImage = new Image(getClass().getResourceAsStream("/lep-background.jpg"),  this.manageView.getScreenWidth(), this.manageView.getScreenHeight(), false, false);
         gc = canvas.getGraphicsContext2D();	
-        gc.getCanvas().setWidth(getScreenWidth());
-        gc.getCanvas().setHeight(getScreenHeight());
+        gc.getCanvas().setWidth(this.manageView.getScreenWidth());
+        gc.getCanvas().setHeight(this.manageView.getScreenHeight());
         gc.drawImage(bgImage, 0, 0);
 	}
 	
@@ -65,6 +65,10 @@ public class Start extends View {
 		buttons = new ArrayList<>();
 		buttons.add(addNextButton( "new", "PlotDesign"));
 		buttons.add(addNextButton("gallery", "Gallery"));
+		buttons.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
+			System.out.println(this.manageView.getCalledFromStart());
+	       	this.manageView.setCalledFromStart(true);
+	    });
 		box.getChildren().addAll(buttons);
 		return box;
 	}

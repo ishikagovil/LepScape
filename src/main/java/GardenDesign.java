@@ -31,6 +31,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.embed.swing.SwingFXUtils;
 
+
 /**
  * This class sets the main screen
  * It allows user to make their garden based on set preferences and conditions
@@ -45,6 +46,11 @@ public class GardenDesign extends View{
 	final int INFO_IV_SIZE = 50;
 	final int HBOX_SPACING = 20;
 	final int FONTSIZE = 20;
+	final int XDISPLACE = 200;
+	final int YDISPLACE = 50;
+	final int POPUPWIDTH = 100;
+	final int POPUPHEIGHT = 50;
+	final double THRESHOLD = 0.00001;
 	Canvas canvas;
 	Stage stage;
 	//Panes
@@ -54,11 +60,15 @@ public class GardenDesign extends View{
 	public BorderPane comparePane = new BorderPane();
 	public StackPane info = new StackPane();
 	Map<String,ImageView> oblist;
+	ArrayList<ImageView> placed = new ArrayList<>();
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
 	ImageView c = new ImageView(compost);
 	Pane main;
 	Map<String, String> plants;
-
+	Label plantLarge = new Label("Can't fit in garden!");
+	Label collisionDetected = new Label("Plants overlapping!");
+	Label emptyLabel = new Label();
+	Label fillMe = new Label();
 	
 	/**
 	 * Initializes an instance of GardenDesign
@@ -77,7 +87,7 @@ public class GardenDesign extends View{
 		border.setCenter(main);
 		
 		ScrollPane scroll = new ScrollPane();
-		tile.setMaxWidth(screenHeight);
+		tile.setMaxWidth(this.manageView.getScreenHeight());
 		tile.setMaxHeight(2*STANDARD_IMAGEVIEW);
 		tile = addTilePane();
 		
@@ -99,6 +109,7 @@ public class GardenDesign extends View{
 
 		showCompostBin();
 	}
+
 	
 	public void budgetExceededPopup() {
 		final Stage budgetExceeded = new Stage();
@@ -236,10 +247,10 @@ public class GardenDesign extends View{
 	        @Override
 	        public void handle(MouseEvent event) {
 	        	if(event.getClickCount()==2) {
-	        		System.out.println("clicked on " + getDisplayText(list.getSelectionModel().getSelectedItem()));
 	        		String name = getDisplayText(list.getSelectionModel().getSelectedItem());
 	        		String node = addImageView(main.getLayoutX(),main.getLayoutY(),name,controller.scalePlantSpread(name));
-	        		controller.removeFromDeleted(name, node,main.getLayoutX(),main.getLayoutY() );
+	        		controller.removeFromDeleted(name, node,main.getLayoutX(),main.getLayoutY());
+	        		deleted.close();
 	        	}
 	            
 	        }
@@ -279,23 +290,17 @@ public class GardenDesign extends View{
 		TilePane tile = new TilePane();
 		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
 		oblist.forEach((k,v)->{
+			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
+			v.setOnMouseDragged(controller.getHandlerforDrag());
+			// returns image back to original TilePane location
+			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
 			v.setOnDragDetected(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent event) {
 					v.startFullDrag();
-					v.startDragAndDrop(TransferMode.ANY);
 				}
 			});
-			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
-			v.setOnMouseDragged(controller.getHandlerforDrag());
-			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
-			Tooltip t = new Tooltip(controller.tooltipInfo(k));
-			t.setOnShowing(e->{
-				System.out.println("Showing");
-			});
-			t.setX(v.getX());
-			t.setY(v.getY());
-			Tooltip.install(v, t);
+			hoverTooltip(controller.tooltipInfo(k),v);
 			String uniqueID = UUID.randomUUID().toString();
 			v.setId(uniqueID);
 			plants.put(uniqueID, k);
@@ -305,6 +310,40 @@ public class GardenDesign extends View{
 			controller.inMain = true;
 		});
 		return tile;
+	}
+	
+	/**
+	 * Adds the pane that hols the lep count and the budget
+	 * Called from previous screen after user has set a budget
+	 */
+	public void addBudgetLepPane() {
+		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+		
+		HBox blPane = new HBox();
+		blPane.setSpacing(20);
+		
+		ImageView lepIv= new ImageView(lep);
+		lepIv.setPreserveRatio(true);
+		lepIv.setFitHeight(50);
+		ImageView budget = new ImageView(dollar);
+		budget.setPreserveRatio(true);
+		budget.setFitHeight(50);
+		Label lepCount = new Label("0");
+		lepCount.setFont(new Font("Arial", 16));
+		Label budgetCount = new Label(""+controller.getBudget());
+		budgetCount.setFont(new Font("Arial", 16));
+		lepCount.setGraphic(lepIv);
+		budgetCount.setGraphic(budget);
+		
+		blPane.getChildren().add(lepCount);
+		blPane.getChildren().add(budgetCount);
+		blPane.getChildren().add(fillMe);
+		
+		blPane.setAlignment(Pos.CENTER);
+		border.setTop(blPane);
+		border.setAlignment(blPane, Pos.CENTER);
+
 	}
 
 	/**
@@ -397,8 +436,92 @@ public class GardenDesign extends View{
 			}
 		});
 		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
-		main.getChildren().add(iv2);
-		return iv2.getId();
+		if (validatePlantPlacement(x, y, heightWidth)[0] > THRESHOLD) {
+			// if collided, don't add ImageView to Pane
+			System.out.println("collided!");
+			// add pop up window to display "too big"
+			//popup1.show(popup1);
+			controller.showPopupMessage("Cannot place plant there!", stage);
+			return null;
+		} else {
+			// if no collision detected, add ImageView to Pane and add to overall plantlist
+			System.out.println("no collide?");
+			main.getChildren().add(iv2);
+			placed.add(iv2);
+			System.out.println("placed plant!");
+			return iv2.getId();
+		}
+	}
+	
+	public double[] validatePlantPlacement(double x, double y, double heightWidth) {
+		
+		double[] returnThis = new double[5];
+		
+		boolean isCollide = false;
+		returnThis[0] = 0;				// the distance
+		returnThis[1] = 0;				// whether it's top left(1), top right(2), bottom right(3), bottom left(4)
+		returnThis[2] = 0;
+		returnThis[3] = 0;
+		returnThis[4] = 0;
+		
+		//ObservableList<Node> children = main.getChildren();
+		ArrayList<ImageView> children = placed;
+		
+		for (ImageView plantImg : children) {
+			// assuming x & y are top left
+			
+			double compHeight = plantImg.getBoundsInParent().getHeight();		// the height of the ImageView
+			double compWidth = plantImg.getBoundsInParent().getWidth();			// the width of the ImageView
+			
+			// compHeight should be equal to compWidth (because circle duh)
+			// => radius is equal to compHeight / 2 or compWidth / 2
+			
+			// circle collision defined by
+			// distance between centers of obj < radii of two circles
+			
+			double xCoord = plantImg.getBoundsInParent().getCenterX();	
+			double yCoord = plantImg.getBoundsInParent().getCenterY();
+			
+			System.out.println("x: " + xCoord + ", y: " + yCoord);
+			
+			double xCoord2 = x + heightWidth/2 - XDISPLACE;
+			double yCoord2 = y + heightWidth/2 - YDISPLACE;
+			
+			System.out.println("x2: " + xCoord2 + ", y2: " + yCoord2);
+			
+			double shoulderLengthApart = (heightWidth/2) + (compHeight/2);
+			System.out.println("heightWidth: " + heightWidth/2);
+			System.out.println("radius: " + compHeight/2);
+			System.out.println("shoulderLengthApart: " + shoulderLengthApart);
+			
+			double distance = Math.sqrt(Math.pow(xCoord2 - xCoord, 2) + Math.pow(yCoord2 - yCoord, 2));
+			System.out.println("distance: " + distance);
+			
+			// threshold number accounting for if they are comparing the same image
+			if (distance < shoulderLengthApart && distance > 0.0001) {
+				
+				if (xCoord2 < xCoord) {
+					if (yCoord2 < yCoord) {
+						returnThis[1] = 1;
+					} else {
+						returnThis[1] = 4;
+					}
+				} else {
+					if (yCoord2 < yCoord) {
+						returnThis[1] = 2;
+					} else {
+						returnThis[1] = 3;
+					}
+				}
+				returnThis[0] = distance;
+				returnThis[2] = xCoord;
+				returnThis[3] = yCoord;
+				returnThis[4] = shoulderLengthApart;
+			}
+			System.out.println("---");
+		}
+		
+		return returnThis;
 	}
 	
 	/**
@@ -406,14 +529,14 @@ public class GardenDesign extends View{
 	 */
 	public void makeInfoPane(String name, String info) {
 		BorderPane info1 = new BorderPane();
-		info1.setPrefWidth(screenWidth / 6);
-		info1.setMinHeight(screenHeight-300);
+		info1.setPrefWidth(this.manageView.getScreenWidth() / 6);
+		info1.setMinHeight(this.manageView.getScreenHeight()-300);
 		info1.setStyle("-fx-background-color: LIGHTBLUE");
 		
 		Label title = new Label(name);
 		title.setFont(new Font("Andale Mono", FONTSIZE));
 		title.setWrapText(true);
-		title.setMaxWidth(screenWidth/6);
+		title.setMaxWidth(this.manageView.getScreenWidth()/6);
 		
 		Button toggle = new Button();
 		Image toggleIM = new Image(getClass().getResourceAsStream("/toggle.png"));
@@ -436,7 +559,7 @@ public class GardenDesign extends View{
 		Text tf = new Text();
 		tf.setText(info);
 		tf.setTextAlignment(TextAlignment.CENTER);
-		tf.setWrappingWidth(screenWidth / 6.5);;
+		tf.setWrappingWidth(this.manageView.getScreenWidth() / 6.5);;
 		tf.setFont(new Font("Andale Mono", 14));
 
 		info1.setTop(top);
@@ -454,8 +577,8 @@ public class GardenDesign extends View{
 	public VBox addGridPane() {
 		VBox vb = new VBox();
 		vb.setStyle("-fx-background-color: LIGHTBLUE");
-		vb.setMinHeight(screenHeight/4);
-		vb.setPrefWidth(screenHeight/7);
+		vb.setMinHeight(this.manageView.getScreenWidth()/4);
+		vb.setPrefWidth(this.manageView.getScreenHeight()/7);
 		vb.setAlignment(Pos.CENTER);
 		
 		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore")); 
@@ -495,21 +618,14 @@ public class GardenDesign extends View{
 	}
 	
 	/**
-	 * returns the center pane in borderPane
-	 * @return the pane
-	 */
-	public Pane mainPane(){
-		return main;
-	}
-	/**
 	 * Makes the compare pane where plants can be placed and compared 
 	 * @return the created pane
 	 */
 	public BorderPane addBorderPane() {
 		BorderPane border = new BorderPane();
 		border.setStyle("-fx-background-color: LIGHTBLUE");
-		border.setMinHeight(screenHeight/3);
-		border.setMaxWidth(screenHeight/4);
+		border.setMinHeight(this.manageView.getScreenHeight()/3);
+		border.setMaxWidth(this.manageView.getScreenHeight()/4);
 		StackPane s1 = addStackPane("-fx-background-color: ALICEBLUE");
 		StackPane s2 = addStackPane("-fx-background-color: LAVENDER");
 		Label l = new Label("Compare");
@@ -550,7 +666,7 @@ public class GardenDesign extends View{
 	public StackPane addStackPane(String background) {
 		StackPane stack = new StackPane();
 		stack.setStyle("-fx-border-color:GREY; -fx-border-width:1px; "+background);
-		stack.setMinWidth(screenHeight/8);
+		stack.setMinWidth(this.manageView.getScreenHeight()/8);
 		return stack;
 	}
 	
@@ -559,6 +675,7 @@ public class GardenDesign extends View{
 	 */
 	public void removePlant(Node n) {
 		System.out.println("removing plant");
+		placed.remove(n);
 		main.getChildren().remove(n);
 	}
 	
@@ -569,7 +686,7 @@ public class GardenDesign extends View{
 		c.setPreserveRatio(true);
 		c.setFitHeight(NORMALCOMPOST);
 		c.setTranslateX(60);
-		c.setTranslateY((screenHeight-200)/2 + 100);
+		c.setTranslateY((this.manageView.getScreenHeight()-200)/2 + 100);
 		c.setOnMouseExited(event->{
 			System.out.println("set on mouse exited");
 			c.setFitHeight(NORMALCOMPOST);

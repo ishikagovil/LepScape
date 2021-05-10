@@ -1,17 +1,22 @@
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
+import javafx.stage.Popup;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,7 +35,6 @@ import javafx.application.Application;
  * @author Ishika Govil, Arunima Dey, Dea Harjianto, Jinay Jain, Kimmy Huynh
  */
 public class Controller extends Application {
-	private final boolean DEBUG = true;
 	ManageViews view;
 	// reading plant information
 	String plantFile = "src/main/resources/finalPlantListWithInfo.csv";
@@ -39,6 +43,11 @@ public class Controller extends Application {
 	Model model;
 	Stage stage;
 	boolean inMain = false;
+	final int XDISPLACE = 200;
+	final int YDISPLACE = 50;
+	final double THRESHOLD = 0.00001;
+	final int XSNAPDISPLACE = 12;
+	final int YSNAPDISPLACE = 12;
 	
 	/** 
 	 * Override for the Application start method. Instantiates all fields
@@ -52,11 +61,12 @@ public class Controller extends Application {
 		this.model.setPlantDirectory(CSVtoPlants.readFile(plantFile));
 		System.out.println("setting lep directory");
 		this.model.setLepDirectory(CSVtoLeps.readFile(lepFile));
-	    view = new ManageViews(stage,this, plantFile, lepFile);
+		Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+	    view = new ManageViews(stage,this, plantFile, lepFile, screenBounds.getWidth(), screenBounds.getHeight());
+	    System.out.println(screenBounds);
 	    this.stage = stage;
-//		this.stage.setFullScreen(true);
+		this.stage.setFullScreen(true);
 	    readBack();
-
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
@@ -269,6 +279,34 @@ public class Controller extends Application {
 	}
 	
 	/**
+	 * when a user wants to edit a previously saved garden
+	 * @param event the edit button action
+	 * @param index index of saved garden
+	 * @param dialog the stage that contains edit button
+	 */
+/*public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
+		this.view.switchViews("GardenDesign");
+		setTheStage();
+		model.gardenMap = model.savedGardens.get(index);
+		Garden garden = model.gardenMap;
+		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
+		System.out.println("outline: "+garden.outline + " "+ garden.outline.size());
+		((GardenDesign) view.views.get("GardenDesign")).remakePane();
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
+		model.scale = garden.scale;
+		model.lengthPerPixel = garden.lengthPerPixel;
+		garden.plants.forEach(plant->{
+			double heightWidth = scalePlantSpread(plant.getName());
+			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
+			model.gardenMap.placedPlants.put(node, plant);
+		});
+		dialog.close();
+		model.setToEdit();
+		model.setEditGardenIndex(index);
+	}
+*/
+	/**
+
 	 * Show the information of a savedGarden when user clicks on it
 	 * @param event the button click event
 	 * @param index index of the saved garden
@@ -313,7 +351,7 @@ public class Controller extends Application {
 			String name = model.plantDirectory.get(key).getCommonName();
 			String description = model.plantDirectory.get(key).getDescription();
 			String info = description;
-			view.makeInfoPane(name, info);
+			((GardenDesign)view.views.get("GardenDesign")).makeInfoPane(name, info);
 		}
 		event.setDragDetect(true);
 	}
@@ -325,16 +363,11 @@ public class Controller extends Application {
 	 */
 	public void drag(MouseEvent event) {
 		Node n = (Node)event.getSource();
-		if (!DEBUG) {
-			System.out.println("ic mouse drag ty: " + n.getTranslateY() + ", ey: " + event.getY() );
-			System.out.println("ic mouse drag tx: " + n.getTranslateX() + ", ex: " + event.getX() );
-		}
 		n.toFront();
 		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
 		model.setY(model.getY() + event.getY());
 		view.setX(model.getX(),n);
 		view.setY(model.getY(),n);
-		
 		event.setDragDetect(false);
 	}
 	
@@ -346,10 +379,11 @@ public class Controller extends Application {
 	 * @author Arunima Dey
 	 */
 	public void release(MouseEvent event, String name, boolean startingInTile) {
-		System.out.println("released");
+		System.out.println("released PART TWO");
 		Node n = (Node)event.getSource();
 		n.setMouseTransparent(false);
 		if(startingInTile) {
+			System.out.println("resetting parent image");
 			view.setX(0,n);
 			view.setY(0,n);
 			if(inMain) {
@@ -374,15 +408,72 @@ public class Controller extends Application {
 			}
 		}
 		else {
- 			System.out.println("updating");
+ 			System.out.println("updating PART TWO");
  			String id = ((Node) event.getSource()).getId();
  			model.updateXY(id);
+ 			ImageView plant = ((ImageView) event.getSource());
+ 			double plantX = plant.getBoundsInParent().getCenterX();
+ 			double plantY = plant.getBoundsInParent().getCenterY();
+ 			double plantRadius = plant.getBoundsInParent().getHeight();
+ 			
+ 			double plantXFixed = plantX - plantRadius/2 + XDISPLACE;
+ 			double plantYFixed = plantY - plantRadius/2 + YDISPLACE;
+ 			
+ 			System.out.println("x: " + plantX + ", y: " + plantY + ", radius: " + plantRadius);
+ 			
+ 			double[] collidingInfo = ((GardenDesign)(view.views.get("GardenDesign"))).validatePlantPlacement(plantXFixed, plantYFixed, plantRadius);
+			int collideNumber = (int)collidingInfo[1];
+ 			System.out.println(collidingInfo[0]);
+ 			System.out.println(collideNumber);
+ 			
+ 			if (collideNumber == 0) {
+ 	 			// updates the location haha gang gang
+ 				model.updateXY(id);
+ 	 			System.out.println("updated and moved PART TWO!");
+ 			} else {
+ 				// make it SNAP BACK
+ 				
+ 				double coordSnap = plantCollideSnap(collidingInfo[4]);
+ 				
+ 				double parentX = collidingInfo[2];
+ 				double parentY = collidingInfo[3];
+ 				//double totalDist = collidingInfo[4];
+ 				
+ 				switch(collideNumber) {
+ 					case 1:
+ 						plantX = parentX - coordSnap;
+ 						plantY = parentY - coordSnap;
+ 						break;
+ 					case 2:
+ 						plantX = parentX + coordSnap;
+ 						plantY = parentY - coordSnap;
+ 						break;
+ 					case 3:
+ 						plantX = parentX + coordSnap;
+ 						plantY = parentY + coordSnap;
+ 						break;
+ 					case 4:
+ 						plantX = parentX - coordSnap;
+ 						plantY = parentY + coordSnap;
+ 						break;
+ 				}
+ 				
+ 				view.setX(plantX - XSNAPDISPLACE,n);
+ 				view.setY(plantY - YSNAPDISPLACE,n);
+ 				System.out.println("cannot move, collided PART TWO!");
+			}
  		}
 		inMain = false;
 	}
 	
 	public void updateBudgetandLep() {
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
+	}
+	
+	
+	public double plantCollideSnap(double distance) {
+		double coord = Math.sqrt(Math.pow(distance, 2) / 2);
+		return coord;
 	}
 	
 	/**
@@ -462,6 +553,7 @@ public class Controller extends Application {
 	 * Everytime the application is started a read back all the saved gardens from previos sessions
 	 * @author Arunima Dey
 	 */
+	@SuppressWarnings("unchecked")
 	public void readBack() {
 		try {
 			System.out.println("reading");
@@ -479,6 +571,36 @@ public class Controller extends Application {
 			System.out.println("error reading in");
 			e.printStackTrace();
 		}
+	}
+	
+	// https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message
+	public static Popup createPopup(final String message) {
+	    final Popup popup = new Popup();
+	    popup.setAutoFix(true);
+	    popup.setAutoHide(true);
+	    popup.setHideOnEscape(true);
+	    Label label = new Label(message);
+	    label.setOnMouseReleased(new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent e) {
+	            popup.hide();
+	        }
+	    });
+	    label.setStyle(" -fx-background-color: #8C6057; -fx-padding: 10; -fx-border-color: #5C5346; -fx-border-width: 5; -fx-font-size: 16; -fx-text-fill: white");
+	    popup.getContent().add(label);
+	    return popup;
+	}
+
+	public static void showPopupMessage(final String message, final Stage stage) {
+	    final Popup popup = createPopup(message);
+	    popup.setOnShown(new EventHandler<WindowEvent>() {
+	        @Override
+	        public void handle(WindowEvent e) {
+	            popup.setX(stage.getX() + stage.getWidth()/2 - popup.getWidth()/2);
+	            popup.setY(stage.getY() + stage.getHeight()/2 - popup.getHeight()/2);
+	        }
+	    });        
+	    popup.show(stage);
 	}
 	
 	/**
@@ -588,11 +710,11 @@ public class Controller extends Application {
 	 * @param double scale 
 	 * @author Ishika Govil
 	 */
-	public void drawPlot(double scale) {
+	public void drawPlot() {
 		ListIterator<Vector2> itr = model.getGarden().outline.listIterator();
-		iteratePlot(itr, model.getGarden().outline, false, scale);
+		iteratePlot(itr, model.getGarden().outline, false);
 		itr = model.getGarden().polygonCorners.listIterator();
-		iteratePlot(itr, model.getGarden().polygonCorners, true, scale);
+		iteratePlot(itr, model.getGarden().polygonCorners, true);
 	}
 	
 	/**
@@ -600,9 +722,9 @@ public class Controller extends Application {
 	 * @param double scale
 	 * @author Ishika Govil
 	 */
-	public void drawFreehandPart(double scale) {
+	public void drawFreehandPart() {
 		ListIterator<Vector2> itr = model.getGarden().outline.listIterator();
-		iteratePlot(itr, model.getGarden().outline, false, scale);
+		iteratePlot(itr, model.getGarden().outline, false);
 	}
 	
 	/**
@@ -627,12 +749,7 @@ public class Controller extends Application {
 	 * @param double scale 
 	 * @author Ishika Govil
 	 */
-	public void iteratePlot(ListIterator<Vector2> itr, ArrayList<Vector2> list, boolean isPolygon, double scale) {
-		Vector2 translate;
-		if(scale == 1)
-			translate = new Vector2(0, 0);
-		else
-			translate = this.model.translateScaledPlot(this.view.getGardenTopLeft());		
+	public void iteratePlot(ListIterator<Vector2> itr, ArrayList<Vector2> list, boolean isPolygon) {
 		while(itr.hasNext()) {
 			Vector2 point1 = itr.next();
 			Vector2 point2;
@@ -643,24 +760,10 @@ public class Controller extends Application {
 			else 
 				return;
 			if(point2.getX() != -1 && point1.getX()!= -1)
-				this.view.drawLine(point1.getX()*scale + translate.getX(), point1.getY()*scale + translate.getY(), point2.getX()*scale + translate.getX(), point2.getY()*scale + translate.getY(), isPolygon);
+				this.view.drawLine(point1.getX(), point1.getY(), point2.getX(), point2.getY(), isPolygon);
 		}
 	}
 	
-	/**
-	 * Using the extreme x and y coordinates, the pixel lengths of the maximum minus minimum are determined.
-	 * Then, these lengths are divided by desired lengths to determine scale.
-	 * The minimum is used as the scale and drawPlot is called
-	 * @author Ishika Govil
-	 */
-	public void scalePlot() {
-		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
-		double scaleY = this.view.getGardenHeight() / Math.abs(extrema.get(0).getY() -  extrema.get(2).getY());
-		double scaleX = this.view.getGardenWidth() / Math.abs(extrema.get(1).getX() -  extrema.get(3).getX());
-		double scale =  Math.min(scaleX, scaleY);
-		this.model.setScale(scale);
-		drawPlot(scale);
-	}
 	
 	/** 
 	 * Called when user is drawing. 
@@ -807,20 +910,5 @@ public class Controller extends Application {
 		info += "\nLeps supported: "+s.getLepsSupported();
 		return info;
 	}
-	
-
-	/**
-	 * Starting x location for a node
-	 * @return the x
-	 * @author Arunima Dey
-	 */
-	public double getStartingX() {return model.getX();}
-	
-	/**
-	 * starting y location of a node
-	 * @return the y
-	 * @author Arunima Dey
-	 */
-	public double getStartingY() {return model.getY();}
 
 }

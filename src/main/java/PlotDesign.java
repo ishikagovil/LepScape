@@ -2,10 +2,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -14,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.*;
@@ -21,12 +19,13 @@ import java.util.*;
 public class PlotDesign extends View{
 	ArrayList<ImageView> drawSwitch; 
 	ArrayList<ImageView> dimSwitch;
-	HBox box;
+	ToolBar box;
 	GridPane grid; //added to contain the TextField
 	ToolBar toolbar;
 	Polygon poly;
 	Image plotInstructions;
 	Image dimInstructions;
+	Line dimLine;
     boolean shapeClicked = false;
     boolean dragAnchor = false;
     ObservableList<Anchor> anchors;
@@ -43,10 +42,11 @@ public class PlotDesign extends View{
 	 */
 	public PlotDesign(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
-		Canvas canvas = new Canvas(screenWidth, screenHeight);
+		Canvas canvas = new Canvas(this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
 		//Loading Images
-		dimInstructions = new Image(getClass().getResourceAsStream("/dimensions.jpg"));
-		plotInstructions = new Image(getClass().getResourceAsStream("/drawPlot.jpg"));
+		dimInstructions = new Image(getClass().getResourceAsStream("/dimensions.jpg"), this.manageView.getScreenWidth(), this.manageView.getScreenHeight(), false, false);
+		plotInstructions = new Image(getClass().getResourceAsStream("/drawPlot.jpg"),  this.manageView.getScreenWidth(), this.manageView.getScreenHeight(), false, false);
+
 		//Set canvas for drawing: https://www.youtube.com/watch?v=gjZQB6BmyK4
 		border = new BorderPane();
 		border.getChildren().add(canvas); 
@@ -100,7 +100,7 @@ public class PlotDesign extends View{
             //Remove the lines on the current screen and polygon points
            	removeLines();
            	controller.restartPolygonBoundary();
-           	gc.clearRect(0,0, screenWidth, screenHeight);
+           	gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
            	border.setOnMouseReleased(null);
            	
            	//Enable toolbar buttons
@@ -113,12 +113,20 @@ public class PlotDesign extends View{
            	border.getChildren().add(poly);
            	border.getChildren().addAll(anchors);
            	shapeClicked = poly.getPoints().size() != 0;
-           	controller.drawFreehandPart(1);
+           	controller.drawFreehandPart();
+           	
+           	//Removing the dimension line
+           	if(dimLine != null) {
+            	border.getChildren().remove(dimLine);
+            	dimLine = null;
+            }
            	
            	//Change border design
            	border.getChildren().remove(grid);
            	gc.drawImage(plotInstructions, 0, 0);
            	createHBox(drawSwitch);	       
+           	
+           	e.consume();
         });
 	}
 	/**
@@ -143,15 +151,21 @@ public class PlotDesign extends View{
         	anchors = FXCollections.observableArrayList();
         	removeLines();
         	gc.drawImage(plotInstructions, 0, 0);
+        	e.consume();
         });
         drawSwitch.add(clear);
         
         //Adding Undo button
         ImageView undo = addNextButton("undo", "ClearDim");
         dimSwitch.add(undo);
-        dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (event)-> {
-            gc.clearRect(0,0, screenWidth, screenHeight);
+        dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
+            gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
+            if(dimLine != null) {
+            	border.getChildren().remove(dimLine);
+            	dimLine = null;
+            }
            	onSettingDimensions(); 
+        	e.consume();
         });
   
 	}
@@ -175,6 +189,7 @@ public class PlotDesign extends View{
 	 */
 	public void validateSave() {
 		drawSwitch.get(2).setOnMouseClicked((e) -> {        
+			e.consume();
            	toolbar.getItems().get(0).setDisable(true);
            	toolbar.getItems().get(1).setDisable(true);
             	
@@ -185,14 +200,13 @@ public class PlotDesign extends View{
            	//Clear everything on this screen
            	border.getChildren().remove(poly);
            	border.getChildren().removeAll(anchors);
-           	gc.clearRect(0,0, screenWidth, screenHeight);
+           	gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
           	shapeClicked = true;
            	
            	//Start the next screen for dimensions 
            	onSettingDimensions();      	
            	removeLines();
-          	controller.drawPlot(1);
-            
+          	controller.drawPlot();
         });
 	}
 	/**
@@ -206,6 +220,13 @@ public class PlotDesign extends View{
         border.setOnMouseReleased(event -> {
         	border.setOnMousePressed(null);
 		    border.setOnMouseDragged(null);
+		    border.setOnMouseReleased(null);
+		    gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
+		    dimLine = new Line(manageView.dimLen.get(0)[0], manageView.dimLen.get(0)[1], manageView.dimLen.get(manageView.dimLen.size()-1)[0], manageView.dimLen.get(manageView.dimLen.size()-1)[1]);
+		    dimLine.setStrokeWidth(3);
+		    dimLine.setStroke(Color.DARKGREEN);
+			border.getChildren().add(dimLine);
+			gc.drawImage(dimInstructions, 0, 0);
 		});	
 		createHBox(dimSwitch);
 	    
@@ -222,6 +243,8 @@ public class PlotDesign extends View{
 	   			dimension.clear();
 	   		}         
 	    	controller.switchViews("ConditionScreen");          
+	    	
+	    	event.consume();
 	    });	
 	    grid = new GridPane();
 	    grid.getChildren().add(dimension);
@@ -236,13 +259,22 @@ public class PlotDesign extends View{
 	public void createHBox(ArrayList<ImageView> list) {
 		if(border.getChildren().contains(box))
 			border.getChildren().remove(box);
-		box = new HBox();
-		box.setSpacing(10);
+		box = new ToolBar();
+//		box.setSpacing(10);
 		box.setPadding(new Insets(20));
-		box.setAlignment(Pos.TOP_CENTER);
+//		box.setAlignment(Pos.TOP_CENTER);
 		box.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
-		box.getChildren().addAll(list);
+		box.getItems().add(createSpacer());
+		box.getItems().addAll(list);
+		box.getItems().add(createSpacer());
 		border.setBottom(box);
+	}
+	
+	private Node createSpacer() {
+		Pane spacer = new Pane();
+		HBox.setHgrow(spacer, Priority.SOMETIMES);
+		
+		return spacer;
 	}
 	
 	/**
@@ -263,6 +295,8 @@ public class PlotDesign extends View{
             border.setOnMousePressed(null);
             border.setOnMouseDragged(null);
             border.setOnMouseReleased(null);
+            
+            e.consume();
         });
 	}
 	
@@ -273,8 +307,8 @@ public class PlotDesign extends View{
 		//Polygon code adapted from: https://gist.github.com/jpt1122/dc3f1b76f152200718a8
 
 		//Initializes the points clockwise starting from top left corner of box
-		double[] x = new double[]{screenWidth/2-100, screenWidth/2+100, screenWidth/2+100, screenWidth/2-100};
-	    double[] y = new double[]{screenHeight/2-100, screenHeight/2-100, screenHeight/2+100, screenHeight/2+100};  
+		double[] x = new double[]{this.manageView.getScreenWidth()/2-100, this.manageView.getScreenWidth()/2+100, this.manageView.getScreenWidth()/2+100, this.manageView.getScreenWidth()/2-100};
+	    double[] y = new double[]{this.manageView.getScreenHeight()/2-100, this.manageView.getScreenHeight()/2-100, this.manageView.getScreenHeight()/2+100, this.manageView.getScreenHeight()/2+100};  
 		List<Double> values = new ArrayList<Double>();
         for(int i = 0; i < x.length; i++) {
         	values.add(x[i]);

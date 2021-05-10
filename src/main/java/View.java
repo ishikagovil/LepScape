@@ -1,10 +1,8 @@
 import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,14 +20,6 @@ import java.util.*;
 public abstract class View{
 	private static final int lineWidth = 3;
 	private static final double fillThreshold = 0.95;
-	
-	public int screenWidth = 1290;
-	public int screenHeight = 800;
-	public double gardenWidth = 0.5*screenWidth;
-	public double gardenHeight = 0.5*screenHeight;
-	public double gardenTopLeftX = 0.3*screenWidth;
-	public double gardenTopLeftY = 0.2*screenHeight;
-
 	BorderPane border;
 	Stage stage;
 	Controller controller;
@@ -56,6 +46,7 @@ public abstract class View{
 		this.stage.setTitle("Lepscape");
 		
 	}	
+	
 	/**
 	 * Sets the translateX value of a node n
 	 * @param double x
@@ -71,21 +62,7 @@ public abstract class View{
 	public BorderPane getBorderPane() {
 		return border;
 	}
-	/**
-	 * Returns the screenWidth
-	 * @return int 
-	 */
-	public int getScreenWidth() {
-		return screenWidth;
-	}
-	/**
-	 * Returns the screenHeight
-	 * @return int 
-	 */
-	public int getScreenHeight() {
-		return screenHeight;
-	}
-	
+
 	/**
 	 * Sets the translateX value of a node n
 	 * @param double x
@@ -261,7 +238,7 @@ public abstract class View{
 
 	private static void floodFill(Canvas canvas, Conditions conds, int startX, int startY, int width, int height) {
 		// Inspired by the flood fill example https://stackoverflow.com/questions/23983465/is-there-a-fill-function-for-arbitrary-shapes-in-javafx
-		Stack<Point2D> fillStack = new Stack<>();
+		Stack<Vector2> fillStack = new Stack<>();
 
 		WritableImage snapshot = canvas.snapshot(null, null);
 		PixelReader pr = snapshot.getPixelReader();
@@ -272,10 +249,10 @@ public abstract class View{
 
 		
 		Color fillColor = conds.toColor();
-		fillStack.push(new Point2D(startX, startY));
+		fillStack.push(new Vector2(startX, startY));
 		
 		while(!fillStack.empty()) {
-			Point2D curr = fillStack.pop();
+			Vector2 curr = fillStack.pop();
 			int x = (int) curr.getX();
 			int y = (int) curr.getY();
 
@@ -285,28 +262,24 @@ public abstract class View{
 			imgPW.setColor(x, y, Color.BLACK);
 
 			if(x > 0) {
-				fillStack.push(new Point2D(x-1, y));
+				fillStack.push(new Vector2(x-1, y));
 			}
 			
 			if(x < width - 1) {
-				fillStack.push(new Point2D(x+1, y));
+				fillStack.push(new Vector2(x+1, y));
 			}
 
 			if(y > 0) {
-				fillStack.push(new Point2D(x, y-1));
+				fillStack.push(new Vector2(x, y-1));
 			}
 
 			if(y < height - 1) {
-				fillStack.push(new Point2D(x, y+1));
+				fillStack.push(new Vector2(x, y+1));
 			}
 				
 		}
 	}
 	
-	//Used only in gardenDesign. In here because need to called by controller
-	public void removePlant(Node n) {}
-	public void makeInfoPane(String name, String info) {}
-	public void updateBudgetandLep(int cost, int lepCount) {}
 
 
 }

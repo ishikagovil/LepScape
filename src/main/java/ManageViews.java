@@ -16,6 +16,8 @@ public class ManageViews {
 	public double dimPixel; //Used when setting the dimensions of the garden
 	public ArrayList<double[]> dimLen; //Used when setting the dimensions of the garden
 	public WritableImage img; //sets the image from PlotDesign
+	public double screenWidth;
+	public double screenHeight;
 	Map<String,View> views;
 	View currView;
 	Controller controller;
@@ -25,8 +27,6 @@ public class ManageViews {
 	public Map<String, Image> buttonImages;
 	public Pane sp;
 	public WritableImage savedImg;
-	public WritableImage plot;
-
 	/**
 	 * @author Ishika Govil
 	 */
@@ -38,10 +38,12 @@ public class ManageViews {
 	 * @param Controller
 	 * @author Ishika Govil
 	 */
-	public ManageViews(Stage stage, Controller c, String fileName, String fileName2) {
+	public ManageViews(Stage stage, Controller c, String fileName, String fileName2, double width, double height) {
 		importImages(fileName, fileName2);
 		dimLen = new ArrayList<>();
 		dimPixel = -1;
+		this.screenWidth = width;
+		this.screenHeight = height;
 		this.controller = c;
 	    this.stage = stage;
 	    this.sp = new Pane();
@@ -49,6 +51,8 @@ public class ManageViews {
 		initializeViews();
 	    this.currView = this.getView("Start");
 	}
+	
+	
 	public void importButtonImages() {
 		File[] file;
 		this.buttonImages = new HashMap<>();
@@ -170,45 +174,6 @@ public class ManageViews {
 	    setSavedImage(img);
 	}
 	
-	/**
-	 * Makes the image data for the a garden
-	 * @return the int matrix
-	 */
-	public int[][] makeDataforPlot() {
-		int width = (int)plot.getWidth();
-		int height = (int)plot.getHeight();
-		int[][] data = new int[width][height];
-		PixelReader r = plot.getPixelReader();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                data[i][j] = r.getArgb(i, j);
-            }
-        }
-        return data;
-	}
-	
-	/**
-	 * with data makes the image of a garden
-	 * @param width the width of garden
-	 * @param height height of garden
-	 * @param data imageData for garden
-	 */
-	public void makeImageforplot(int width, int height, int[][] data) {
-		System.out.println(width);
-		System.out.println(height);
-		if(width<=0 && height<=0) {
-			width = 1;
-			height=1;
-		}
-		WritableImage img = new WritableImage(width, height);
-	    PixelWriter w = img.getPixelWriter();
-	    for (int i = 0; i < width; i++) {
-	    	for (int j = 0; j < height; j++) {
-	    		w.setArgb(i, j, data[i][j]);
-	    	}
-	    }
-	    setPlot(img);
-	}
 	
 	/** 
 	 * Returns the BorderPane associated with the current View
@@ -219,40 +184,19 @@ public class ManageViews {
 	}
 	/** 
 	 * Returns the screen width associated with the current View
-	 * @return int 
+	 * @return double 
 	 */
-	public int getScreenWidth() {
-		return this.currView.screenWidth;
+	public double getScreenWidth() {
+		return this.screenWidth;
 	}
 	/** 
 	 * Returns the screen height associated with the current View
-	 * @return int 
+	 * @return double 
 	 */
-	public int getScreenHeight() {
-		return this.currView.screenHeight;
+	public double getScreenHeight() {
+		return this.screenHeight;
 	}
-	/** 
-	 * Returns the garden width associated with the current View
-	 * @return int 
-	 */
-	public double getGardenWidth() {
-		return this.currView.gardenWidth;
-	}
-	/** 
-	 * Returns the garden height associated with the current View
-	 * @return int 
-	 */
-	public double getGardenHeight() {
-		return this.currView.gardenHeight;
-	}
-	
-	/** 
-	 * Returns the top left corner of the garden view frame
-	 * @return int 
-	 */
-	public Vector2 getGardenTopLeft() {
-		return new Vector2(this.currView.gardenTopLeftX,  this.currView.gardenTopLeftY);
-	}
+
 
 	/** 
 	 * Returns the GraphicsContext associated with the current View
@@ -311,14 +255,6 @@ public class ManageViews {
 		this.currView = this.views.get("PlotDesign");
 	}
 	
-	/**
-	 * removed a given plant
-	 * @param node the plant that will be deleted
-	 */
-	public void removePlant(Node node) {
-		views.get("GardenDesign").removePlant(node);
-	}
-	
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
 	}
@@ -326,14 +262,6 @@ public class ManageViews {
 	public void validateSave() {
 		if(this.currView instanceof PlotDesign)
 			((PlotDesign) this.currView).validateSave();
-	}
-	
-	/**
-	 * Sets the image for plot
-	 * @param plot
-	 */
-	public void setPlot(WritableImage plot) {
-		this.plot = plot;
 	}
 	
 	//methods only used by garden design
@@ -345,24 +273,14 @@ public class ManageViews {
 		currView.setX(x, n);
 	}
 	
-	public void addImageView(double x, double y, String key, double heightWidth) {
-		((GardenDesign) views.get("GardenDesign")).addImageView(x,y,key,heightWidth);
-//		currView.addImageView(x, y, key);
+	public boolean getCalledFromStart() {
+		return ((Gallery) views.get("Gallery")).calledFromStart;
 	}
 	
-//	public void removePlant(Node n) {currView.removePlant(n);}
-	public void makeInfoPane(String name, String info) {
-		currView.makeInfoPane(name, info);
+	public void setCalledFromStart(boolean called) {
+		((Gallery) views.get("Gallery")).calledFromStart = called;
+		((Gallery) views.get("Gallery")).setBackButton();
 	}
-	
-	/**
-	 * updates the budget and lep count when plant added
-	 * @param cost the cost of plant
-	 * @param lepCount lep supported by plant
-	 */
-//	public void updateBudgetandLep(double cost, int lepCount) {
-//		((GardenDesign)views.get("GardenDesign")).updateBudgetandLep(cost, lepCount);
-//	}
 	
 	public void updateLepandCost(double cost, int lepCount) {
 		((Summary) views.get("Summary")).updateLepandCost(cost, lepCount);

@@ -1,31 +1,40 @@
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import javafx.animation.TranslateTransition;
+import javax.imageio.ImageIO;
+import javafx.embed.swing.SwingFXUtils;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javafx.embed.swing.SwingFXUtils;
+
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 
 
 public class Summary extends View {
@@ -63,7 +72,6 @@ public class Summary extends View {
 	       sp1.getChildren().add(iv1);
 	       translation.play();
 	       */
-
 		border.setCenter(main);  
     }
 	
@@ -94,6 +102,41 @@ public class Summary extends View {
         	FileChooser file = new FileChooser();
         	file.setTitle("Download File");
         	File file1 = file.showSaveDialog(stage);
+        	file.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        });
+        WritableImage wim = manageView.savedImg;
+		File f = new File("src/main/resources/gardenImage");
+		//BufferedImage b = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
+		try {
+			ImageIO.write(SwingFXUtils.fromFXImage(wim,null),"png", f);
+		}
+		catch (Exception s){
+
+		}
+        // https://www.youtube.com/watch?v=CuK4urJtoyA
+        // https://www.youtube.com/watch?v=Mef0Thtrjsc
+        download.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        	@Override
+        	public void handle(MouseEvent event) {
+        		Document document = new Document();
+				try {
+					PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("GardenDesign.pdf"));
+			        document.open();
+			        document.add(new Paragraph("A Hello World PDF document."));
+			        WritableImage wi = new WritableImage((int) gc.getCanvas().getWidth(), (int) gc.getCanvas().getHeight());
+			        gc.getCanvas().snapshot(null, wi);
+			        BufferedImage bi = SwingFXUtils.fromFXImage((Image) wi, null);
+			        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+			        ImageIO.write(bi, "png", bo);
+			        com.itextpdf.text.Image im = com.itextpdf.text.Image.getInstance(bo.toByteArray());
+			        document.add(im);
+			        document.close();
+			        writer.close();
+				}
+				catch (DocumentException | IOException e) {
+					e.printStackTrace();
+				}
+        	}
         });
         bottomButtons.add(download);
         bottomButtons.add(addNextButton("next", "Restart"));
@@ -128,6 +171,9 @@ public class Summary extends View {
         saveGarden.setOnMouseClicked(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
         buttons.add(addNextButton("gallery","Gallery"));
+        buttons.get(4).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
+        	this.manageView.setCalledFromStart(false);
+        });
         return buttons;
 	}
 
