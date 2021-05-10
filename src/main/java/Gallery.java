@@ -21,7 +21,7 @@ import java.util.*;
 
 //https://stackoverflow.com/questions/44841329/how-to-implement-serializable-for-my-project-to-have-persistence
 public class Gallery extends View{
-	final int GARDEN_IMAGEVIEW_HEIGHT=100;
+	final int GARDEN_IMAGEVIEW_HEIGHT=175;
 	final int HBOX_SPACING = 20;
 	final int INFO_IV_SIZE = 50;
 	public ArrayList<Button> multiview;

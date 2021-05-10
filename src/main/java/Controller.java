@@ -651,6 +651,10 @@ public class Controller extends Application {
 				model.savedGardens.remove(model.getEditGardenIndex());
 				model.savedGardens.add(model.getEditGardenIndex(),model.getGarden());
 				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),garden.getCost(),garden.getLepCount(),garden.getTitle());
+				FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				oos.writeObject(model.savedGardens);
+				oos.close();	
 			}else {
 				TextField titleField = ((Summary) view.views.get("Summary")).gardenTitlePopup();
 				titleField.setOnKeyReleased(e->{
@@ -661,14 +665,19 @@ public class Controller extends Application {
 							System.out.println("Title of garden: "+garden.getTitle());
 							model.savedGardens.add(garden);
 							gal.loadScreen(view.savedImg,model.savedGardens.size()-1,garden.getCost(),garden.getLepCount(),garden.getTitle());
+							try {
+								FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
+								ObjectOutputStream oos = new ObjectOutputStream(fos);
+								oos.writeObject(model.savedGardens);
+								oos.close();	
+							}catch(IOException e1) {
+								System.out.println("error writing to file");
+								e1.printStackTrace();
+							}
 						}
 					}
 				});
 			}
-			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(model.savedGardens);
-			oos.close();	
  		}
  		catch(IOException e) {
  			System.out.println("error writing to file");
