@@ -54,7 +54,7 @@ public class Summary extends View {
 		border = new BorderPane();
 		border.setBottom(addBottomHBox());
 		border.setLeft(addNavigationVBox());
-		border.setCenter(addCenterPane());
+		//border.setCenter(addCenterPane());
 		
 		/*
 	       // load butterfly animation
@@ -72,7 +72,9 @@ public class Summary extends View {
 	       sp1.getChildren().add(iv1);
 	       translation.play();
 	       */
-		border.setCenter(main);  
+		
+       //main = addCanvas();
+		border.setCenter(main);  		
     }
 	
 /**
@@ -209,7 +211,7 @@ public class Summary extends View {
 		ImageView iv = new ImageView(manageView.savedImg);
 		iv.setPreserveRatio(true);
 		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
-		iv.fitHeightProperty().bind(gardenDesign.widthProperty());
+		iv.fitHeightProperty().bind(gardenDesign.heightProperty());
 		gardenDesign.getChildren().add(iv);
 		border.setCenter(gardenDesign);
 	}

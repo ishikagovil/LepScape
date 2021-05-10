@@ -24,7 +24,6 @@ public class Gallery extends View{
 	final int GARDEN_IMAGEVIEW_HEIGHT=100;
 	final int HBOX_SPACING = 20;
 	final int INFO_IV_SIZE = 50;
-	Controller c;
 	public ArrayList<Button> multiview;
 	public Button back;
 	public Button sort;
@@ -33,28 +32,16 @@ public class Gallery extends View{
 	boolean calledFromStart;
 	Stage stage;
 	
-	public Gallery(Stage stage, Controller c, ManageViews manageView) {
-		super(stage, c, manageView);
+	public Gallery(Stage stage, Controller controller, ManageViews manageView) {
+		super(stage, controller, manageView);
 		border = new BorderPane();
 		this.stage = stage;
-		this.c = c;
 		// back button 
 		
 //		back.setOnAction(controller.getHandlerforClicked("Back to Start"));
 		setBackButton();
 		
-		// get the summary pane on the right to display lep + cost
-		VBox vb1 = new VBox();
-		vb1.setPadding(new Insets(20));
-		vb1.setSpacing(15);
-		vb1.setStyle("-fx-background-color: lavender");
-		Text summary = new Text("Summary");
-		summary.setTextAlignment(TextAlignment.LEFT);
-		summary.setFont(Font.font(null, FontWeight.BOLD, 30));
-		vb1.getChildren().add(summary);
-		border.setRight(vb1);
 		ScrollPane root = new ScrollPane();
-		
 		tile = new TilePane();
 		tile.setStyle("-fx-background-color: lightblue; -fx-border-color: chocolate; -fx-border-width: 5px");
 		tile.setPadding(new Insets(5));
@@ -90,6 +77,7 @@ public class Gallery extends View{
 			hb1.getChildren().add(addNextButton("back","Start"));
 		else
 			hb1.getChildren().add(addNextButton("back","Summary"));
+		
 		border.setBottom(hb1);
 	}
 
@@ -127,12 +115,15 @@ public class Gallery extends View{
 	        		information.setAlignment(Pos.CENTER);
 	        		information.getChildren().add(lepLabel);
 	        		information.getChildren().add(costLabel);
-	        		
+	     
 	                BorderPane bp = new BorderPane();
 	                
 	                HBox hb = new HBox(HBOX_SPACING);
 	                Button edit = new Button("Edit");
-	                edit.setOnAction(c.getHandlerforEditSaved(index,dialog));
+	                Button delete = new Button("Delete");
+	                edit.setOnAction(controller.getHandlerforEditSaved(index,dialog));
+	                delete.setOnAction(controller.getHandlerforDeleteSaved(index, dialog));
+	                hb.getChildren().add(delete);
 	                hb.getChildren().add(edit);
 	                bp.setBottom(hb);
 	                hb.setAlignment(Pos.CENTER);
@@ -154,4 +145,10 @@ public class Gallery extends View{
 
 	}
 	
+	public void removeGardenFromPane(int index) {
+		tile.getChildren().remove(index);
+	}
+	
 }
+
+

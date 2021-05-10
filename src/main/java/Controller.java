@@ -240,8 +240,8 @@ public class Controller extends Application {
 	 * @param dialog stage that holds the dit button
 	 * @return the action event
 	 */
-	public EventHandler<ActionEvent> getHandlerforEditSaved(int index, Stage dialog){
-		return (e) -> {editSavedGarden(e,index, dialog);};
+	public EventHandler<ActionEvent> getHandlerforEditSaved(int index, Stage window){
+		return (e) -> {editSavedGarden(e,index, window);};
 	}
 	
 	/**
@@ -256,6 +256,10 @@ public class Controller extends Application {
 	
 	public EventHandler<MouseEvent> getHandlerForGardenClear(){
 		return (e) -> {clearGarden(e);};
+	}
+	
+	public EventHandler<ActionEvent> getHandlerforDeleteSaved(int index, Stage window){
+		return (e) -> {deleteSavedGarden(e, index, window);};
 	}
 	
 	public void clearGarden(MouseEvent e) {
@@ -399,8 +403,8 @@ public class Controller extends Application {
 				}
 				else {
 					double heightWidth = scalePlantSpread(name);
-					String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-					model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
+					String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth,false);
+					model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId,false);
 					((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 				}
 				//((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
@@ -498,7 +502,7 @@ public class Controller extends Application {
 	 */
 	public void removeFromDeleted(String plantName, String nodeId, double x, double y) {
 		model.deleted.remove(plantName);
-		model.placePlant(x, y, plantName, nodeId);
+		model.placePlant(x, y, plantName, nodeId,false);
 		if(model.gardenMap.getCost()>model.gardenMap.getBudget()) {
 			GardenDesign g = (GardenDesign) view.views.get("GardenDesign");
 			g.budgetExceededPopup();
@@ -520,13 +524,31 @@ public class Controller extends Application {
 		return numPixels;
 	}
 	
+	public void deleteSavedGarden(ActionEvent event, int index, Stage window) {
+		model.savedGardens.remove(index);
+		Gallery gal = (Gallery) view.views.get("Gallery");
+		gal.removeGardenFromPane(index);
+		window.close();
+		new File("src/main/resources/garden.ser").delete();
+		try {
+			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(model.savedGardens);
+			oos.close();	
+		}
+		catch(IOException e) {
+			System.out.println("error writing to file after deleting");
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * when a user wants to edit a previously saved garden
 	 * @param event the edit button action
 	 * @param index index of saved garden
 	 * @param dialog the stage that contains edit button
 	 */
-	public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
+	public void editSavedGarden(ActionEvent event, int index, Stage window) {
 		this.view.switchViews("GardenDesign");
 		setTheStage();
 		model.gardenMap = model.savedGardens.get(index);
@@ -539,12 +561,12 @@ public class Controller extends Application {
 		model.lengthPerPixel = garden.lengthPerPixel;
 		garden.plants.forEach(plant->{
 			double heightWidth = scalePlantSpread(plant.getName());
-			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
-			model.placePlant(plant.getX(), plant.getY(), plant.getName(), node);
+			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth,true);
+			model.placePlant(plant.getX(), plant.getY(), plant.getName(), node, true);
 		});
 		System.out.println(garden.getBudget());
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getLepCount(),garden.getBudget());
-		dialog.close();
+		window.close();
 		model.setToEdit();
 		model.setEditGardenIndex(index);
 	}
@@ -611,8 +633,6 @@ public class Controller extends Application {
 	public void summarySave(MouseEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
-		System.out.println("polygonCorners "+ model.gardenMap.polygonCorners+" "+ model.gardenMap.polygonCorners.size());
-		System.out.println("outline "+ model.gardenMap.outline+ " "+model.gardenMap.outline.size());
 		model.gardenMap.lengthPerPixel = model.lengthPerPixel;
 		model.gardenMap.scale = model.scale;
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);

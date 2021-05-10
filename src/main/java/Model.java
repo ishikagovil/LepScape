@@ -127,11 +127,13 @@ public class Model implements java.io.Serializable{
 	 * @param key the name of plant
 	 * @param nodeId the node of corresponding imageView
 	 */
-	public void placePlant(double x, double y, String key, String nodeId) {
+	public void placePlant(double x, double y, String key, String nodeId,boolean initial) {
 		System.out.println("adding to Garden");
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
-		gardenMap.addToGarden(new PlacedPlant(x,y,specie));
+		if(!initial) {
+			gardenMap.addToGarden(new PlacedPlant(x,y,specie));
+		}
  		System.out.println("plants: "+gardenMap.placedPlants);
 	}
 	

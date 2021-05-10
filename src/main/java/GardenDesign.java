@@ -248,7 +248,7 @@ public class GardenDesign extends View{
 	        public void handle(MouseEvent event) {
 	        	if(event.getClickCount()==2) {
 	        		String name = getDisplayText(list.getSelectionModel().getSelectedItem());
-	        		String node = addImageView(main.getLayoutX(),main.getLayoutY(),name,controller.scalePlantSpread(name));
+	        		String node = addImageView(main.getLayoutX(),main.getLayoutY(),name,controller.scalePlantSpread(name),false);
 	        		controller.removeFromDeleted(name, node,main.getLayoutX(),main.getLayoutY());
 	        		deleted.close();
 	        	}
@@ -312,39 +312,39 @@ public class GardenDesign extends View{
 		return tile;
 	}
 	
-	/**
-	 * Adds the pane that hols the lep count and the budget
-	 * Called from previous screen after user has set a budget
-	 */
-	public void addBudgetLepPane() {
-		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
-		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
-		
-		HBox blPane = new HBox();
-		blPane.setSpacing(20);
-		
-		ImageView lepIv= new ImageView(lep);
-		lepIv.setPreserveRatio(true);
-		lepIv.setFitHeight(50);
-		ImageView budget = new ImageView(dollar);
-		budget.setPreserveRatio(true);
-		budget.setFitHeight(50);
-		Label lepCount = new Label("0");
-		lepCount.setFont(new Font("Arial", 16));
-		Label budgetCount = new Label(""+controller.getBudget());
-		budgetCount.setFont(new Font("Arial", 16));
-		lepCount.setGraphic(lepIv);
-		budgetCount.setGraphic(budget);
-		
-		blPane.getChildren().add(lepCount);
-		blPane.getChildren().add(budgetCount);
-		blPane.getChildren().add(fillMe);
-		
-		blPane.setAlignment(Pos.CENTER);
-		border.setTop(blPane);
-		border.setAlignment(blPane, Pos.CENTER);
-
-	}
+//	/**
+//	 * Adds the pane that hols the lep count and the budget
+//	 * Called from previous screen after user has set a budget
+//	 */
+//	public void addBudgetLepPane() {
+//		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+//		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+//		
+//		HBox blPane = new HBox();
+//		blPane.setSpacing(20);
+//		
+//		ImageView lepIv= new ImageView(lep);
+//		lepIv.setPreserveRatio(true);
+//		lepIv.setFitHeight(50);
+//		ImageView budget = new ImageView(dollar);
+//		budget.setPreserveRatio(true);
+//		budget.setFitHeight(50);
+//		Label lepCount = new Label("0");
+//		lepCount.setFont(new Font("Arial", 16));
+//		Label budgetCount = new Label(""+controller.getBudget());
+//		budgetCount.setFont(new Font("Arial", 16));
+//		lepCount.setGraphic(lepIv);
+//		budgetCount.setGraphic(budget);
+//		
+//		blPane.getChildren().add(lepCount);
+//		blPane.getChildren().add(budgetCount);
+//		blPane.getChildren().add(fillMe);
+//		
+//		blPane.setAlignment(Pos.CENTER);
+//		border.setTop(blPane);
+//		border.setAlignment(blPane, Pos.CENTER);
+//
+//	}
 
 	/**
 	 * Everytime a plant is placed onto or removed the garden the lep count and budget is updated
@@ -362,6 +362,10 @@ public class GardenDesign extends View{
 		budgetLepPane.setSpacing(HBOX_SPACING);
 		ImageView lepIv= new ImageView(lep);
 		ImageView budgetIv = new ImageView(dollar);
+		
+		hoverTooltip("Leps supported", lepIv);
+		hoverTooltip("Cost",budgetIv);
+		
 		lepIv.setPreserveRatio(true);
 		lepIv.setFitHeight(INFO_IV_SIZE);
 		budgetIv.setPreserveRatio(true);
@@ -384,8 +388,6 @@ public class GardenDesign extends View{
 		top.setCenter(budgetLepPane);
 		
 		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
-		next.setPreserveRatio(true);
-		next.setFitHeight(INFO_IV_SIZE+25);
 		setOnMouse(next, "next");
 		next.setOnMouseClicked(e->{
 			saveGardenImage();
@@ -394,8 +396,6 @@ public class GardenDesign extends View{
 		});
 		
 		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
-		back.setPreserveRatio(true);
-		back.setFitHeight(INFO_IV_SIZE+25);
 		setOnMouse(back, "back");
 		back.setOnMouseClicked(e->{
 			controller.switchViews("ConditionScreen");
@@ -413,7 +413,7 @@ public class GardenDesign extends View{
 	 * After a drag release a new imageview is created inside the center pane
 	 * This new imageView is a copy of the imageView that was dragged and can be dragged, cannot be used to create another imageView
 	 */
-	public String addImageView(double x, double y, String key, double heightWidth) {
+	public String addImageView(double x, double y, String key, double heightWidth, boolean initial) {
 		System.out.println("in the inner addImageView");
 		System.out.println("key: "+key);
 		Image im = new Image(getClass().getResourceAsStream("/plantimg/"+key+".png"));
@@ -436,11 +436,10 @@ public class GardenDesign extends View{
 			}
 		});
 		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
-		if (validatePlantPlacement(x, y, heightWidth)[0] > THRESHOLD) {
+		if (validatePlantPlacement(x, y, heightWidth)[0] > THRESHOLD && !initial) {
 			// if collided, don't add ImageView to Pane
 			System.out.println("collided!");
 			// add pop up window to display "too big"
-			//popup1.show(popup1);
 			controller.showPopupMessage("Cannot place plant there!", stage);
 			return null;
 		} else {
@@ -575,12 +574,12 @@ public class GardenDesign extends View{
 	 * @return the new pane 
 	 */
 	public VBox addGridPane() {
-		VBox vb = new VBox();
-		vb.setStyle("-fx-background-color: LIGHTBLUE");
-		vb.setMinHeight(this.manageView.getScreenWidth()/4);
+		VBox vb = new VBox(10);
+		//vb.setStyle("-fx-background-color: LIGHTBLUE");
+		vb.setMinHeight(this.manageView.getScreenWidth()/6);
 		vb.setPrefWidth(this.manageView.getScreenHeight()/7);
 		vb.setAlignment(Pos.CENTER);
-		
+	
 		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore")); 
 		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
 		setOnMouse(clear, "clear");
@@ -594,7 +593,6 @@ public class GardenDesign extends View{
 		vb.getChildren().add(clear);
 		
 		return vb;
-		
 	}
 	
 	/**
