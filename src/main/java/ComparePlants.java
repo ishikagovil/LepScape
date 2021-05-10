@@ -5,6 +5,7 @@ import java.util.UUID;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -13,11 +14,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class ComparePlants extends View {
@@ -34,11 +37,13 @@ public class ComparePlants extends View {
     Pane mainCompare;
     PlantSpecies leftSpecies;
     PlantSpecies rightSpecies;
+    VBox center;
 	//public TilePane tile = new TilePane();
     
     final int INFOSPC = 20;
     final int ins = 20;
-    final int centerThis = 60;
+    final int centerThis = 100;
+    final int PUSHX = 200;
 		
 	public ComparePlants(Stage stage, Controller controller, ManageViews manageView) {
 		super(stage, controller, manageView);
@@ -60,30 +65,46 @@ public class ComparePlants extends View {
 		
 		mainCompare = new Pane();
 		
-		VBox center = new VBox();
-		center.setSpacing(INFOSPC);
-		center.getChildren().add(makeInstructions());
-		center.getChildren().add(makePlantBoxes());
-		center.getChildren().add(this.mainCompare);
+		this.mainCompare.setStyle("-fx-background-color: #A69F98");
+		
+		this.center = new VBox();
+		this.center.setSpacing(INFOSPC);
+		this.center.getChildren().add(makeInstructions());
+		this.center.getChildren().add(makePlantBoxes());
+		this.center.getChildren().add(this.mainCompare);
+		
+		VBox.setVgrow(this.center.getChildren().get(0), Priority.ALWAYS);
+		VBox.setVgrow(this.center.getChildren().get(1), Priority.ALWAYS);
+		VBox.setVgrow(this.center.getChildren().get(2), Priority.ALWAYS);
+		
+		this.center.setAlignment(Pos.CENTER);
 
-        border.setCenter(center);
+        border.setCenter(this.center);
         
-		//updateCenterBottom();
+		updateCenterBottom();
         
         this.leftPlant = makePlantInfo();
+        for (Node x : this.leftPlant.getChildren()) {
+        	this.leftPlant.setAlignment(x,  Pos.CENTER);
+        }
         border.setLeft(this.leftPlant);
         this.rightPlant = makePlantInfo();
         border.setRight(this.rightPlant);
+        for (Node x : this.rightPlant.getChildren()) {
+        	this.rightPlant.setAlignment(x,  Pos.CENTER);
+        }
 
 	}
 	
 	public Label makeInstructions() {
-		String ins = "Choose from the drop down menus below to compare two plants! View their supported butterfly/moth count, cost, and more!";
-		Label insT = new Label(ins);
+		String text = "Choose from the drop down menus below to compare two plants! View their supported butterfly/moth count, cost, and more!";
+		Label insT = new Label(text);
 		
 		insT.setFont(new Font("Andale Mono", 20));
 		insT.setMaxWidth(screenWidth / 3);
 		insT.setWrapText(true);
+		insT.setTextAlignment(TextAlignment.CENTER);
+		insT.setPadding(new Insets(ins, ins, ins, ins));;
 		
 		return insT;
 	}
@@ -92,7 +113,9 @@ public class ComparePlants extends View {
 		VBox centerSelect = new VBox();
 		
 		Label plant1 = new Label("Plant 1:");
+		plant1.setFont(new Font ("Andale Mono", 20));
 		Label plant2 = new Label("Plant 2:");
+		plant2.setFont(new Font("Andale Mono", 20));
 		
         ComboBox<PlantSpecies> plantList1 = new ComboBox<>();
         plantSpecs.forEach((k, v) -> {
@@ -116,6 +139,9 @@ public class ComparePlants extends View {
 		
 		centerSelect.getChildren().add(plant2);
 		centerSelect.getChildren().add(plantList2);
+		
+		centerSelect.setAlignment(Pos.CENTER);
+		centerSelect.setSpacing(INFOSPC);
 
 		return centerSelect;
 	}
@@ -126,7 +152,7 @@ public class ComparePlants extends View {
 		title.setFont(new Font("Andale Mono", 20));
 		Text sciName = new Text("(" + plant.getGenusName() + " " + plant.getSpeciesName() + ")");
 		//sciName.setMaxWidth(screenWidth / 3);
-		sciName.setFont(Font.font("Andale Mono", FontPosture.ITALIC, 20));
+		sciName.setFont(Font.font("Andale Mono", 20));
 		ImageView plantImg = plantPics.get(plant.getGenusName() + "-" + plant.getSpeciesName());
 		int lepCount = plant.getLepsSupported();
 		int cost = plant.getCost();
@@ -138,16 +164,19 @@ public class ComparePlants extends View {
 			type = "herbaceous";
 		}
 	
-		Text desc = new Text("Cost: " + cost + "\n\nSpread Radius: " + spread + "\n\nButterflies/Moths Supported: " + lepCount + "\n\nPlant Type: " + type);
-		desc.setFont(new Font("Andale Mono", 15));
+		Text desc = new Text("Cost: $" + cost + "\n\nSpread Radius: " + spread + "ft\n\nButterflies/Moths Supported: " + lepCount + "\n\nPlant Type: " + type);
+		desc.setFont(new Font("Andale Mono", 16));
 		
 		VBox plantBlock = new VBox();
 		plantBlock.setMaxWidth(screenWidth / 3);
 		plantImg.setFitWidth(screenWidth / 4);
 		plantBlock.setSpacing(INFOSPC);
-		plantBlock.getChildren().addAll(title, sciName, plantImg, desc);
 		
-		plantBlock.setPadding(new Insets(ins, ins, ins, centerThis));
+		title.setTextAlignment(TextAlignment.CENTER);
+		sciName.setTextAlignment(TextAlignment.CENTER);
+		desc.setTextAlignment(TextAlignment.CENTER);
+		
+		plantBlock.getChildren().addAll(title, sciName, plantImg, desc);
 		
 		if (isFirst) {
 			this.leftPlant.getChildren().clear();
@@ -159,6 +188,10 @@ public class ComparePlants extends View {
 			this.rightSpecies = plant;
 		}
 		
+		plantBlock.setAlignment(Pos.BASELINE_CENTER);
+		plantBlock.setTranslateX(PUSHX);
+		plantBlock.setPadding(new Insets(ins, ins, ins, centerThis));
+		
 		updateCenterBottom();
 	}
 	
@@ -166,23 +199,32 @@ public class ComparePlants extends View {
 		
 		this.mainCompare.getChildren().clear();
 		
-		Label costLabel = new Label("Best Cost: ");
+		Label costLabel = new Label("Best Cost:");
 		costLabel.setFont(new Font("Andale Mono", 20));
-		Label lepLabel = new Label("Best Lep Support: ");
+		costLabel.setUnderline(true);
+		costLabel.setMaxWidth(screenWidth / 3);
+		Label lepLabel = new Label("Best Lep Support:");
+		lepLabel.setUnderline(true);
 		lepLabel.setFont(new Font("Andale Mono", 20));
-		Label advLabel = new Label("Advice: ");
+		lepLabel.setMaxWidth(screenWidth / 3);
+		Label advLabel = new Label("Advice:");
 		advLabel.setFont(new Font("Andale Mono", 20));
+		advLabel.setUnderline(true);
+		advLabel.setMaxWidth(screenWidth / 3);
 		
 		Label costWinner = new Label();
 		costWinner.setFont(new Font("Andale Mono", 20));
+		costWinner.setMaxWidth(screenWidth / 3);
 		Label lepWinner = new Label();
 		lepWinner.setFont(new Font("Andale Mono", 20));
+		lepWinner.setMaxWidth(screenWidth / 3);
 		Label adv = new Label();
 		adv.setFont(new Font("Andale Mono", 20));
 		adv.setMaxWidth(screenWidth / 3);
+		adv.setAlignment(Pos.CENTER);
 		adv.setWrapText(true);
 		
-		if (this.leftPlant.getChildren().isEmpty() || this.rightPlant.getChildren().isEmpty()) {
+		if (this.leftSpecies == null || this.rightSpecies == null) {
 			costWinner.setText("N/A");
 			lepWinner.setText("N/A");
 		} else {
@@ -226,17 +268,25 @@ public class ComparePlants extends View {
 			results.getChildren().addAll(advLabel, adv);
 		}
 		
+		for (Node x : results.getChildren()) {
+			x.setStyle("-fx-text-fill: white");
+		}
+		
+		results.setMaxWidth(screenWidth / 3);
+		results.setPadding(new Insets(ins, ins, ins, ins));
 		results.setSpacing(INFOSPC);
 		
 		this.mainCompare.getChildren().add(results);
-		
+		results.setAlignment(Pos.CENTER);
+
 	}
+
 	
 	public BorderPane makePlantInfo() {
 		BorderPane plant = new BorderPane();
 		
 		plant.setPrefWidth(screenWidth / 3);
-		plant.setMinHeight(screenHeight-300);
+		//plant.setMinHeight(screenHeight-300);
 		
 		Label plantInfo = new Label("test");
 		plant.getChildren().add(plantInfo);
@@ -250,9 +300,14 @@ public class ComparePlants extends View {
 		BorderPane header = new BorderPane();
 		Label title = new Label("Compare Plants!");
 		title.setFont(new Font("Andale Mono", 50));
+		title.setStyle("-fx-text-fill: white");
 		header.setCenter(title);
 		ImageView back = addNextButton("back", "GardenDesign");
 		header.setLeft(back);
+		header.setPadding(new Insets(ins, ins, ins, ins));
+		
+		header.setStyle("-fx-background-color: #A69F98");
+		
 		return header;
 	}
 	
