@@ -1,7 +1,7 @@
 
 public enum SoilType {
 	ANY("Any", 0),
-	CLAY("Clay", 0.3),
+	CLAY("Sand", 0.3),
 	DIRT("Dirt", 0.6),
 	ROCK("Rock", 0.9);
 

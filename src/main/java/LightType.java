@@ -1,9 +1,9 @@
 
 public enum LightType {
 	ANY("Any", 0),
-	DARK("Dark", 0.3),
-	BRIGHT("Bright", 0.6),
-	INTENSE("Intense", 0.9);
+	DARK("Shade", 0.3),
+	BRIGHT("Partial Shade", 0.6),
+	INTENSE("No Shade", 0.9);
 	
 	private static final double epsilon = 0.07;
 	
