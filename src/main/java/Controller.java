@@ -261,15 +261,15 @@ public class Controller extends Application {
 		return (e) -> {sectionClicked(e, canvas);};
 	}
 	
-	public EventHandler<MouseEvent> getHandlerForGardenClear(){
-		return (e) -> {clearGarden(e);};
-	}
+//	public EventHandler<MouseEvent> getHandlerForGardenClear(){
+//		return (e) -> {clearGarden(e);};
+//	}
 	
 	public EventHandler<ActionEvent> getHandlerforDeleteSaved(int index, Stage window){
 		return (e) -> {deleteSavedGarden(e, index, window);};
 	}
 	
-	public void clearGarden(MouseEvent e) {
+	public void clearGarden() {
 		Garden garden = model.gardenMap;
 		garden.placedPlants.clear();
 		this.updateBudgetandLep();

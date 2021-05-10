@@ -549,16 +549,19 @@ public class GardenDesign extends View{
 		vb.setAlignment(Pos.CENTER);
 	
 		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore"), addNextButton("learnmore", "ComparePlants")); 
-//		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
-//		setOnMouse(clear, "clear");
-//		clear.setOnMouseClicked(e->{
-//			//setOnMouse(clear, "clear");
-//			main.getChildren().clear();
-//			controller.getHandlerForGardenClear();
-//			main = addCanvas();
-//			border.setCenter(main);
-//		});
-//		vb.getChildren().add(clear);
+		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
+		setOnMouse(clear, "clear");
+		clear.setOnMouseClicked(e->{
+			//setOnMouse(clear, "clear");
+			for(int i = 1; i<main.getChildren().size(); i++) {
+				main.getChildren().remove(i);
+			}
+			//main.getChildren().clear();
+			controller.clearGarden();
+			//main = addCanvas();
+			//border.setCenter(main);
+		});
+		vb.getChildren().add(clear);
 		
 		return vb;
 	}
