@@ -548,7 +548,7 @@ public class GardenDesign extends View{
 		vb.setPrefWidth(this.manageView.getScreenHeight()/7);
 		vb.setAlignment(Pos.CENTER);
 	
-		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore")); 
+		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore"), addNextButton("learnmore", "ComparePlants")); 
 		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
 		setOnMouse(clear, "clear");
 		clear.setOnMouseClicked(e->{

@@ -36,7 +36,7 @@ public class Lepedia extends View {
 	final int ins = 10;
 	final int spc = 40;
 	int centerThis;
-	final int boxWidth = 900;
+	final int boxWidth = 1000;
 
 	public Lepedia(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
