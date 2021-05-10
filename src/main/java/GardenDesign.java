@@ -318,6 +318,7 @@ public class GardenDesign extends View{
 			border.getChildren().remove(border.getTop());
 		}
 		
+		BorderPane top = new BorderPane();
 		HBox budgetLepPane = new HBox();
 		budgetLepPane.setSpacing(HBOX_SPACING);
 		ImageView lepIv= new ImageView(lep);
@@ -341,7 +342,32 @@ public class GardenDesign extends View{
 		budgetLepPane.getChildren().add(costBar);
 		hoverTooltip("$ "+(int)cost+"/"+(int)budget, costBar);
 		budgetLepPane.setAlignment(Pos.CENTER);
-		border.setTop(budgetLepPane);
+		top.setCenter(budgetLepPane);
+		
+		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
+		next.setPreserveRatio(true);
+		next.setFitHeight(INFO_IV_SIZE+25);
+		setOnMouse(next, "next");
+		next.setOnMouseClicked(e->{
+			saveGardenImage();
+			controller.switchViews("Summary");
+			
+		});
+		
+		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
+		back.setPreserveRatio(true);
+		back.setFitHeight(INFO_IV_SIZE+25);
+		setOnMouse(back, "back");
+		back.setOnMouseClicked(e->{
+			controller.switchViews("ConditionScreen");
+			
+		});
+		
+		top.setRight(next);
+		top.setLeft(back);
+		
+		
+		border.setTop(top);
 	}
 	
 	/**
@@ -429,20 +455,10 @@ public class GardenDesign extends View{
 		VBox vb = new VBox();
 		vb.setStyle("-fx-background-color: LIGHTBLUE");
 		vb.setMinHeight(screenHeight/4);
-		vb.setPrefWidth(screenHeight/4);
-		vb.setAlignment(Pos.CENTER);;
-		ImageView[] buttons = new ImageView[] {
-			addNextButton("back","ConditionScreen"), addNextButton("learnmore", "LearnMore")
-		}; 
-
-		vb.getChildren().addAll(buttons); 
-		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
-		setOnMouse(next, "next");
-		next.setOnMouseClicked(e->{
-			saveGardenImage();
-			controller.switchViews("Summary");
-			
-		});
+		vb.setPrefWidth(screenHeight/7);
+		vb.setAlignment(Pos.CENTER);
+		
+		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore")); 
 		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
 		setOnMouse(clear, "clear");
 		clear.setOnMouseClicked(e->{
@@ -452,8 +468,8 @@ public class GardenDesign extends View{
 			main = addCanvas();
 			border.setCenter(main);
 		});
-		vb.getChildren().add(next);
 		vb.getChildren().add(clear);
+		
 		return vb;
 		
 	}

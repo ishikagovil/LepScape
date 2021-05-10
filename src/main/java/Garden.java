@@ -76,22 +76,12 @@ public class Garden implements java.io.Serializable {
 	 * @return the number of the leps supported
 	 */
 	public int getLepCount() {
-		if(placedPlants!=null) {
-			int leps = 0;
-			Iterator<PlacedPlant> iter = placedPlants.values().iterator();
-			while(iter.hasNext()) {
-				leps+=iter.next().getSpecies().getLepsSupported();
-			}
-			return leps;
+		int leps = 0;
+		Iterator<PlacedPlant> iter = placedPlants.values().iterator();
+		while(iter.hasNext()) {
+			leps+=iter.next().getSpecies().getLepsSupported();
 		}
-		else {
-			int leps = 0;
-			Iterator<PlacedPlant> iter = plants.iterator();
-			while(iter.hasNext()) {
-				leps+=iter.next().getSpecies().getLepsSupported();
-			}
-			return leps;
-		}
+		return leps;
 		
 	}
 	
