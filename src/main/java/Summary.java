@@ -13,8 +13,10 @@ import com.itextpdf.text.pdf.PdfWriter;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -26,6 +28,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -34,10 +37,17 @@ import javax.swing.*;
 import javafx.embed.swing.SwingFXUtils;
 
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 
 
 public class Summary extends View {
+	final int STANDARD_IMAGEVIEW = 100;
+	final int NORMALCOMPOST = 75;
+	final int ENTERCOMPOST = 85;
+	final int INFO_IV_SIZE = 50;
+	final int HBOX_SPACING = 20;
+	final int FONTSIZE = 20;
 	public Controller ic;
 	Pane main;
 	Canvas canvas;
@@ -178,6 +188,30 @@ public class Summary extends View {
         });
         return buttons;
 	}
+	
+	public TextField gardenTitlePopup() {
+		final Stage gardenTitle = new Stage();
+		gardenTitle.initModality(Modality.APPLICATION_MODAL);
+		gardenTitle.initOwner(stage);
+		Label text = new Label("Set a title for your garden");
+		text.setFont(new Font("Andale Mono", FONTSIZE));
+		text.setStyle("-fx-font-size: 16; -fx-text-fill: white");
+		Label instruction = new Label("Press enter to set new budget or the X if you are done");
+		TextField titleField = new TextField("Enter title");
+		titleField.setMaxWidth(STANDARD_IMAGEVIEW);
+		BorderPane border = new BorderPane();
+		border.setTop(text);
+		BorderPane.setAlignment(text,Pos.CENTER);
+		border.setCenter(titleField);
+		border.setBottom(instruction);
+		BorderPane.setAlignment(instruction,Pos.CENTER);
+		border.setStyle(" -fx-background-color: #8C6057; -fx-padding: 10; -fx-border-color: #5C5346; -fx-border-width: 5;");
+		Scene popUpScene = new Scene(border,450,STANDARD_IMAGEVIEW);
+		gardenTitle.setScene(popUpScene);
+		gardenTitle.show();
+		
+		return titleField;
+	}
 
 /**
  * create a center pane to hold the garden design 
@@ -196,7 +230,7 @@ public class Summary extends View {
  */
 	public void addCanvas() {
 		Pane gardenDesign = new Pane();
-		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		gardenDesign.setStyle("-fx-background-color: lavender");
 		canvas = new Canvas();
 		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		gc = canvas.getGraphicsContext2D();
@@ -211,16 +245,17 @@ public class Summary extends View {
 		ImageView iv = new ImageView(manageView.savedImg);
 		iv.setPreserveRatio(true);
 		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
-		iv.fitHeightProperty().bind(gardenDesign.heightProperty());
+//		iv.fitHeightProperty().bind(gardenDesign.heightProperty());
 		gardenDesign.getChildren().add(iv);
 		border.setCenter(gardenDesign);
+		border.setAlignment(gardenDesign, Pos.CENTER);
 	}
 	
 /**
  * create a tilepane to hold information about the garden with updated cost and leps count
  * @return
  */
-	public void updateLepandCost(double cost, int leps) {
+	public void updateLepandCost(double cost, int lepCount) {
 		VBox rightPane = new VBox();
 	    rightPane.setPadding(new Insets(10));
 	    rightPane.setStyle("-fx-background-color: lavender");
@@ -228,22 +263,24 @@ public class Summary extends View {
 	    title.setFont(Font.font(null, FontWeight.BOLD, 30));
 	    
 		HBox box1 = new HBox();
-	    Image lepCount = new Image(getClass().getResourceAsStream("/butterfly1.png"));
-	    ImageView lepIV = new ImageView(lepCount);
+	    Image lepIm = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+	    ImageView lepIV = new ImageView(lepIm);
 		lepIV.setPreserveRatio(true);
-		lepIV.setFitHeight(20);
-		Label lep = new Label(""+ leps);
-		lep.setGraphic(lepIV);
-		box1.getChildren().addAll(lepIV, lep);
+		lepIV.setFitHeight(40);
+		Label leps = new Label(""+lepCount);
+		leps.setFont(new Font("Arial", 16));
+		Label budgetCount = new Label(""+cost);
+		budgetCount.setFont(new Font("Arial", 16));
+		leps.setGraphic(lepIV);
+		box1.getChildren().addAll(lepIV, leps);
 		
 		HBox box = new HBox();
 		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
 		ImageView costIV = new ImageView(dollar);
-		Label totalCost = new Label("" + cost);
-		totalCost.setGraphic(costIV);
+		budgetCount.setGraphic(costIV);
 		costIV.setPreserveRatio(true);
-		costIV.setFitHeight(20);
-		box.getChildren().addAll(costIV, totalCost);
+		costIV.setFitHeight(40);
+		box.getChildren().addAll(costIV, budgetCount);
 		
 		rightPane.getChildren().addAll(title, box1, box);
 		border.setRight(rightPane);

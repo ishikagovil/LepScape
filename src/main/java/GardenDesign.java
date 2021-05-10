@@ -100,7 +100,9 @@ public class GardenDesign extends View{
 		//comparePane = addBorderPane();
 		
 		BorderPane bd2= new BorderPane();
+		
 		bd2.setTop(vb);
+		bd2.setStyle("-fx-background-color: LIGHTBLUE");
 		bd2.setAlignment(bd2, Pos.TOP_LEFT);
 		//bd2.setBottom(comparePane);
 		//bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
@@ -312,40 +314,6 @@ public class GardenDesign extends View{
 		return tile;
 	}
 	
-//	/**
-//	 * Adds the pane that hols the lep count and the budget
-//	 * Called from previous screen after user has set a budget
-//	 */
-//	public void addBudgetLepPane() {
-//		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
-//		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
-//		
-//		HBox blPane = new HBox();
-//		blPane.setSpacing(20);
-//		
-//		ImageView lepIv= new ImageView(lep);
-//		lepIv.setPreserveRatio(true);
-//		lepIv.setFitHeight(50);
-//		ImageView budget = new ImageView(dollar);
-//		budget.setPreserveRatio(true);
-//		budget.setFitHeight(50);
-//		Label lepCount = new Label("0");
-//		lepCount.setFont(new Font("Arial", 16));
-//		Label budgetCount = new Label(""+controller.getBudget());
-//		budgetCount.setFont(new Font("Arial", 16));
-//		lepCount.setGraphic(lepIv);
-//		budgetCount.setGraphic(budget);
-//		
-//		blPane.getChildren().add(lepCount);
-//		blPane.getChildren().add(budgetCount);
-//		blPane.getChildren().add(fillMe);
-//		
-//		blPane.setAlignment(Pos.CENTER);
-//		border.setTop(blPane);
-//		border.setAlignment(blPane, Pos.CENTER);
-//
-//	}
-
 	/**
 	 * Everytime a plant is placed onto or removed the garden the lep count and budget is updated
 	 */
@@ -575,7 +543,7 @@ public class GardenDesign extends View{
 	 */
 	public VBox addGridPane() {
 		VBox vb = new VBox(10);
-		//vb.setStyle("-fx-background-color: LIGHTBLUE");
+		vb.setStyle("-fx-background-color: LIGHTBLUE");
 		vb.setMinHeight(this.manageView.getScreenWidth()/6);
 		vb.setPrefWidth(this.manageView.getScreenHeight()/7);
 		vb.setAlignment(Pos.CENTER);
@@ -611,7 +579,6 @@ public class GardenDesign extends View{
 			
 		}
 		this.manageView.sp = main;
-		((Summary) this.manageView.views.get("Summary")).addCanvas();
 		
 	}
 	

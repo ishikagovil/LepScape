@@ -23,6 +23,7 @@ public class Garden implements java.io.Serializable {
 	public double scale;
 	public transient HashMap<String, PlacedPlant> placedPlants;
 	public double budget;
+	public String title;
 
 	/**
 	 * Creates a default garden object
@@ -41,7 +42,6 @@ public class Garden implements java.io.Serializable {
 		this.placedPlants= new HashMap<>();
 		System.out.println("outline: "+ outline);
 		System.out.println("polygonCorners"+polygonCorners);
-//		this.image = new BufferedImage (0,0,0);
 	}
 	
 	/**
@@ -138,6 +138,14 @@ public class Garden implements java.io.Serializable {
 		this.budget = d;
 	}
 	
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public String getTitle() {
+		return this.title;
+	}
 	
 	/**
 	 * Returns the list of coordinates of freedrawn piece of boundary set by user

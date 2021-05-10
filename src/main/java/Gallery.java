@@ -82,66 +82,73 @@ public class Gallery extends View{
 	}
 
 	//https://stackoverflow.com/questions/22166610/how-to-create-a-popup-windows-in-javafx
-	public void loadScreen(WritableImage gardenImage, int index, double cost, double leps) {
+	public void loadScreen(WritableImage gardenImage, int index, double cost, double leps, String title) {
 		System.out.println("in here");
-			ImageView iv = new ImageView(gardenImage);
-			iv.setPreserveRatio(true);
-			iv.setFitHeight(GARDEN_IMAGEVIEW_HEIGHT);
-			iv.setOnMouseClicked(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					final Stage dialog = new Stage();
-	                dialog.initModality(Modality.APPLICATION_MODAL);
-	                dialog.initOwner(stage);
-	                
-	                Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
-	        		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
-	        		
-	        		ImageView lepIv= new ImageView(lep);
-	        		ImageView budgetIv = new ImageView(dollar);
-	        		lepIv.setPreserveRatio(true);
-	        		lepIv.setFitHeight(INFO_IV_SIZE);
-	        		budgetIv.setPreserveRatio(true);
-	        		budgetIv.setFitHeight(INFO_IV_SIZE);
-	        		
-	        		Label lepLabel = new Label(""+leps);
-	        		lepLabel.setFont(new Font("Arial", 16));
-	        		Label costLabel = new Label(""+cost);
-	        		costLabel.setFont(new Font("Arial", 16));
-	        		lepLabel.setGraphic(lepIv);
-	        		costLabel.setGraphic(budgetIv);
-	        		
-	        		HBox information = new HBox(HBOX_SPACING);
-	        		information.setAlignment(Pos.CENTER);
-	        		information.getChildren().add(lepLabel);
-	        		information.getChildren().add(costLabel);
-	     
-	                BorderPane bp = new BorderPane();
-	                
-	                HBox hb = new HBox(HBOX_SPACING);
-	                Button edit = new Button("Edit");
-	                Button delete = new Button("Delete");
-	                edit.setOnAction(controller.getHandlerforEditSaved(index,dialog));
-	                delete.setOnAction(controller.getHandlerforDeleteSaved(index, dialog));
-	                hb.getChildren().add(delete);
-	                hb.getChildren().add(edit);
-	                bp.setBottom(hb);
-	                hb.setAlignment(Pos.CENTER);
-	                bp.setAlignment(hb, Pos.CENTER);
-	                
-	                bp.setTop(information);
-	                bp.setAlignment(information, Pos.CENTER);
-	                ImageView garden = new ImageView(gardenImage);
-	                garden.setPreserveRatio(true);
-	                garden.setFitHeight(5*GARDEN_IMAGEVIEW_HEIGHT);
-	                bp.setCenter(garden);
-	                Scene dialogScene = new Scene(bp);
-	                dialog.setScene(dialogScene);
-					dialog.show();
-				}
-	            
-			});
-			tile.getChildren().add(iv);
+		BorderPane gardenTile = new BorderPane();
+		ImageView iv = new ImageView(gardenImage);
+		Label titleLabel = new Label(title);
+		titleLabel.setFont(new Font("Andale Mono", 16));
+		gardenTile.setBottom(titleLabel);
+		gardenTile.setPadding(new Insets(0,5,0,5));
+		gardenTile.setCenter(iv);
+		gardenTile.setAlignment(titleLabel, Pos.CENTER);
+		iv.setPreserveRatio(true);
+		iv.setFitHeight(GARDEN_IMAGEVIEW_HEIGHT);
+		gardenTile.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				final Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(stage);
+                dialog.setTitle(title);
+                Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
+        		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
+        		
+        		ImageView lepIv= new ImageView(lep);
+        		ImageView budgetIv = new ImageView(dollar);
+        		lepIv.setPreserveRatio(true);
+        		lepIv.setFitHeight(INFO_IV_SIZE);
+        		budgetIv.setPreserveRatio(true);
+        		budgetIv.setFitHeight(INFO_IV_SIZE);
+        		
+        		Label lepLabel = new Label(""+leps);
+        		lepLabel.setFont(new Font("Andale Mono", 16));
+        		Label costLabel = new Label(""+cost);
+        		costLabel.setFont(new Font("Andale Mono", 16));
+        		lepLabel.setGraphic(lepIv);
+        		costLabel.setGraphic(budgetIv);
+        		
+        		HBox information = new HBox(HBOX_SPACING);
+        		information.setAlignment(Pos.CENTER);
+        		information.getChildren().add(lepLabel);
+        		information.getChildren().add(costLabel);
+     
+                BorderPane bp = new BorderPane();
+                
+                HBox hb = new HBox(HBOX_SPACING);
+                Button edit = new Button("Edit");
+                Button delete = new Button("Delete");
+                edit.setOnAction(controller.getHandlerforEditSaved(index,dialog));
+                delete.setOnAction(controller.getHandlerforDeleteSaved(index, dialog));
+                hb.getChildren().add(delete);
+                hb.getChildren().add(edit);
+                bp.setBottom(hb);
+                hb.setAlignment(Pos.CENTER);
+                bp.setAlignment(hb, Pos.CENTER);
+                
+                bp.setTop(information);
+                bp.setAlignment(information, Pos.CENTER);
+                ImageView garden = new ImageView(gardenImage);
+                garden.setPreserveRatio(true);
+                garden.setFitHeight(5*GARDEN_IMAGEVIEW_HEIGHT);
+                bp.setCenter(garden);
+                Scene dialogScene = new Scene(bp);
+                dialog.setScene(dialogScene);
+				dialog.show();
+			}
+            
+		});
+		tile.getChildren().add(gardenTile);
 
 	}
 	

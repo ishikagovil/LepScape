@@ -7,6 +7,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
@@ -337,6 +339,10 @@ public class Controller extends Application {
 		this.model.setBudget(newBudget);
 	}
 	
+	public void setGardenTitle(String title) {
+		this.model.gardenMap.setTitle(title);;
+	}
+	
 	/**
 	 * Controls the event when mouse is pressed on a plant imageView
 	 * Displays name and information of that plant in garden design screen
@@ -586,7 +592,7 @@ public class Controller extends Application {
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				Garden garden = model.savedGardens.get(i);
 				view.makeImage(garden.getWidth(), garden.getHeight(), garden.data);
-				gal.loadScreen(view.savedImg,i,model.getCostforGallery(garden),model.getLepsforGallery(garden));
+				gal.loadScreen(view.savedImg,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
 			}
 			ois.close();
 		} catch (ClassNotFoundException | IOException e) {
@@ -644,11 +650,20 @@ public class Controller extends Application {
 			if(model.editing()) {
 				model.savedGardens.remove(model.getEditGardenIndex());
 				model.savedGardens.add(model.getEditGardenIndex(),model.getGarden());
-				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),garden.getCost(),garden.getLepCount());
+				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),garden.getCost(),garden.getLepCount(),garden.getTitle());
 			}else {
-				System.out.println("add to the end of the arrayList");
-				model.savedGardens.add(garden);
-				gal.loadScreen(view.savedImg,model.savedGardens.size()-1,garden.getCost(),garden.getLepCount());
+				TextField titleField = ((Summary) view.views.get("Summary")).gardenTitlePopup();
+				titleField.setOnKeyReleased(e->{
+					if(e.getCode()==KeyCode.ENTER) {
+						if(titleField.getText()!=null) {
+							this.setGardenTitle(titleField.getText());
+							(titleField.getScene().getWindow()).hide();
+							System.out.println("Title of garden: "+garden.getTitle());
+							model.savedGardens.add(garden);
+							gal.loadScreen(view.savedImg,model.savedGardens.size()-1,garden.getCost(),garden.getLepCount(),garden.getTitle());
+						}
+					}
+				});
 			}
 			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -862,6 +877,8 @@ public class Controller extends Application {
 			 }
 		 }
 		 else if(next.equals("Summary")) {
+			 ((Summary) view.views.get("Summary")).addCanvas();
+			 ((Summary) view.views.get("Summary")).updateLepandCost(model.gardenMap.getCost(), model.gardenMap.getLepCount());
 			 this.view.switchViews(next);
 			 setTheStage();
 			 //model.gardenMap.setImage(view.savedImg);
