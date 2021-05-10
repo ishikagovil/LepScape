@@ -568,17 +568,9 @@ public class GardenDesign extends View{
 	 */
 	public void saveGardenImage() {
 		System.out.println("calling from in here");
-		this.manageView.setSavedImage(main.snapshot(null, null));
-		WritableImage wim = manageView.savedImg;
-		File f = new File("src/main/resources/gardenImage");
-		//BufferedImage b = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-		try {
-			ImageIO.write(SwingFXUtils.fromFXImage(wim,null),"png", f);
-		}
-		catch (Exception s){
-			
-		}
-		this.manageView.sp = main;
+		WritableImage wim = main.snapshot(null, null);
+		BufferedImage image = SwingFXUtils.fromFXImage(wim,null);
+		this.manageView.setSavedImage(image);
 		
 	}
 	

@@ -16,9 +16,6 @@ public class Garden implements java.io.Serializable {
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
 //	public ArrayList<String> plant;
-	public int width;
-	public int height;
-	public int[][] data;
 	public double lengthPerPixel;
 	public double scale;
 	public transient HashMap<String, PlacedPlant> placedPlants;
@@ -36,9 +33,6 @@ public class Garden implements java.io.Serializable {
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();
 		//this.plant = new ArrayList<>();
-		this.width = 0;
-		this.height = 0;
-		this.data = new int[width][height];
 		this.placedPlants= new HashMap<>();
 		System.out.println("outline: "+ outline);
 		System.out.println("polygonCorners"+polygonCorners);
@@ -81,46 +75,6 @@ public class Garden implements java.io.Serializable {
 		return leps;
 		
 	}
-	
-	/**
-	 * Sets the width, height and data attributes
-	 * @param width
-	 * @param height
-	 * @param data
-	 * @author Arunima Dey
-	 */
-	public void setGardenImageInfo(int width, int height, int[][] data){
-		//this.image = image;
-		this.width = width;
-		this.height = height;
-		this.data = data;
-		//makeData();
-	}
-	/**
-	 * getter for data of garden
-	 * @return the data
-	 * @author Arunima Dey
-	 */
-	public int[][] getGardenData(){
-		return this.data;
-	}
-	
-	/**
-	 * Get the width of this garden
-	 * @return the width
-	 */
-	public int getWidth() {
-		return this.width;
-	}
-	
-	/**
-	 * Get the height of this garden
-	 * @return the height
-	 */
-	public int getHeight() {
-		return this.height;
-	}
-	
 	
 	/**
 	 * Get the cost of the garden

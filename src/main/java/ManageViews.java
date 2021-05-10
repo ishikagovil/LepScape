@@ -1,17 +1,19 @@
 import java.util.*;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
 
+/**
+ * @author Ishika Govil
+ */
 public class ManageViews {
 	public double dimPixel; //Used when setting the dimensions of the garden
 	public ArrayList<double[]> dimLen; //Used when setting the dimensions of the garden
@@ -25,11 +27,7 @@ public class ManageViews {
 	public Map<String, ImageView> plantImages;
 	public Map<String, ImageView> lepImages;
 	public Map<String, Image> buttonImages;
-	public Pane sp;
-	public WritableImage savedImg;
-	/**
-	 * @author Ishika Govil
-	 */
+	public BufferedImage savedImg;
 	
 	/**
 	 * Constuctor for the ManageViews class, which initializes the HashMap of views and other fields
@@ -46,7 +44,6 @@ public class ManageViews {
 		this.screenHeight = height;
 		this.controller = c;
 	    this.stage = stage;
-	    this.sp = new Pane();
 		importButtonImages();
 		initializeViews();
 	    this.currView = this.getView("Start");
@@ -70,6 +67,11 @@ public class ManageViews {
 	
 	public void setPlantImg(Map<String, ImageView> imgs) {
 		this.plantImages = imgs;
+	}
+	
+	public Image getGardenImag() {
+		Image im = SwingFXUtils.toFXImage(savedImg, null);
+		return im;
 	}
 
 	public void importImages(String fileName, String fileName2) {
@@ -105,6 +107,10 @@ public class ManageViews {
 	    views.put("Lepedia", new Lepedia(stage,controller,this));
 	}
 	
+//	public void saveImage(int index, BufferedImage image) {
+//		this.savedGardenImages.add(index, image);
+//	}
+	
 	/** 
 	 * Called in Controller when user wishes to switch views
 	 * The next action is determined by the string passed to the function
@@ -135,45 +141,6 @@ public class ManageViews {
 		else
 			this.currView = this.getView(next);
 	}
-	
-	/**
-	 * Makes data for savedImg
-	 * @return the matrix of data
-	 */
-	//for the next 2 methods
-	//https://stackoverflow.com/questions/33074774/javafx-image-serialization
-	public int[][] makeData() {
-		int width = (int)savedImg.getWidth();
-		int height = (int) savedImg.getHeight();
-		int[][] data = new int[width][height];
-		PixelReader r = savedImg.getPixelReader();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                data[i][j] = r.getArgb(i, j);
-            }
-        }
-        return data;
-	}
-	
-	/**
-	 * Makes the image for given information of an image
-	 * @param width the width of image
-	 * @param height the height of image
-	 * @param data the data for image
-	 */
-	public void makeImage(int width, int height, int[][] data) {
-		System.out.println(width);
-		System.out.println(height);
-		WritableImage img = new WritableImage(width, height);
-	    PixelWriter w = img.getPixelWriter();
-	    for (int i = 0; i < width; i++) {
-	    	for (int j = 0; j < height; j++) {
-	    		w.setArgb(i, j, data[i][j]);
-	    	}
-	    }
-	    setSavedImage(img);
-	}
-	
 	
 	/** 
 	 * Returns the BorderPane associated with the current View
@@ -215,16 +182,16 @@ public class ManageViews {
 		return views.get(key);
 	}
 	
-	/** 
-	 * Writes the WritableImage field img after user saves their PlotDesign
-	 * Useful for sharing the WritableImage between View classes
-	 * @param WritableImage  
-	 */
-	public void setImage(WritableImage img) {
-		this.img = img;
-	}
+//	/** 
+//	 * Writes the WritableImage field img after user saves their PlotDesign
+//	 * Useful for sharing the WritableImage between View classes
+//	 * @param WritableImage  
+//	 */
+//	public void setImage(WritableImage img) {
+//		this.img = img;
+//	}
 	
-	public void setSavedImage(WritableImage img) {
+	public void setSavedImage(BufferedImage img) {
 		System.out.println("called");
 		this.savedImg = img;
 	}

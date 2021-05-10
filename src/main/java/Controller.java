@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
@@ -31,6 +32,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
+
 import javafx.application.Application;
 
 /**
@@ -536,6 +540,7 @@ public class Controller extends Application {
 		gal.removeGardenFromPane(index);
 		window.close();
 		new File("src/main/resources/garden.ser").delete();
+		new File("src/main/resources/gardenImage"+index+".png").delete();
 		try {
 			FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -589,10 +594,11 @@ public class Controller extends Application {
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			model.savedGardens = (ArrayList<Garden>) ois.readObject();
 			Gallery gal = (Gallery) view.views.get("Gallery");
+			//model.savedGardens.clear();
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				Garden garden = model.savedGardens.get(i);
-				view.makeImage(garden.getWidth(), garden.getHeight(), garden.data);
-				gal.loadScreen(view.savedImg,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
+				Image im = new Image(getClass().getResourceAsStream("/"+garden.getTitle()+".png"));
+				gal.loadScreen(im,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
 			}
 			ois.close();
 		} catch (ClassNotFoundException | IOException e) {
@@ -642,29 +648,40 @@ public class Controller extends Application {
 		model.gardenMap.lengthPerPixel = model.lengthPerPixel;
 		model.gardenMap.scale = model.scale;
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
-		model.gardenMap.setGardenImageInfo((int)view.savedImg.getWidth(), (int)view.savedImg.getHeight(), view.makeData());
-		System.out.println("button works");
 		Garden garden = model.getGarden();
  		try {
 			Gallery gal = (Gallery) view.views.get("Gallery");
 			if(model.editing()) {
-				model.savedGardens.remove(model.getEditGardenIndex());
-				model.savedGardens.add(model.getEditGardenIndex(),model.getGarden());
-				gal.loadScreen(view.savedImg, model.getEditGardenIndex(),garden.getCost(),garden.getLepCount(),garden.getTitle());
+				int index = model.getEditGardenIndex();
+				model.savedGardens.remove(index);
+				model.savedGardens.add(index,model.getGarden());
+				gal.loadScreen(view.getGardenImag(), index ,garden.getCost(),garden.getLepCount(),garden.getTitle());
 				FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(model.savedGardens);
-				oos.close();	
+				oos.close();
+				System.out.println("the index:"+index);
+				new File("src/main/resources/"+model.gardenMap.getTitle()+".png").delete();
+				File f = new File("src/main/resources/"+model.gardenMap.getTitle()+".png");
+				try {
+					ImageIO.write(view.savedImg,"png", f);
+				}
+				catch (Exception s){
+					s.printStackTrace();
+				}
+				
 			}else {
+				int index = model.savedGardens.size()-1;
 				TextField titleField = ((Summary) view.views.get("Summary")).gardenTitlePopup();
 				titleField.setOnKeyReleased(e->{
 					if(e.getCode()==KeyCode.ENTER) {
-						if(titleField.getText()!=null) {
-							this.setGardenTitle(titleField.getText());
+						String title = titleField.getText();
+						if(title!=null && model.isTitleValid(title)) {
+							this.setGardenTitle(title);
 							(titleField.getScene().getWindow()).hide();
 							System.out.println("Title of garden: "+garden.getTitle());
 							model.savedGardens.add(garden);
-							gal.loadScreen(view.savedImg,model.savedGardens.size()-1,garden.getCost(),garden.getLepCount(),garden.getTitle());
+							gal.loadScreen(view.getGardenImag(),index,garden.getCost(),garden.getLepCount(),garden.getTitle());
 							try {
 								FileOutputStream fos = new FileOutputStream("src/main/resources/garden.ser");
 								ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -674,9 +691,29 @@ public class Controller extends Application {
 								System.out.println("error writing to file");
 								e1.printStackTrace();
 							}
+							new File("src/main/resources/"+title+".png").delete();
+							File f = new File("src/main/resources/"+title+".png");
+							try {
+								ImageIO.write(view.savedImg,"png", f);
+							}
+							catch (Exception s){
+								s.printStackTrace();
+							}
+						}else {
+							Popup error = createPopup("Error with title!\nTry to enter a different title");
+							error.show(stage);
 						}
 					}
 				});
+//				System.out.println("the index:"+index);
+//				new File("src/main/resources/gardenImage"+index+".png").delete();
+//				File f = new File("src/main/resources/gardenImage"+index+".png");
+//				try {
+//					ImageIO.write(view.savedImg,"png", f);
+//				}
+//				catch (Exception s){
+//					s.printStackTrace();
+//				}
 			}
  		}
  		catch(IOException e) {
@@ -686,6 +723,7 @@ public class Controller extends Application {
 		
 		
 	}
+	
 
 	/** 
 	 * Called when user is drawing. 
