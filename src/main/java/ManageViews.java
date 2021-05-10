@@ -63,6 +63,7 @@ public class ManageViews {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public void setPlantImg(Map<String, ImageView> imgs) {
@@ -78,6 +79,8 @@ public class ManageViews {
 		plantImages = new HashMap<>();
 		System.out.println("setting plant images");
 		plantImages = CSVtoPlants.readFileForImg(fileName);
+		//masterPlantImages = new HashMap();
+		//masterPlantImages = CSVtoPlants.readFileForImg(fileName);
 		lepImages = new HashMap<>();
 		System.out.println("setting lep images");
 		lepImages = CSVtoLeps.readFileForImg(fileName2);
@@ -103,6 +106,7 @@ public class ManageViews {
 	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
 	    views.put("Summary", new Summary(stage,controller,this));
 	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
+	    views.put("ComparePlants", new ComparePlants(stage, controller, this));
 	    views.put("LearnMore", new LearnMore(stage,controller,this));
 	    views.put("Lepedia", new Lepedia(stage,controller,this));
 	}

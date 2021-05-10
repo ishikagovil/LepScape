@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -286,6 +287,24 @@ public class Controller extends Application {
 		ArrayList<String> filteredNames = model.getFilteredList(cond);		
 		GardenDesign gd = (GardenDesign) this.view.getView("GardenDesign");
 		gd.updateImageList(filteredNames);
+	}
+	
+	public EventHandler<ActionEvent> getHandlerForPlantCompare(ComboBox<PlantSpecies> plantList) {
+		return (e) -> {updateComparePlant(e, plantList, true);};
+	}
+	
+	public EventHandler<ActionEvent> getHandlerForPlantCompare2(ComboBox<PlantSpecies> plantList) {
+		return (e) -> {updateComparePlant(e, plantList, false);};
+	}
+	
+	public void updateComparePlant(ActionEvent event, ComboBox<PlantSpecies> plantList, boolean isFirst) {
+		int selectedIndex = plantList.getSelectionModel().getSelectedIndex();
+	    PlantSpecies selectedItem = plantList.getSelectionModel().getSelectedItem();
+	    
+	    ((ComparePlants)view.getView("ComparePlants")).updatePlantInfo(selectedItem, isFirst);
+
+	    System.out.println("Selection made: [" + selectedIndex + "] " + selectedItem);
+	    System.out.println("   ComboBox.getValue(): " + plantList.getValue());
 	}
 	
 	/**

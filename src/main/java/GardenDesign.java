@@ -548,17 +548,17 @@ public class GardenDesign extends View{
 		vb.setPrefWidth(this.manageView.getScreenHeight()/7);
 		vb.setAlignment(Pos.CENTER);
 	
-		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore")); 
-		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
-		setOnMouse(clear, "clear");
-		clear.setOnMouseClicked(e->{
-			//setOnMouse(clear, "clear");
-			main.getChildren().clear();
-			controller.getHandlerForGardenClear();
-			main = addCanvas();
-			border.setCenter(main);
-		});
-		vb.getChildren().add(clear);
+		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore"), addNextButton("learnmore", "ComparePlants")); 
+//		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
+//		setOnMouse(clear, "clear");
+//		clear.setOnMouseClicked(e->{
+//			//setOnMouse(clear, "clear");
+//			main.getChildren().clear();
+//			controller.getHandlerForGardenClear();
+//			main = addCanvas();
+//			border.setCenter(main);
+//		});
+//		vb.getChildren().add(clear);
 		
 		return vb;
 	}
