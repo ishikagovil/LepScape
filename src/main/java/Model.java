@@ -162,6 +162,16 @@ public class Model implements java.io.Serializable{
 		return lep;
 	}
 	
+	public boolean isTitleValid(String newTitle) {
+		Iterator<Garden> iter = savedGardens.iterator();
+		while(iter.hasNext()) {
+			if(iter.next().getTitle().equals(newTitle)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * removes a plant from placedPlants and updates budgte and lep
 	 * @param key the name of the plant

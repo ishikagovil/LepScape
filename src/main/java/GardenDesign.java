@@ -549,16 +549,16 @@ public class GardenDesign extends View{
 		vb.setAlignment(Pos.CENTER);
 	
 		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore"), addNextButton("learnmore", "ComparePlants")); 
-		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
-		setOnMouse(clear, "clear");
-		clear.setOnMouseClicked(e->{
-			//setOnMouse(clear, "clear");
-			main.getChildren().clear();
-			controller.getHandlerForGardenClear();
-			main = addCanvas();
-			border.setCenter(main);
-		});
-		vb.getChildren().add(clear);
+//		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
+//		setOnMouse(clear, "clear");
+//		clear.setOnMouseClicked(e->{
+//			//setOnMouse(clear, "clear");
+//			main.getChildren().clear();
+//			controller.getHandlerForGardenClear();
+//			main = addCanvas();
+//			border.setCenter(main);
+//		});
+//		vb.getChildren().add(clear);
 		
 		return vb;
 	}
@@ -568,17 +568,9 @@ public class GardenDesign extends View{
 	 */
 	public void saveGardenImage() {
 		System.out.println("calling from in here");
-		this.manageView.setSavedImage(main.snapshot(null, null));
-		WritableImage wim = manageView.savedImg;
-		File f = new File("src/main/resources/gardenImage");
-		//BufferedImage b = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-		try {
-			ImageIO.write(SwingFXUtils.fromFXImage(wim,null),"png", f);
-		}
-		catch (Exception s){
-			
-		}
-		this.manageView.sp = main;
+		WritableImage wim = main.snapshot(null, null);
+		BufferedImage image = SwingFXUtils.fromFXImage(wim,null);
+		this.manageView.setSavedImage(image);
 		
 	}
 	

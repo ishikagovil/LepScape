@@ -82,7 +82,7 @@ public class Gallery extends View{
 	}
 
 	//https://stackoverflow.com/questions/22166610/how-to-create-a-popup-windows-in-javafx
-	public void loadScreen(WritableImage gardenImage, int index, double cost, double leps, String title) {
+	public void loadScreen(Image gardenImage, int index, double cost, double leps, String title) {
 		System.out.println("in here");
 		BorderPane gardenTile = new BorderPane();
 		ImageView iv = new ImageView(gardenImage);

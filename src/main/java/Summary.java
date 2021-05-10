@@ -116,15 +116,6 @@ public class Summary extends View {
         	File file1 = file.showSaveDialog(stage);
         	file.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
         });
-        WritableImage wim = manageView.savedImg;
-		File f = new File("src/main/resources/gardenImage");
-		//BufferedImage b = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-		try {
-			ImageIO.write(SwingFXUtils.fromFXImage(wim,null),"png", f);
-		}
-		catch (Exception s){
-
-		}
         // https://www.youtube.com/watch?v=CuK4urJtoyA
         // https://www.youtube.com/watch?v=Mef0Thtrjsc
         download.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -242,7 +233,7 @@ public class Summary extends View {
 		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
 		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
 		
-		ImageView iv = new ImageView(manageView.savedImg);
+		ImageView iv = new ImageView(manageView.getGardenImag());
 		iv.setPreserveRatio(true);
 		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
 //		iv.fitHeightProperty().bind(gardenDesign.heightProperty());
