@@ -49,9 +49,10 @@ public class ComparePlants extends View {
 	//public TilePane tile = new TilePane();
     
     final int INFOSPC = 20;
-    final int ins = 20;
-    final int centerThis = 100;
+    final int INS = 20;
+    final int CENTER = 100;
     final int PUSHX = 200;
+    final int MOVEUP = -50;
 		
 	/**
 	 * Initializes a new instance of ComparePlants.
@@ -122,7 +123,7 @@ public class ComparePlants extends View {
 		insT.setMaxWidth(screenWidth / 3);
 		insT.setWrapText(true);
 		insT.setTextAlignment(TextAlignment.CENTER);
-		insT.setPadding(new Insets(ins, ins, ins, ins));;
+		insT.setPadding(new Insets(INS));
 		
 		return insT;
 	}
@@ -203,12 +204,13 @@ public class ComparePlants extends View {
 		VBox plantBlock = new VBox();
 		plantBlock.setMaxWidth(screenWidth / 3);
 		plantImg.setPreserveRatio(true);
-		plantImg.setFitWidth(screenWidth / 4);
+		plantImg.setFitWidth(screenWidth / 5);
 		plantBlock.setSpacing(INFOSPC);
 		
 		title.setTextAlignment(TextAlignment.CENTER);
 		sciName.setTextAlignment(TextAlignment.CENTER);
 		desc.setTextAlignment(TextAlignment.CENTER);
+		desc.setTranslateY(MOVEUP);
 		
 		plantBlock.getChildren().addAll(title, sciName, plantImg, desc);
 		
@@ -224,7 +226,7 @@ public class ComparePlants extends View {
 		
 		plantBlock.setAlignment(Pos.BASELINE_CENTER);
 		plantBlock.setTranslateX(PUSHX);
-		plantBlock.setPadding(new Insets(ins, ins, ins, centerThis));
+		plantBlock.setPadding(new Insets(INS, INS, INS, CENTER));
 		
 		updateCenterBottom();
 	}
@@ -310,7 +312,7 @@ public class ComparePlants extends View {
 		}
 		
 		results.setMaxWidth(screenWidth / 3);
-		results.setPadding(new Insets(ins, ins, ins, ins));
+		results.setPadding(new Insets(INS));
 		results.setSpacing(INFOSPC);
 		
 		this.mainCompare.getChildren().add(results);
@@ -349,7 +351,7 @@ public class ComparePlants extends View {
 		header.setCenter(title);
 		ImageView back = addNextButton("Back", "GardenDesign");
 		header.setLeft(back);
-		header.setPadding(new Insets(ins, ins, ins, ins));
+		header.setPadding(new Insets(INS));
 		
 		header.setStyle("-fx-background-color: #A69F98");
 		

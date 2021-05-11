@@ -49,6 +49,7 @@ public class GardenDesign extends View{
 	final int YDISPLACE = 50;
 	final int POPUPWIDTH = 100;
 	final int POPUPHEIGHT = 50;
+	final int MOVEUP = -50;
 	private final int INFOSPC = 5;
 	private final int SMALLFONT = 12;
 	private final int SMALLSPC = 10;
@@ -590,9 +591,11 @@ public class GardenDesign extends View{
 		tf.setTextAlignment(TextAlignment.CENTER);
 		tf.setWrappingWidth(this.manageView.getScreenWidth() / 6.5);;
 		tf.setFont(new Font("Andale Mono", 14));
+		tf.setTranslateY(MOVEUP);
 		
 		desc.getChildren().addAll(plant, tf);
 		desc.setSpacing(INFOSPC);
+		desc.setPadding(new Insets(SMALLSPC));
 		desc.setAlignment(Pos.BASELINE_CENTER);
 
 		info1.setTop(top);
