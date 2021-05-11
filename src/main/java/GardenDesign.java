@@ -43,6 +43,7 @@ public class GardenDesign extends View{
 	final int POPUPWIDTH = 100;
 	final int POPUPHEIGHT = 50;
 	final double THRESHOLD = 0.00001;
+	final double BAR_SPACING = 8;
 	Canvas canvas;
 	Stage stage;
 	//Panes
@@ -81,19 +82,8 @@ public class GardenDesign extends View{
 		
 		border.setCenter(main);
 		
-		ScrollPane scroll = new ScrollPane();
-		tile.setMaxWidth(screenHeight);
-		tile.setMaxHeight(200);
-		tile = addTilePane();
+		border.setBottom(createBottom());
 		
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
-        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
-//        scroll.setFitToHeight(true);
-        scroll.setFitToWidth(true);
-        //scroll.setMaxWidth(screenWidth);
-        scroll.setMaxHeight(300);						// needed to initialize a dimension for scrollpane; leave in
-		scroll.setContent(tile);
-		border.setBottom(scroll);
 		//border.setBottom(tile);
 		//comparePane = addBorderPane();
 		
@@ -106,6 +96,56 @@ public class GardenDesign extends View{
 		border.setLeft(bd2);
 
 		showCompostBin();
+	}
+	
+	private Node createBottom() {
+		VBox bottom = new VBox();
+		
+		HBox filterBar = new HBox(BAR_SPACING);
+		
+		filterBar.setStyle("-fx-background-color: #8C6057");
+		filterBar.setPadding(new Insets(BAR_SPACING));
+		
+		TextField search = new TextField();
+		search.setPromptText("Search");
+		search.setOnKeyReleased((e) -> { controller.updateSearch(search.getText()); });
+		
+		ComboBox<Comparator<PlantSpecies>> filters = createFilterDropdown();
+		
+		filters.setOnAction(controller.getHandlerForSort());
+		
+		filterBar.getChildren().addAll(search, filters);
+		
+		ScrollPane scroll = new ScrollPane();
+		tile.setMaxWidth(screenHeight);
+		tile.setMaxHeight(200);
+		tile = addTilePane();
+		
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
+//        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        //scroll.setMaxWidth(screenWidth);
+        scroll.setMinHeight(200);						// needed to initialize a dimension for scrollpane; leave in
+		scroll.setContent(tile);
+		
+		bottom.getChildren().addAll(filterBar, scroll);
+		
+		return bottom;
+	}
+	
+	private ComboBox<Comparator<PlantSpecies>> createFilterDropdown() {
+		ComboBox<Comparator<PlantSpecies>> combo = new ComboBox<>();
+		
+		List<Comparator<PlantSpecies>> sorts = new ArrayList<>();
+		sorts.add(new SortByLeps());
+		sorts.add(new SortByName());
+		sorts.add(new SortByCost());
+		
+		combo.getItems().addAll(sorts);
+		combo.getSelectionModel().select(0);
+		
+		return combo;
 	}
 
 	
