@@ -49,6 +49,9 @@ public class GardenDesign extends View{
 	final int YDISPLACE = 50;
 	final int POPUPWIDTH = 100;
 	final int POPUPHEIGHT = 50;
+	private final int INFOSPC = 5;
+	private final int SMALLFONT = 12;
+	private final int SMALLSPC = 10;
 	final double THRESHOLD = 0.00001;
 	Canvas canvas;
 	Stage stage;
@@ -154,7 +157,7 @@ public class GardenDesign extends View{
 		this.main = addCanvas();
 		border.setCenter(main);
 		border.getChildren().remove(border.getRight());
-		makeInfoPane("Information","");
+		makeInfoPane("", "Information","");
 		main.setOnMouseDragReleased(event->{
 			System.out.println("(remakePane) will read when plant enters main");
 			controller.inMain = true;
@@ -500,7 +503,7 @@ public class GardenDesign extends View{
 	/**
 	 * Makes the pane will display information about a given plant when it is clicked
 	 */
-	public void makeInfoPane(String name, String info) {
+	public void makeInfoPane(String sciName, String name, String info) {
 		BorderPane info1 = new BorderPane();
 		info1.setPrefWidth(this.manageView.getScreenWidth() / 6);
 		info1.setMinHeight(this.manageView.getScreenHeight()-300);
@@ -527,17 +530,28 @@ public class GardenDesign extends View{
 		title.setAlignment(Pos.CENTER);
 		title.setTextAlignment(TextAlignment.CENTER);
 		top.getChildren().add(title);
+		top.setSpacing(SMALLSPC);
+		top.setPadding(new Insets(SMALLSPC));
 		
+		VBox desc = new VBox();
+		ImageView plant = new ImageView();
+		plant.setImage(this.manageView.getPlantImages().get(sciName).getImage());
+		plant.setPreserveRatio(true);
+		plant.setFitWidth(this.manageView.getScreenWidth()/7);
 		
 		Text tf = new Text();
 		tf.setText(info);
 		tf.setTextAlignment(TextAlignment.CENTER);
 		tf.setWrappingWidth(this.manageView.getScreenWidth() / 6.5);;
 		tf.setFont(new Font("Andale Mono", 14));
+		
+		desc.getChildren().addAll(plant, tf);
+		desc.setSpacing(INFOSPC);
+		desc.setAlignment(Pos.BASELINE_CENTER);
 
 		info1.setTop(top);
-		info1.setCenter(tf);
-		info1.setAlignment(tf, Pos.CENTER);
+		info1.setCenter(desc);
+		info1.setAlignment(desc, Pos.CENTER);
 		border.setRight(info1);
 		
 	}

@@ -398,9 +398,10 @@ public class Controller extends Application {
 		model.setY(n.getTranslateY());
 		if(key!=null) {
 			String name = model.plantDirectory.get(key).getCommonName();
+			String sciName = model.plantDirectory.get(key).getGenusName() + "-" + model.plantDirectory.get(key).getSpeciesName();
 			String description = model.plantDirectory.get(key).getDescription();
 			String info = description;
-			((GardenDesign)view.views.get("GardenDesign")).makeInfoPane(name, info);
+			((GardenDesign)view.views.get("GardenDesign")).makeInfoPane(sciName, name, info);
 		}
 		event.setDragDetect(true);
 	}
