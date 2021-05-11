@@ -45,7 +45,6 @@ public class GardenDesign extends View{
 	final int ENTERCOMPOST = 85;
 	final int INFO_IV_SIZE = 50;
 	final int HBOX_SPACING = 20;
-	final int FONTSIZE = 20;
 	final int XDISPLACE = 200;
 	final int YDISPLACE = 50;
 	final int POPUPWIDTH = 100;

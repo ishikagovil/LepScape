@@ -12,6 +12,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -19,6 +20,7 @@ import java.util.*;
 
 public abstract class View{
 	private static final int lineWidth = 3;
+	final int FONTSIZE = 20;
 	private static final double fillThreshold = 0.95;
 	BorderPane border;
 	Stage stage;
@@ -94,9 +96,11 @@ public abstract class View{
 	 * Adding tooltip to each ImageView that displays the text to the user and gives information about the ImageView
 	 * @param String text
 	 * @param ImageView iv
+	 * @author Ishika Govil
 	 */
 	public void hoverTooltip(String text, Node node) {
 		Tooltip tip = new Tooltip(text);
+		tip.setFont(new Font("Andale Mono", FONTSIZE));
 		tip.setShowDelay(Duration.seconds(0.5));
 		tip.setOnShowing(s->{
 			//https://stackoverflow.com/questions/24621133/javafx-how-to-set-tooltip-location-relative-to-the-mouse-cursor
