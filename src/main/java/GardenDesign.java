@@ -85,7 +85,7 @@ public class GardenDesign extends View{
 		main = addCanvas();
 		
 		border.setCenter(main);
-		
+		main.setStyle("-fx-background-color: #F0F2EF");
 		ScrollPane scroll = new ScrollPane();
 		tile.setMaxWidth(this.manageView.getScreenHeight());
 		tile.setMaxHeight(2*STANDARD_IMAGEVIEW);
@@ -102,7 +102,7 @@ public class GardenDesign extends View{
 		BorderPane bd2= new BorderPane();
 		
 		bd2.setTop(vb);
-		bd2.setStyle("-fx-background-color: LIGHTBLUE");
+		bd2.setStyle("-fx-background-color: #afd5aa");
 		bd2.setAlignment(bd2, Pos.TOP_LEFT);
 		//bd2.setBottom(comparePane);
 		//bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
@@ -290,7 +290,7 @@ public class GardenDesign extends View{
 	public TilePane addTilePane() {
 		plants = new HashMap<>();
 		TilePane tile = new TilePane();
-		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
+		tile.setStyle("-fx-background-color: #A69F98");
 		oblist.forEach((k,v)->{
 			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
 			v.setOnMouseDragged(controller.getHandlerforDrag());
@@ -327,6 +327,7 @@ public class GardenDesign extends View{
 		
 		BorderPane top = new BorderPane();
 		HBox budgetLepPane = new HBox();
+		top.setStyle("-fx-background-color: #A69F98");
 		budgetLepPane.setSpacing(HBOX_SPACING);
 		ImageView lepIv= new ImageView(lep);
 		ImageView budgetIv = new ImageView(dollar);
@@ -498,7 +499,7 @@ public class GardenDesign extends View{
 		BorderPane info1 = new BorderPane();
 		info1.setPrefWidth(this.manageView.getScreenWidth() / 6);
 		info1.setMinHeight(this.manageView.getScreenHeight()-300);
-		info1.setStyle("-fx-background-color: LIGHTBLUE");
+		info1.setStyle("-fx-background-color: #afd5aa");
 		
 		Label title = new Label(name);
 		title.setFont(new Font("Andale Mono", FONTSIZE));
@@ -543,7 +544,7 @@ public class GardenDesign extends View{
 	 */
 	public VBox addGridPane() {
 		VBox vb = new VBox(10);
-		vb.setStyle("-fx-background-color: LIGHTBLUE");
+		vb.setStyle("-fx-background-color: #afd5aa");
 		vb.setMinHeight(this.manageView.getScreenWidth()/6);
 		vb.setPrefWidth(this.manageView.getScreenHeight()/7);
 		vb.setAlignment(Pos.CENTER);
@@ -583,10 +584,10 @@ public class GardenDesign extends View{
 	 */
 	public BorderPane addBorderPane() {
 		BorderPane border = new BorderPane();
-		border.setStyle("-fx-background-color: LIGHTBLUE");
+		border.setStyle("-fx-background-color: #afd5aa");
 		border.setMinHeight(this.manageView.getScreenHeight()/3);
 		border.setMaxWidth(this.manageView.getScreenHeight()/4);
-		StackPane s1 = addStackPane("-fx-background-color: ALICEBLUE");
+		StackPane s1 = addStackPane("-fx-background-color: #A69F98");
 		StackPane s2 = addStackPane("-fx-background-color: LAVENDER");
 		Label l = new Label("Compare");
 		s2.toBack();
