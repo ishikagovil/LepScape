@@ -96,6 +96,8 @@ public class GardenDesign extends View{
 		border.setLeft(bd2);
 
 		showCompostBin();
+		
+		controller.updateSearch("");
 	}
 	
 	private Node createBottom() {
