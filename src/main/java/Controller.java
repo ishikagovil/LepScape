@@ -2,10 +2,12 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -29,9 +31,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
+
+import com.itextpdf.text.List;
+
 import javafx.application.Application;
 
 /**
@@ -975,5 +983,50 @@ public class Controller extends Application {
 		info += "\nLeps supported: "+s.getLepsSupported();
 		return info;
 	}
+	
+	public ArrayList<Integer> updateDropdown(ActionEvent event, ComboBox<String> cb) {
+		int woody = 0;
+		int herb = 0;
+		ArrayList<Integer> countPlants = new ArrayList<Integer>();
+		String option = cb.getValue();
+		if (option.equals("Top 5 lep-supported plants")) {
+			for (PlacedPlant p : model.gardenMap.getPlants()) {
+				ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
+				leppy.add(p.getSpecies());
+				Collections.sort(leppy, new Comparator<PlantSpecies>() {
+					@Override
+					public int compare(PlantSpecies x, PlantSpecies y) {
+						return x.getLepsSupported() - y.getLepsSupported();
+					}
+				});
+				Collections.reverseOrder();
+				PieChart.Data d[] = new PieChart.Data[5];
+				
+				PieChart p1 = new PieChart();
+			}
+			
+		}
+		else {
+			for (PlacedPlant p : model.gardenMap.getPlants()) {
+				boolean isWoody = p.getSpecies().isWoody();
+				if (isWoody) {
+					woody = woody + 1;
+				}
+				else {
+					herb = herb + 1;
+				}
+			}
+		}
+		countPlants.add(woody, herb);
+		return countPlants;
+	}
+	
+	public EventHandler<ActionEvent> getHandlerForSummaryPie(ComboBox<String> options) {
+		return (e) -> {
+			updateDropdown(e, options);
+		};
+	}
+	
+	
 
 }

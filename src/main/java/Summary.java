@@ -1,10 +1,16 @@
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.imageio.ImageIO;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -15,6 +21,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -51,6 +59,7 @@ public class Summary extends View {
 	public Controller ic;
 	Pane main;
 	Canvas canvas;
+	ComboBox<String> cb;
 
 /**
  * set up a stage and border pane to hold other panes
@@ -260,17 +269,17 @@ public class Summary extends View {
 	    rightPane.setPadding(new Insets(10));
 	    rightPane.setStyle("-fx-background-color: lavender");
 	    Text title = new Text("Summary");
-	    title.setFont(Font.font(null, FontWeight.BOLD, 30));
+	    title.setFont(Font.font("Andale Mono", FontWeight.BOLD, 30));
 	    
 		HBox box1 = new HBox();
 	    Image lepIm = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 	    ImageView lepIV = new ImageView(lepIm);
 		lepIV.setPreserveRatio(true);
 		lepIV.setFitHeight(40);
-		Label leps = new Label(""+lepCount);
-		leps.setFont(new Font("Arial", 16));
-		Label budgetCount = new Label(""+cost);
-		budgetCount.setFont(new Font("Arial", 16));
+		Label leps = new Label("" + lepCount);
+		leps.setFont(new Font("Andale Mono", 16));
+		Label budgetCount = new Label("" + cost);
+		budgetCount.setFont(new Font("Andale Mono", 16));
 		leps.setGraphic(lepIV);
 		box1.getChildren().addAll(lepIV, leps);
 		
@@ -282,7 +291,21 @@ public class Summary extends View {
 		costIV.setFitHeight(40);
 		box.getChildren().addAll(costIV, budgetCount);
 		
-		rightPane.getChildren().addAll(title, box1, box);
+		VBox vb = new VBox();
+		Label des = new Label("Use the drop down to choose the statistical data you want to view for this garden: ");
+		String options[] = {"Top 5 lep-supported plants", "Herbaceous vs. woody"};
+		cb = new ComboBox<String>(FXCollections.observableArrayList(options));
+		cb.setStyle("-fx-font: \"Andale Mono\"");
+		//cb.setOnAction(controller.getHandlerForSummaryPie(cb));
+		vb.getChildren().addAll(des, cb);
+		vb.setAlignment(Pos.CENTER);
+		
+		rightPane.getChildren().addAll(title, box1, box, vb);
 		border.setRight(rightPane);
+	}
+	
+	public void herbaceousVSWoody() {
+		
+		
 	}
 }
