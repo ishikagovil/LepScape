@@ -665,6 +665,20 @@ public class Controller extends Application {
 		}
 	}
 	
+	/**
+	 * Refreshes the images in the view screens
+	 */
+	public void refreshImages() {
+		GardenDesign gd = (GardenDesign) view.getView("GardenDesign");
+		
+		ArrayList<String> newPlants = new ArrayList<>();
+		newPlants.addAll(model.getPlantInfo().keySet());
+		
+		System.out.println("ADDING PLANTS: " + newPlants);
+		
+		gd.updateImageList(newPlants);
+	}
+	
 	// https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message
 	public static Popup createPopup(final String message) {
 	    final Popup popup = new Popup();
