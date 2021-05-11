@@ -3,14 +3,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.util.*;
-import javax.imageio.ImageIO;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,8 +12,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
@@ -297,6 +292,11 @@ public class GardenDesign extends View{
 			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
 			v.setOnDragDetected((MouseEvent event)->{
 					v.startFullDrag();
+					Dragboard db = v.startDragAndDrop(TransferMode.COPY);
+					ClipboardContent content = new ClipboardContent();
+					//content.putImage(v.getImage());
+					db.setContent(content);
+					
 			});
 			hoverTooltip(controller.tooltipInfo(k),v);
 			String uniqueID = UUID.randomUUID().toString();
@@ -304,6 +304,30 @@ public class GardenDesign extends View{
 			plants.put(uniqueID, k);
 			tile.getChildren().add(v);
 		});
+		main.setOnDragOver(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(DragEvent event) {
+				System.out.println("drag over in main");
+				if(event.getGestureSource()!=main && event.getDragboard().hasImage()) {
+					event.acceptTransferModes(TransferMode.ANY);
+				}
+				
+			}
+		});
+		main.setOnDragDropped(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(DragEvent event) {
+				Dragboard db = event.getDragboard();
+				if(db.hasImage()) {
+					event.setDropCompleted(true);
+				}
+				else {
+					event.setDropCompleted(false);
+				}
+			}
+			
+		});
+		
 		main.setOnMouseDragReleased(event->{
 			controller.inMain = true;
 		});
@@ -556,13 +580,11 @@ public class GardenDesign extends View{
 		setOnMouse(clear, "Clear");
 		clear.setOnMouseClicked(e->{
 			//setOnMouse(clear, "clear");
-			for(int i = 1; i<main.getChildren().size(); i++) {
-				main.getChildren().remove(i);
-			}
-			//main.getChildren().clear();
+			Node canvas = main.getChildren().get(0);
+			main.getChildren().clear();
+			main.getChildren().add(canvas);
+			placed.clear();
 			controller.clearGarden();
-			//main = addCanvas();
-			//border.setCenter(main);
 		});
 		vb.getChildren().add(clear);
 		
