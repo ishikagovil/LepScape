@@ -407,7 +407,6 @@ public class GardenDesign extends View{
 		if (validatePlantPlacement(x, y, heightWidth)[0] > THRESHOLD && !initial) {
 			// if collided, don't add ImageView to Pane
 			System.out.println("collided!");
-			// add pop up window to display "too big"
 			controller.showPopupMessage("Cannot place plant there!", stage);
 			return null;
 		} else {
@@ -420,6 +419,13 @@ public class GardenDesign extends View{
 		}
 	}
 	
+	/**
+	 * Determines whether the location the ImageView is being placed is a valid location.
+	 * @param x
+	 * @param y
+	 * @param heightWidth
+	 * @return double[]
+	 */
 	public double[] validatePlantPlacement(double x, double y, double heightWidth) {
 		
 		double[] returnThis = new double[5];

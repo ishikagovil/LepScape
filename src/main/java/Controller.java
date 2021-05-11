@@ -450,7 +450,9 @@ public class Controller extends Application {
 					double heightWidth = scalePlantSpread(name);
 					String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth,false);
 					model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId,false);
-					((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
+					if (nodeId != null) {
+						((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
+					}
 				}
 				//((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 				
