@@ -142,7 +142,7 @@ public class Summary extends View {
         	}
         });
         bottomButtons.add(download);
-        bottomButtons.add(addNextButton("Next", "Restart"));
+        bottomButtons.add(addNextButton("New", "Restart"));
         return bottomButtons;
 	}
 	
