@@ -235,7 +235,7 @@ public class ComparePlants extends View {
 		
 		this.mainCompare.getChildren().clear();
 		
-		Label costLabel = new Label("Best Cost:");
+		Label costLabel = new Label("Best Price:");
 		costLabel.setFont(new Font("Andale Mono", 20));
 		costLabel.setUnderline(true);
 		costLabel.setMaxWidth(screenWidth / 3);
