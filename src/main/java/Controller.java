@@ -247,7 +247,7 @@ public class Controller extends Application {
 	 * @param dialog stage that holds the dit button
 	 * @return the action event
 	 */
-	public EventHandler<ActionEvent> getHandlerforEditSaved(int index, Stage window){
+	public EventHandler<MouseEvent> getHandlerforEditSaved(int index, Stage window){
 		return (e) -> {editSavedGarden(e,index, window);};
 	}
 	
@@ -265,7 +265,7 @@ public class Controller extends Application {
 //		return (e) -> {clearGarden(e);};
 //	}
 	
-	public EventHandler<ActionEvent> getHandlerforDeleteSaved(int index, Stage window){
+	public EventHandler<MouseEvent> getHandlerforDeleteSaved(int index, Stage window){
 		return (e) -> {deleteSavedGarden(e, index, window);};
 	}
 	
@@ -576,7 +576,7 @@ public class Controller extends Application {
 		return numPixels;
 	}
 	
-	public void deleteSavedGarden(ActionEvent event, int index, Stage window) {
+	public void deleteSavedGarden(MouseEvent event, int index, Stage window) {
 		model.savedGardens.remove(index);
 		Gallery gal = (Gallery) view.views.get("Gallery");
 		gal.removeGardenFromPane(index);
@@ -601,7 +601,7 @@ public class Controller extends Application {
 	 * @param index index of saved garden
 	 * @param dialog the stage that contains edit button
 	 */
-	public void editSavedGarden(ActionEvent event, int index, Stage window) {
+	public void editSavedGarden(MouseEvent event, int index, Stage window) {
 		this.view.switchViews("GardenDesign");
 		setTheStage();
 		model.gardenMap = model.savedGardens.get(index);

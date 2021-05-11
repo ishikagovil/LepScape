@@ -108,8 +108,8 @@ public class Summary extends View {
 	public ArrayList<ImageView> addBottomButtons() {
 		// make buttons for Lepedia, Download and Create New Garden
         ArrayList <ImageView> bottomButtons = new ArrayList <>();
-        ImageView download = new ImageView(this.manageView.buttonImages.get("download"));
-        setOnMouse(download, "download");
+        ImageView download = new ImageView(this.manageView.buttonImages.get("Download"));
+        setOnMouse(download, "Download");
         download.setOnMouseClicked(e -> {
         	FileChooser file = new FileChooser();
         	file.setTitle("Download File");
@@ -142,7 +142,7 @@ public class Summary extends View {
         	}
         });
         bottomButtons.add(download);
-        bottomButtons.add(addNextButton("next", "Restart"));
+        bottomButtons.add(addNextButton("Next", "Restart"));
         return bottomButtons;
 	}
 	
@@ -166,15 +166,14 @@ public class Summary extends View {
  */
 	public ArrayList<ImageView> addNavigationButtons() {
 		ArrayList <ImageView> buttons = new ArrayList<>();
-        buttons.add(addNextButton("back", "GardenDesign"));
-        buttons.add(addNextButton("lepedia", "Lepedia"));
-        buttons.add(addNextButton("learnmore","LearnMore"));
-        ImageView saveGarden = new ImageView(this.manageView.buttonImages.get("save"));
-        setOnMouse(saveGarden, "save");
+        buttons.add(addNextButton("Back", "GardenDesign"));
+        buttons.add(addNextButton("Lepedia", "Lepedia"));
+        ImageView saveGarden = new ImageView(this.manageView.buttonImages.get("Save"));
+        setOnMouse(saveGarden, "Save");
         saveGarden.setOnMouseClicked(controller.getHandlerforSummarySave());
         buttons.add(saveGarden);
-        buttons.add(addNextButton("gallery","Gallery"));
-        buttons.get(4).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
+        buttons.add(addNextButton("Gallery","Gallery"));
+        buttons.get(3).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
         	this.manageView.setCalledFromStart(false);
         });
         return buttons;

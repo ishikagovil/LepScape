@@ -126,10 +126,13 @@ public class Gallery extends View{
                 BorderPane bp = new BorderPane();
                 
                 HBox hb = new HBox(HBOX_SPACING);
-                Button edit = new Button("Edit");
-                Button delete = new Button("Delete");
-                edit.setOnAction(controller.getHandlerforEditSaved(index,dialog));
-                delete.setOnAction(controller.getHandlerforDeleteSaved(index, dialog));
+             
+                ImageView edit = new ImageView(manageView.buttonImages.get("Edit"));
+              	ImageView delete = new ImageView(manageView.buttonImages.get("Delete"));
+              	setOnMouse(edit, "Edit");
+      			edit.setOnMouseClicked(controller.getHandlerforEditSaved(index,dialog));
+      			setOnMouse(delete, "Delete");
+      			delete.setOnMouseClicked(controller.getHandlerforDeleteSaved(index, dialog));
                 hb.getChildren().add(delete);
                 hb.getChildren().add(edit);
                 bp.setBottom(hb);
