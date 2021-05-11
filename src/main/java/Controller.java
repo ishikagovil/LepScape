@@ -514,7 +514,7 @@ public class Controller extends Application {
  				System.out.println("cannot move, collided PART TWO!");
 			}
  		}
-		inMain = false;
+		//inMain = false;
 	}
 	
 	public void updateBudgetandLep() {
