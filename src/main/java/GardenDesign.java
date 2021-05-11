@@ -53,6 +53,7 @@ public class GardenDesign extends View{
 	private final int SMALLFONT = 12;
 	private final int SMALLSPC = 10;
 	final double THRESHOLD = 0.00001;
+	final double BAR_SPACING = 8;
 	Canvas canvas;
 	Stage stage;
 	//Panes
@@ -93,18 +94,10 @@ public class GardenDesign extends View{
 		mainPaneWidth = 0;
 		mainPaneHeight = 0;
 		main.setStyle("-fx-background-color: #F0F2EF");
-		scroll = new ScrollPane();
-		tile.setMaxWidth(this.manageView.getScreenHeight());
-		tile.setMaxHeight(2*STANDARD_IMAGEVIEW);
-		tile = addTilePane();
 		
-		scroll = new ScrollPane();
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
-        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
-        scroll.setFitToWidth(true);
-        scroll.setMaxHeight(2*STANDARD_IMAGEVIEW);						// needed to initialize a dimension for scrollpane; leave in
-		scroll.setContent(tile);
-		border.setBottom(scroll);
+		border.setBottom(createBottom());
+		
+		//border.setBottom(tile);
 		//comparePane = addBorderPane();
 		
 		BorderPane bd2= new BorderPane();
@@ -117,7 +110,56 @@ public class GardenDesign extends View{
 		
 		border.setLeft(bd2);
 		showCompostBin();
+	}
+	
+	private Node createBottom() {
+		VBox bottom = new VBox();
 		
+		HBox filterBar = new HBox(BAR_SPACING);
+		
+		filterBar.setStyle("-fx-background-color: #8C6057");
+		filterBar.setPadding(new Insets(BAR_SPACING));
+		
+		TextField search = new TextField();
+		search.setPromptText("Search");
+		search.setOnKeyReleased((e) -> { controller.updateSearch(search.getText()); });
+		
+		ComboBox<Comparator<PlantSpecies>> filters = createFilterDropdown();
+		
+		filters.setOnAction(controller.getHandlerForSort());
+		
+		filterBar.getChildren().addAll(search, filters);
+		
+		scroll = new ScrollPane();
+		tile.setMaxWidth(this.manageView.getScreenHeight());
+		tile.setMaxHeight(2*STANDARD_IMAGEVIEW);
+		tile = addTilePane();
+		
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
+//        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        //scroll.setMaxWidth(screenWidth);
+        scroll.setMaxHeight(2*STANDARD_IMAGEVIEW);						// needed to initialize a dimension for scrollpane; leave in
+		scroll.setContent(tile);
+		
+		bottom.getChildren().addAll(filterBar, scroll);
+		
+		return bottom;
+	}
+	
+	private ComboBox<Comparator<PlantSpecies>> createFilterDropdown() {
+		ComboBox<Comparator<PlantSpecies>> combo = new ComboBox<>();
+		
+		List<Comparator<PlantSpecies>> sorts = new ArrayList<>();
+		sorts.add(new SortByLeps());
+		sorts.add(new SortByName());
+		sorts.add(new SortByCost());
+		
+		combo.getItems().addAll(sorts);
+		combo.getSelectionModel().select(0);
+		
+		return combo;
 	}
 
 	

@@ -11,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -33,6 +34,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
@@ -279,6 +281,34 @@ public class Controller extends Application {
 		
 	}
 
+	/**
+	 * Creates a handler for when the user changes the sort
+	 * @return the corresponding handler
+	 */
+	public EventHandler<ActionEvent> getHandlerForSort() {
+		return (e) -> { updateSort(e); };
+	}
+	
+	/**
+	 * Updates the current search with the query
+	 * @param query the search query inputted
+	 */
+	public void updateSearch(String query) {
+		GardenDesign gd = (GardenDesign) this.view.getView("GardenDesign");
+		gd.updateImageList(model.updateFilter(new SearchFilter(query)));
+	}
+	
+	/**
+	 * Updates the current sort to use
+	 * @param comp the comparator to sort by
+	 */
+	public void updateSort(ActionEvent e) {
+		ComboBox<Comparator<PlantSpecies>> box = (ComboBox<Comparator<PlantSpecies>>) e.getSource();
+		GardenDesign gd = (GardenDesign) this.view.getView("GardenDesign");
+		gd.updateImageList(model.updateSort(box.getValue()));
+	}
+	
+	
 	private void sectionClicked(MouseEvent e, Canvas canvas) {
 		int newX = (int) e.getX();
 		int newY = (int) e.getY();
@@ -287,7 +317,8 @@ public class Controller extends Application {
 		PixelReader pr = img.getPixelReader();
 		Conditions cond = Conditions.fromColor(pr.getColor(newX, newY));
 		
-		ArrayList<String> filteredNames = model.getFilteredList(cond);		
+		ArrayList<String> filteredNames = model.updateFilter(new ConditionFilter(cond));
+		System.out.println(filteredNames);
 		GardenDesign gd = (GardenDesign) this.view.getView("GardenDesign");
 		gd.updateImageList(filteredNames);
 	}

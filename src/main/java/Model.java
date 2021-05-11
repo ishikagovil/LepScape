@@ -15,6 +15,8 @@ public class Model implements java.io.Serializable{
 	public HashSet<String> deleted;
 	public Boolean editGarden;
 	public int editGardenIndex;
+	public Comparator<PlantSpecies> sort;
+	public PlantFilter filter;
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh
@@ -27,6 +29,8 @@ public class Model implements java.io.Serializable{
 		this.lengthPerPixel = -1;
 		this.movedPlant = "";
 		this.deleted = new HashSet<>();
+		this.sort = new SortByLeps();
+		this.filter = new SearchFilter("");
 		editGarden = false;
 
 	}
@@ -300,6 +304,21 @@ public class Model implements java.io.Serializable{
 	}
 	
 	/**
+	 * Updates the current sorting used for the plants
+	 * @param sort the new sorting type
+	 * @return a new list of plants sorted by the sort and filter
+	 */
+	public ArrayList<String> updateSort(Comparator<PlantSpecies> sort) {
+		this.sort = sort;
+		return filterAndSortPlants();
+	}
+
+	public ArrayList<String> updateFilter(PlantFilter filter) {
+		this.filter = filter;
+		return filterAndSortPlants();
+	}
+	
+	/**
 	 * Calculates the distance of a line between the two provided points
 	 * @param double x1 representing x coordinate of first point
 	 * @param double y1 representing y coordinate of first point
@@ -325,21 +344,14 @@ public class Model implements java.io.Serializable{
 		return translate;
 	}
 	
-	public ArrayList<String> getFilteredList(Conditions cond) {
+	private ArrayList<String> filterAndSortPlants() {
+		ArrayList<PlantSpecies> plants = new ArrayList<>(plantDirectory.values());
 		ArrayList<String> names = new ArrayList<>();
-		plantDirectory.forEach((name, plant) -> {
-			boolean matchMoist = plant.getMoistureType() == MoistureType.ANY 
-					|| cond.getMoistureType() == MoistureType.ANY 
-					|| cond.getMoistureType() == plant.getMoistureType();
-			boolean matchDirt = plant.getSoilType() == SoilType.ANY 
-					|| cond.getSoilType() == SoilType.ANY 
-					|| cond.getSoilType() == plant.getSoilType();
-			boolean matchSun = plant.getLightType() == LightType.ANY 
-					|| cond.getSunlightType() == LightType.ANY 
-					|| cond.getSunlightType() == plant.getLightType();
-			
-			if(matchMoist && matchDirt && matchSun) {
-				names.add(name);
+
+		Collections.sort(plants, this.sort);
+		plants.forEach((plant) -> {
+			if(filter.include(plant)) {
+				names.add(plant.getGenusName() + "-" + plant.getSpeciesName());
 			}
 		});
 		
