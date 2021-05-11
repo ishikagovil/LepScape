@@ -295,11 +295,8 @@ public class GardenDesign extends View{
 			v.setOnMouseDragged(controller.getHandlerforDrag());
 			// returns image back to original TilePane location
 			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
-			v.setOnDragDetected(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
+			v.setOnDragDetected((MouseEvent event)->{
 					v.startFullDrag();
-				}
 			});
 			hoverTooltip(controller.tooltipInfo(k),v);
 			String uniqueID = UUID.randomUUID().toString();
