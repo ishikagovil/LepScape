@@ -98,7 +98,7 @@ public class Conditions implements java.io.Serializable {
 			soilType.getValue(), 
 			moistureType.getValue(),
 			sunlightType.getValue(),
-			1.0);
+			0.5);
 
 	}
 	
