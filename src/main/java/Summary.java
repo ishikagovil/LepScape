@@ -144,9 +144,10 @@ public class Summary extends View {
 					PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("GardenDesign.pdf"));
 			        document.open();
 			        document.add(new Paragraph("A Hello World PDF document."));
-			        WritableImage wi = new WritableImage((int) gc.getCanvas().getWidth(), (int) gc.getCanvas().getHeight());
-			        gc.getCanvas().snapshot(null, wi);
-			        BufferedImage bi = SwingFXUtils.fromFXImage((Image) wi, null);
+			        //WritableImage wi = new WritableImage((int) gc.getCanvas().getWidth(), (int) gc.getCanvas().getHeight());
+			        //gc.getCanvas().snapshot(null, wi);
+			        //ImageView iv = new ImageView(manageView.savedImg);
+			        BufferedImage bi = SwingFXUtils.fromFXImage(manageView.img, null);
 			        ByteArrayOutputStream bo = new ByteArrayOutputStream();
 			        ImageIO.write(bi, "png", bo);
 			        com.itextpdf.text.Image im = com.itextpdf.text.Image.getInstance(bo.toByteArray());
@@ -254,7 +255,7 @@ public class Summary extends View {
 		ImageView iv = new ImageView(manageView.savedImg);
 		iv.setPreserveRatio(true);
 		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
-//		iv.fitHeightProperty().bind(gardenDesign.heightProperty());
+		iv.fitHeightProperty().bind(gardenDesign.heightProperty());
 		gardenDesign.getChildren().add(iv);
 		border.setCenter(gardenDesign);
 		border.setAlignment(gardenDesign, Pos.CENTER);
@@ -292,11 +293,11 @@ public class Summary extends View {
 		box.getChildren().addAll(costIV, budgetCount);
 		
 		VBox vb = new VBox();
-		Label des = new Label("Use the drop down to choose the statistical data you want to view for this garden: ");
+		Label des = new Label("Use the drop down view statistics: ");
 		String options[] = {"Top 5 lep-supported plants", "Herbaceous vs. woody"};
 		cb = new ComboBox<String>(FXCollections.observableArrayList(options));
 		cb.setStyle("-fx-font: \"Andale Mono\"");
-		//cb.setOnAction(controller.getHandlerForSummaryPie(cb));
+		cb.setOnAction(controller.getHandlerForSummaryPie(cb));
 		vb.getChildren().addAll(des, cb);
 		vb.setAlignment(Pos.CENTER);
 		

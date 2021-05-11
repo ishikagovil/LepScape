@@ -2,7 +2,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -24,7 +23,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,11 +32,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
-
-import com.itextpdf.text.List;
 
 import javafx.application.Application;
 
@@ -988,23 +983,21 @@ public class Controller extends Application {
 		int woody = 0;
 		int herb = 0;
 		ArrayList<Integer> countPlants = new ArrayList<Integer>();
-		String option = cb.getValue();
-		if (option.equals("Top 5 lep-supported plants")) {
+		ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
+		if (cb.getValue().equals("Top 5 lep-supported plants")) {
 			for (PlacedPlant p : model.gardenMap.getPlants()) {
-				ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
 				leppy.add(p.getSpecies());
-				Collections.sort(leppy, new Comparator<PlantSpecies>() {
-					@Override
-					public int compare(PlantSpecies x, PlantSpecies y) {
-						return x.getLepsSupported() - y.getLepsSupported();
-					}
-				});
-				Collections.reverseOrder();
-				PieChart.Data d[] = new PieChart.Data[5];
-				
-				PieChart p1 = new PieChart();
 			}
+			Collections.sort(leppy, new Comparator<PlantSpecies>() {
+				@Override
+				public int compare(PlantSpecies x, PlantSpecies y) {
+					return x.getLepsSupported() - y.getLepsSupported();
+				}
+			});
+			Collections.reverseOrder();
+			PieChart.Data d[] = new PieChart.Data[5];
 			
+			PieChart p1 = new PieChart();
 		}
 		else {
 			for (PlacedPlant p : model.gardenMap.getPlants()) {
