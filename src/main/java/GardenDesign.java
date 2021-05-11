@@ -71,6 +71,8 @@ public class GardenDesign extends View{
 	Label collisionDetected = new Label("Plants overlapping!");
 	Label emptyLabel = new Label();
 	Label fillMe = new Label();
+	public double mainPaneWidth;
+	public double mainPaneHeight;
 	
 	/**
 	 * Initializes an instance of GardenDesign
@@ -87,6 +89,8 @@ public class GardenDesign extends View{
 		main = addCanvas();
 		
 		border.setCenter(main);
+		mainPaneWidth = 0;
+		mainPaneHeight = 0;
 		main.setStyle("-fx-background-color: #F0F2EF");
 		ScrollPane scroll = new ScrollPane();
 		tile.setMaxWidth(this.manageView.getScreenHeight());
@@ -110,8 +114,8 @@ public class GardenDesign extends View{
 		//bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
 		
 		border.setLeft(bd2);
-
 		showCompostBin();
+		
 	}
 
 	
@@ -550,6 +554,8 @@ public class GardenDesign extends View{
 		info1.setCenter(desc);
 		info1.setAlignment(desc, Pos.CENTER);
 		border.setRight(info1);
+		mainPaneWidth = main.getWidth();
+		mainPaneHeight = main.getHeight();
 		
 	}
 	
@@ -588,7 +594,7 @@ public class GardenDesign extends View{
 	 */
 	public void saveGardenImage() {
 		System.out.println("calling from in here");
-		WritableImage wim = main.snapshot(null, null);
+		WritableImage wim = controller.snapshotGarden();
 		BufferedImage image = SwingFXUtils.fromFXImage(wim,null);
 		this.manageView.setSavedImage(image);
 		

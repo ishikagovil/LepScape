@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -12,8 +13,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Polygon;
@@ -518,6 +521,18 @@ public class Controller extends Application {
 		//inMain = false;
 	}
 	
+	public WritableImage snapshotGarden() {
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.TRANSPARENT);
+		WritableImage temp = ((GardenDesign)this.view.currView).main.snapshot(params,null);
+		PixelReader reader = temp.getPixelReader();	
+		if(this.model.getGarden().placedPlants.size() != 0)
+			return new WritableImage(reader, 0, 0, (int)((GardenDesign)this.view.currView).mainPaneWidth,(int)((GardenDesign)this.view.currView).mainPaneHeight );
+		else
+			return temp;
+				
+	}
+	
 	public void updateBudgetandLep() {
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 	}
@@ -831,8 +846,7 @@ public class Controller extends Application {
 	
 	/**
 	 * Iterates over the boundary ArrayLists in Garden to draw plot to screen.
-	 * Calls iteratePlot() to translate and scale the plot
-	 * @param double scale 
+	 * Calls iteratePlot() to translate the plot
 	 * @author Ishika Govil
 	 */
 	public void drawPlot() {
@@ -844,7 +858,6 @@ public class Controller extends Application {
 	
 	/**
 	 * Iterates over just the freehand portion outline ArrayList in Garden
-	 * @param double scale
 	 * @author Ishika Govil
 	 */
 	public void drawFreehandPart() {

@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * @author Ishika Govil, Kimmy Huynh, Arunima Dey
@@ -188,8 +189,6 @@ public class Garden implements java.io.Serializable {
 	 * @author Ishika Govil 
 	 */
 	public ArrayList<Vector2> getExtremes() {
-		System.out.println("outline: "+ outline);
-		System.out.println("polygon: "+ polygonCorners);
 		ArrayList<Vector2> scaledOutlines = new ArrayList<>();
 		ArrayList<Vector2> extrema = new ArrayList<>();
 		int lowestX = 0; 
@@ -198,7 +197,6 @@ public class Garden implements java.io.Serializable {
 		int highestY = 0;
 		scaledOutlines.addAll(outline);
 		scaledOutlines.addAll(polygonCorners);
-		System.out.println("scaled: " +scaledOutlines);
 		Iterator<Vector2> itr = scaledOutlines.iterator();
 		int idx = 0;
 		while(itr.hasNext()) {
@@ -219,6 +217,8 @@ public class Garden implements java.io.Serializable {
 		extrema.add(scaledOutlines.get(lowestX));
 		return extrema;
 	}
+	
+	
 	
 	/**
 	 * Adds the plant to a list of PlacedPlants.
