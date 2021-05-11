@@ -551,7 +551,10 @@ public class Controller extends Application {
  		}
 		//inMain = false;
 	}
-	
+	/**
+	 * Saves the garden image such that it crops the image at the bounds of the main pane in GardenDesign
+	 * @return WritableImage for the entire garden
+	 */
 	public WritableImage snapshotGarden() {
 		SnapshotParameters params = new SnapshotParameters();
 		params.setFill(Color.TRANSPARENT);
