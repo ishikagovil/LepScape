@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -34,6 +35,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.ListIterator;
@@ -1096,6 +1098,53 @@ public class Controller extends Application {
 		info += "\nCost: $"+s.getCost();
 		info += "\nLeps supported: "+s.getLepsSupported();
 		return info;
+	}
+
+	public ArrayList<Integer> isWoody(ComboBox<String> cb) {
+		ArrayList<Integer> countPlants = new ArrayList<Integer>();
+		int woody = 0;
+		int herb = 0;
+		boolean isWoody;
+		if (cb.getValue().equals("Herbaceous vs. woody")) {
+			for (PlacedPlant p : model.gardenMap.getPlants()) {
+				isWoody = p.getSpecies().isWoody();
+				if (isWoody) {
+					woody = woody + 1;
+				}
+				else {
+					herb = herb + 1;
+				}
+			}
+			countPlants.add(woody, herb);
+		}
+		return countPlants;
+	}
+	public ArrayList<PlantSpecies> lepsSupported(ComboBox<String> cb) {
+		ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
+		if (cb.getValue().equals("Top 5 lep-supported plants")) {
+			for (PlacedPlant p : model.gardenMap.getPlants()) {
+				leppy.add(p.getSpecies());
+			}
+			
+			Collections.sort(leppy, new Comparator<PlantSpecies>() {
+				@Override
+				public int compare(PlantSpecies x, PlantSpecies y) {
+					return x.getLepsSupported() - y.getLepsSupported();
+				}
+			});
+			Collections.reverseOrder();
+		}
+		return leppy;
+	}
+	
+	public void isWoody1(<ActionEvent> e) {
+		
+	}
+	
+	public EventHandler<ActionEvent> getHandlerForSummaryPie(ComboBox<String> cb) {
+		return (e) -> {
+			isWoody(cb);
+		};
 	}
 
 }

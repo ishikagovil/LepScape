@@ -4,17 +4,36 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+
 import javax.imageio.ImageIO;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.Axis;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.PieChart.Data;
+import javafx.scene.chart.StackedBarChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -51,7 +70,7 @@ public class Summary extends View {
 	public Controller ic;
 	Pane main;
 	Canvas canvas;
-
+	ComboBox<String> cb;
 /**
  * set up a stage and border pane to hold other panes
  * @param stage
@@ -93,7 +112,7 @@ public class Summary extends View {
  */
 	public HBox addBottomHBox() {
 		HBox box = new HBox();
-        box.setStyle("-fx-background-color: steelblue");
+        box.setStyle("-fx-background-color: #8C6057");
         box.setSpacing(15);
         box.setPadding(new Insets(15, 12, 15, 12));
         box.setAlignment(Pos.CENTER_RIGHT);
@@ -110,35 +129,35 @@ public class Summary extends View {
         ArrayList <ImageView> bottomButtons = new ArrayList <>();
         ImageView download = new ImageView(this.manageView.buttonImages.get("Download"));
         setOnMouse(download, "Download");
-        download.setOnMouseClicked(e -> {
-        	FileChooser file = new FileChooser();
-        	file.setTitle("Download File");
-        	File file1 = file.showSaveDialog(stage);
-        	file.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        });
-        // https://www.youtube.com/watch?v=CuK4urJtoyA
-        // https://www.youtube.com/watch?v=Mef0Thtrjsc
+        // https://www.howtobuildsoftware.com/index.php/how-do/9Zf/itext-javafx-8-save-javafx-scrollpane-content-to-pdf-file
         download.setOnMouseClicked(new EventHandler<MouseEvent>() {
         	@Override
         	public void handle(MouseEvent event) {
-        		Document document = new Document();
-				try {
-					PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("GardenDesign.pdf"));
-			        document.open();
-			        document.add(new Paragraph("A Hello World PDF document."));
-			        WritableImage wi = new WritableImage((int) gc.getCanvas().getWidth(), (int) gc.getCanvas().getHeight());
-			        gc.getCanvas().snapshot(null, wi);
-			        BufferedImage bi = SwingFXUtils.fromFXImage((Image) wi, null);
-			        ByteArrayOutputStream bo = new ByteArrayOutputStream();
-			        ImageIO.write(bi, "png", bo);
-			        com.itextpdf.text.Image im = com.itextpdf.text.Image.getInstance(bo.toByteArray());
-			        document.add(im);
-			        document.close();
-			        writer.close();
-				}
-				catch (DocumentException | IOException e) {
-					e.printStackTrace();
-				}
+        		FileChooser fc = new FileChooser();
+        		FileChooser.ExtensionFilter ext = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+        		fc.getExtensionFilters().add(ext);
+        		fc.setTitle("Download File");
+        		File pdfFile = fc.showSaveDialog(stage);
+        		try {
+        			FileOutputStream fo = new FileOutputStream(new File("GardenDesign.png"));
+        			ImageIO.write(manageView.savedImg, "png", fo);
+        			fo.flush();
+        			fo.close();
+        			
+        			com.itextpdf.text.Image im = com.itextpdf.text.Image.getInstance("GardenDesign.png");
+        			Document doc = new Document(new com.itextpdf.text.Rectangle(im.getScaledWidth(), im.getScaledHeight()));
+        			FileOutputStream fos = new FileOutputStream(pdfFile);
+        			PdfWriter w = PdfWriter.getInstance(doc, fos);
+        			doc.open();
+        			doc.add(im);
+        			fos.flush();
+        			doc.close();
+        			fos.close();
+        			w.close();
+        		}
+        		catch (Exception e) {
+        			e.printStackTrace();
+        		}
         	}
         });
         bottomButtons.add(download);
@@ -209,7 +228,7 @@ public class Summary extends View {
  */
 	public StackPane addCenterPane() {
 		StackPane centerPane = new StackPane();
-		centerPane.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
+	//	centerPane.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
 		return centerPane;
 	}
 	
@@ -222,7 +241,7 @@ public class Summary extends View {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-background-color: lavender");
 		canvas = new Canvas();
-		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		//canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		gc = canvas.getGraphicsContext2D();
 //		gardenDesign.getChildren().add(canvas);
 	
@@ -272,7 +291,61 @@ public class Summary extends View {
 		costIV.setFitHeight(40);
 		box.getChildren().addAll(costIV, budgetCount);
 		
-		rightPane.getChildren().addAll(title, box1, box);
+		VBox vb = new VBox();
+		//Comparator<PlantSpecies> lepsSort = new SortByLeps();
+		
+		Label des = new Label("Use the drop down view statistics: ");
+		String options[] = {"Top 5 lep-supported plants", "Herbaceous vs. woody", "helloooooo testing"};
+		cb = new ComboBox<String>(FXCollections.observableArrayList(options));
+		cb.getSelectionModel().select(0);
+		cb.setStyle("-fx-font: \"Andale Mono\"");
+		vb.getChildren().addAll(des, cb);
+		cb.setOnAction(controller.getHandlerForSummaryPie(cb));
+		/*if (cb.getValue().equals(options[0])) {
+			CategoryAxis x = new CategoryAxis();
+			NumberAxis y = new NumberAxis();
+			int i = 0;
+			for (PlantSpecies p : controller.lepsSupported(cb)) {
+				x.setLabel(p.getSpeciesName());
+				y.setLabel("Leps supported by each plant");
+				StackedBarChart sb = new StackedBarChart(x, y);
+				sb.setTitle("Leps supported by top 5 plants in garden");
+				XYChart.Series p1 = new XYChart.Series<>();
+				p1.setName(controller.lepsSupported(cb).get(i).getSpeciesName());
+				p1.getData().add(new XYChart.Data<>(controller.lepsSupported(cb).get(i).)
+			}
+		}
+		*/
+		/*
+		if (cb.getValue().equals(options[1])) {
+			//ObservableList<PieChart.Data> data;
+			//PieChart.Data d[] = new PieChart.Data[2];
+			//String type[] = {"Woody", "Herbaceous"};
+			//int i = 0;
+			PieChart.Data s1 = new PieChart.Data("Woody", 12);
+			PieChart.Data s2 = new PieChart.Data("Herbaceous", 20);
+			//data = FXCollections.observableArrayList(new PieChart.Data("Woody", 12), new PieChart.Data("Herbaceous", 14));
+			/*for (int p : controller.isWoody(cb)) {
+				d[i] = new PieChart.Data(type[i], controller.isWoody(cb).get(i));
+				i = i + 1;
+			}*/
+			//PieChart p = new PieChart(FXCollections.observableArrayList(d));
+		/*	PieChart pc = new PieChart();
+			pc.getData().add(s1);
+			pc.getData().add(s2);
+			pc.setLegendSide(Side.BOTTOM);
+			pc.setTitle("Woody vs. Herbaceous");
+			pc.setClockwise(true);
+			//pc.setLabelsVisible(true);
+			pc.setStartAngle(180);
+			vb.getChildren().add(pc);
+		}
+		*/
+		//.setOnAction(controller.getHandlerForSummaryPie(cb));*/
+		vb.setAlignment(Pos.CENTER);
+		
+		rightPane.getChildren().addAll(title, box1, box, vb);
+		border.setRight(rightPane);
 		border.setRight(rightPane);
 	}
 }
