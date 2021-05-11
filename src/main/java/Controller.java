@@ -670,6 +670,7 @@ public class Controller extends Application {
 	 */
 	public void refreshImages() {
 		GardenDesign gd = (GardenDesign) view.getView("GardenDesign");
+		ComparePlants cp = (ComparePlants) view.getView("ComparePlants");
 		
 		ArrayList<String> newPlants = new ArrayList<>();
 		newPlants.addAll(model.getPlantInfo().keySet());
@@ -677,6 +678,7 @@ public class Controller extends Application {
 		System.out.println("ADDING PLANTS: " + newPlants);
 		
 		gd.updateImageList(newPlants);
+		cp.setPlantDir(view.getPlantImages());
 	}
 	
 	// https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message

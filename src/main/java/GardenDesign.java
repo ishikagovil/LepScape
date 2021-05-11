@@ -93,7 +93,7 @@ public class GardenDesign extends View{
 		mainPaneWidth = 0;
 		mainPaneHeight = 0;
 		main.setStyle("-fx-background-color: #F0F2EF");
-		ScrollPane scroll = new ScrollPane();
+		scroll = new ScrollPane();
 		tile.setMaxWidth(this.manageView.getScreenHeight());
 		tile.setMaxHeight(2*STANDARD_IMAGEVIEW);
 		tile = addTilePane();

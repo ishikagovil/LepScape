@@ -183,6 +183,7 @@ public class ComparePlants extends View {
 		
 		// create a new ImageView so the original ImageView doesn't get messed up by manipulations
 		ImageView host = plantPics.get(plant.getGenusName() + "-" + plant.getSpeciesName());
+		if(host == null) return;
 		ImageView plantImg = new ImageView();
 		plantImg.setImage(host.getImage());
 		
@@ -355,5 +356,12 @@ public class ComparePlants extends View {
 		return header;
 	}
 	
+    /**
+     * Sets the new imageview directory after they are loaded in
+     * @param Map<String, ImageView> the new imageview directory
+     */
+    public void setPlantDir(Map<String, ImageView> dir) {
+    	this.plantPics = dir;
+    }
 
 }
