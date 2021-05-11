@@ -42,7 +42,9 @@ public class ComparePlants extends View {
     BorderPane rightPlant;
     Pane mainCompare;
     PlantSpecies leftSpecies;
+    ImageView leftImg;
     PlantSpecies rightSpecies;
+    ImageView rightImg;
     VBox center;
 	//public TilePane tile = new TilePane();
     
@@ -178,7 +180,12 @@ public class ComparePlants extends View {
 		Text sciName = new Text("(" + plant.getGenusName() + " " + plant.getSpeciesName() + ")");
 		//sciName.setMaxWidth(screenWidth / 3);
 		sciName.setFont(Font.font("Andale Mono", 20));
-		ImageView plantImg = plantPics.get(plant.getGenusName() + "-" + plant.getSpeciesName());
+		
+		// create a new ImageView so the original ImageView doesn't get messed up by manipulations
+		ImageView host = plantPics.get(plant.getGenusName() + "-" + plant.getSpeciesName());
+		ImageView plantImg = new ImageView();
+		plantImg.setImage(host.getImage());
+		
 		int lepCount = plant.getLepsSupported();
 		int cost = plant.getCost();
 		double spread = plant.getSpreadRadius();
@@ -194,6 +201,7 @@ public class ComparePlants extends View {
 		
 		VBox plantBlock = new VBox();
 		plantBlock.setMaxWidth(screenWidth / 3);
+		plantImg.setPreserveRatio(true);
 		plantImg.setFitWidth(screenWidth / 4);
 		plantBlock.setSpacing(INFOSPC);
 		
