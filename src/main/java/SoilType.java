@@ -6,9 +6,9 @@
  */
 public enum SoilType {
 	ANY("Any", 0),
-	CLAY("Sand", 0.3),
-	DIRT("Dirt", 0.6),
-	ROCK("Rock", 0.9);
+	CLAY("Sandy", 0.3),
+	DIRT("Loamy", 0.6),
+	ROCK("Clay", 0.9);
 
 	private static final double epsilon = 0.07;
 	

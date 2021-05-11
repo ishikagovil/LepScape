@@ -7,7 +7,7 @@
 public enum MoistureType {
 	ANY("Any", 0),
 	DRY("Dry", 0.3),
-	MOIST("Moist", 0.6),
+	MOIST("Damp", 0.6),
 	WET("Wet", 0.9);
 
 	private static final double epsilon = 0.07;
