@@ -558,7 +558,7 @@ public class Controller extends Application {
 		WritableImage temp = ((GardenDesign)this.view.currView).main.snapshot(params,null);
 		PixelReader reader = temp.getPixelReader();	
 		if(this.model.getGarden().placedPlants.size() != 0)
-			return new WritableImage(reader, 0, 0, (int)((GardenDesign)this.view.currView).mainPaneWidth,(int)((GardenDesign)this.view.currView).mainPaneHeight );
+			return new WritableImage(reader, 0, 0, (int)((GardenDesign)this.view.currView).main.getWidth(),(int)((GardenDesign)this.view.currView).main.getHeight() );
 		else
 			return temp;
 				

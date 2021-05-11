@@ -74,8 +74,6 @@ public class GardenDesign extends View{
 	Label collisionDetected = new Label("Plants overlapping!");
 	Label emptyLabel = new Label();
 	Label fillMe = new Label();
-	public double mainPaneWidth;
-	public double mainPaneHeight;
 	
 	/**
 	 * Initializes an instance of GardenDesign
@@ -92,8 +90,6 @@ public class GardenDesign extends View{
 		main = addCanvas();
 		
 		border.setCenter(main);
-		mainPaneWidth = 0;
-		mainPaneHeight = 0;
 		main.setStyle("-fx-background-color: #F0F2EF");
 		
 		border.setBottom(createBottom());
@@ -602,9 +598,6 @@ public class GardenDesign extends View{
 		info1.setCenter(desc);
 		info1.setAlignment(desc, Pos.CENTER);
 		border.setRight(info1);
-		mainPaneWidth = main.getWidth();
-		mainPaneHeight = main.getHeight();
-		
 	}
 	
 	/**
