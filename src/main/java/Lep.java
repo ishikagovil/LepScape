@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 
-//Lep specie
-//Each lep object will have a specie name, genus name, common name, 
-//a description of the lep, and all the native plants that it can feed on to survive
+/**
+ * Representative of a Lep species and contains data of everything unique to it.
+ * @author dharjianto
+ *
+ */
 public class Lep {
 	
 	private String speciesName;
@@ -12,7 +14,12 @@ public class Lep {
 	private ArrayList<String> thrivesInGenus;
 	private ArrayList<PlantSpecies> thrivesIn; //all the plants species the lep feeds on
 	
-	
+	/**
+	 * Creates an instance of a Lep.
+	 * @param speciesName
+	 * @param genusName
+	 * @param commonName
+	 */
 	public Lep(String speciesName, String genusName, String commonName) {
 		this.speciesName = speciesName;
 		this.genusName = genusName;

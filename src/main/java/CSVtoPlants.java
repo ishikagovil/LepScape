@@ -5,9 +5,19 @@ import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Use for converting CSV file of plant data into useable data for the program.
+ * @author dharjianto
+ *
+ */
 public class CSVtoPlants {
 
-    public static Map<String, PlantSpecies> readFile(String fileName) {
+	/**
+	 * Reads in the file to make PlantSpecies objects of every plant species available.
+	 * @param fileName
+	 * @return Map<String, PlantSpecies>
+	 */
+	public static Map<String, PlantSpecies> readFile(String fileName) {
 		Map<String, PlantSpecies> listPlants = new HashMap<>();
 
         String speciesName;
@@ -57,7 +67,12 @@ public class CSVtoPlants {
 		return listPlants;
 	}
 
-    public static Map<String, ImageView> readFileForImg(String fileName) {
+    /**
+     * Reads in the file to get the key for images of each PlantSpecies.
+     * @param fileName
+     * @return Map<String, ImageView>
+     */
+	public static Map<String, ImageView> readFileForImg(String fileName) {
 		Map<String, ImageView> plantImg = new HashMap<>();
         
         String genusName, speciesName;
@@ -96,7 +111,7 @@ public class CSVtoPlants {
 	}
     
     // debugging; guaranteeing working
-    
+
     public static void main(String[] args) {
         Map<String, ImageView> plantImg = readFileForImg("../resources/finalPlantListWithInfo.csv");
 

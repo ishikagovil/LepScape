@@ -38,6 +38,12 @@ public class Lepedia extends View {
 	int centerThis;
 	final int boxWidth = 1000;
 
+	/**
+	 * Creates an instance of the Lepedia.
+	 * @param stage
+	 * @param c
+	 * @param manageView
+	 */
 	public Lepedia(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		border = new BorderPane();
@@ -52,6 +58,10 @@ public class Lepedia extends View {
 		border.setAlignment(back, Pos.CENTER);
 	}
 	
+	/**
+	 * Makes the header/title of the page.
+	 * @return VBox
+	 */
 	public VBox makeHeader() {
 		VBox header = new VBox();
 		
@@ -77,7 +87,6 @@ public class Lepedia extends View {
 	/**
 	 *  Gathers information from completed Garden and updates it based on the plants available
 	 */
-		
 	public void updateLepedia() {
 		ScrollPane sp = new ScrollPane();
 		sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);    // horizontal scroll bar
@@ -135,9 +144,8 @@ public class Lepedia extends View {
 	 * Create each row in the Lepedia consisting of ImageViw (if avail) and information of specific Lep
 	 * @param lepImages
 	 * @param lep
-	 * @return
+	 * @return HBox
 	 */
-	
 	public HBox getInfoTile(Map<String, ImageView> lepImages, Lep lep) {
 		String genusName = lep.getGenusName();
 		String speciesName = lep.getSpeciesName();

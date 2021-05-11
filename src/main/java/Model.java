@@ -76,13 +76,22 @@ public class Model implements java.io.Serializable{
 	public void setGarden(Garden garden) {
 		this.gardenMap = garden;
 	}
+	
+	/**
+	 * Setter method to set the plant directory.
+	 * @param plantdir
+	 */
 	public void setPlantDirectory(Map<String, PlantSpecies> plantdir) {
 		this.plantDirectory = plantdir;
 	}
 	
+	/**
+	 * Setter method to set the lep directory.
+	 * @param lepdir
+	 */
 	public void setLepDirectory(Map<String, Lep> lepdir) {
 		this.lepDirectory = lepdir;
-		Iterator lepIt = lepdir.entrySet().iterator();
+		/*Iterator lepIt = lepdir.entrySet().iterator();
 		Iterator plantIt = this.plantDirectory.entrySet().iterator();
 		System.out.println("created iterators for plant + lep");
 		
@@ -108,7 +117,7 @@ public class Model implements java.io.Serializable{
 			
 			System.out.println(lepObj.getThrivesIn());
 			
-		}
+		}*/
 		
 	}
 

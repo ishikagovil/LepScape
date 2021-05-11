@@ -53,8 +53,8 @@ public class Controller extends Application {
 	final int XDISPLACE = 200;
 	final int YDISPLACE = 50;
 	final double THRESHOLD = 0.00001;
-	final int XSNAPDISPLACE = 12;
-	final int YSNAPDISPLACE = 12;
+	final int XSNAPDISPLACE = 15;
+	final int YSNAPDISPLACE = 15;
 	
 	/** 
 	 * Override for the Application start method. Instantiates all fields
@@ -289,14 +289,30 @@ public class Controller extends Application {
 		gd.updateImageList(filteredNames);
 	}
 	
+	/**
+	 * Called when Plant 1's drop down is altered in PlantCompare page and updates info accordingly.
+	 * @param plantList
+	 * @return EventHandler<ActionEvent>
+	 */
 	public EventHandler<ActionEvent> getHandlerForPlantCompare(ComboBox<PlantSpecies> plantList) {
 		return (e) -> {updateComparePlant(e, plantList, true);};
 	}
 	
+	/**
+	 * Called when Plant 2's drop down is altered in PlantCompare page and updates info accordingly.
+	 * @param plantList
+	 * @return EventHandler<ActionEvent>
+	 */
 	public EventHandler<ActionEvent> getHandlerForPlantCompare2(ComboBox<PlantSpecies> plantList) {
 		return (e) -> {updateComparePlant(e, plantList, false);};
 	}
 	
+	/**
+	 * Calls the PlantCompare page to update the information for whichever plant/display is called.
+	 * @param event
+	 * @param plantList
+	 * @param isFirst
+	 */
 	public void updateComparePlant(ActionEvent event, ComboBox<PlantSpecies> plantList, boolean isFirst) {
 		int selectedIndex = plantList.getSelectionModel().getSelectedIndex();
 	    PlantSpecies selectedItem = plantList.getSelectionModel().getSelectedItem();
@@ -405,11 +421,11 @@ public class Controller extends Application {
 	}
 	
 	/**
-	 * Controls the release event. When drag starts in tilepane adds a new imageView of the same plant to the center pane 
+	 * Controls the release event. When drag starts in tilepane adds a new imageView of the same plant to the center pane. Also checks for collisions among ImageViews according to spread. 
 	 * @param event the mouse event
 	 * @param name the name or key of the plant being released
 	 * @param startingInTile boolean to inform if drag started in tile pane
-	 * @author Arunima Dey
+	 * @author Arunima Dey, Dea Harjianto
 	 */
 	public void release(MouseEvent event, String name, boolean startingInTile) {
 		System.out.println("released PART TWO");
@@ -504,6 +520,11 @@ public class Controller extends Application {
 	}
 	
 	
+	/**
+	 * Does the math for how far apart should the two centers of ImageViews be to be totally aligned.
+	 * @param distance
+	 * @return double
+	 */
 	public double plantCollideSnap(double distance) {
 		double coord = Math.sqrt(Math.pow(distance, 2) / 2);
 		return coord;

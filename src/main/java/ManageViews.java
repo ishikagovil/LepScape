@@ -66,6 +66,10 @@ public class ManageViews {
 		
 	}
 	
+	/**
+	 * A setter method to set the plantImages attribute to a given set of images.
+	 * @param imgs
+	 */
 	public void setPlantImg(Map<String, ImageView> imgs) {
 		this.plantImages = imgs;
 	}
@@ -75,6 +79,11 @@ public class ManageViews {
 		return im;
 	}
 
+	/**
+	 * Calls methods in CSVto___ to gather images from folder in assets to useable ImageViews for our program.
+	 * @param fileName
+	 * @param fileName2
+	 */
 	public void importImages(String fileName, String fileName2) {
 		plantImages = new HashMap<>();
 		System.out.println("setting plant images");
@@ -86,10 +95,18 @@ public class ManageViews {
 		lepImages = CSVtoLeps.readFileForImg(fileName2);
 	}
 
+	/**
+	 * Getter method for the plant images.
+	 * @return Map<String, ImageView>
+	 */
 	public Map<String, ImageView> getPlantImages() {
 		return this.plantImages;
 	}
 	
+	/**
+	 * Getter method for the lep iamges.
+	 * @return Map<String, ImageView>
+	 */
 	public Map<String, ImageView> getLepImages() {
 		return this.lepImages;
 	}
