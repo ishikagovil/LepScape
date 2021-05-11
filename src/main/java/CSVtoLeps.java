@@ -7,9 +7,19 @@ import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Use for converting CSV file of lep data into useable data for program.
+ * @author Dea Harjianto
+ *
+ */
 public class CSVtoLeps {
 
-    public static Map<String, Lep> readFile(String fileName) {
+    /**
+     * Reads the file and creates a Map of Lep objects written in the file.
+     * @param fileName
+     * @return Map<String, Lep>
+     */
+	public static Map<String, Lep> readFile(String fileName) {
 		Map<String, Lep> listLeps = new HashMap<>();
 
         String genusName;
@@ -38,12 +48,17 @@ public class CSVtoLeps {
             reader.close();   
 		}
 		catch (Exception e) {            
-            //System.err.format("Exception occurred trying to read '%s'.", fileName);            
-            //e.printStackTrace();        
+            System.err.format("Exception occurred trying to read '%s'.", fileName);            
+            e.printStackTrace();        
         }
 		return listLeps;
 	}
     
+	/**
+	 * Reads the file for the key to get the images of leps in a separate folder and creates a Map containing the ImageViews.
+	 * @param fileName
+	 * @return Map<String, ImageView>
+	 */
     public static Map<String, ImageView> readFileForImg(String fileName) {
 		Map<String, ImageView> lepImg = new HashMap<>();
         

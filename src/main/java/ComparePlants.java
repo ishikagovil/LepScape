@@ -23,6 +23,12 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * A screen that serves to pull up two plants and compare their stats. Provides feedback as well.
+ * @author Dea Harjianto
+ *
+ */
+
 public class ComparePlants extends View {
 	
 	Map<String, ImageView> plantPics;
@@ -45,7 +51,13 @@ public class ComparePlants extends View {
     final int centerThis = 100;
     final int PUSHX = 200;
 		
-	public ComparePlants(Stage stage, Controller controller, ManageViews manageView) {
+	/**
+	 * Initializes a new instance of ComparePlants.
+	 * @param stage
+	 * @param controller
+	 * @param manageView
+	 */
+    public ComparePlants(Stage stage, Controller controller, ManageViews manageView) {
 		super(stage, controller, manageView);
 		
 		this.screenWidth = (int)manageView.getScreenWidth();
@@ -96,7 +108,11 @@ public class ComparePlants extends View {
 
 	}
 	
-	public Label makeInstructions() {
+	/**
+	 * Makes the instructions blurb and returns the Label.
+	 * @return Label
+	 */
+    public Label makeInstructions() {
 		String text = "Choose from the drop down menus below to compare two plants! View their supported butterfly/moth count, cost, and more!";
 		Label insT = new Label(text);
 		
@@ -109,7 +125,11 @@ public class ComparePlants extends View {
 		return insT;
 	}
 	
-	public VBox makePlantBoxes() {
+	/**
+	 * Makes the drop down boxes for the plants; makes two instances.
+	 * @return VBox
+	 */
+    public VBox makePlantBoxes() {
 		VBox centerSelect = new VBox();
 		
 		Label plant1 = new Label("Plant 1:");
@@ -146,7 +166,12 @@ public class ComparePlants extends View {
 		return centerSelect;
 	}
 	
-	public void updatePlantInfo(PlantSpecies plant, boolean isFirst) {
+	/**
+	 * When a drop down box is altered, call this function to make the screen display the information.
+	 * @param plant
+	 * @param isFirst
+	 */
+    public void updatePlantInfo(PlantSpecies plant, boolean isFirst) {
 		Text title = new Text(plant.getCommonName());
 		//title.setMaxWidth(screenWidth / 3);
 		title.setFont(new Font("Andale Mono", 20));
@@ -195,7 +220,10 @@ public class ComparePlants extends View {
 		updateCenterBottom();
 	}
 	
-	public void updateCenterBottom() {
+	/**
+	 * Call this function to update the feedback given depending on what plants are displayed.
+	 */
+    public void updateCenterBottom() {
 		
 		this.mainCompare.getChildren().clear();
 		
@@ -282,7 +310,11 @@ public class ComparePlants extends View {
 	}
 
 	
-	public BorderPane makePlantInfo() {
+	/**
+	 * Makes empty component to display plant information in.
+	 * @return BorderPane
+	 */
+    public BorderPane makePlantInfo() {
 		BorderPane plant = new BorderPane();
 		
 		plant.setPrefWidth(screenWidth / 3);
@@ -296,7 +328,11 @@ public class ComparePlants extends View {
 		return plant;
 	}
 	
-	public BorderPane makeTitle() {
+	/**
+	 * Makes the title and back button to display.
+	 * @return BorderPane
+	 */
+    public BorderPane makeTitle() {
 		BorderPane header = new BorderPane();
 		Label title = new Label("Compare Plants!");
 		title.setFont(new Font("Andale Mono", 50));
