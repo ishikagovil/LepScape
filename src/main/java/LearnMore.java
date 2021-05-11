@@ -26,7 +26,7 @@ public class LearnMore extends View{
 	public HBox addBottomPane() {
 		HBox box = new HBox();
 		box.setPadding(new Insets(20));
-		ImageView done = addNextButton("next", "GardenDesign");
+		ImageView done = addNextButton("Back", "GardenDesign");
 		box.getChildren().add(done);
 		box.setAlignment(Pos.CENTER);
 		return box;

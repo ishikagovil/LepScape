@@ -65,11 +65,11 @@ public class ConditionScreen extends View {
 		budgetLabel.setStyle("-fx-text-fill: #5c5346");
 		
 		HBox buttons = new HBox(boxSpacing);
-		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
-		setOnMouse(back, "back");
+		ImageView back = new ImageView(this.manageView.buttonImages.get("Back"));
+		setOnMouse(back, "Back");
 		back.setOnMouseClicked(controller.getHandlerforClicked("PlotDesign"));
-		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
-		setOnMouse(next, "next");
+		ImageView next = new ImageView(this.manageView.buttonImages.get("Next"));
+		setOnMouse(next, "Next");
 		next.setOnMouseClicked((event) -> {
 			try{
 	    		controller.updateBudget(Double.parseDouble(budgetField.getText()));
@@ -116,7 +116,7 @@ public class ConditionScreen extends View {
 	private Node createCanvasPane() {
 	    Pane wrapperPane = new Pane();
 
-		wrapperPane.setStyle("-fx-background-color: #fof2ef");
+		wrapperPane.setStyle("-fx-background-color: #F0F2EF");
 	    // Put canvas in the center of the window
 	    canvas = new Canvas();
 	    gc = canvas.getGraphicsContext2D();

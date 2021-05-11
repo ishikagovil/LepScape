@@ -53,7 +53,7 @@ public class Lepedia extends View {
 		
 		border.setTop(makeHeader());
 		//border.setAlignment(lepTitle, Pos.CENTER);
-		ImageView back = addNextButton("back", "Summary");
+		ImageView back = addNextButton("Back", "Summary");
 		border.setBottom(back);
 		border.setAlignment(back, Pos.CENTER);
 	}

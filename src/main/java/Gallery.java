@@ -74,9 +74,9 @@ public class Gallery extends View{
 		back.setPrefSize(100, 30);
 
 		if(calledFromStart)
-			hb1.getChildren().add(addNextButton("back","Start"));
+			hb1.getChildren().add(addNextButton("Back","Start"));
 		else
-			hb1.getChildren().add(addNextButton("back","Summary"));
+			hb1.getChildren().add(addNextButton("Back","Summary"));
 		
 		border.setBottom(hb1);
 	}

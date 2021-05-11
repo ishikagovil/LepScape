@@ -71,13 +71,13 @@ public class PlotDesign extends View{
 		//Add editing button and functionality
         toolbar = new ToolBar();
         toolbar.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
-        toolbar.getItems().add(addNextButton("draw","Drawing"));
+        toolbar.getItems().add(addNextButton("Draw","Drawing"));
         //Make sure the anchors cannot be dragged when freehand is selected
         toolbar.getItems().get(0).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
         	dragAnchor = false;    	
         	toggleAnchorHandler();
         });
-        toolbar.getItems().add(addNextButton("polygon","Shape"));
+        toolbar.getItems().add(addNextButton("Polygon","Shape"));
         disableDrawing(toolbar.getItems().get(1));
         //Adding page buttons  (buttons to switch after drawing and buttons to switch after dimensions)
         drawSwitch = new ArrayList<>();
@@ -89,12 +89,12 @@ public class PlotDesign extends View{
 	 */
 	public void backButtons() {
 		//Adding Back buttons
-        drawSwitch.add(addNextButton("back", "Start"));
+        drawSwitch.add(addNextButton("Back", "Start"));
         disableDrawing(drawSwitch.get(0));
         
         //Adding second Back button on dimensions screen
-        dimSwitch.add(new ImageView(this.manageView.buttonImages.get("back")));
-        setOnMouse(dimSwitch.get(0), "back");
+        dimSwitch.add(new ImageView(this.manageView.buttonImages.get("Back")));
+        setOnMouse(dimSwitch.get(0), "Back");
         disableDrawing(dimSwitch.get(0));
         dimSwitch.get(0).setOnMouseClicked((e) -> {
             //Remove the lines on the current screen and polygon points
@@ -134,7 +134,7 @@ public class PlotDesign extends View{
 	 */
 	public void clearButtons() {
         //Adding Clear button
-		ImageView clear = addNextButton("clear", "Clear");
+		ImageView clear = addNextButton("Clear", "Clear");
         clear.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
         	shapeClicked = false;
        		border.getChildren().removeAll(anchors);             		
@@ -156,7 +156,7 @@ public class PlotDesign extends View{
         drawSwitch.add(clear);
         
         //Adding Undo button
-        ImageView undo = addNextButton("undo", "ClearDim");
+        ImageView undo = addNextButton("Undo", "ClearDim");
         dimSwitch.add(undo);
         dimSwitch.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
             gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
@@ -175,12 +175,12 @@ public class PlotDesign extends View{
 	 */
 	public void saveButtons() {
 		//Adding Save button
-        drawSwitch.add(new ImageView(this.manageView.buttonImages.get("next")));
-        setOnMouse(drawSwitch.get(2), "next");
+        drawSwitch.add(new ImageView(this.manageView.buttonImages.get("Next")));
+        setOnMouse(drawSwitch.get(2), "Next");
         
         //Adding Next button
-        dimSwitch.add(new ImageView(this.manageView.buttonImages.get("next")));
-        setOnMouse(dimSwitch.get(2), "next");
+        dimSwitch.add(new ImageView(this.manageView.buttonImages.get("Next")));
+        setOnMouse(dimSwitch.get(2), "Next");
 	}
 	
 	/**

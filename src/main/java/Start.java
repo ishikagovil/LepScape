@@ -63,8 +63,8 @@ public class Start extends View {
 		box.setSpacing(15);
 		box.setAlignment(Pos.CENTER);
 		buttons = new ArrayList<>();
-		buttons.add(addNextButton( "new", "PlotDesign"));
-		buttons.add(addNextButton("gallery", "Gallery"));
+		buttons.add(addNextButton( "New", "PlotDesign"));
+		buttons.add(addNextButton("Gallery", "Gallery"));
 		buttons.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
 	       	this.manageView.setCalledFromStart(true);
 	    });

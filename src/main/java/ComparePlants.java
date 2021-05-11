@@ -338,7 +338,7 @@ public class ComparePlants extends View {
 		title.setFont(new Font("Andale Mono", 50));
 		title.setStyle("-fx-text-fill: white");
 		header.setCenter(title);
-		ImageView back = addNextButton("back", "GardenDesign");
+		ImageView back = addNextButton("Back", "GardenDesign");
 		header.setLeft(back);
 		header.setPadding(new Insets(ins, ins, ins, ins));
 		

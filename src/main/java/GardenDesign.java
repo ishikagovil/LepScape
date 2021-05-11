@@ -356,16 +356,16 @@ public class GardenDesign extends View{
 		budgetLepPane.setAlignment(Pos.CENTER);
 		top.setCenter(budgetLepPane);
 		
-		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
-		setOnMouse(next, "next");
+		ImageView next = new ImageView(this.manageView.buttonImages.get("Next"));
+		setOnMouse(next, "Next");
 		next.setOnMouseClicked(e->{
 			saveGardenImage();
 			controller.switchViews("Summary");
 			
 		});
 		
-		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
-		setOnMouse(back, "back");
+		ImageView back = new ImageView(this.manageView.buttonImages.get("Back"));
+		setOnMouse(back, "Back");
 		back.setOnMouseClicked(e->{
 			controller.switchViews("ConditionScreen");
 			
@@ -555,9 +555,9 @@ public class GardenDesign extends View{
 		vb.setPrefWidth(this.manageView.getScreenHeight()/7);
 		vb.setAlignment(Pos.CENTER);
 	
-		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore"), addNextButton("learnmore", "ComparePlants")); 
-		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
-		setOnMouse(clear, "clear");
+		vb.getChildren().addAll(addNextButton("Learn More", "LearnMore"), addNextButton("Plant Compare", "ComparePlants")); 
+		ImageView clear = new ImageView(this.manageView.buttonImages.get("Clear"));
+		setOnMouse(clear, "Clear");
 		clear.setOnMouseClicked(e->{
 			//setOnMouse(clear, "clear");
 			for(int i = 1; i<main.getChildren().size(); i++) {
@@ -593,7 +593,7 @@ public class GardenDesign extends View{
 		border.setStyle("-fx-background-color: #afd5aa");
 		border.setMinHeight(this.manageView.getScreenHeight()/3);
 		border.setMaxWidth(this.manageView.getScreenHeight()/4);
-		StackPane s1 = addStackPane("-fx-background-color: #A69F98");
+		StackPane s1 = addStackPane("-fx-background-color: #5C5346");
 		StackPane s2 = addStackPane("-fx-background-color: LAVENDER");
 		Label l = new Label("Compare");
 		s2.toBack();
