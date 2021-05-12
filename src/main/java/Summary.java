@@ -58,6 +58,8 @@ public class Summary extends View {
 	Pane main;
 	Canvas canvas;
 	ComboBox<String> cb;
+	int totalLep;
+	double totalCost;
 
 	/**
 	 * set up a stage and border pane to hold other panes
@@ -72,27 +74,8 @@ public class Summary extends View {
 		border.setTop(addTitle());
 		border.setBottom(addBottomHBox());
 		border.setLeft(addNavigationVBox());
-		//main = new Pane();
-		//border.setCenter(main);
-		
-		/*
-	       // load butterfly animation
-	       ImageView iv1 = new ImageView();
-	       Image butterfly = new Image(getClass().getResourceAsStream("/butterfly.png"));
-	      // Image flapping = new Image(getClass().getResourceAsStream("/flapping.png"));
-	       iv1.setImage(butterfly);
-	       iv1.setPreserveRatio(true);
-	       iv1.setFitHeight(30);
-	       
-	       Duration duration = Duration.minutes(2);
-	       TranslateTransition translation = new TranslateTransition(duration, iv1);
-	       translation.setByX(100);
-	       translation.setAutoReverse(true);
-	       sp1.getChildren().add(iv1);
-	       translation.play();
-	       */
-		
-       //main = addCanvas();
+		totalLep = 0;
+		totalCost = 0;
 		border.setCenter(main);  		
     }
 	
@@ -143,12 +126,8 @@ public class Summary extends View {
         		fc.setTitle("Download File");
         		File pdfFile = fc.showSaveDialog(stage);
         		try {
-        			//WritableImage wi = controller.snapshotGarden();
-        			//BufferedImage bi = SwingFXUtils.fromFXImage(wi, null);
-        			//BufferedImage bi = SwingFXUtils.fromFXImage(manageView.getGardenImag(), null);
         			FileOutputStream fo = new FileOutputStream(new File("GardenDesign.png"));
         			ImageIO.write(manageView.savedImg, "png", fo);
-        			//ImageIO.write(bi, "png", fo);
         			fo.flush();
         			fo.close();
         			
@@ -157,16 +136,18 @@ public class Summary extends View {
         			FileOutputStream fos = new FileOutputStream(pdfFile);
         			PdfWriter w = PdfWriter.getInstance(doc, fos);
         			doc.open();
-        		
+        			doc.add(im);
         		    Map<String,PlacedPlant> result = controller.getPlacedPlants();
         			List plantList = new List(List.ORDERED);
-        			plantList.add("Here are the plants in your garden!");
+        			List titleList = new List(List.ALIGN_MIDDLE);
+        			titleList.add("Here are the plants in your garden!");
+        			titleList.add("Total cost: " + totalCost + ", Total insect species attracted: "+ totalLep);
+        			doc.add(titleList);
         			for (PlacedPlant p : result.values()) {
         				plantList.add(new ListItem(p.pdfDescription()));
         				System.out.println("DOWNLOAD" + p.pdfDescription());
         			}
         			
-        			doc.add(im);
         			//doc.add((Element) cb);
         			doc.add(plantList);
         			fos.flush();
@@ -245,17 +226,6 @@ public class Summary extends View {
 		return titleField;
 	}
 
-
-/**
- * create a center pane to hold the garden design 
- * @return the center pane
- */
-	/*public StackPane addCenterPane() {
->>>>>>> 66de488c227b42681116a8c3d8c436ca49e7991e
-		StackPane centerPane = new StackPane();
-	//	centerPane.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
-		return centerPane;
-	}*/
 	
 	/**
 	 * Makes the canvas so the previously set garden outline can be displayed
@@ -291,6 +261,8 @@ public class Summary extends View {
 	VBox rightPane;
 	VBox vb;
 	public void updateLepandCost(double cost, int lepCount) {
+		this.totalLep = lepCount;
+		this.totalCost = cost;
 		rightPane = new VBox();
 	    rightPane.setPadding(new Insets(HBOX_SPACING));
 	    rightPane.setStyle("-fx-background-color: #AFD5AA");
