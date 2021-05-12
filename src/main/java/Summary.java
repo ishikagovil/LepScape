@@ -328,6 +328,10 @@ public class Summary extends View {
 		//border.setRight(rightPane);
 	}
 	
+	/**
+	 * create a pie chart based on how many woody and herbaceous plants there are in the garden
+	 * @return the created pie chart
+	 */
 	public PieChart isWoody() {
 	/*	final Popup p = new Popup();
 		p.setAutoFix(true);
@@ -358,6 +362,10 @@ public class Summary extends View {
 		//vb.getChildren().add(pc);
 	}
 	
+	/**
+	 * create stacked bar chart for the most leps-supported plants
+	 * @return the created stacked bar chart with datas, x-y axis
+	 */
 	public StackedBarChart<String, Number> mostLeps() {
 		CategoryAxis x = new CategoryAxis();
 		x.setCategories(FXCollections.<String> observableArrayList(Arrays.asList(
