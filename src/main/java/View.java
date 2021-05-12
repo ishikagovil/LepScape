@@ -170,7 +170,16 @@ public abstract class View{
 			freeLines = new ArrayList<>();
 	}
 	
-	public static double drawOnCanvas(Canvas canvas, ArrayList<Vector2> points, ArrayList<Vector2> extrema, ArrayList<Conditions> conditions) {
+	/**
+	 * Draws the user's plot onto any size canvas
+	 * @param canvas canvas to draw on
+	 * @param outline outline of the freehand
+	 * @param polygon plot polygon corners
+	 * @param extrema extrema of the points of the outline
+	 * @param conditions an arraylist of conditions to draw
+	 * @return the scale that was used to draw the plot
+	 */
+	public static double drawOnCanvas(Canvas canvas, ArrayList<Vector2> outline, ArrayList<Vector2> polygon, ArrayList<Vector2> extrema, ArrayList<Conditions> conditions) {
 		double minX = extrema.get(3).getX();
 		double maxX = extrema.get(1).getX();
 		double minY = extrema.get(0).getY();
@@ -190,7 +199,8 @@ public abstract class View{
 //		System.out.println("cw: " + canvas.getWidth());
 //		System.out.println("ch: " + canvas.getHeight());
 		
-		drawOutlines(gc, points, scale, minX, minY);
+		drawOutlines(gc, outline, scale, minX, minY, false);
+		drawOutlines(gc, polygon, scale, minX, minY, true);
 		
 		Iterator<Conditions> condIter = conditions.iterator();
 		
@@ -214,18 +224,14 @@ public abstract class View{
 		return Math.min(xScale, yScale);
 	}
 	
-	private static void drawOutlines(GraphicsContext gc, ArrayList<Vector2> points, double scale, double minX, double minY) {
-		Iterator<Vector2> pointIter = points.iterator();
-
+	private static void drawOutlines(GraphicsContext gc, ArrayList<Vector2> points, double scale, double minX, double minY, boolean closed) {
 		boolean isNewLine = true;
 		
-		while(pointIter.hasNext()) {
-
-			Vector2 point = pointIter.next();
+		for(Vector2 point : points) {
 			double x = (point.getX() - minX) * scale;
 			double y = (point.getY() - minY) * scale;
 			
-//			System.out.println("x: " + x + " y: " + y);
+			System.out.println("Point: x: " + x + " y: " + y);
 
 			if(x < 0 && y < 0) {
 				isNewLine = true;
@@ -238,6 +244,13 @@ public abstract class View{
 				gc.stroke();
 			}
 			
+		}
+		if(closed && !points.isEmpty()) {
+			Vector2 point = points.get(0);
+			double x = (point.getX() - minX) * scale;
+			double y = (point.getY() - minY) * scale;
+			gc.lineTo(x, y);
+			gc.stroke();
 		}
 		gc.closePath();
 	}
