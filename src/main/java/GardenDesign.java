@@ -105,6 +105,10 @@ public class GardenDesign extends View{
 		showCompostBin();
 	}
 	
+	/**
+	 * Created the bottom of the screen that hold all the plant images
+	 * @return the bottom pane
+	 */
 	private Node createBottom() {
 		VBox bottom = new VBox();
 		
@@ -141,6 +145,10 @@ public class GardenDesign extends View{
 		return bottom;
 	}
 	
+	/**
+	 * Created sort by drop downs for plants
+	 * @return thee Combo box
+	 */
 	private ComboBox<Comparator<PlantSpecies>> createFilterDropdown() {
 		ComboBox<Comparator<PlantSpecies>> combo = new ComboBox<>();
 		
@@ -155,16 +163,18 @@ public class GardenDesign extends View{
 		return combo;
 	}
 
-	
+	/**
+	 * Creates the popup for when user exceeds budget
+	 */
 	public void budgetExceededPopup() {
 		final Stage budgetExceeded = new Stage();
 		budgetExceeded.initModality(Modality.APPLICATION_MODAL);
 		budgetExceeded.initOwner(stage);
 		budgetExceeded.setTitle("YOU HAVE EXCEEDED YOUR BUDGET!");
 		Label text = new Label("To continue adding to your garden increase your budget");
-		text.setFont(new Font("Andale Mono", FONTSIZE));
 		text.setStyle("-fx-font-size: 16; -fx-text-fill: white");
 		Label instruction = new Label("Press enter to set new budget or the X if you are done");
+		instruction.setStyle("-fx-font-size: 16; -fx-text-fill: white");
 		TextField budgetField = new TextField("Enter new budget");
 		budgetField.setMaxWidth(STANDARD_IMAGEVIEW);
 		BorderPane border = new BorderPane();
@@ -363,7 +373,10 @@ public class GardenDesign extends View{
 	}
 	
 	/**
-	 * Everytime a plant is placed onto or removed the garden the lep count and budget is updated
+	 * Remakes the top of the border pane, that holds cost and lep count, when user places plant
+	 * @param cost the new cost
+	 * @param lepCount the leps supported
+	 * @param budget thee total budget
 	 */
 	public void updateBudgetandLep(double cost, int lepCount, double budget) {
 		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));

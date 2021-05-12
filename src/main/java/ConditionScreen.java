@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 /**
  * The screen to select garden conditions and partition the garden into sections
  * @author Jinay Jain
- *
  */
 public class ConditionScreen extends View {
 

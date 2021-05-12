@@ -20,7 +20,7 @@ public class Model implements java.io.Serializable{
 	public boolean gardenDesign;
 	
 	/**
-	 * @author Ishika Govil, Kimmy Huynh
+	 * @author Ishika Govil, Kimmy Huynh, Arunima Dey
 	 */
 	public Model() {
 		this.savedGardens = new ArrayList<>();
@@ -36,6 +36,9 @@ public class Model implements java.io.Serializable{
 
 	}
 	
+	/**
+	 * Restartes all attributes of model except saved gardens when user starts a new garden
+	 */
 	public void restart() {
 		this.gardenMap = new Garden();
 		this.lengthPerPixel = -1;
@@ -164,6 +167,11 @@ public class Model implements java.io.Serializable{
  		System.out.println("plants: "+gardenMap.placedPlants);
 	}
 	
+	/**
+	 * Gets the cost of plants for gallery's saved gardens when placed plants has not been initilized
+	 * @param garden the garden for which we need cost
+	 * @return the cost
+	 */
 	public double getCostforGallery(Garden garden) {
 		Iterator<PlacedPlant> iter = garden.plants.iterator();
 		double cost = 0;
@@ -179,6 +187,11 @@ public class Model implements java.io.Serializable{
 		return cost;
 	}
 	
+	/**
+	 * Gets the lep count of plants for gallery's saved gardens when placed plants has not been initilized
+	 * @param garden the garden for which we need lep count
+	 * @return the lep count
+	 */
 	public int getLepsforGallery(Garden garden) {
 		Iterator<PlacedPlant> iter = garden.plants.iterator();
 		int lep = 0;
@@ -194,6 +207,11 @@ public class Model implements java.io.Serializable{
 		return lep;
 	}
 	
+	/**
+	 * Checks if a given no garden exists with same title before user can set it as the title of theeir garden
+	 * @param newTitle the title
+	 * @return the boolean to indicate whether title exits or not
+	 */
 	public boolean isTitleValid(String newTitle) {
 		Iterator<Garden> iter = savedGardens.iterator();
 		while(iter.hasNext()) {
@@ -230,6 +248,10 @@ public class Model implements java.io.Serializable{
  		System.out.println("plants: "+gardenMap.placedPlants);
  	}
 	
+	/**
+	 * Gets the lep direectory
+	 * @return the hashmap of lep name and lep object
+	 */
 	public Map<String, Lep> getLepDirectory() {
 		return this.lepDirectory;
 	}
@@ -331,6 +353,7 @@ public class Model implements java.io.Serializable{
 		this.sort = sort;
 		return filterAndSortPlants();
 	}
+	
 
 	public ArrayList<String> updateFilter(PlantFilter filter) {
 		this.filter = filter;
@@ -363,6 +386,10 @@ public class Model implements java.io.Serializable{
 		return translate;
 	}
 	
+	/**
+	 * Makes the arraylist of new plant names for when user sorts and filters plants
+	 * @return the arraylist
+	 */
 	private ArrayList<String> filterAndSortPlants() {
 		ArrayList<PlantSpecies> plants = new ArrayList<>(plantDirectory.values());
 		ArrayList<String> names = new ArrayList<>();

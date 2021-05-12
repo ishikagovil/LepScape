@@ -276,11 +276,19 @@ public class Controller extends Application {
 		return (e) -> {sectionClicked(e, canvas);};
 	}
 	
-	
+	/**
+	 * Creates handler for when user deleted a saved garden
+	 * @param index the index of the garden to be deleted
+	 * @param window the stage of the garden summary 
+	 * @return the handler
+	 */
 	public EventHandler<MouseEvent> getHandlerforDeleteSaved(int index, Stage window){
 		return (e) -> {deleteSavedGarden(e, index, window);};
 	}
 	
+	/**
+	 * Clears garden when user clicks the clear button
+	 */
 	public void clearGarden() {
 		Garden garden = model.gardenMap;
 		garden.placedPlants.clear();
@@ -315,7 +323,11 @@ public class Controller extends Application {
 		gd.updateImageList(model.updateSort(box.getValue()));
 	}
 	
-	
+	/**
+	 * Controls mouse event when user clicks on a given section of plot
+	 * @param e the mouse event
+	 * @param canvas the canvas
+	 */
 	private void sectionClicked(MouseEvent e, Canvas canvas) {
 		int newX = (int) e.getX();
 		int newY = (int) e.getY();
@@ -363,52 +375,6 @@ public class Controller extends Application {
 	    System.out.println("Selection made: [" + selectedIndex + "] " + selectedItem);
 	    System.out.println("   ComboBox.getValue(): " + plantList.getValue());
 	}
-	
-	/**
-	 * when a user wants to edit a previously saved garden
-	 * @param event the edit button action
-	 * @param index index of saved garden
-	 * @param dialog the stage that contains edit button
-	 */
-/*public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
-		this.view.switchViews("GardenDesign");
-		setTheStage();
-		model.gardenMap = model.savedGardens.get(index);
-		Garden garden = model.gardenMap;
-		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
-		System.out.println("outline: "+garden.outline + " "+ garden.outline.size());
-		((GardenDesign) view.views.get("GardenDesign")).remakePane();
-		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
-		model.scale = garden.scale;
-		model.lengthPerPixel = garden.lengthPerPixel;
-		garden.plants.forEach(plant->{
-			double heightWidth = scalePlantSpread(plant.getName());
-			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
-			model.gardenMap.placedPlants.put(node, plant);
-		});
-		dialog.close();
-		model.setToEdit();
-		model.setEditGardenIndex(index);
-	}
-*/
-	/**
-
-	 * Show the information of a savedGarden when user clicks on it
-	 * @param event the button click event
-	 * @param index index of the saved garden
-	 * @param dialog the popup stage
-	 * @author Arunima Dey
-	 */
-//	public void showSummaryInfo(ActionEvent event, int index, Stage dialog) {
-//		this.view.switchViews("Summary");
-//		setTheStage();
-//		Garden garden = model.savedGardens.get(index);
-//		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getLepCount());
-//		
-//		dialog.close();
-//		model.setToEdit();
-//		model.setEditGardenIndex(index);
-//	}
 	
 	/**
 	 * Updates the budget based on the double passed from a TextField
@@ -462,10 +428,18 @@ public class Controller extends Application {
 		event.setDragDetect(false);
 	}
 	
+	/**
+	 * The event handler for drag over 
+	 * @return
+	 */
 	public EventHandler<DragEvent> getHandlerForDragOver() {
 		return (e) -> {setOndragOver(e);};
 	} 
 	
+	/**
+	 * Controls the drag over event. When plant needs to be places in the center pane
+	 * @param event the Drag event
+	 */
 	public void setOndragOver(DragEvent event) {
 		Node n = (Node) event.getGestureSource();
 		view.setX(0,n);
@@ -573,6 +547,9 @@ public class Controller extends Application {
 				
 	}
 	
+	/**
+	 * Updates the budget and lep count for garden design
+	 */
 	public void updateBudgetandLep() {
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 	}
@@ -632,6 +609,9 @@ public class Controller extends Application {
 		return numPixels;
 	}
 	
+	/**
+	 * Saves the state of gardenDesign when user closes application
+	 */
 	public void saveState() {
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
@@ -648,6 +628,9 @@ public class Controller extends Application {
 		}
 	}
 	
+	/**
+	 * When user closes application on garden deesign screen brings user back to where they were in a previous session
+	 */
 	public void restoreState() {
 		System.out.println("restoring state");
 		try {
@@ -712,6 +695,12 @@ public class Controller extends Application {
 		model.setEditGardenIndex(index);
 	}
 	
+	/**
+	 * Deletes a saved garden when user clicks delete button
+	 * @param event the mouse event from clicked delete
+	 * @param index the index of thee garden to be deleted
+	 * @param window the stage that shows the garden summary and and the delete button
+	 */
 	public void deleteSavedGarden(MouseEvent event, int index, Stage window) {
 		model.savedGardens.remove(index);
 		Gallery gal = (Gallery) view.views.get("Gallery");
@@ -748,8 +737,12 @@ public class Controller extends Application {
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				Garden garden = model.savedGardens.get(i);
 				System.out.println(garden.getTitle());
-				Image im = new Image(getClass().getResourceAsStream("/"+garden.getTitle()+".png"));
-				gal.loadScreen(im,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
+				try {
+					Image im = new Image(getClass().getResourceAsStream("/SavedGardenImages/"+garden.getTitle()+".png"));
+					gal.loadScreen(im,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
+				}catch(NullPointerException e) {
+					e.printStackTrace();
+				}
 			}
 			ois.close();
 		} catch (ClassNotFoundException | IOException e) {
@@ -774,6 +767,11 @@ public class Controller extends Application {
 		cp.setPlantDir(view.getPlantImages());
 	}
 	
+	/**
+	 * Creates a popup with given message
+	 * @param message
+	 * @return the popup
+	 */
 	// https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message
 	public static Popup createPopup(final String message) {
 	    final Popup popup = new Popup();
@@ -791,7 +789,12 @@ public class Controller extends Application {
 	    popup.getContent().add(label);
 	    return popup;
 	}
-
+	
+	/**
+	 * Displays popup message with given string
+	 * @param message the message that goes in the popup
+	 * @param stage the stage that owns the popup
+	 */
 	public static void showPopupMessage(final String message, final Stage stage) {
 	    final Popup popup = createPopup(message);
 	    popup.setOnShown(new EventHandler<WindowEvent>() {
@@ -809,6 +812,7 @@ public class Controller extends Application {
 	 * @param event button pressed event
 	 * @author Arunima Dey
 	 */
+	//https://stackoverflow.com/questions/44841329/how-to-implement-serializable-for-my-project-to-have-persistence
 	public void summarySave(MouseEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
@@ -828,8 +832,8 @@ public class Controller extends Application {
 				oos.writeObject(model.savedGardens);
 				oos.close();
 				System.out.println("the index:"+index);
-				new File("src/main/resources/"+model.gardenMap.getTitle()+".png").delete();
-				File f = new File("src/main/resources/"+model.gardenMap.getTitle()+".png");
+				new File("src/main/resources/SavedGardenImages/"+model.gardenMap.getTitle()+".png").delete();
+				File f = new File("src/main/resources/SavedGardenImages/"+model.gardenMap.getTitle()+".png");
 				try {
 					ImageIO.write(view.savedImg,"png", f);
 				}
@@ -858,8 +862,8 @@ public class Controller extends Application {
 								System.out.println("error writing to file");
 								e1.printStackTrace();
 							}
-							new File("src/main/resources/"+title+".png").delete();
-							File f = new File("src/main/resources/"+title+".png");
+							new File("src/main/resources/SavedGardenImages/"+title+".png").delete();
+							File f = new File("src/main/resources/SavedGardenImages/"+title+".png");
 							try {
 								ImageIO.write(view.savedImg,"png", f);
 							}
@@ -1102,6 +1106,9 @@ public class Controller extends Application {
 		 }
 	}
 	
+	/**
+	 * Sets models gardendesign attribute to true
+	 */
 	public void goingToGardenDesign() {
 		model.gardenDesign=true;
 	}

@@ -30,17 +30,12 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javafx.embed.swing.SwingFXUtils;
-
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 
-
+/**
+ * Sets the stage for final screen which allows user to save garden, download a pdf of plant list or make a new garden
+ */
 public class Summary extends View {
 	final int STANDARD_IMAGEVIEW = 100;
 	final int NORMALCOMPOST = 75;
@@ -52,12 +47,12 @@ public class Summary extends View {
 	Pane main;
 	Canvas canvas;
 
-/**
- * set up a stage and border pane to hold other panes
- * @param stage
- * @param c
- * @param manageView
- */
+	/**
+	 * set up a stage and border pane to hold other panes
+	 * @param stage
+	 * @param c
+	 * @param manageView
+	 */
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
 		super(stage, c, manageView);
@@ -87,10 +82,10 @@ public class Summary extends View {
 		border.setCenter(main);  		
     }
 	
-/**
- * add bottom pane to hold the buttons for create new garden and download
- * @return the bottom pane created 
- */
+	/**
+	 * add bottom pane to hold the buttons for create new garden and download
+	 * @return the bottom pane created 
+	 */
 	public HBox addBottomHBox() {
 		HBox box = new HBox();
         box.setStyle("-fx-background-color: steelblue");
@@ -101,10 +96,10 @@ public class Summary extends View {
         return box;
 	}
 	
-/**
- * create an array list of buttons of download and create new garden
- * @return an array list of buttons
- */
+	/**
+	 * create an array list of buttons of download and create new garden
+	 * @return an array list of buttons
+	 */
 	public ArrayList<ImageView> addBottomButtons() {
 		// make buttons for Lepedia, Download and Create New Garden
         ArrayList <ImageView> bottomButtons = new ArrayList <>();
@@ -146,10 +141,10 @@ public class Summary extends View {
         return bottomButtons;
 	}
 	
-/**
- * create a vertical box pane to hold the navigation buttons
- * @return the vertical pane
- */
+	/**
+	 * create a vertical box pane to hold the navigation buttons
+	 * @return the vertical pane
+	 */
 	public VBox addNavigationVBox() {
 		VBox sideVBox = new VBox();
         sideVBox.setStyle("-fx-background-color: lavender");
@@ -160,10 +155,10 @@ public class Summary extends View {
         return sideVBox;
 	}
 
-/**
- * create an array list of navigation buttons
- * @return an array list of buttons
- */
+	/**
+	 * create an array list of navigation buttons
+	 * @return an array list of buttons
+	 */
 	public ArrayList<ImageView> addNavigationButtons() {
 		ArrayList <ImageView> buttons = new ArrayList<>();
 		buttons.add(addNextButton("Back", "GardenDesign"));
@@ -179,6 +174,10 @@ public class Summary extends View {
         return buttons;
 	}
 	
+	/**
+	 * Makes the popup to ask user for garden title when they try to save a garden
+	 * @return the Textfield which is checked for legal titles
+	 */
 	public TextField gardenTitlePopup() {
 		final Stage gardenTitle = new Stage();
 		gardenTitle.initModality(Modality.APPLICATION_MODAL);
@@ -203,21 +202,21 @@ public class Summary extends View {
 		return titleField;
 	}
 
-/**
- * create a center pane to hold the garden design 
- * @return the center pane
- */
+	/**
+	 * create a center pane to hold the garden design 
+	 * @return the center pane
+	 */
 	public StackPane addCenterPane() {
 		StackPane centerPane = new StackPane();
 		centerPane.setStyle("-fx-border-color: chocolate; -fx-border-width: 5px; -fx-background-color: lightblue");
 		return centerPane;
 	}
 	
-/**
- * Makes the canvas so the previously set garden outline can be displayed
- * Canvas then places inside a pane
- * @return the created pane
- */
+	/**
+	 * Makes the canvas so the previously set garden outline can be displayed
+	 * Canvas then places inside a pane
+	 * @return the created pane
+	 */
 	public void addCanvas() {
 		Pane gardenDesign = new Pane();
 		gardenDesign.setStyle("-fx-background-color: lavender");
@@ -235,16 +234,15 @@ public class Summary extends View {
 		ImageView iv = new ImageView(manageView.getGardenImag());
 		iv.setPreserveRatio(true);
 		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
-//		iv.fitHeightProperty().bind(gardenDesign.heightProperty());
 		gardenDesign.getChildren().add(iv);
 		border.setCenter(gardenDesign);
 		border.setAlignment(gardenDesign, Pos.CENTER);
 	}
 	
-/**
- * create a tilepane to hold information about the garden with updated cost and leps count
- * @return
- */
+	/**
+	 * create a tilepane to hold information about the garden with updated cost and leps count
+	 * @return
+	 */
 	public void updateLepandCost(double cost, int lepCount) {
 		VBox rightPane = new VBox();
 	    rightPane.setPadding(new Insets(10));

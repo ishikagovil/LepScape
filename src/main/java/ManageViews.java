@@ -52,7 +52,6 @@ public class ManageViews {
 		initializeViews();
 	    this.currView = this.getView("Start");
 	    stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
-
 			@Override
 			public void handle(WindowEvent event) {
 				// TODO Auto-generated method stub
@@ -63,20 +62,11 @@ public class ManageViews {
 			}
 	    	
 	    });
-//	    extensionForm.stage = stage;
-//	    stage.setOnCloseRequest(event->{
-//	    	event.consume();
-//	        Platform.runLater(() -> {
-//	            stage.hide();
-//	            extensionForm.onHide();
-//	        });
-//	    });
-//	    stage.setOnCloseRequest(ev->{
-//	    	controller.saveState();
-//	    });
 	}
 	
-	
+	/**
+	 * Imports in all the images for buttons
+	 */
 	public void importButtonImages() {
 		File[] file;
 		this.buttonImages = new HashMap<>();
@@ -101,6 +91,10 @@ public class ManageViews {
 		this.plantImages = imgs;
 	}
 	
+	/**
+	 * Makes an image out of the buffered image of garden
+	 * @return the convterted image
+	 */
 	public Image getGardenImag() {
 		Image im = SwingFXUtils.toFXImage(savedImg, null);
 		return im;
@@ -162,6 +156,9 @@ public class ManageViews {
 	    views.put("Lepedia", new Lepedia(stage,controller,this));
 	}
 	
+	/**
+	 * Resets all the views when user wants to start new garden
+	 */
 	public void resetViews() {
 		Gallery g = (Gallery) views.get("Gallery");
 		views = new HashMap<>();
@@ -175,10 +172,6 @@ public class ManageViews {
 	    views.put("LearnMore", new LearnMore(stage,controller,this));
 	    views.put("Lepedia", new Lepedia(stage,controller,this));
 	}
-	
-//	public void saveImage(int index, BufferedImage image) {
-//		this.savedGardenImages.add(index, image);
-//	}
 	
 	/** 
 	 * Called in Controller when user wishes to switch views
@@ -251,15 +244,10 @@ public class ManageViews {
 		return views.get(key);
 	}
 	
-//	/** 
-//	 * Writes the WritableImage field img after user saves their PlotDesign
-//	 * Useful for sharing the WritableImage between View classes
-//	 * @param WritableImage  
-//	 */
-//	public void setImage(WritableImage img) {
-//		this.img = img;
-//	}
-	
+	/**
+	 * Sets savedImg to buffered image of garden
+	 * @param img
+	 */
 	public void setSavedImage(BufferedImage img) {
 		System.out.println("called");
 		this.savedImg = img;
@@ -300,28 +288,55 @@ public class ManageViews {
 			((PlotDesign) this.currView).validateSave();
 	}
 	
+	/**
+	 * Calls currView to set the y component of a given node
+	 * @param y the y coordinate
+	 * @param n the node
+	 */
 	//methods only used by garden design
 	public void setY(double y, Node n){
 		currView.setY(y, n);
 	}
 	
+	/**
+	 * Calls currView to set the x component of a given node
+	 * @param x the x coordinate
+	 * @param n the node
+	 */
 	public void setX(double x, Node n){
 		currView.setX(x, n);
 	}
 	
+	/**
+	 * Gets the boolean to indicate whether galleery was accessed from start screen or summary
+	 * @return the boolean
+	 */
 	public boolean getCalledFromStart() {
 		return ((Gallery) views.get("Gallery")).calledFromStart;
 	}
 	
+	/**
+	 * Sets the boolean to indicate whether galleery was accessed from start screen or summary
+	 * @param called the boolean
+	 */
 	public void setCalledFromStart(boolean called) {
 		((Gallery) views.get("Gallery")).calledFromStart = called;
 		((Gallery) views.get("Gallery")).setBackButton();
 	}
 	
+	/**
+	 * Updates lep and budget count when summary screen is displayed
+	 * @param cost the cost
+	 * @param lepCount the leps supported
+	 */
 	public void updateLepandCost(double cost, int lepCount) {
 		((Summary) views.get("Summary")).updateLepandCost(cost, lepCount);
 	}
 	
+	/**
+	 * Gets the map of button names and images
+	 * @return the map
+	 */
 	public Map<String, Image> getButtons() {
 		return this.buttonImages;
 	}

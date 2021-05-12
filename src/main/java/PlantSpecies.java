@@ -282,7 +282,6 @@ public class PlantSpecies implements Comparable<PlantSpecies>{
 		return this.commonName;
 	}
 
-
 	@Override
 	public int compareTo(PlantSpecies o) {
 		String name = this.getCommonName();
