@@ -191,14 +191,12 @@ public abstract class View{
 		
 		Iterator<Conditions> condIter = conditions.iterator();
 		
-		System.out.println("Drawing conditions");
 		while(condIter.hasNext()) {
 			Conditions cond = condIter.next();
 			int startX = (int) ((cond.getX() - minX) * scale);
 			int startY = (int) ((cond.getY() - minY) * scale);
 			floodFill(canvas, cond, startX, startY, (int) canvas.getWidth(), (int) canvas.getHeight());
 			gc.save();
-			System.out.println("drawing cond at " + startX + " " + startY);
 		}
 		return scale;
 	}

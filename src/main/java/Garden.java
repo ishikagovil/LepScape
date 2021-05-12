@@ -35,8 +35,6 @@ public class Garden implements java.io.Serializable {
 		this.compostBin = new HashSet<PlantSpecies>();
 		//this.plant = new ArrayList<>();
 		this.placedPlants= new HashMap<>();
-		System.out.println("outline: "+ outline);
-		System.out.println("polygonCorners"+polygonCorners);
 	}
 	
 	/**
