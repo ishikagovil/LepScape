@@ -202,7 +202,7 @@ public class GardenDesign extends View{
 		this.main = addCanvas();
 		border.setCenter(main);
 		border.getChildren().remove(border.getRight());
-		makeInfoPane("", "Information","");
+		//makeInfoPane("", "Information","");
 		main.setOnMouseDragReleased(event->{
 			System.out.println("(remakePane) will read when plant enters main");
 			controller.inMain = true;
