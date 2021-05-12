@@ -96,6 +96,6 @@ public class PlacedPlant implements java.io.Serializable{
  		return this.name;
  	}
 	public String pdfDescription() {
-		return "Species name: " + species.getSpeciesName() + "\n" + "common name: " + species.getCommonName() + "\n" + "genus name: " + species.getGenusName();
+		return species.getCommonName() + ", also known as " + species.getGenusName() + " " + species.getSpeciesName();
 	}
 }
