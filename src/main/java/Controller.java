@@ -111,6 +111,10 @@ public class Controller extends Application {
 		return (e) -> { switchViews(next); };
 	}
 	
+	public EventHandler<ActionEvent> getHandlerForLinkClicked(String url) {
+		return (e) -> getHostServices().showDocument(url);
+	}
+	
 	/** 
 	 * Calls onChangeCursor in view when mouse enters the button frame
 	 * @param String key representing key for the ImageView

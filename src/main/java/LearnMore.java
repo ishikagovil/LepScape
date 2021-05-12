@@ -1,3 +1,4 @@
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -18,6 +19,9 @@ public class LearnMore extends View{
 	final int VGAP = 50;
 	final int SPC = 20;
 	final int TOPINS = 50;
+	final int MOVEUP = -60;
+	final int MOVEUP2 = - 35;
+	final int MOVEUP3 = -10;
 	double wrap;
 
 
@@ -69,10 +73,45 @@ public class LearnMore extends View{
 	
 	public VBox addSubtitle() {
 		Text by = new Text("Created by undergraduate software engineers Arunima Dey, Ishika Govil, Dea Harjianto, Kimmy Huynh, and Jinay Jain.");
+		by.setFont(new Font("Andale Mono", TSIZE));
+		by.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		by.setTextAlignment(TextAlignment.CENTER);
+		
 		Text reas = new Text("This program was created to help users like you plan a garden surrounding native plants and lep maximization.");
+		reas.setFont(new Font("Andale Mono", TSIZE));
+		reas.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		reas.setTextAlignment(TextAlignment.CENTER);
+		
+		Text lepinfo = new Text("Lepidoptera, coming from the Ancient Greek lepís \"scale\" + pterón \"wing\", is an order of insects including butterflies and moths. Our goal is to attract as many of these insects to your garden using only native plants!");
+		lepinfo.setFont(new Font("Andale Mono", TSIZE));
+		lepinfo.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		lepinfo.setTextAlignment(TextAlignment.CENTER);
+		lepinfo.setTranslateY(MOVEUP);
+		
+		Text nativePlant = new Text("The native plants of this program are native to Delaware and are beneficial to our insects' health! If our insects are not supported, our ecosystem will collapse!");
+		nativePlant.setFont(new Font("Andale Mono", TSIZE));
+		nativePlant.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		nativePlant.setTextAlignment(TextAlignment.CENTER);
+		nativePlant.setTranslateY(MOVEUP2);
+		
+		Text clickNow = new Text("Click the link to find out more about native plants and insect support via Mt. Cuba!");
+		clickNow.setFont(new Font("Andale Mono", TSIZE));
+		clickNow.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		clickNow.setTextAlignment(TextAlignment.CENTER);
+		clickNow.setTranslateY(MOVEUP3);
+		
+		Hyperlink mtcuba = new Hyperlink("https://mtcubacenter.org");
+		mtcuba.setOnAction(this.controller.getHandlerForLinkClicked(mtcuba.getText()));
+		mtcuba.setFont(new Font("Andale Mono", TSIZE));
+		mtcuba.setPadding(new Insets(INS));
+		mtcuba.setStyle("-fx-text-fill: #afd5aa");
 		
 		VBox sub = new VBox();
-		sub.getChildren().addAll(by, reas);
+		sub.getChildren().addAll(by, reas, lepinfo, nativePlant, clickNow, mtcuba);
+		sub.setAlignment(Pos.BASELINE_CENTER);
+		sub.setPrefWidth(this.manageView.getScreenWidth());
+		sub.setSpacing(SPC);
+		
 		
 		return sub;
 	}
