@@ -1,7 +1,8 @@
 import java.util.*;
-import javafx.embed.swing.SwingFXUtils;
-
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -9,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
@@ -49,6 +51,29 @@ public class ManageViews {
 		importButtonImages();
 		initializeViews();
 	    this.currView = this.getView("Start");
+	    stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+
+			@Override
+			public void handle(WindowEvent event) {
+				// TODO Auto-generated method stub
+				System.out.println("closing application");
+				controller.saveState();
+				Platform.exit();
+				System.exit(0);
+			}
+	    	
+	    });
+//	    extensionForm.stage = stage;
+//	    stage.setOnCloseRequest(event->{
+//	    	event.consume();
+//	        Platform.runLater(() -> {
+//	            stage.hide();
+//	            extensionForm.onHide();
+//	        });
+//	    });
+//	    stage.setOnCloseRequest(ev->{
+//	    	controller.saveState();
+//	    });
 	}
 	
 	

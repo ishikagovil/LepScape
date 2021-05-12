@@ -3,9 +3,9 @@ import java.util.*;
 public class Model implements java.io.Serializable{
 	
 	public Garden gardenMap;
-	public Map<String, PlantSpecies> plantDirectory;
-	public Map<String, Lep> lepDirectory;
-	public ArrayList<Garden> savedGardens;
+	public transient Map<String, PlantSpecies> plantDirectory;
+	public transient Map<String, Lep> lepDirectory;
+	public transient ArrayList<Garden> savedGardens;
 	public double lengthPerPixel;
 	public double scale;
 	public Vector2 translate;
@@ -13,10 +13,11 @@ public class Model implements java.io.Serializable{
 	public double y;
 	public String movedPlant;
 	public HashSet<String> deleted;
-	public Boolean editGarden;
+	public boolean editGarden;
 	public int editGardenIndex;
-	public Comparator<PlantSpecies> sort;
-	public PlantFilter filter;
+	public transient Comparator<PlantSpecies> sort;
+	public transient PlantFilter filter;
+	public boolean gardenDesign;
 	
 	/**
 	 * @author Ishika Govil, Kimmy Huynh
@@ -43,6 +44,7 @@ public class Model implements java.io.Serializable{
 		this.sort = new SortByLeps();
 		this.filter = new SearchFilter("");
 		editGarden = false;
+		gardenDesign = false;
 
 	}
 	
@@ -153,6 +155,7 @@ public class Model implements java.io.Serializable{
 	 */
 	public void placePlant(double x, double y, String key, String nodeId,boolean initial) {
 		System.out.println("adding to Garden");
+		System.out.println("the key when adding to garden: "+key);
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
 		if(!initial) {
@@ -164,20 +167,25 @@ public class Model implements java.io.Serializable{
 	public double getCostforGallery(Garden garden) {
 		Iterator<PlacedPlant> iter = garden.plants.iterator();
 		double cost = 0;
-		while(iter.hasNext()) {
-			System.out.println(iter.next().getName());
-			System.out.println(plantDirectory.size());
-			System.out.println(plantDirectory.get("Rhus-glabra"));
-//			PlantSpecies plant = plantDirectory.get(iter.next().get);
-//			plantDirectory.get(iter.next().getName());
-//			cost+=plant.getCost();
+		for(int i = 0; i<garden.plants.size();i++) {
+			PlantSpecies plant = plantDirectory.get(garden.plants.get(i).getName());
+			cost+=plant.getCost();
 		}
+//		while(iter.hasNext()) {
+////			PlantSpecies plant = plantDirectory.get(iter.next().get);
+////			plantDirectory.get(iter.next().getName());
+////			cost+=plant.getCost();
+//		}
 		return cost;
 	}
 	
 	public int getLepsforGallery(Garden garden) {
 		Iterator<PlacedPlant> iter = garden.plants.iterator();
 		int lep = 0;
+		for(int i = 0; i<garden.plants.size();i++) {
+			PlantSpecies plant = plantDirectory.get(garden.plants.get(i).getName());
+			lep+=plant.getLepsSupported();
+		}
 //		while(iter.hasNext()) {
 //			System.out.println(iter.next());
 //			PlantSpecies plant = plantDirectory.get(iter.next().getName());

@@ -166,7 +166,7 @@ public class Summary extends View {
  */
 	public ArrayList<ImageView> addNavigationButtons() {
 		ArrayList <ImageView> buttons = new ArrayList<>();
-        buttons.add(addNextButton("Back", "GardenDesign"));
+		buttons.add(addNextButton("Back", "GardenDesign"));
         buttons.add(addNextButton("Lepedia", "Lepedia"));
         ImageView saveGarden = new ImageView(this.manageView.buttonImages.get("Save"));
         setOnMouse(saveGarden, "Save");
