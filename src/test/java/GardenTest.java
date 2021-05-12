@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class GardenTest {
 	
-	private Garden g1 = new Garden(15, 20);
+	private Garden g1 = new Garden(15);
 	private Garden g2 = new Garden();
 	private PlantSpecies testSpecies = new PlantSpecies("a", "b", "c", 0, 0, 0, true, 0, 0, 0);
 	private PlacedPlant testPlant = new PlacedPlant(0, 0, testSpecies);
@@ -16,7 +16,7 @@ class GardenTest {
 	
 	@BeforeEach
 	void beforeEach() {
-		g1 = new Garden(15, 20);
+		g1 = new Garden(15);
 		g2 = new Garden();
 		testSpecies = new PlantSpecies("a", "b", "c", 0, 0, 0, true, 0, 0, 0);
 		testPlant = new PlacedPlant(0, 0, testSpecies);
@@ -25,42 +25,42 @@ class GardenTest {
 	
 	@Test
 	void testGetNumLeps() {
-		assertEquals(15, g1.getNumLeps());
-		assertEquals(0, g2.getNumLeps());
+		assertEquals(15, g1.getLepCount());
+		assertEquals(0, g2.getLepCount());
 	}
 
-	@Test
-	void testSetNumLeps() {
-		g1.setNumLeps(200);
-		assertEquals(200, g1.getNumLeps());
-		g2.setNumLeps(15);
-		assertEquals(15, g2.getNumLeps());
-	}
+//	@Test
+//	void testSetNumLeps() {
+//		g1.setNumLeps(200);
+//		assertEquals(200, g1.getNumLeps());
+//		g2.setNumLeps(15);
+//		assertEquals(15, g2.getNumLeps());
+//	}
 	
-	@Test
-	void testAddNumLeps() {
-		g1.addNumLeps(15);
-		assertEquals(30, g1.getNumLeps());
-	}
+//	@Test
+//	void testAddNumLeps() {
+//		g1.addNumLeps(15);
+//		assertEquals(30, g1.getNumLeps());
+//	}
 
 	@Test
 	void testGetCost() {
 		assertEquals(20, g1.getCost());
 	}
 
-	@Test
-	void testSetCost() {
-		g1.setCost(100);
-		assertEquals(100, g1.getCost());
-		g2.setCost(30);
-		assertEquals(30, g2.getCost());
-	}
+//	@Test
+//	void testSetCost() {
+//		g1.setCost(100);
+//		assertEquals(100, g1.getCost());
+//		g2.setCost(30);
+//		assertEquals(30, g2.getCost());
+//	}
 	
-	@Test
-	void testAddCost() {
-		g1.addCost(250);
-		assertEquals(270, g1.getCost());
-	}
+//	@Test
+//	void testAddCost() {
+//		g1.addCost(250);
+//		assertEquals(270, g1.getCost());
+//	}
 
 	@Test
 	void testGetOutline() {
@@ -134,20 +134,20 @@ class GardenTest {
 		assertFalse(g1.getPlants().isEmpty());
 	}
 	
-	@Test
-	void testSetGardenImageInfo() {
-		g1.setGardenImageInfo(0, 0, null);
-		assertNull(g1.getGardenData());
-		assertEquals(0, g1.getWidth());
-		assertEquals(0, g1.getHeight());
-	}
+//	@Test
+//	void testSetGardenImageInfo() {
+//		g1.setGardenImageInfo(0, 0, null);
+//		assertNull(g1.getGardenData());
+//		assertEquals(0, g1.getWidth());
+//		assertEquals(0, g1.getHeight());
+//	}
 	
-	@Test
-	void testSetPlotImageInfo() {
-		g1.setPlotImageInfo(0, 0, null);
-		assertNull(g1.plotData);
-		assertEquals(0, g1.plotWidth);
-		assertEquals(0, g1.plotHeight);
-	}
+//	@Test
+//	void testSetPlotImageInfo() {
+//		g1.setPlotImageInfo(0, 0, null);
+//		assertNull(g1.plotData);
+//		assertEquals(0, g1.plotWidth);
+//		assertEquals(0, g1.plotHeight);
+//	}
 	
 }

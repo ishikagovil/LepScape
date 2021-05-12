@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -38,12 +39,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ListIterator;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+
+import com.itextpdf.text.BaseColor;
 
 import javafx.application.Application;
 
@@ -975,8 +980,9 @@ public class Controller extends Application {
 	 */
 	public void drawToCanvas(Canvas canvas) {
 		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
-		ArrayList<Vector2> points = this.model.getGarden().getOutline();
+		ArrayList<Vector2> points = new ArrayList<>();
 		ArrayList<Conditions> conds = this.model.getGarden().getSections();
+		points.addAll(this.model.getGarden().getOutline());
 		points.addAll(this.model.getGarden().getPolygonCorners());
 		
 		double newScale = View.drawOnCanvas(canvas, points, extrema, conds);
@@ -1170,4 +1176,173 @@ public class Controller extends Application {
 		return info;
 	}
 
+	public void isWoody(ComboBox<String> cb) {
+		//ArrayList<Integer> countPlants = new ArrayList<Integer>();
+		/*int woody = 0;
+		int herb = 0;
+		boolean isWoody;
+		String selected = cb.getSelectionModel().getSelectedItem();
+		System.out.println(selected);
+		if (selected.equals("Herbaceous vs. woody")) {
+			for (PlacedPlant p : model.getGarden().getPlants()) {
+				isWoody = p.getSpecies().isWoody();
+				if (isWoody) {
+					woody = woody + 1;
+				}
+				else {
+					herb = herb + 1;
+				}
+			}
+			countPlants.add(woody);
+			countPlants.add(herb);
+			
+		}
+		System.out.println("Woody vs Herb:" + countPlants);
+		return countPlants;*/
+		
+		Summary s = (Summary) this.view.views.get("Summary");
+		//s.isWoody(model.isWoodyData());
+		//s.piePopup();
+		s.isWoody();
+		System.out.println("hello, im in woody");
+	}
+	/*public ArrayList<PlantSpecies> lepsSupported(ComboBox<String> cb) {
+		ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
+		if (cb.getValue().equals("Top 5 lep-supported plants")) {
+			for (PlacedPlant p : model.gardenMap.getPlants()) {
+				leppy.add(p.getSpecies());
+			}
+			
+			Collections.sort(leppy, new Comparator<PlantSpecies>() {
+				@Override
+				public int compare(PlantSpecies x, PlantSpecies y) {
+					return x.getLepsSupported() - y.getLepsSupported();
+				}
+			});
+			Collections.reverseOrder();
+		}
+		return leppy;
+	}
+	*/
+	public ArrayList<PlantSpecies> lepsCount() {
+		ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
+		for (PlacedPlant p : model.getGarden().getPlants()) {
+			leppy.add(p.getSpecies());
+		}
+		Collections.sort(leppy, new Comparator<PlantSpecies>() {
+			@Override
+			public int compare(PlantSpecies x, PlantSpecies y) {
+				return x.getLepsSupported() - y.getLepsSupported();
+			}
+		});
+		Collections.reverseOrder();
+		//leppy.subList(0, 4).clear();;
+		return leppy;
+	}
+	
+	public ArrayList<Lep> getLepsName() {
+		Map<String, Lep> leppy = getLepInfo();
+		HashSet<String> plantToLep = new HashSet<>();
+		ArrayList<PlacedPlant> plants = model.getGarden().getPlants();
+		ArrayList<Lep> lepsInGarden = new ArrayList<>();
+		
+		plants.forEach(plant -> {
+			plantToLep.add(plant.getSpecies().getGenusName());
+		});
+		Collections.sort(plants, new Comparator<PlacedPlant>() {
+			@Override
+			public int compare(PlacedPlant x, PlacedPlant y) {
+				return x.getSpecies().getLepsSupported() - y.getSpecies().getLepsSupported();
+			}
+		});
+		Collections.reverseOrder();
+		plants.subList(5, plants.size()).clear();
+		
+		leppy.forEach((lepKey, lepObj) -> {
+	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
+	    	System.out.println(thrivesIn);
+	    	for (String genusReqs: thrivesIn) {
+	    		System.out.println(genusReqs);
+	    		if (plantToLep.contains(genusReqs)) {
+	    			if (!(lepsInGarden.contains(lepObj))) {
+	    				lepsInGarden.add(lepObj);
+	    			}
+	    		}
+	    	}
+	    });
+		return lepsInGarden;
+	}
+/*	public void isWoody1(ActionEvent e) {
+		ComboBox<String> box = (ComboBox<String>) e.getSource();
+		//Object selected = box.getsel
+		Summary s = (Summary) this.view.getView("Summary");
+		s.isWoody(model.isWoodyData());
+		System.out.println("get into the combo box");
+	}
+*/
+	public EventHandler<ActionEvent> getHandlerForSummary(ComboBox<String> cb) {
+		return (e) -> {
+			isWoody(cb);
+		};
+	}
+	
+	public ArrayList<Integer> conditionColor(int ind) {
+		ArrayList<Integer> c = new ArrayList<Integer>();
+		c.add((int) model.getGarden().getSections().get(ind).toColor().getRed());
+		c.add((int) model.getGarden().getSections().get(ind).toColor().getGreen());
+		c.add((int) model.getGarden().getSections().get(ind).toColor().getBlue());
+		return c;
+	}
+
+	public ArrayList<Conditions> getConditions() {
+		return model.getGarden().getSections();
+	}
+	
+	public int countWoody()  {
+		int wood = 0;
+		for (PlacedPlant p : model.getGarden().getPlants()) {
+			if (p.getSpecies().isWoody()) {
+				wood = wood + 1;
+			}
+		}
+		return wood;
+	}
+	
+	public int countHerbaceous() {
+		int herb = 0;
+		for (PlacedPlant p : model.getGarden().getPlants()) {
+			if (! p.getSpecies().isWoody()) {
+				herb = herb + 1;
+			}
+		}
+		return herb;
+	}
+	
+	/*public static Popup createWoodyPopup() {
+		final Popup p = new Popup();
+		p.setAutoFix(true);
+		p.setAutoHide(true);
+		p.setHideOnEscape(true);
+		Label l = new Label("Woody vs Herbaceous in your garden: ");
+		l.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				p.hide();
+			}
+		});
+		return p;
+	}
+	public static void woodyPopup(final Stage stage) {
+		final Popup p = createWoodyPopup();
+		p.setOnShown(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent e) {
+				p.setX(stage.getX() + stage.getWidth() / 2 - p.getWidth() / 2);
+	            p.setY(stage.getY() + stage.getHeight() / 2 - p.getHeight() / 2);
+			}
+		});
+		p.show(stage);
+	}*/
+	
+	
 }

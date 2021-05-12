@@ -403,4 +403,25 @@ public class Model implements java.io.Serializable{
 		
 		return names;
 	}
+	/*
+	public ArrayList<Integer> isWoodyData() {
+		ArrayList<Integer> plantCount = new ArrayList<Integer>();
+		boolean isWoody;
+		int woody = 0;
+		int herb = 0;
+		for (PlacedPlant p : this.gardenMap.getPlants()) {
+			isWoody = p.getSpecies().isWoody();
+			if (isWoody) {
+				woody = woody + 1;
+			}
+			else {
+				herb = herb + 1;
+			}
+		}
+		plantCount.add(woody, herb);
+		System.out.println("woody: " + woody);
+		System.out.println("Herb: " + herb);
+		return plantCount;
+	}
+	*/
 }
