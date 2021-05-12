@@ -53,6 +53,7 @@ import com.itextpdf.text.BaseColor;
 import javafx.application.Application;
 
 /**
+ * The controller part of the MVC model
  * @author Ishika Govil, Arunima Dey, Dea Harjianto, Jinay Jain, Kimmy Huynh
  */
 public class Controller extends Application {

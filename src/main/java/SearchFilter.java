@@ -1,4 +1,9 @@
 
+/**
+ * Filters plants based on a search query and their names
+ * @author Jinay Jain
+ *
+ */
 public class SearchFilter implements PlantFilter {
 	String query;
 	public SearchFilter(String query) {

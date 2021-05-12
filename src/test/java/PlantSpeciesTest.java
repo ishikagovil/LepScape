@@ -44,7 +44,7 @@ class PlantSpeciesTest {
 	@Test
 	void testDescription() {
 		ps.setDescription();
-		assertEquals(ps.getDescription(), "Also known as c\nThis herbaceous plant attracts a total of 2 leps.");
+		assertFalse(ps.getDescription().isEmpty());
 		ps.setDescription("a");
 		assertEquals(ps.getDescription(), "a");
 	}
@@ -95,5 +95,21 @@ class PlantSpeciesTest {
 	@Test
 	void testToString() {
 		assertEquals(ps.toString(), ps.getCommonName());
+	}
+	
+	@Test
+	void testCompareTo() {
+		assertEquals(0, ps.compareTo(ps2));
+	}
+	
+	@Test
+	void testPdfDescription() {
+		ps.pdfDescription();
+		ps2.pdfDescription();
+		assertTrue(
+			ps.pdfDescription.contains(ps.getSpeciesName()) &&
+			ps.pdfDescription.contains(ps.getCommonName()) &&
+			ps.pdfDescription.contains(ps.getGenusName())
+		);
 	}
 }

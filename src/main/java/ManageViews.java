@@ -16,6 +16,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 
 /**
+ * A class used to control the views and screens on the app
  * @author Ishika Govil
  */
 public class ManageViews {

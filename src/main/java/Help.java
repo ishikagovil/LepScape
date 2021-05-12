@@ -10,6 +10,10 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * A screen used to give the user help tips for using the app
+ *
+ */
 public class Help extends View{
 	
 	final int TITLESIZE = 50;

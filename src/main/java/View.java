@@ -18,7 +18,7 @@ import javafx.util.Duration;
 import java.util.*;
 
 /**
- * Abstract class that holds all the views and any methods that aree common among them
+ * Abstract class that holds all the views and any methods that are common among them
  */
 public abstract class View{
 	private static final int lineWidth = 3;
@@ -35,11 +35,12 @@ public abstract class View{
 	ImageCursor shovelCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/shovelCursor.png"), 50,50,false,false));
 	//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
 	ImageCursor handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
+
 	/**
 	 * View class that is the super class for all View screens
-	 * @param Stage stage
-	 * @param Controller c
-	 * @param ManageViews manageView
+	 * @param stage Stage to use from JavaFX
+	 * @param c controller instance
+	 * @param manageView ManageViews instance
 	 */
 	public View(Stage stage, Controller c, ManageViews manageView) { 
 		this.manageView = manageView;
@@ -53,8 +54,8 @@ public abstract class View{
 	
 	/**
 	 * Sets the translateX value of a node n
-	 * @param double x
-	 * @param Node n
+	 * @param x new X value
+	 * @param n node to update
 	 */
 	public void setX(double x, Node n) {
 		n.setTranslateX(x);
@@ -68,9 +69,9 @@ public abstract class View{
 	}
 
 	/**
-	 * Sets the translateX value of a node n
-	 * @param double x
-	 * @param Node n
+	 * Sets the translateY value of a node n
+	 * @param y new Y value
+	 * @param n node to set
 	 */
 	public void setY(double y, Node n) {
 		n.setTranslateY(y);
@@ -78,9 +79,9 @@ public abstract class View{
 
 	/**
 	 * Updates the cursor to the different ImageCursors
-	 * @param boolean hand
-	 * @param String key representing key for the ImageView
-	 * @param ImageView b representing the ImageView being hovered
+	 * @param hand
+	 * @param key representing key for the ImageView
+	 * @param b representing the ImageView being hovered
 	 * @author Ishika Govil
 	 */
 	public void changeCursor(boolean hand, String key, ImageView b) { //Changes cursor to either a hand if true is passed, or pointer if false
@@ -97,8 +98,8 @@ public abstract class View{
 	} 
 	/**
 	 * Adding tooltip to each ImageView that displays the text to the user and gives information about the ImageView
-	 * @param String text
-	 * @param ImageView iv
+	 * @param text
+	 * @param node
 	 * @author Ishika Govil
 	 */
 	public void hoverTooltip(String text, Node node) {
@@ -117,8 +118,8 @@ public abstract class View{
 	}
 	/**
 	 * Adds a button with the correct size and actions
-	 * @param String key representing key of the Image in ManageView's buttonImages HashMap
-	 * @param String next representing the action the button performs when clicked
+	 * @param key representing key of the Image in ManageView's buttonImages HashMap
+	 * @param next representing the action the button performs when clicked
 	 * @return Button
 	 * @author Ishika Govil
 	 */
@@ -131,8 +132,8 @@ public abstract class View{
 
 	/**
 	 * Sets the MouseEntered and MouseExited handlers for ImageView
-	 * @param Button b
-	 * @param String key
+	 * @param b
+	 * @param key
 	 * @author Ishika Govil
 	 */
 	public void setOnMouse(ImageView b, String key) {
@@ -141,11 +142,11 @@ public abstract class View{
 	}
 	/**
 	 * Adds a line between (x1,y1) and (x2,y2)
-	 * @param double x1
-	 * @param double y1
-	 * @param double x2
-	 * @param double y2
-	 * @param boolean isPolygon
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param isPolygon
 	 * @author Ishika Govil
 	 */
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {

@@ -1,5 +1,9 @@
 import java.util.*;
 
+/**
+ * Model part of the MVC design pattern
+ *
+ */
 public class Model implements java.io.Serializable{
 	
 	public Garden gardenMap;
@@ -155,6 +159,7 @@ public class Model implements java.io.Serializable{
 	 * @param y the y coordinate
 	 * @param key the name of plant
 	 * @param nodeId the node of corresponding imageView
+	 * @param initial false if this is a new plant to be added
 	 */
 	public void placePlant(double x, double y, String key, String nodeId,boolean initial) {
 		System.out.println("adding to Garden");

@@ -10,6 +10,10 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * Allows the user to learn more about leps and native plants
+ *
+ */
 public class LearnMore extends View{
 	
 	final int TITLESIZE = 50;

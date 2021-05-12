@@ -1,11 +1,13 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ModelTest {
@@ -15,11 +17,16 @@ class ModelTest {
 	public Map<String, Lep> lepDirectory = new HashMap<>();
 	public float x = (float) 10.0;
 	public float y = (float) 5.0;
-	public PlantSpecies plant1 = new PlantSpecies("a", "b", "c", 0, 0, 0, false, 0, 0, 0);
+	public PlantSpecies plant1 = new PlantSpecies("a", "b", "c", 0, 3, 6, false, 0, 0, 0);
 	public PlantSpecies plant2 = new PlantSpecies();
 	public int cost = 0;
 	
 	public Model m = new Model();
+	
+	@BeforeEach
+	void resetModel() {
+		m = new Model();
+	}
 	
 	@Test
 	void testSetEdit() {
@@ -66,6 +73,7 @@ class ModelTest {
 	void testPlaceAndRemovePlant() {
 		m.getPlantInfo().put("plant", plant1);
 		m.placePlant(0, 0, "plant", "id", false);
+		m.placePlant(0, 0, "plant", "id", true); // shouldn't be readded to the garden
 		assertEquals(m.getGarden().getPlants().size(), 1);
 		m.removePlant("plant", "id");
 		assertEquals(m.deleted.size(), 1);
@@ -80,33 +88,13 @@ class ModelTest {
 		assertEquals(m.getGarden().placedPlants.get("id2").getY(), m.getY());
 	}
 	
-//	@Test
-//	void testFilteredList() {
-//		m.getPlantInfo().clear();
-//		m.getPlantInfo().put("testPlant", new PlantSpecies("a", "b", "c", 3, 3, 3, false, 10, 10, 10));
-//		Conditions c = new Conditions(SoilType.ROCK, MoistureType.WET, LightType.INTENSE);
-//		ArrayList<String> list = m.getFilteredList(c);
-//		assertEquals(list.size(), 1);
-//	}
-	
 	@Test
 	void testBudget() {
-		m.setBudget(5);
-		assertEquals(m.getBudget(), 5);
+		m.getPlantInfo().put("plant1", plant1);
+		m.placePlant(0, 0, "plant1", "id2", false);
+		assertEquals(6, m.getBudget());
 	}
-
-//	@Test
-//	void testLepCount() {
-//		m.getGarden().setNumLeps(30);
-//		assertEquals(m.getLepCount(), 30);
-//	}
-
-//	@Test
-//	void testPlacePlant() {
-//		m.placePlant(x, x, null);
-//		fail("Not yet implemented");
-//	}
-
+	
 	@Test
 	void testSetScale() {
 		m.setScale(5);
@@ -154,4 +142,61 @@ class ModelTest {
 		assertEquals(5, distance);
 	}
 
+	@Test
+	void testRestart() {
+		m.getGarden().setBudget(300);
+		m.restart();
+		assertEquals(0, m.getBudget());
+		assertEquals(-1, m.getLengthPerPixel());
+	}
+	
+	@Test
+	void testGetCostForGallery() {
+		Garden g = new Garden();
+		PlacedPlant p = new PlacedPlant(0, 0, plant1);
+		g.addToGarden(p);
+		m.getPlantInfo().put(p.getName(), p.getSpecies());
+		assertEquals(6, m.getCostforGallery(g));
+	}
+
+	@Test
+	void testGetLepsforGallery() {
+		Garden g = new Garden();
+		PlacedPlant p = new PlacedPlant(0, 0, plant1);
+		g.addToGarden(p);
+		m.getPlantInfo().put(p.getName(), p.getSpecies());
+		assertEquals(3, m.getLepsforGallery(g));
+	}
+	
+	@Test
+	void testTitleValid() {
+		Garden g = new Garden();
+		g.setTitle("taken");
+		m.savedGardens.add(g);
+		
+		assertFalse(m.isTitleValid(g.getTitle()));
+		assertTrue(m.isTitleValid("not taken"));
+	}
+	
+	@Test
+	void testSetBudget() {
+		m.setBudget(300);
+		assertEquals(300, m.getGarden().getBudget());
+	}
+	
+	@Test
+	void testUpdateFilter() {
+		m.getPlantInfo().put("test", plant1);
+		ArrayList<String> list = m.updateFilter(new SearchFilter("bad"));
+		assertTrue(list.isEmpty());
+		list = m.updateFilter(new SearchFilter("a"));
+		assertFalse(list.isEmpty());
+	}
+	
+	@Test
+	void testUpdateSort() {
+		Comparator<PlantSpecies> sort = new SortByLeps();
+		m.updateSort(sort);
+		assertEquals(sort, m.sort);
+	}
 }
