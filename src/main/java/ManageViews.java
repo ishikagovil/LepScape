@@ -134,6 +134,20 @@ public class ManageViews {
 	    views.put("Lepedia", new Lepedia(stage,controller,this));
 	}
 	
+	public void resetViews() {
+		Gallery g = (Gallery) views.get("Gallery");
+		views = new HashMap<>();
+		views.put("Start", new Start(stage, controller,this));
+		views.put("Gallery", g);
+	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
+	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
+	    views.put("Summary", new Summary(stage,controller,this));
+	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
+	    views.put("ComparePlants", new ComparePlants(stage, controller, this));
+	    views.put("LearnMore", new LearnMore(stage,controller,this));
+	    views.put("Lepedia", new Lepedia(stage,controller,this));
+	}
+	
 //	public void saveImage(int index, BufferedImage image) {
 //		this.savedGardenImages.add(index, image);
 //	}
@@ -244,7 +258,7 @@ public class ManageViews {
 	
 	// restart the plot, clear all lines so user can draw a new garden design
 	public void restartPlot() {
-		initializeViews();
+		resetViews();
 		this.dimLen = new ArrayList<>(); 
 		this.currView = this.views.get("PlotDesign");
 	}
