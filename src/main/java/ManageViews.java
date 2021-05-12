@@ -95,7 +95,9 @@ public class ManageViews {
 				plantImages = CSVtoPlants.readFileForImg(fileName);
 				System.out.println("setting lep images");
 				lepImages = CSVtoLeps.readFileForImg(fileName2);
-				controller.refreshImages();
+				Platform.runLater(() -> {
+					controller.refreshImages();
+				});
 			}
 		}.start();
 		
