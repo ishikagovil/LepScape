@@ -24,6 +24,7 @@ public class PlantSpecies implements Comparable<PlantSpecies>{
 	private SoilType soil;
 	private LightType light;
 	private MoistureType moisture;
+	public String pdfDescription;
 
 	// for all "req" attributes, if value is -1, no specific requirements for plant
 	
@@ -290,5 +291,15 @@ public class PlantSpecies implements Comparable<PlantSpecies>{
 	    return name.compareToIgnoreCase(name2); 
 	}
 
-
+	public void pdfDescription() {
+		String plantType = "";
+		if (isWoody) {
+			plantType = "woody";
+		} else {
+			plantType = "herbaceous";
+		}
+		this.pdfDescription = "Species name: " + this.speciesName + "\n" + 
+								"Common name: " + this.commonName + "\n" +
+								"Genus name: " + this.genusName + "\n";
+	}
 }

@@ -1,4 +1,5 @@
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
@@ -9,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -31,6 +33,7 @@ public class ConditionScreen extends View {
 	private final int INS = 10;
 	private final int SPAC = 50;
 	
+	TextField budgetField;
 	private Canvas canvas;
 
 	/**
@@ -42,10 +45,47 @@ public class ConditionScreen extends View {
 	public ConditionScreen(Stage stage, Controller c, ManageViews manageView) {
 		super(stage, c, manageView);
 		border = new BorderPane();
-		
+		border.setTop(addTitle());
 	    // Create a wrapper Pane first
 	    border.setCenter(createCanvasPane());
 		border.setRight(createSidebar());
+		border.setBottom(addBottomPane());
+	}
+	
+	public HBox addBottomPane() {
+		HBox box = new HBox();
+		box.setPadding(new Insets(largeFontSize));
+		box.setStyle("-fx-background-color: #8C6057");
+		
+		ImageView back = new ImageView(this.manageView.buttonImages.get("Back"));
+		setOnMouse(back, "Back");
+		back.setOnMouseClicked(controller.getHandlerforClicked("PlotDesign"));
+		ImageView next = new ImageView(this.manageView.buttonImages.get("Next"));
+		setOnMouse(next, "Next");
+		next.setOnMouseClicked((event) -> {
+			try{
+	    		controller.updateBudget(Double.parseDouble(budgetField.getText()));
+				controller.updateBudgetandLep();
+				controller.switchViews("GardenDesign");
+	    	}
+	    	catch(NumberFormatException e){
+	    		//not a double
+	   			budgetField.clear();
+	   		}         
+		});
+		box.getChildren().addAll(back, next);
+		box.setAlignment(Pos.TOP_RIGHT);
+		return box;
+	}
+	
+	public HBox addTitle() {
+		HBox box = new HBox();
+		box.setPadding(new Insets(largeFontSize));
+		box.setStyle("-fx-background-color: #a69f98");
+		Text title = new Text("Condition Screen");
+		title.setFont(Font.font("Andale Mono", FontWeight.BOLD, SPAC));
+		box.getChildren().add(title);
+		return box;
 	}
 	
 	/**
@@ -58,12 +98,13 @@ public class ConditionScreen extends View {
 		sidebar.setStyle("-fx-background-color: #afd5aa");
 		
 		HBox budgetRow = new HBox();
-		TextField budgetField = new TextField();
+		budgetField = new TextField();
 		Label budgetLabel = new Label("Budget ($): ");
 		budgetRow.getChildren().addAll(budgetLabel, budgetField);
 		budgetLabel.setFont(new Font("Andale Mono", fontSize));
 		budgetLabel.setStyle("-fx-text-fill: #5c5346");
 		
+		/*
 		HBox buttons = new HBox(boxSpacing);
 		ImageView back = new ImageView(this.manageView.buttonImages.get("Back"));
 		setOnMouse(back, "Back");
@@ -82,7 +123,7 @@ public class ConditionScreen extends View {
 	   		}         
 		});
 		buttons.getChildren().addAll(back, next);
-		
+		*/
 		Node dropdowns = createConditionDropdowns();
 		
 		Text title = new Text("Plot Conditions");
@@ -102,7 +143,7 @@ public class ConditionScreen extends View {
 		title.setWrappingWidth(wrappingWidth);
 		title.setUnderline(true);
 		
-		sidebar.getChildren().addAll(title, info, info2, budgetRow, dropdowns, buttons);
+		sidebar.getChildren().addAll(title, info, info2, budgetRow, dropdowns);
 		
 		sidebar.setSpacing(SPAC);
 		
