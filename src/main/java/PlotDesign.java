@@ -115,16 +115,9 @@ public class PlotDesign extends View{
            	shapeClicked = poly.getPoints().size() != 0;
            	controller.drawFreehandPart();
            	
-           	//Removing the dimension line
-           	if(dimLine != null) {
-            	border.getChildren().remove(dimLine);
-            	dimLine = null;
-            }
-           	
-           	//Restart the dimension line
-           	this.manageView.dimLen = new ArrayList<>();
-           	this.manageView.dimPixel = -1;
-           	
+           	if(dimLine != null)
+           		border.getChildren().remove(dimLine);    
+  	
            	//Change border design
            	border.getChildren().remove(grid);
            	gc.drawImage(plotInstructions, 0, 0);
@@ -178,13 +171,13 @@ public class PlotDesign extends View{
 	 * Creates the buttons Next and Save in dimSwitch and drawSwitch lists, respectively
 	 */
 	public void saveButtons() {
-		//Adding Save button
-        drawSwitch.add(new ImageView(this.manageView.buttonImages.get("Next")));
-        setOnMouse(drawSwitch.get(2), "Next");
-        
-        //Adding Next button
+		 //Adding Next button
         dimSwitch.add(new ImageView(this.manageView.buttonImages.get("Next")));
         setOnMouse(dimSwitch.get(2), "Next");
+        
+		//Adding Save button
+        drawSwitch.add(new ImageView(this.manageView.buttonImages.get("Next")));
+        setOnMouse(drawSwitch.get(2), "Next"); 
 	}
 	
 	/**
@@ -206,9 +199,12 @@ public class PlotDesign extends View{
            	border.getChildren().removeAll(anchors);
            	gc.clearRect(0,0, this.manageView.getScreenWidth(), this.manageView.getScreenHeight());
           	shapeClicked = true;
-           	
            	//Start the next screen for dimensions 
-           	onSettingDimensions();      	
+      		onSettingDimensions();      	
+          	if(dimLine != null) {
+           		border.getChildren().add(dimLine);  
+           		disableDrawing(border);
+          	}
            	removeLines();
           	controller.drawPlot();
         });
@@ -218,7 +214,7 @@ public class PlotDesign extends View{
 	 * Saves the inputed value and calls settingLength in controller to calculate length per pixel
 	 */
 	public void onSettingDimensions() {
-        gc.drawImage(dimInstructions, 0, 0);
+      	gc.drawImage(dimInstructions, 0, 0);
 		border.setOnMousePressed(controller.getHandlerforSettingDimension(true));
         border.setOnMouseDragged(controller.getHandlerforSettingDimension(false));
         border.setOnMouseReleased(event -> {

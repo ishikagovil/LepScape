@@ -291,6 +291,14 @@ public class ManageViews {
 		this.currView = this.views.get("PlotDesign");
 	}
 	
+	/**
+	 * Calls the drawLine method in the View class
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param isPolygon
+	 */
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
 	}

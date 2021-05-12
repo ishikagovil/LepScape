@@ -117,6 +117,11 @@ public class Controller extends Application {
 		return (e) -> { switchViews(next); };
 	}
 	
+	/** 
+	 * Called when the link to Mt. Cuba is clicked
+	 * @param String for the url
+	 * @return EventHandler<ActionEvent>
+	 */
 	public EventHandler<ActionEvent> getHandlerForLinkClicked(String url) {
 		return (e) -> getHostServices().showDocument(url);
 	}
@@ -276,11 +281,18 @@ public class Controller extends Application {
 		return (e) -> {sectionClicked(e, canvas);};
 	}
 	
-	
+	/**
+	 * Called when user hits delete to remove a saved garden
+	 * @param index
+	 * @param window
+	 * @return
+	 */
 	public EventHandler<MouseEvent> getHandlerforDeleteSaved(int index, Stage window){
 		return (e) -> {deleteSavedGarden(e, index, window);};
 	}
-	
+	/**
+	 * Called when user hits clear to remove plants from garden
+	 */
 	public void clearGarden() {
 		Garden garden = model.gardenMap;
 		garden.placedPlants.clear();
@@ -315,7 +327,11 @@ public class Controller extends Application {
 		gd.updateImageList(model.updateSort(box.getValue()));
 	}
 	
-	
+	/**
+	 * Fills in the section of the plot when user clicks on it
+	 * @param e
+	 * @param canvas
+	 */
 	private void sectionClicked(MouseEvent e, Canvas canvas) {
 		int newX = (int) e.getX();
 		int newY = (int) e.getY();
@@ -365,52 +381,6 @@ public class Controller extends Application {
 	}
 	
 	/**
-	 * when a user wants to edit a previously saved garden
-	 * @param event the edit button action
-	 * @param index index of saved garden
-	 * @param dialog the stage that contains edit button
-	 */
-/*public void editSavedGarden(ActionEvent event, int index, Stage dialog) {
-		this.view.switchViews("GardenDesign");
-		setTheStage();
-		model.gardenMap = model.savedGardens.get(index);
-		Garden garden = model.gardenMap;
-		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
-		System.out.println("outline: "+garden.outline + " "+ garden.outline.size());
-		((GardenDesign) view.views.get("GardenDesign")).remakePane();
-		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getNumLeps());
-		model.scale = garden.scale;
-		model.lengthPerPixel = garden.lengthPerPixel;
-		garden.plants.forEach(plant->{
-			double heightWidth = scalePlantSpread(plant.getName());
-			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth);
-			model.gardenMap.placedPlants.put(node, plant);
-		});
-		dialog.close();
-		model.setToEdit();
-		model.setEditGardenIndex(index);
-	}
-*/
-	/**
-
-	 * Show the information of a savedGarden when user clicks on it
-	 * @param event the button click event
-	 * @param index index of the saved garden
-	 * @param dialog the popup stage
-	 * @author Arunima Dey
-	 */
-//	public void showSummaryInfo(ActionEvent event, int index, Stage dialog) {
-//		this.view.switchViews("Summary");
-//		setTheStage();
-//		Garden garden = model.savedGardens.get(index);
-//		((Summary) view.views.get("Summary")).updateLepandCost(garden.getCost(), garden.getLepCount());
-//		
-//		dialog.close();
-//		model.setToEdit();
-//		model.setEditGardenIndex(index);
-//	}
-	
-	/**
 	 * Updates the budget based on the double passed from a TextField
 	 * @param budgetString the String with the user's budget input
 	 * @author Jinay Jain
@@ -419,8 +389,12 @@ public class Controller extends Application {
 		this.model.setBudget(newBudget);
 	}
 	
+	/**
+	 * Sets the title of a saved garden
+	 * @param title
+	 */
 	public void setGardenTitle(String title) {
-		this.model.gardenMap.setTitle(title);;
+		this.model.gardenMap.setTitle(title);
 	}
 	
 	/**
@@ -573,6 +547,9 @@ public class Controller extends Application {
 				
 	}
 	
+	/**
+	 * Updates the budget and leps in the garden
+	 */
 	public void updateBudgetandLep() {
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 	}
@@ -891,12 +868,14 @@ public class Controller extends Application {
 	 * @author Ishika Govil 
 	 */
 	public void draw(MouseEvent event, boolean isPressed) { // (changeCursor called with false) -- in beta
-		if(isPressed)
+		if(isPressed) {
 			 this.view.getGC().beginPath();
-		 this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
-		 this.view.getGC().stroke();
-		 this.model.getGarden().updateOutline(event.getSceneX(), event.getSceneY());
-		 this.view.validateSave();
+			 restartPlotting();
+		}
+		this.view.getGC().lineTo(event.getSceneX(), event.getSceneY());
+		this.view.getGC().stroke();
+		this.model.getGarden().updateOutline(event.getSceneX(), event.getSceneY());
+		this.view.validateSave();
 	}
 	/**
 	 * When user lifts their mouse upon drawing the plot boundary, it adds a (-1, -1) point to the outline 
@@ -921,6 +900,7 @@ public class Controller extends Application {
     		anchor.setCenterY(event.getY());    
     		poly.getPoints().set(idx, x.get());
     		poly.getPoints().set(idx + 1, y.get());
+    		restartPlotting();           	
     	}
 	}
 	
@@ -1056,13 +1036,10 @@ public class Controller extends Application {
 	 * @author Ishika Govil 
 	 */
 	public void switchViews(String next) {
-		System.out.println("state: "+model.gardenDesign);
 		 //Clears the canvas the user was drawing on. Also clears the ArrayList corresponding to the coordinates of the plot boundary
 		 if(next.equals("Clear")) {
 			 this.model.getGarden().clearOutline();
-			 this.view.views.remove("ConditionScreen");
-			 this.view.views.put("ConditionScreen", new ConditionScreen(stage,this,this.view));
-			 this.model.getGarden().sections = new ArrayList<Conditions>();
+			 restartPlotting();
 		 }
 		 //Clears only the lines drawn after setting dimension. Also clears the ArrayList corresponding to the coordinates of the line
 		 else if(next.equals("ClearDim")) {
@@ -1070,9 +1047,6 @@ public class Controller extends Application {
 			 this.view.dimLen = new ArrayList<>();
 		 } 
 		 else if(next.equals("Restart")) {
-//			 this.model.getGarden().outline = new ArrayList<Vector2>(); 
-//			 this.model.getGarden().polygonCorners = new ArrayList<Vector2>();
-//			 this.model.getGarden().getSections().clear();
 			 this.model.restart();
 			 this.view.restartPlot();
 			 setTheStage();
@@ -1102,6 +1076,22 @@ public class Controller extends Application {
 			 setTheStage();
 		 }
 	}
+	/**
+	 * Restarts various properties of PlotDesign if the user goes back to plot design and makes changes
+	 * @author Ishika Govil
+	 */
+	public void restartPlotting() {
+		 this.view.views.remove("ConditionScreen");
+		 this.view.views.put("ConditionScreen", new ConditionScreen(stage,this,this.view));
+		 this.model.getGarden().sections = new ArrayList<Conditions>();
+		 //Removing the dimension line
+		 this.view.dimLen = new ArrayList<>();
+		 this.view.dimPixel = -1;
+		 if(((PlotDesign) view.views.get("PlotDesign")).dimLine != null) {
+			 this.view.currView.border.getChildren().remove(((PlotDesign) view.views.get("PlotDesign")).dimLine );
+			 ((PlotDesign) view.views.get("PlotDesign")).dimLine = null;
+		 }
+	}
 	
 	public void goingToGardenDesign() {
 		model.gardenDesign=true;
@@ -1123,6 +1113,11 @@ public class Controller extends Application {
 		return this.model.getGarden();
 	}
 
+	/**
+	 * Fills the region of a canvas with the user specified conditions
+	 * @param canvas
+	 * @param e
+	 */
 	private void fillRegion(Canvas canvas, MouseEvent e) {
 		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
 
