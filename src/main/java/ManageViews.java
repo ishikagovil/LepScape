@@ -95,7 +95,9 @@ public class ManageViews {
 				plantImages = CSVtoPlants.readFileForImg(fileName);
 				System.out.println("setting lep images");
 				lepImages = CSVtoLeps.readFileForImg(fileName2);
-				controller.refreshImages();
+				Platform.runLater(() -> {
+					controller.refreshImages();
+				});
 			}
 		}.start();
 		
@@ -130,6 +132,20 @@ public class ManageViews {
 	    views.put("Summary", new Summary(stage,controller,this));
 	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
 	    views.put("Help", new Help(stage, controller, this));
+	    views.put("ComparePlants", new ComparePlants(stage, controller, this));
+	    views.put("LearnMore", new LearnMore(stage,controller,this));
+	    views.put("Lepedia", new Lepedia(stage,controller,this));
+	}
+	
+	public void resetViews() {
+		Gallery g = (Gallery) views.get("Gallery");
+		views = new HashMap<>();
+		views.put("Start", new Start(stage, controller,this));
+		views.put("Gallery", g);
+	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
+	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
+	    views.put("Summary", new Summary(stage,controller,this));
+	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
 	    views.put("ComparePlants", new ComparePlants(stage, controller, this));
 	    views.put("LearnMore", new LearnMore(stage,controller,this));
 	    views.put("Lepedia", new Lepedia(stage,controller,this));
@@ -245,7 +261,7 @@ public class ManageViews {
 	
 	// restart the plot, clear all lines so user can draw a new garden design
 	public void restartPlot() {
-		initializeViews();
+		resetViews();
 		this.dimLen = new ArrayList<>(); 
 		this.currView = this.views.get("PlotDesign");
 	}

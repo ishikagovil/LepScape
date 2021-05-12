@@ -1,6 +1,11 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -73,6 +78,14 @@ public class ComparePlants extends View {
 		plantPics = manageView.getPlantImages();
         
         plantSpecs = controller.getPlantInfo();
+        List<Entry<String, PlantSpecies>> sortList = new ArrayList<>(plantSpecs.entrySet());
+        sortList.sort(Entry.<String, PlantSpecies>comparingByValue());
+        		
+        Map<String, PlantSpecies> result = new LinkedHashMap<>();
+        for (Entry<String, PlantSpecies> entry : sortList) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        plantSpecs = result;
 		
 		border = new BorderPane();
 		//comparePlant = new HBox();
@@ -111,6 +124,8 @@ public class ComparePlants extends View {
 
 	}
 	
+
+    
 	/**
 	 * Makes the instructions blurb and returns the Label.
 	 * @return Label

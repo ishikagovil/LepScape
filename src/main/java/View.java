@@ -85,7 +85,8 @@ public abstract class View{
 		if(hand) {
 			stage.getScene().setCursor(this.handCursor);
 			b.setImage(this.manageView.buttonImages.get(key + "_h"));
-			hoverTooltip(key, b);
+			if(!key.equals("Back")  && !key.equals("Next")  && !key.equals("New") )
+				hoverTooltip(key, b);
 		}
 		else {
 			stage.getScene().setCursor(this.shovelCursor);

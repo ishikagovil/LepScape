@@ -1,10 +1,11 @@
+import java.util.Comparator;
 
 /**
  * Representative of a specific plant species.
  * @author dharjianto
  *
  */
-public class PlantSpecies {
+public class PlantSpecies implements Comparable<PlantSpecies>{
 	private String speciesName;
 	private String genusName;
 	private String commonName;
@@ -280,4 +281,14 @@ public class PlantSpecies {
 	public String toString() {
 		return this.commonName;
 	}
+
+
+	@Override
+	public int compareTo(PlantSpecies o) {
+		String name = this.getCommonName();
+	    String name2 = o.getCommonName();
+	    return name.compareToIgnoreCase(name2); 
+	}
+
+
 }
