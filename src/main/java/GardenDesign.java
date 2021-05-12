@@ -17,6 +17,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -219,13 +220,6 @@ public class GardenDesign extends View{
 	 */
 	public void addCanvas(Pane main) {
 		System.out.println("in addCanvas");
-<<<<<<< HEAD
-		Pane gardenDesign = new Pane();
-		gardenDesign.setStyle("-fx-border-color: #F0F2EF; -fx-border-width:5px");
-=======
-//		Pane gardenDesign = new Pane();
-//		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
->>>>>>> ecabf01cc8df818e265244573de36f5558b91c57
 		canvas = new Canvas();
 		canvas.setStyle("-fx-border-color:#F0F2EF; -fx-border-width:5px");
 		gc = canvas.getGraphicsContext2D();

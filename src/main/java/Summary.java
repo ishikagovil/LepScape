@@ -40,10 +40,6 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-<<<<<<< HEAD
-import javafx.scene.image.WritableImage;
-=======
->>>>>>> 66de488c227b42681116a8c3d8c436ca49e7991e
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -59,7 +55,7 @@ public class Summary extends View {
 	public Controller ic;
 	Pane main;
 	Canvas canvas;
-<<<<<<< HEAD
+	ComboBox<String> cb;
 
 	/**
 	 * set up a stage and border pane to hold other panes
@@ -67,15 +63,6 @@ public class Summary extends View {
 	 * @param c
 	 * @param manageView
 	 */
-=======
-	ComboBox<String> cb;
-/**
- * set up a stage and border pane to hold other panes
- * @param stage
- * @param c
- * @param manageView
- */
->>>>>>> 66de488c227b42681116a8c3d8c436ca49e7991e
 	public Summary(Stage stage, Controller c, ManageViews manageView) {
 		// set up the stage with different area
 		super(stage, c, manageView);
@@ -107,12 +94,10 @@ public class Summary extends View {
 		border.setCenter(main);  		
     }
 	
-<<<<<<< HEAD
 	/**
 	 * add bottom pane to hold the buttons for create new garden and download
 	 * @return the bottom pane created 
 	 */
-=======
 	public HBox addTitle() {
 		HBox box = new HBox();
 		box.setPadding(new Insets(HBOX_SPACING));
@@ -127,7 +112,6 @@ public class Summary extends View {
  * add bottom pane to hold the buttons for create new garden and download
  * @return the bottom pane created 
  */
->>>>>>> 66de488c227b42681116a8c3d8c436ca49e7991e
 	public HBox addBottomHBox() {
 		HBox box = new HBox();
         box.setStyle("-fx-background-color: #8C6057");
@@ -266,13 +250,7 @@ public class Summary extends View {
 		return titleField;
 	}
 
-<<<<<<< HEAD
-	/**
-	 * create a center pane to hold the garden design 
-	 * @return the center pane
-	 */
-	public StackPane addCenterPane() {
-=======
+
 /**
  * create a center pane to hold the garden design 
  * @return the center pane
@@ -305,30 +283,18 @@ public class Summary extends View {
 		
 		ImageView iv = new ImageView(manageView.getGardenImag());
 		iv.setPreserveRatio(true);
-<<<<<<< HEAD
 		iv.fitWidthProperty().bind(gardenDesign.widthProperty());
-=======
-		///iv.fitWidthProperty().bind(gardenDesign.widthProperty());
-		//iv.fitHeightProperty().bind(gardenDesign.heightProperty());
->>>>>>> 66de488c227b42681116a8c3d8c436ca49e7991e
 		gardenDesign.getChildren().add(iv);
 		border.setCenter(gardenDesign);
 		BorderPane.setAlignment(gardenDesign, Pos.CENTER);
 	}
 	
-<<<<<<< HEAD
 	/**
 	 * create a tilepane to hold information about the garden with updated cost and leps count
 	 * @return
 	 */
-=======
-/**
- * create a tilepane to hold information about the garden with updated cost and leps count
- * @return
- */
 	VBox rightPane;
 	VBox vb;
->>>>>>> 66de488c227b42681116a8c3d8c436ca49e7991e
 	public void updateLepandCost(double cost, int lepCount) {
 		rightPane = new VBox();
 	    rightPane.setPadding(new Insets(HBOX_SPACING));
