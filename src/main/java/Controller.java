@@ -81,7 +81,7 @@ public class Controller extends Application {
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
-	    //restoreState();
+	    restoreState();
 	    
 	}
 
@@ -267,9 +267,6 @@ public class Controller extends Application {
 		return (e) -> {sectionClicked(e, canvas);};
 	}
 	
-//	public EventHandler<MouseEvent> getHandlerForGardenClear(){
-//		return (e) -> {clearGarden(e);};
-//	}
 	
 	public EventHandler<MouseEvent> getHandlerforDeleteSaved(int index, Stage window){
 		return (e) -> {deleteSavedGarden(e, index, window);};
@@ -388,51 +385,6 @@ public class Controller extends Application {
 		this.model.gardenMap.setTitle(title);;
 	}
 	
-	public void restoreState() {
-		System.out.println("restoring state");
-		try {
-			FileInputStream fis = new FileInputStream("src/main/resources/SavedState.ser");
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Model model = (Model) ois.readObject();
-			System.out.println("is gardenDesign true? "+model.gardenDesign);
-			if(!model.gardenDesign) {
-				this.model = model;
-				this.view.switchViews("GardenDesign");
-				setTheStage();
-				Garden garden = model.gardenMap;
-				garden.placedPlants = new HashMap<>();
-				((GardenDesign) view.views.get("GardenDesign")).remakePane();
-				garden.plants.forEach(plant->{
-					System.out.println("so plants exist");
-//					double heightWidth = scalePlantSpread(plant.getName());
-//					String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth,true);
-//					model.placePlant(plant.getX(), plant.getY(), plant.getName(), node, true);
-				});
-				((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getLepCount(),garden.getBudget());
-			}
-			ois.close();
-		}catch(ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-		
-		
-	}
-	
-	public void saveState() {
-		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
-		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
-		try {
-			new File("src/main/resources/SavedState.ser").delete();
-			FileOutputStream fos = new FileOutputStream("src/main/resources/SavedState.ser");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(model);
-			oos.close();
-		}catch(Exception e) {
-			System.out.println("Not able to write to saved state");
-			e.printStackTrace();
-		}
-	}
-	
 	/**
 	 * Controls the event when mouse is pressed on a plant imageView
 	 * Displays name and information of that plant in garden design screen
@@ -441,8 +393,6 @@ public class Controller extends Application {
 	 */
 	public void pressed(MouseEvent event, String key, boolean inMain) {
 		Node n = (Node) event.getSource();
-		//n.toFront();
-		//n.setMouseTransparent(true);
 		System.out.println("Clicked");
 		model.movedPlant = key;
 		model.setX(n.getTranslateX());
@@ -453,7 +403,7 @@ public class Controller extends Application {
 			String info = description;
 			((GardenDesign)view.views.get("GardenDesign")).makeInfoPane(name, info);
 		}
-			event.setDragDetect(true);
+		event.setDragDetect(true);
 		
 		
 	}
@@ -464,7 +414,6 @@ public class Controller extends Application {
 	 * @author Arunima Dey
 	 */
 	public void drag(MouseEvent event) {
-		System.out.println("in drag event");
 		Node n = (Node)event.getSource();
 		n.toFront();
 		model.setX(model.getX() + event.getX()); //event.getX() is the amount of horiz drag
@@ -479,49 +428,28 @@ public class Controller extends Application {
 	} 
 	
 	public void setOndragOver(DragEvent event) {
-		System.out.println("resetting parent image");
 		Node n = (Node) event.getGestureSource();
 		view.setX(0,n);
 		view.setY(0,n);
-		//if(!inMain) {
 		if(event.getGestureSource()!=event.getSource() && event.getDragboard().hasString()) {
-//			event.acceptTransferModes(TransferMode.ANY);
-			//event.acceptTransferModes(TransferMode.COPY);
 			Dragboard db = event.getDragboard();
 			String name = db.getString();
-				System.out.println("in main ready to place");
-//				double heightWidth = scalePlantSpread(name);
-//				String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-//				model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-				if(model.gardenMap.getCost()>=model.gardenMap.getBudget()) {
-					System.out.println("budget over: "+ model.gardenMap.getBudget());
-					GardenDesign g = (GardenDesign) view.views.get("GardenDesign");
-					g.budgetExceededPopup();
-					System.out.println("budget should now be changed: "+ model.gardenMap.getBudget());
+			System.out.println("the name of the plant setOnDragOver: "+name);
+			System.out.println("in main ready to place");
+			if(model.gardenMap.getCost()>=model.gardenMap.getBudget()) {
+				System.out.println("budget over: "+ model.gardenMap.getBudget());
+				GardenDesign g = (GardenDesign) view.views.get("GardenDesign");
+				g.budgetExceededPopup();
+				System.out.println("budget should now be changed: "+ model.gardenMap.getBudget());
+			}
+			else {
+				double heightWidth = scalePlantSpread(name);
+				String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth,false);
+				model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId,false);
+				if (nodeId != null) {
+					((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
 				}
-				else {
-					double heightWidth = scalePlantSpread(name);
-					String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth,false);
-					model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId,false);
-					if (nodeId != null) {
-						((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
-					}
-				}
-				
-				//((GardenDesign) view.views.get("GardenDesign")).addEvents(db, (ImageView) n);
-				
-//				if(db.hasImage()) {
-//					event.setDropCompleted(true);
-//				}
-//				else {
-//					event.setDropCompleted(false);
-//				}
-				//saveState();
-				
-				//((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
-				
-			//}
-//				event.clone();
+			}
 		}
 		
 	}
@@ -534,95 +462,61 @@ public class Controller extends Application {
 	 * @author Arunima Dey, Dea Harjianto
 	 */
 	public void release(MouseEvent event, String name, boolean startingInTile) {
-		System.out.println("released PART TWO");
 		Node n = (Node)event.getSource();
-		n.setMouseTransparent(false);
-		if(startingInTile) {
-			System.out.println("resetting parent image");
-			view.setX(0,n);
-			view.setY(0,n);
-			if(!inMain) {
-				System.out.println("in main ready to place");
-//				double heightWidth = scalePlantSpread(name);
-//				String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth);
-//				model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId);
-				if(model.gardenMap.getCost()>=model.gardenMap.getBudget()) {
-					System.out.println("budget over: "+ model.gardenMap.getBudget());
-					GardenDesign g = (GardenDesign) view.views.get("GardenDesign");
-					g.budgetExceededPopup();
-					System.out.println("budget should now be changed: "+ model.gardenMap.getBudget());
-				}
-				else {
-					double heightWidth = scalePlantSpread(name);
-					String nodeId = ((GardenDesign)view.views.get("GardenDesign")).addImageView(event.getSceneX(),event.getSceneY(), name,heightWidth,false);
-					model.placePlant(event.getSceneX(), event.getSceneY(), name, nodeId,false);
-					if (nodeId != null) {
-						((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
-					}
-				}
-				//saveState();
-				
-				//((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
-				
+		System.out.println("updating PART TWO");
+		String id = ((Node) event.getSource()).getId();
+		model.updateXY(id);
+		ImageView plant = ((ImageView) event.getSource());
+		double plantX = plant.getBoundsInParent().getCenterX();
+		double plantY = plant.getBoundsInParent().getCenterY();
+		double plantRadius = plant.getBoundsInParent().getHeight();
+		
+		double plantXFixed = plantX - plantRadius/2 + XDISPLACE;
+		double plantYFixed = plantY - plantRadius/2 + YDISPLACE;
+		
+		System.out.println("x: " + plantX + ", y: " + plantY + ", radius: " + plantRadius);
+		
+		double[] collidingInfo = ((GardenDesign)(view.views.get("GardenDesign"))).validatePlantPlacement(plantXFixed, plantYFixed, plantRadius);
+		int collideNumber = (int)collidingInfo[1];
+		System.out.println(collidingInfo[0]);
+		System.out.println(collideNumber);
+		
+		if (collideNumber == 0) {
+ 			// updates the location haha gang gang
+			model.updateXY(id);
+ 			System.out.println("updated and moved PART TWO!");
+		} else {
+			// make it SNAP BACK
+			
+			double coordSnap = plantCollideSnap(collidingInfo[4]);
+			
+			double parentX = collidingInfo[2];
+			double parentY = collidingInfo[3];
+			//double totalDist = collidingInfo[4];
+			
+			switch(collideNumber) {
+				case 1:
+					plantX = parentX - coordSnap;
+					plantY = parentY - coordSnap;
+					break;
+				case 2:
+					plantX = parentX + coordSnap;
+					plantY = parentY - coordSnap;
+					break;
+				case 3:
+					plantX = parentX + coordSnap;
+					plantY = parentY + coordSnap;
+					break;
+				case 4:
+					plantX = parentX - coordSnap;
+					plantY = parentY + coordSnap;
+					break;
 			}
+			
+			view.setX(plantX - XSNAPDISPLACE,n);
+			view.setY(plantY - YSNAPDISPLACE,n);
+			System.out.println("cannot move, collided PART TWO!");
 		}
-		else {
- 			System.out.println("updating PART TWO");
- 			String id = ((Node) event.getSource()).getId();
- 			model.updateXY(id);
- 			ImageView plant = ((ImageView) event.getSource());
- 			double plantX = plant.getBoundsInParent().getCenterX();
- 			double plantY = plant.getBoundsInParent().getCenterY();
- 			double plantRadius = plant.getBoundsInParent().getHeight();
- 			
- 			double plantXFixed = plantX - plantRadius/2 + XDISPLACE;
- 			double plantYFixed = plantY - plantRadius/2 + YDISPLACE;
- 			
- 			System.out.println("x: " + plantX + ", y: " + plantY + ", radius: " + plantRadius);
- 			
- 			double[] collidingInfo = ((GardenDesign)(view.views.get("GardenDesign"))).validatePlantPlacement(plantXFixed, plantYFixed, plantRadius);
-			int collideNumber = (int)collidingInfo[1];
- 			System.out.println(collidingInfo[0]);
- 			System.out.println(collideNumber);
- 			
- 			if (collideNumber == 0) {
- 	 			// updates the location haha gang gang
- 				model.updateXY(id);
- 	 			System.out.println("updated and moved PART TWO!");
- 			} else {
- 				// make it SNAP BACK
- 				
- 				double coordSnap = plantCollideSnap(collidingInfo[4]);
- 				
- 				double parentX = collidingInfo[2];
- 				double parentY = collidingInfo[3];
- 				//double totalDist = collidingInfo[4];
- 				
- 				switch(collideNumber) {
- 					case 1:
- 						plantX = parentX - coordSnap;
- 						plantY = parentY - coordSnap;
- 						break;
- 					case 2:
- 						plantX = parentX + coordSnap;
- 						plantY = parentY - coordSnap;
- 						break;
- 					case 3:
- 						plantX = parentX + coordSnap;
- 						plantY = parentY + coordSnap;
- 						break;
- 					case 4:
- 						plantX = parentX - coordSnap;
- 						plantY = parentY + coordSnap;
- 						break;
- 				}
- 				
- 				view.setX(plantX - XSNAPDISPLACE,n);
- 				view.setY(plantY - YSNAPDISPLACE,n);
- 				System.out.println("cannot move, collided PART TWO!");
-			}
- 		}
-		//inMain = false;
 	}
 	
 	public void updateBudgetandLep() {
@@ -678,10 +572,90 @@ public class Controller extends Application {
 	 * @author Arunima Dey
 	 */
 	public double scalePlantSpread(String plantKey) {
+		System.out.println("plantKey in scalePlantspread");
 		PlantSpecies plant = model.plantDirectory.get(plantKey);
-		System.out.println("Plant: " + plant.getCommonName() + " spread: " + plant.getSpreadRadius());
 		double numPixels = plant.getSpreadRadius() / (this.model.getLengthPerPixel() * this.model.getScale());
 		return numPixels;
+	}
+	
+	public void saveState() {
+		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
+		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
+		System.out.println("size of plants when saving state"+model.gardenMap.plants.size());
+		try {
+			new File("src/main/resources/SavedState.ser").delete();
+			FileOutputStream fos = new FileOutputStream("src/main/resources/SavedState.ser");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(model);
+			oos.close();
+		}catch(Exception e) {
+			System.out.println("Not able to write to saved state");
+			e.printStackTrace();
+		}
+	}
+	
+	public void restoreState() {
+		System.out.println("restoring state");
+		try {
+			FileInputStream fis = new FileInputStream("src/main/resources/SavedState.ser");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Model model = (Model) ois.readObject();
+			System.out.println("is gardenDesign true? "+model.gardenDesign);
+			if(model.gardenDesign) {
+				Map<String, PlantSpecies> plantDirectory = this.model.plantDirectory;
+				Map<String, Lep> lepDirectory = this.model.lepDirectory;
+				this.model = model;
+				this.model.plantDirectory = plantDirectory;
+				this.model.lepDirectory = lepDirectory;
+				this.view.switchViews("GardenDesign");
+				setTheStage();
+				Garden garden = model.gardenMap;
+				System.out.println("outline size: "+garden.outline.size());
+				System.out.println("plants size: "+ garden.plants.size());
+				garden.placedPlants = new HashMap<>();
+				((GardenDesign) view.views.get("GardenDesign")).remakePane();
+				garden.plants.forEach(plant->{
+					System.out.println("so plants exist");
+					double heightWidth = scalePlantSpread(plant.getName());
+					String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth,true);
+					model.placePlant(plant.getX(), plant.getY(), plant.getName(), node, true);
+				});
+				((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getLepCount(),garden.getBudget());
+			}
+			ois.close();
+		}catch(ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * when a user wants to edit a previously saved garden
+	 * @param event the edit button action
+	 * @param index index of saved garden
+	 * @param dialog the stage that contains edit button
+	 */
+	public void editSavedGarden(MouseEvent event, int index, Stage window) {
+		this.view.switchViews("GardenDesign");
+		this.goingToGardenDesign();
+		setTheStage();
+		model.gardenMap = model.savedGardens.get(index);
+		Garden garden = model.gardenMap;
+		model.gardenMap.placedPlants = new HashMap<>();
+		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
+		System.out.println("putline: "+garden.outline + " "+ garden.outline.size());
+		((GardenDesign) view.views.get("GardenDesign")).remakePane();
+		model.scale = garden.scale;
+		model.lengthPerPixel = garden.lengthPerPixel;
+		garden.plants.forEach(plant->{
+			double heightWidth = scalePlantSpread(plant.getName());
+			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth,true);
+			model.placePlant(plant.getX(), plant.getY(), plant.getName(), node, true);
+		});
+		System.out.println(garden.getBudget());
+		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getLepCount(),garden.getBudget());
+		window.close();
+		model.setToEdit();
+		model.setEditGardenIndex(index);
 	}
 	
 	public void deleteSavedGarden(MouseEvent event, int index, Stage window) {
@@ -703,34 +677,6 @@ public class Controller extends Application {
 		}
 	}
 	
-	/**
-	 * when a user wants to edit a previously saved garden
-	 * @param event the edit button action
-	 * @param index index of saved garden
-	 * @param dialog the stage that contains edit button
-	 */
-	public void editSavedGarden(MouseEvent event, int index, Stage window) {
-		this.view.switchViews("GardenDesign");
-		setTheStage();
-		model.gardenMap = model.savedGardens.get(index);
-		Garden garden = model.gardenMap;
-		model.gardenMap.placedPlants = new HashMap<>();
-		System.out.println("polygon; "+ garden.polygonCorners + " "+ garden.polygonCorners.size());
-		System.out.println("putline: "+garden.outline + " "+ garden.outline.size());
-		((GardenDesign) view.views.get("GardenDesign")).remakePane();
-		model.scale = garden.scale;
-		model.lengthPerPixel = garden.lengthPerPixel;
-		garden.plants.forEach(plant->{
-			double heightWidth = scalePlantSpread(plant.getName());
-			String node = ((GardenDesign) view.views.get("GardenDesign")).addImageView(plant.getX(), plant.getY(), plant.getName(),heightWidth,true);
-			model.placePlant(plant.getX(), plant.getY(), plant.getName(), node, true);
-		});
-		System.out.println(garden.getBudget());
-		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(garden.getCost(), garden.getLepCount(),garden.getBudget());
-		window.close();
-		model.setToEdit();
-		model.setEditGardenIndex(index);
-	}
 
 	/**
 	 * Everytime the application is started a read back all the saved gardens from previos sessions
@@ -855,15 +801,6 @@ public class Controller extends Application {
 						}
 					}
 				});
-//				System.out.println("the index:"+index);
-//				new File("src/main/resources/gardenImage"+index+".png").delete();
-//				File f = new File("src/main/resources/gardenImage"+index+".png");
-//				try {
-//					ImageIO.write(view.savedImg,"png", f);
-//				}
-//				catch (Exception s){
-//					s.printStackTrace();
-//				}
 			}
  		}
  		catch(IOException e) {
@@ -1075,13 +1012,18 @@ public class Controller extends Application {
 			 }
 		 }
 		 else if(next.equals("Summary")) {
-			 model.gardenDesign=true;
+			 model.gardenDesign=false;
 			 ((Summary) view.views.get("Summary")).addCanvas();
 			 ((Summary) view.views.get("Summary")).updateLepandCost(model.gardenMap.getCost(), model.gardenMap.getLepCount());
 			 this.view.switchViews(next);
 			 setTheStage();
 			 //model.gardenMap.setImage(view.savedImg);
 			 
+		 }
+		 else if(next.equals("GardenDesign")) {
+			 goingToGardenDesign();
+			 this.view.switchViews(next);
+			 setTheStage();
 		 }
 		 else {
 			 this.view.switchViews(next);

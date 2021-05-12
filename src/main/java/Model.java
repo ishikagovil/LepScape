@@ -140,6 +140,7 @@ public class Model implements java.io.Serializable{
 	 */
 	public void placePlant(double x, double y, String key, String nodeId,boolean initial) {
 		System.out.println("adding to Garden");
+		System.out.println("the key when adding to garden: "+key);
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
 		if(!initial) {
