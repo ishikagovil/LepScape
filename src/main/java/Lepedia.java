@@ -27,7 +27,6 @@ import javafx.stage.Stage;
  * Creating the Lepedia screen showcasing the directory of leps associated with PlacedPlants of Garden
  * @author Dea Harjianto
  */
-
 public class Lepedia extends View {
 	
 	final int numLepImages = 117;

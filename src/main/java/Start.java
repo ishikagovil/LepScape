@@ -10,12 +10,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.*;
 
+/**
+ * Sets the stage for the application's first screen
+ */
 public class Start extends View {
 	public ArrayList<ImageView> buttons;
 	Canvas canvas;
-	/**
-	 * @author Kimmy Huynh
-	 */
 	
 	/**
 	 * Creates a simple introductory screen with two buttons, new plot and gallery of saved plots
@@ -32,6 +32,9 @@ public class Start extends View {
         border.setCenter(addButtonPane());
 	}
 
+	/**
+	 * Adds a background for this screen
+	 */
 	public void addBackgroundImage() {
 		Image bgImage = new Image(getClass().getResourceAsStream("/lep-background.jpg"),  this.manageView.getScreenWidth(), this.manageView.getScreenHeight(), false, false);
         gc = canvas.getGraphicsContext2D();	

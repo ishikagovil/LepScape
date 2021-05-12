@@ -1,14 +1,11 @@
 import java.util.*;
-import java.util.Map.Entry;
 
 /**
+ * Class represents the Garden with its plants, boundaries, and conditions
  * @author Ishika Govil, Kimmy Huynh, Arunima Dey
  */
 public class Garden implements java.io.Serializable {
 	
-	/**
-	 * Class represents the Garden with its plants, boundaries, and conditions
-	 */
 	private static final long serialVersionUID = 1L;
 	public ArrayList<PlacedPlant> plants;
 	public ArrayList<Vector2> outline;

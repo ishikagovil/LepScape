@@ -16,6 +16,9 @@ import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import java.util.*;
 
+/**
+ * Sets the stage for the screen where user can make the plot for their garden
+ */
 public class PlotDesign extends View{
 	ArrayList<ImageView> drawSwitch; 
 	ArrayList<ImageView> dimSwitch;
@@ -29,9 +32,6 @@ public class PlotDesign extends View{
     boolean shapeClicked = false;
     boolean dragAnchor = false;
     ObservableList<Anchor> anchors;
-	/**
-	 * @author Ishika Govil 
-	 */
 	
 	/**
 	 * Adds the drawing functionality with the Freedraw button

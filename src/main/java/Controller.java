@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -38,12 +39,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ListIterator;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+
+import com.itextpdf.text.BaseColor;
 
 import javafx.application.Application;
 
@@ -86,7 +91,7 @@ public class Controller extends Application {
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
-	    restoreState();
+	    //restoreState();
 	    
 	}
 
@@ -282,16 +287,17 @@ public class Controller extends Application {
 	}
 	
 	/**
-	 * Called when user hits delete to remove a saved garden
-	 * @param index
-	 * @param window
-	 * @return
+	 * Creates handler for when user deleted a saved garden
+	 * @param index the index of the garden to be deleted
+	 * @param window the stage of the garden summary 
+	 * @return the handler
 	 */
 	public EventHandler<MouseEvent> getHandlerforDeleteSaved(int index, Stage window){
 		return (e) -> {deleteSavedGarden(e, index, window);};
 	}
+	
 	/**
-	 * Called when user hits clear to remove plants from garden
+	 * Clears garden when user clicks the clear button
 	 */
 	public void clearGarden() {
 		Garden garden = model.gardenMap;
@@ -328,9 +334,9 @@ public class Controller extends Application {
 	}
 	
 	/**
-	 * Fills in the section of the plot when user clicks on it
-	 * @param e
-	 * @param canvas
+	 * Controls mouse event when user clicks on a given section of plot
+	 * @param e the mouse event
+	 * @param canvas the canvas
 	 */
 	private void sectionClicked(MouseEvent e, Canvas canvas) {
 		int newX = (int) e.getX();
@@ -436,10 +442,18 @@ public class Controller extends Application {
 		event.setDragDetect(false);
 	}
 	
+	/**
+	 * The event handler for drag over 
+	 * @return
+	 */
 	public EventHandler<DragEvent> getHandlerForDragOver() {
 		return (e) -> {setOndragOver(e);};
 	} 
 	
+	/**
+	 * Controls the drag over event. When plant needs to be places in the center pane
+	 * @param event the Drag event
+	 */
 	public void setOndragOver(DragEvent event) {
 		Node n = (Node) event.getGestureSource();
 		view.setX(0,n);
@@ -548,7 +562,7 @@ public class Controller extends Application {
 	}
 	
 	/**
-	 * Updates the budget and leps in the garden
+	 * Updates the budget and lep count for garden design
 	 */
 	public void updateBudgetandLep() {
 		((GardenDesign) view.views.get("GardenDesign")).updateBudgetandLep(model.gardenMap.getCost(), model.gardenMap.getLepCount(),model.gardenMap.getBudget());
@@ -609,6 +623,9 @@ public class Controller extends Application {
 		return numPixels;
 	}
 	
+	/**
+	 * Saves the state of gardenDesign when user closes application
+	 */
 	public void saveState() {
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
 		model.gardenMap.plants = new ArrayList<PlacedPlant>(values);
@@ -625,6 +642,9 @@ public class Controller extends Application {
 		}
 	}
 	
+	/**
+	 * When user closes application on garden deesign screen brings user back to where they were in a previous session
+	 */
 	public void restoreState() {
 		System.out.println("restoring state");
 		try {
@@ -689,6 +709,12 @@ public class Controller extends Application {
 		model.setEditGardenIndex(index);
 	}
 	
+	/**
+	 * Deletes a saved garden when user clicks delete button
+	 * @param event the mouse event from clicked delete
+	 * @param index the index of thee garden to be deleted
+	 * @param window the stage that shows the garden summary and and the delete button
+	 */
 	public void deleteSavedGarden(MouseEvent event, int index, Stage window) {
 		model.savedGardens.remove(index);
 		Gallery gal = (Gallery) view.views.get("Gallery");
@@ -725,8 +751,12 @@ public class Controller extends Application {
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				Garden garden = model.savedGardens.get(i);
 				System.out.println(garden.getTitle());
-				Image im = new Image(getClass().getResourceAsStream("/"+garden.getTitle()+".png"));
-				gal.loadScreen(im,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
+				try {
+					Image im = new Image(getClass().getResourceAsStream("/SavedGardenImages/"+garden.getTitle()+".png"));
+					gal.loadScreen(im,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
+				}catch(NullPointerException e) {
+					e.printStackTrace();
+				}
 			}
 			ois.close();
 		} catch (ClassNotFoundException | IOException e) {
@@ -751,6 +781,11 @@ public class Controller extends Application {
 		cp.setPlantDir(view.getPlantImages());
 	}
 	
+	/**
+	 * Creates a popup with given message
+	 * @param message
+	 * @return the popup
+	 */
 	// https://stackoverflow.com/questions/18669209/javafx-what-is-the-best-way-to-display-a-simple-message
 	public static Popup createPopup(final String message) {
 	    final Popup popup = new Popup();
@@ -768,7 +803,12 @@ public class Controller extends Application {
 	    popup.getContent().add(label);
 	    return popup;
 	}
-
+	
+	/**
+	 * Displays popup message with given string
+	 * @param message the message that goes in the popup
+	 * @param stage the stage that owns the popup
+	 */
 	public static void showPopupMessage(final String message, final Stage stage) {
 	    final Popup popup = createPopup(message);
 	    popup.setOnShown(new EventHandler<WindowEvent>() {
@@ -786,6 +826,7 @@ public class Controller extends Application {
 	 * @param event button pressed event
 	 * @author Arunima Dey
 	 */
+	//https://stackoverflow.com/questions/44841329/how-to-implement-serializable-for-my-project-to-have-persistence
 	public void summarySave(MouseEvent event) {
 		new File("src/main/resources/garden.ser").delete();
 		Collection<PlacedPlant> values = model.gardenMap.placedPlants.values();
@@ -805,8 +846,8 @@ public class Controller extends Application {
 				oos.writeObject(model.savedGardens);
 				oos.close();
 				System.out.println("the index:"+index);
-				new File("src/main/resources/"+model.gardenMap.getTitle()+".png").delete();
-				File f = new File("src/main/resources/"+model.gardenMap.getTitle()+".png");
+				new File("src/main/resources/SavedGardenImages/"+model.gardenMap.getTitle()+".png").delete();
+				File f = new File("src/main/resources/SavedGardenImages/"+model.gardenMap.getTitle()+".png");
 				try {
 					ImageIO.write(view.savedImg,"png", f);
 				}
@@ -835,8 +876,8 @@ public class Controller extends Application {
 								System.out.println("error writing to file");
 								e1.printStackTrace();
 							}
-							new File("src/main/resources/"+title+".png").delete();
-							File f = new File("src/main/resources/"+title+".png");
+							new File("src/main/resources/SavedGardenImages/"+title+".png").delete();
+							File f = new File("src/main/resources/SavedGardenImages/"+title+".png");
 							try {
 								ImageIO.write(view.savedImg,"png", f);
 							}
@@ -1093,6 +1134,9 @@ public class Controller extends Application {
 		 }
 	}
 	
+	/**
+	 * Sets models gardendesign attribute to true
+	 */
 	public void goingToGardenDesign() {
 		model.gardenDesign=true;
 	}
@@ -1159,4 +1203,173 @@ public class Controller extends Application {
 		return info;
 	}
 
+	public void isWoody(ComboBox<String> cb) {
+		//ArrayList<Integer> countPlants = new ArrayList<Integer>();
+		/*int woody = 0;
+		int herb = 0;
+		boolean isWoody;
+		String selected = cb.getSelectionModel().getSelectedItem();
+		System.out.println(selected);
+		if (selected.equals("Herbaceous vs. woody")) {
+			for (PlacedPlant p : model.getGarden().getPlants()) {
+				isWoody = p.getSpecies().isWoody();
+				if (isWoody) {
+					woody = woody + 1;
+				}
+				else {
+					herb = herb + 1;
+				}
+			}
+			countPlants.add(woody);
+			countPlants.add(herb);
+			
+		}
+		System.out.println("Woody vs Herb:" + countPlants);
+		return countPlants;*/
+		
+		Summary s = (Summary) this.view.views.get("Summary");
+		//s.isWoody(model.isWoodyData());
+		//s.piePopup();
+		s.isWoody();
+		System.out.println("hello, im in woody");
+	}
+	/*public ArrayList<PlantSpecies> lepsSupported(ComboBox<String> cb) {
+		ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
+		if (cb.getValue().equals("Top 5 lep-supported plants")) {
+			for (PlacedPlant p : model.gardenMap.getPlants()) {
+				leppy.add(p.getSpecies());
+			}
+			
+			Collections.sort(leppy, new Comparator<PlantSpecies>() {
+				@Override
+				public int compare(PlantSpecies x, PlantSpecies y) {
+					return x.getLepsSupported() - y.getLepsSupported();
+				}
+			});
+			Collections.reverseOrder();
+		}
+		return leppy;
+	}
+	*/
+	public ArrayList<PlantSpecies> lepsCount() {
+		ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
+		for (PlacedPlant p : model.getGarden().getPlants()) {
+			leppy.add(p.getSpecies());
+		}
+		Collections.sort(leppy, new Comparator<PlantSpecies>() {
+			@Override
+			public int compare(PlantSpecies x, PlantSpecies y) {
+				return x.getLepsSupported() - y.getLepsSupported();
+			}
+		});
+		Collections.reverseOrder();
+		//leppy.subList(0, 4).clear();;
+		return leppy;
+	}
+	
+	public ArrayList<Lep> getLepsName() {
+		Map<String, Lep> leppy = getLepInfo();
+		HashSet<String> plantToLep = new HashSet<>();
+		ArrayList<PlacedPlant> plants = model.getGarden().getPlants();
+		ArrayList<Lep> lepsInGarden = new ArrayList<>();
+		
+		plants.forEach(plant -> {
+			plantToLep.add(plant.getSpecies().getGenusName());
+		});
+		Collections.sort(plants, new Comparator<PlacedPlant>() {
+			@Override
+			public int compare(PlacedPlant x, PlacedPlant y) {
+				return x.getSpecies().getLepsSupported() - y.getSpecies().getLepsSupported();
+			}
+		});
+		Collections.reverseOrder();
+		plants.subList(5, plants.size()).clear();
+		
+		leppy.forEach((lepKey, lepObj) -> {
+	    	ArrayList<String> thrivesIn = lepObj.getThrivesInGenus();
+	    	System.out.println(thrivesIn);
+	    	for (String genusReqs: thrivesIn) {
+	    		System.out.println(genusReqs);
+	    		if (plantToLep.contains(genusReqs)) {
+	    			if (!(lepsInGarden.contains(lepObj))) {
+	    				lepsInGarden.add(lepObj);
+	    			}
+	    		}
+	    	}
+	    });
+		return lepsInGarden;
+	}
+/*	public void isWoody1(ActionEvent e) {
+		ComboBox<String> box = (ComboBox<String>) e.getSource();
+		//Object selected = box.getsel
+		Summary s = (Summary) this.view.getView("Summary");
+		s.isWoody(model.isWoodyData());
+		System.out.println("get into the combo box");
+	}
+*/
+	public EventHandler<ActionEvent> getHandlerForSummary(ComboBox<String> cb) {
+		return (e) -> {
+			isWoody(cb);
+		};
+	}
+	
+	public ArrayList<Integer> conditionColor(int ind) {
+		ArrayList<Integer> c = new ArrayList<Integer>();
+		c.add((int) model.getGarden().getSections().get(ind).toColor().getRed());
+		c.add((int) model.getGarden().getSections().get(ind).toColor().getGreen());
+		c.add((int) model.getGarden().getSections().get(ind).toColor().getBlue());
+		return c;
+	}
+
+	public ArrayList<Conditions> getConditions() {
+		return model.getGarden().getSections();
+	}
+	
+	public int countWoody()  {
+		int wood = 0;
+		for (PlacedPlant p : model.getGarden().getPlants()) {
+			if (p.getSpecies().isWoody()) {
+				wood = wood + 1;
+			}
+		}
+		return wood;
+	}
+	
+	public int countHerbaceous() {
+		int herb = 0;
+		for (PlacedPlant p : model.getGarden().getPlants()) {
+			if (! p.getSpecies().isWoody()) {
+				herb = herb + 1;
+			}
+		}
+		return herb;
+	}
+	
+	/*public static Popup createWoodyPopup() {
+		final Popup p = new Popup();
+		p.setAutoFix(true);
+		p.setAutoHide(true);
+		p.setHideOnEscape(true);
+		Label l = new Label("Woody vs Herbaceous in your garden: ");
+		l.setOnMouseReleased(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				p.hide();
+			}
+		});
+		return p;
+	}
+	public static void woodyPopup(final Stage stage) {
+		final Popup p = createWoodyPopup();
+		p.setOnShown(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent e) {
+				p.setX(stage.getX() + stage.getWidth() / 2 - p.getWidth() / 2);
+	            p.setY(stage.getY() + stage.getHeight() / 2 - p.getHeight() / 2);
+			}
+		});
+		p.show(stage);
+	}*/
+	
+	
 }

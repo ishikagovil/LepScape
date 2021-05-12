@@ -1,8 +1,10 @@
 import javafx.scene.paint.Color;
 
-//Each region (spereated based on plating conditions will have a condition object associated with it
-//The consition object has the soil type, moisture level, sunlight in the region 
-//as well as the x,y coordinates of thee outline of that region
+/**
+ * Each region (spereated based on plating conditions will have a condition object associated with it
+ * The consition object has the soil type, moisture level, sunlight in the region 
+ * as well as the x,y coordinates of thee outline of that region
+ */
 public class Conditions implements java.io.Serializable {
 	private SoilType soilType;
 	private MoistureType moistureType;

@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -19,7 +18,10 @@ import javafx.stage.Stage;
 import javafx.scene.control.ScrollPane;
 import java.util.*;
 
-//https://stackoverflow.com/questions/44841329/how-to-implement-serializable-for-my-project-to-have-persistence
+/**
+ * Makes the galleery screen where saved gardens aree accessible
+ * @author Arunima Dey
+ */
 public class Gallery extends View{
 	final int GARDEN_IMAGEVIEW_HEIGHT=175;
 	final int HBOX_SPACING = 20;
@@ -32,6 +34,12 @@ public class Gallery extends View{
 	boolean calledFromStart;
 	Stage stage;
 	
+	/**
+	 * Creates the screen that holds all the saved gardens which can be edited or deleted
+	 * @param stage
+	 * @param controller
+	 * @param manageView
+	 */
 	public Gallery(Stage stage, Controller controller, ManageViews manageView) {
 		super(stage, controller, manageView);
 		border = new BorderPane();
@@ -66,6 +74,9 @@ public class Gallery extends View{
 		this.calledFromStart = true;
 	}
 	
+	/**
+	 * Makes the back buttons. Can either take you to the start screen of summary
+	 */
 	public void setBackButton(){
 		HBox hb1 = new HBox();
 		hb1.setAlignment(Pos.BASELINE_LEFT);
@@ -80,7 +91,15 @@ public class Gallery extends View{
 		
 		border.setBottom(hb1);
 	}
-
+	
+	/**
+	 * Loads in a saved garden into the gallery
+	 * @param gardenImage the image of the saved garden
+	 * @param index the index of where to place the tile
+	 * @param cost cost of the garden
+	 * @param leps leps supported by garden
+	 * @param title the title of the garden set bu user
+	 */
 	//https://stackoverflow.com/questions/22166610/how-to-create-a-popup-windows-in-javafx
 	public void loadScreen(Image gardenImage, int index, double cost, double leps, String title) {
 		System.out.println("in here");
@@ -155,6 +174,11 @@ public class Gallery extends View{
 
 	}
 	
+	/**
+	 * Removes a child of the tile pane at a given index 
+	 * @param index the index to remove
+	 * @author Arunima Dey
+	 */
 	public void removeGardenFromPane(int index) {
 		tile.getChildren().remove(index);
 	}

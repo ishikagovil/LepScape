@@ -15,9 +15,11 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.util.*;
 
+/**
+ * Abstract class that holds all the views and any methods that aree common among them
+ */
 public abstract class View{
 	private static final int lineWidth = 3;
 	final int FONTSIZE = 20;

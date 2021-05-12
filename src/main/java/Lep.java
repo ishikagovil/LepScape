@@ -3,7 +3,6 @@ import java.util.ArrayList;
 /**
  * Representative of a Lep species and contains data of everything unique to it.
  * @author dharjianto
- *
  */
 public class Lep {
 	
@@ -33,6 +32,7 @@ public class Lep {
 	 * @param des the description
 	 */
 	public void setDescription(String des) {this.description = des;}
+	
 	/**
 	 * Sets the plantSpecies that support the lep
 	 * @param thrives the arrayList of species
@@ -44,6 +44,11 @@ public class Lep {
 	 * @param thrives arraylist of genus names
 	 */
 	public void setThrivesInGenus(ArrayList<String> thrives) {this.thrivesInGenus = thrives;}
+	
+	/**
+	 * gets the genus of the species the lep can feed on
+	 * @return thrives arraylist of genus name
+	 */
 	public ArrayList<String> getThrivesInGenus() {return this.thrivesInGenus;}
 	
 	/**
@@ -51,6 +56,7 @@ public class Lep {
 	 * @return the name
 	 */
 	public String getSpeciesName() {return this.speciesName;}
+	
 	/**
 	 * gets the genus name of the lep
 	 * @return the name
@@ -62,11 +68,13 @@ public class Lep {
 	 * @return the name
 	 */
 	public String getCommonName() {return this.commonName;}
+	
 	/**
 	 * gets a description of the lep
 	 * @return the description
 	 */
 	public String getDescription() {return this.description;}
+	
 	/**
 	 * gets the plants species lep can feed on
 	 * @return the plantSpecies
