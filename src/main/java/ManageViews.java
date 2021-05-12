@@ -129,6 +129,7 @@ public class ManageViews {
 	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
 	    views.put("Summary", new Summary(stage,controller,this));
 	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
+	    views.put("Help", new Help(stage, controller, this));
 	    views.put("ComparePlants", new ComparePlants(stage, controller, this));
 	    views.put("LearnMore", new LearnMore(stage,controller,this));
 	    views.put("Lepedia", new Lepedia(stage,controller,this));
@@ -278,6 +279,10 @@ public class ManageViews {
 	
 	public void updateLepandCost(double cost, int lepCount) {
 		((Summary) views.get("Summary")).updateLepandCost(cost, lepCount);
+	}
+	
+	public Map<String, Image> getButtons() {
+		return this.buttonImages;
 	}
 	
 
