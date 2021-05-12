@@ -19,12 +19,16 @@ class ConditionTypesTest {
 		for(LightType t : LightType.values()) {
 			assertEquals(LightType.fromValue(t.getValue()), t);
 		}
+		
+		assertEquals(MoistureType.fromValue(20), MoistureType.ANY);
+		assertEquals(SoilType.fromValue(20), SoilType.ANY);
+		assertEquals(LightType.fromValue(20), LightType.ANY);
 	}
 	
 	@Test 
 	void testToString() {
-		assertEquals(st.toString(), "Rock");
-		assertEquals(mt.toString(), "Moist");
-		assertEquals(lt.toString(), "Intense");
+		assertEquals("Clay", st.toString());
+		assertEquals("Damp", mt.toString());
+		assertEquals("Full Sun", lt.toString());
 	}
 }
