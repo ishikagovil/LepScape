@@ -79,6 +79,7 @@ public class ManageViews {
 			    }
 			}
 		} catch (URISyntaxException e) {
+			System.out.println("Button file not found");
 			e.printStackTrace();
 		}
 		
