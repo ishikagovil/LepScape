@@ -210,6 +210,7 @@ public class Summary extends View {
 		text.setFont(new Font("Andale Mono", FONTSIZE));
 		text.setStyle("-fx-font-size: 16; -fx-text-fill: white");
 		Label instruction = new Label("Press enter to set new budget or the X if you are done");
+		instruction.setStyle("-fx-font-size: 16; -fx-text-fill: white");
 		TextField titleField = new TextField("Enter title");
 		titleField.setMaxWidth(STANDARD_IMAGEVIEW);
 		BorderPane border = new BorderPane();

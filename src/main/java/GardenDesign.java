@@ -195,7 +195,7 @@ public class GardenDesign extends View{
 				}
 			}
 		});
-		border.setStyle(" -fx-background-color: #F0F2EF; -fx-padding: 10; -fx-border-color: #5C5346; -fx-border-width: 5;");
+		border.setStyle(" -fx-background-color: #8C6057; -fx-padding: 10; -fx-border-color: #5C5346; -fx-border-width: 5;");
 		Scene popUpScene = new Scene(border,450,STANDARD_IMAGEVIEW);
 		budgetExceeded.setScene(popUpScene);
 		budgetExceeded.show();

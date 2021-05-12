@@ -92,7 +92,7 @@ public class Controller extends Application {
 	    Scene scene = new Scene(view.getBorderPane(), view.getScreenWidth(), view.getScreenHeight());
 	    this.stage.setScene(scene);
 	    setTheStage();
-	    //restoreState();
+	    restoreState();
 	    
 	}
 
