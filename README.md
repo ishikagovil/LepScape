@@ -7,23 +7,34 @@
 - Jinay Jain 
 - Kimmy Huynh
 
-# Current progress
+# Features
 - Draw plot boundaries freehand and with polygon
-- Set dimensions
-- scale plot
-- Add condition boundaries
-- Select conditions
-- Drag and drop plants
-- Compost plants no longer needed
-- Import plant information and populate images
-- serialization with saving and loading gardens
-- Lepedia view most numerous leps 
-- Summary of garden in Gallery 
+- Set dimensions & scale plot accordingly
+- Add condition boundaries & select conditions
+- Drag and drop plants (dynamically changes budget & lep count)
+- Validation of plant placement; warning if overcrowded
+- Delete plants & ability to retrieve them
+- Imported plant information with cropped images; 100 plants total
+- Tooltips implemented to hover over plant images
+- Imported lepidoptera information with 
+- Saving and loading gardens with serialization
+- Gallery view of all saved gardens
+- View most numerated/attracted leps in 'Lepedia'
+- Summary of garden with infographics
+- Compare plant stats feature
+- Help page for assistance using our program
+- Learn more page to learn more about the program background
+- Full screen program
+- Cute shovel/butterfly cursors!
 
-# Future implementations
-- Better user interface
+# Sources
+- Bulk plant information gathered from Trefle.io database using scraper *(courtesy of TA Jeremy Fields)*
+- Minority plant information (plant spread, etc.) gathered from [Online Plant Guide](https://www.onlineplantguide.com)
+- Plant pictures gathered from [Wikimedia Commons](https://commons.wikimedia.org/wiki/Main_Page) or through Trefle.io database
+- Lepidoptera pictures gathered from [Wikimedia Commons](https://commons.wikimedia.org/wiki/Main_Page)
+- Lepidoptera information gathered from [Native Plant Finder](https://www.nwf.org/NativePlantFinder/)
 
-# UML Diagrams
+# Diagrams
 ![Class UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/finalUMLclass.jpg?raw=true)
 
 ![Drag-n-Drop UML](https://github.com/CISC275-S2021/project-team-11-1/blob/main/src/main/resources/finalDragNDrop.jpg?raw=true)
