@@ -971,8 +971,9 @@ public class Controller extends Application {
 	 */
 	public void drawToCanvas(Canvas canvas) {
 		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
-		ArrayList<Vector2> points = this.model.getGarden().getOutline();
+		ArrayList<Vector2> points = new ArrayList<>();
 		ArrayList<Conditions> conds = this.model.getGarden().getSections();
+		points.addAll(this.model.getGarden().getOutline());
 		points.addAll(this.model.getGarden().getPolygonCorners());
 		
 		double newScale = View.drawOnCanvas(canvas, points, extrema, conds);
