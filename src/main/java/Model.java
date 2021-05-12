@@ -35,6 +35,17 @@ public class Model implements java.io.Serializable{
 
 	}
 	
+	public void restart() {
+		this.gardenMap = new Garden();
+		this.lengthPerPixel = -1;
+		this.movedPlant = "";
+		this.deleted = new HashSet<>();
+		this.sort = new SortByLeps();
+		this.filter = new SearchFilter("");
+		editGarden = false;
+
+	}
+	
 	/**
 	 * Sets editGarden based on if user is editing a saved garden or a new one
 	 */

@@ -1,3 +1,4 @@
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -6,116 +7,113 @@ import javafx.geometry.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class LearnMore extends View{
+	
+	final int TITLESIZE = 50;
+	final int TSIZE = 30;
+	final int INS = 20;
+	final int ROWS = 10;
+	final int VGAP = 50;
+	final int SPC = 20;
+	final int TOPINS = 50;
+	final int MOVEUP = -60;
+	final int MOVEUP2 = - 35;
+	final int MOVEUP3 = -10;
+	double wrap;
 
 
 	public LearnMore(Stage stage, Controller c,ManageViews manageView) {
 		super(stage, c,manageView);
+		
+		this.wrap = this.manageView.getScreenWidth() - 290;
 
 		border = new BorderPane();
-		Label title = new Label("Learn More");
-		title.setFont(Font.font(null, 30));
-		border.setTop(title);
-		border.setAlignment(title, Pos.CENTER);
-		border.setBottom(addBottomPane());
+		border.setTop(makeTitle());
+		border.getTop().setStyle("-fx-background-color: #afd5aa");
 		border.setCenter(addCenterPane());
 	}
 	
-	public HBox addBottomPane() {
-		HBox box = new HBox();
-		box.setPadding(new Insets(20));
-		ImageView done = addNextButton("Back", "GardenDesign");
-		box.getChildren().add(done);
-		box.setAlignment(Pos.CENTER);
-		return box;
-	}
-	
-	// get from https://www.youtube.com/watch?v=C_Y6yrkj9Sg
-	public ScrollPane addCenterPane(){
-		ScrollPane sp = new ScrollPane();
-		sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-		sp.setFitToHeight(true);
-		sp.setFitToWidth(true);
+	public BorderPane makeTitle() {
+		BorderPane header = new BorderPane();
+		header.setPadding(new Insets(INS));
 		
-		TilePane tile = new TilePane(Orientation.HORIZONTAL);
-		tile.setPadding(new Insets(10));
-		tile.setVgap(4);
-		tile.setHgap(4);
-		tile.setPrefColumns(1);
-		tile.setPrefRows(5);
-		tile.setStyle("-fx-background-color: sand");
-		/*
-		ImageView pics[] = new ImageView[5];
-		pics[0] = new ImageView(new Image(getClass().getResourceAsStream("/lep-button.png")));
-		pics[1] = new ImageView(new Image(getClass().getResourceAsStream("/freehand-button.png")));
-		pics[2] = new ImageView(new Image(getClass().getResourceAsStream("/polygon-button.png")));
-		pics[3] = new ImageView(new Image(getClass().getResourceAsStream("/new-button.png")));
-		pics[4] = new ImageView(new Image(getClass().getResourceAsStream("/gallery-button.png")));
-		tile.getChildren().addAll(pics);
-		*/
+		ImageView done = addNextButton("Back", "GardenDesign");
+		header.setLeft(done);
+		header.setStyle("-fx-background-color: #afd5aa");
+		
+		Label title = new Label("Learn More!");
+		title.setFont(Font.font("Andale Mono", TITLESIZE));
+		title.setPadding(new Insets(INS));
+		header.setCenter(title);
+		
+		return header;
+	}
+	
+	public TilePane addCenterPane(){
+
+		TilePane tile = new TilePane(Orientation.VERTICAL);
+		tile.setPadding(new Insets(TOPINS, INS, INS, INS));
+		tile.setVgap(VGAP);
+		tile.setHgap(INS);
+		tile.setPrefRows(ROWS);
 		tile.setAlignment(Pos.CENTER);
-		tile.getChildren().addAll(addLepButton(), addFreehandButton(), addPolygonButton(), addNewButton(), addGalleryButton());
-		sp.setContent(tile);
-		return sp;
+		
+		tile.getChildren().addAll(addSubtitle());
+		tile.setAlignment(Pos.BASELINE_CENTER);
+		
+		tile.setStyle("-fx-background-color: #a69f98");
+		
+		tile.setAlignment(Pos.BASELINE_CENTER);
+		
+		return tile;
 	}
 	
-	
-	public HBox addLepButton() {
-		HBox b = new HBox();
-		Image l = new Image(getClass().getResourceAsStream("/lep-button.png"));
-		ImageView lIV = new ImageView(l);
-		Text d1 = new Text("Click on Lepedia button to learn more about different leps that are supported in your garden!");
-		d1.setFont(Font.font(30));
-		d1.setWrappingWidth(1000);
-		b.getChildren().addAll(lIV, d1);
-		b.setAlignment(Pos.TOP_LEFT);
-		return b;
+	public VBox addSubtitle() {
+		Text by = new Text("Created by undergraduate software engineers Arunima Dey, Ishika Govil, Dea Harjianto, Kimmy Huynh, and Jinay Jain.");
+		by.setFont(new Font("Andale Mono", TSIZE));
+		by.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		by.setTextAlignment(TextAlignment.CENTER);
+		
+		Text reas = new Text("This program was created to help users like you plan a garden surrounding native plants and lep maximization.");
+		reas.setFont(new Font("Andale Mono", TSIZE));
+		reas.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		reas.setTextAlignment(TextAlignment.CENTER);
+		
+		Text lepinfo = new Text("Lepidoptera, coming from the Ancient Greek lepís \"scale\" + pterón \"wing\", is an order of insects including butterflies and moths. Our goal is to attract as many of these insects to your garden using only native plants!");
+		lepinfo.setFont(new Font("Andale Mono", TSIZE));
+		lepinfo.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		lepinfo.setTextAlignment(TextAlignment.CENTER);
+		lepinfo.setTranslateY(MOVEUP);
+		
+		Text nativePlant = new Text("The native plants of this program are native to Delaware and are beneficial to our insects' health! If our insects are not supported, our ecosystem will collapse!");
+		nativePlant.setFont(new Font("Andale Mono", TSIZE));
+		nativePlant.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		nativePlant.setTextAlignment(TextAlignment.CENTER);
+		nativePlant.setTranslateY(MOVEUP2);
+		
+		Text clickNow = new Text("Click the link to find out more about native plants and insect support via Mt. Cuba!");
+		clickNow.setFont(new Font("Andale Mono", TSIZE));
+		clickNow.setWrappingWidth(this.manageView.getScreenWidth()-200);
+		clickNow.setTextAlignment(TextAlignment.CENTER);
+		clickNow.setTranslateY(MOVEUP3);
+		
+		Hyperlink mtcuba = new Hyperlink("https://mtcubacenter.org");
+		mtcuba.setOnAction(this.controller.getHandlerForLinkClicked(mtcuba.getText()));
+		mtcuba.setFont(new Font("Andale Mono", TSIZE));
+		mtcuba.setPadding(new Insets(INS));
+		mtcuba.setStyle("-fx-text-fill: #afd5aa");
+		
+		VBox sub = new VBox();
+		sub.getChildren().addAll(by, reas, lepinfo, nativePlant, clickNow, mtcuba);
+		sub.setAlignment(Pos.BASELINE_CENTER);
+		sub.setPrefWidth(this.manageView.getScreenWidth());
+		sub.setSpacing(SPC);
+		
+		
+		return sub;
 	}
 	
-	public HBox addFreehandButton() {
-		HBox b1 = new HBox(); 
-		Image l1 = new Image(getClass().getResourceAsStream("/freehand-button.png"));
-		ImageView l1IV = new ImageView(l1);
-		Text d2 = new Text("Click on freehand button to start designing your plot however you want.");
-		d2.setFont(Font.font(30));
-		d2.setWrappingWidth(this.manageView.getScreenWidth() - 290);
-		b1.getChildren().addAll(l1IV, d2);
-		return b1;
-	}
-	
-	public HBox addPolygonButton() {
-		HBox b = new HBox(); 
-		Image l = new Image(getClass().getResourceAsStream("/polygon-button.png"));
-		ImageView lIV = new ImageView(l);
-		Text d = new Text("Click on polygon button to start designing your plot using polygon tool, you can move the vertices to change the shape of the garden.");
-		d.setFont(Font.font(30));
-		d.setWrappingWidth(this.manageView.getScreenWidth() - 290);
-		b.getChildren().addAll(lIV, d);
-		return b;
-	}
-	
-	public HBox addNewButton() {
-		HBox b = new HBox(); 
-		Image l = new Image(getClass().getResourceAsStream("/new-button.png"));
-		ImageView lIV = new ImageView(l);
-		Label d = new Label("Choose \"New Garden\" to start designing your own garden.");
-		d.setFont(Font.font(30));
-		d.isWrapText();
-		b.getChildren().addAll(lIV, d);
-		return b;
-	}
-	
-	public HBox addGalleryButton() {
-		HBox b = new HBox(); 
-		Image l = new Image(getClass().getResourceAsStream("/gallery-button.png"));
-		ImageView lIV = new ImageView(l);
-		Text d = new Text("Choose \"Gallery\" to view your saved gardens.");
-		d.setFont(Font.font(30));
-		d.setWrappingWidth(this.manageView.getScreenWidth() - 290);
-		b.getChildren().addAll(lIV, d);
-		return b;
-	}
 }

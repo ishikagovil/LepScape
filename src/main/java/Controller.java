@@ -113,6 +113,10 @@ public class Controller extends Application {
 		return (e) -> { switchViews(next); };
 	}
 	
+	public EventHandler<ActionEvent> getHandlerForLinkClicked(String url) {
+		return (e) -> getHostServices().showDocument(url);
+	}
+	
 	/** 
 	 * Calls onChangeCursor in view when mouse enters the button frame
 	 * @param String key representing key for the ImageView
@@ -553,14 +557,17 @@ public class Controller extends Application {
  		}
 		//inMain = false;
 	}
-	
+	/**
+	 * Saves the garden image such that it crops the image at the bounds of the main pane in GardenDesign
+	 * @return WritableImage for the entire garden
+	 */
 	public WritableImage snapshotGarden() {
 		SnapshotParameters params = new SnapshotParameters();
 		params.setFill(Color.TRANSPARENT);
 		WritableImage temp = ((GardenDesign)this.view.currView).main.snapshot(params,null);
 		PixelReader reader = temp.getPixelReader();	
 		if(this.model.getGarden().placedPlants.size() != 0)
-			return new WritableImage(reader, 0, 0, (int)((GardenDesign)this.view.currView).mainPaneWidth,(int)((GardenDesign)this.view.currView).mainPaneHeight );
+			return new WritableImage(reader, 0, 0, (int)((GardenDesign)this.view.currView).main.getWidth(),(int)((GardenDesign)this.view.currView).main.getHeight() );
 		else
 			return temp;
 				
@@ -688,6 +695,7 @@ public class Controller extends Application {
 			//model.savedGardens.clear();
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				Garden garden = model.savedGardens.get(i);
+				System.out.println(garden.getTitle());
 				Image im = new Image(getClass().getResourceAsStream("/"+garden.getTitle()+".png"));
 				gal.loadScreen(im,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
 			}
@@ -1017,8 +1025,10 @@ public class Controller extends Application {
 			 this.view.dimLen = new ArrayList<>();
 		 } 
 		 else if(next.equals("Restart")) {
-			 this.model.getGarden().outline = new ArrayList<Vector2>(); 
-			 this.model.getGarden().polygonCorners = new ArrayList<Vector2>();
+//			 this.model.getGarden().outline = new ArrayList<Vector2>(); 
+//			 this.model.getGarden().polygonCorners = new ArrayList<Vector2>();
+//			 this.model.getGarden().getSections().clear();
+			 this.model.restart();
 			 this.view.restartPlot();
 			 setTheStage();
 		 }

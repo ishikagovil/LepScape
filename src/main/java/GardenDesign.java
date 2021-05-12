@@ -49,6 +49,7 @@ public class GardenDesign extends View{
 	final int YDISPLACE = 50;
 	final int POPUPWIDTH = 100;
 	final int POPUPHEIGHT = 50;
+	final int MOVEUP = -50;
 	private final int INFOSPC = 5;
 	private final int SMALLFONT = 12;
 	private final int SMALLSPC = 10;
@@ -73,8 +74,6 @@ public class GardenDesign extends View{
 	Label collisionDetected = new Label("Plants overlapping!");
 	Label emptyLabel = new Label();
 	Label fillMe = new Label();
-	public double mainPaneWidth;
-	public double mainPaneHeight;
 	
 	/**
 	 * Initializes an instance of GardenDesign
@@ -91,8 +90,6 @@ public class GardenDesign extends View{
 		main = addCanvas();
 		
 		border.setCenter(main);
-		mainPaneWidth = 0;
-		mainPaneHeight = 0;
 		main.setStyle("-fx-background-color: #F0F2EF");
 		
 		border.setBottom(createBottom());
@@ -205,7 +202,7 @@ public class GardenDesign extends View{
 		this.main = addCanvas();
 		border.setCenter(main);
 		border.getChildren().remove(border.getRight());
-		makeInfoPane("", "Information","");
+		//makeInfoPane("", "Information","");
 		main.setOnMouseDragReleased(event->{
 			System.out.println("(remakePane) will read when plant enters main");
 			controller.inMain = true;
@@ -590,18 +587,17 @@ public class GardenDesign extends View{
 		tf.setTextAlignment(TextAlignment.CENTER);
 		tf.setWrappingWidth(this.manageView.getScreenWidth() / 6.5);;
 		tf.setFont(new Font("Andale Mono", 14));
+		tf.setTranslateY(MOVEUP);
 		
 		desc.getChildren().addAll(plant, tf);
 		desc.setSpacing(INFOSPC);
+		desc.setPadding(new Insets(SMALLSPC));
 		desc.setAlignment(Pos.BASELINE_CENTER);
 
 		info1.setTop(top);
 		info1.setCenter(desc);
 		info1.setAlignment(desc, Pos.CENTER);
 		border.setRight(info1);
-		mainPaneWidth = main.getWidth();
-		mainPaneHeight = main.getHeight();
-		
 	}
 	
 	/**

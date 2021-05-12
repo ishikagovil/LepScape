@@ -65,6 +65,7 @@ public class Start extends View {
 		buttons = new ArrayList<>();
 		buttons.add(addNextButton( "New", "PlotDesign"));
 		buttons.add(addNextButton("Gallery", "Gallery"));
+		buttons.add(addNextButton("Help", "Help"));
 		buttons.get(1).addEventHandler(MouseEvent.MOUSE_CLICKED, (e)-> {
 	       	this.manageView.setCalledFromStart(true);
 	    });

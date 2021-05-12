@@ -1,6 +1,11 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -49,9 +54,10 @@ public class ComparePlants extends View {
 	//public TilePane tile = new TilePane();
     
     final int INFOSPC = 20;
-    final int ins = 20;
-    final int centerThis = 100;
+    final int INS = 20;
+    final int CENTER = 100;
     final int PUSHX = 200;
+    final int MOVEUP = -50;
 		
 	/**
 	 * Initializes a new instance of ComparePlants.
@@ -72,6 +78,14 @@ public class ComparePlants extends View {
 		plantPics = manageView.getPlantImages();
         
         plantSpecs = controller.getPlantInfo();
+        List<Entry<String, PlantSpecies>> sortList = new ArrayList<>(plantSpecs.entrySet());
+        sortList.sort(Entry.<String, PlantSpecies>comparingByValue());
+        		
+        Map<String, PlantSpecies> result = new LinkedHashMap<>();
+        for (Entry<String, PlantSpecies> entry : sortList) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        plantSpecs = result;
 		
 		border = new BorderPane();
 		//comparePlant = new HBox();
@@ -110,6 +124,8 @@ public class ComparePlants extends View {
 
 	}
 	
+
+    
 	/**
 	 * Makes the instructions blurb and returns the Label.
 	 * @return Label
@@ -122,7 +138,7 @@ public class ComparePlants extends View {
 		insT.setMaxWidth(screenWidth / 3);
 		insT.setWrapText(true);
 		insT.setTextAlignment(TextAlignment.CENTER);
-		insT.setPadding(new Insets(ins, ins, ins, ins));;
+		insT.setPadding(new Insets(INS));
 		
 		return insT;
 	}
@@ -203,12 +219,13 @@ public class ComparePlants extends View {
 		VBox plantBlock = new VBox();
 		plantBlock.setMaxWidth(screenWidth / 3);
 		plantImg.setPreserveRatio(true);
-		plantImg.setFitWidth(screenWidth / 4);
+		plantImg.setFitWidth(screenWidth / 5);
 		plantBlock.setSpacing(INFOSPC);
 		
 		title.setTextAlignment(TextAlignment.CENTER);
 		sciName.setTextAlignment(TextAlignment.CENTER);
 		desc.setTextAlignment(TextAlignment.CENTER);
+		desc.setTranslateY(MOVEUP);
 		
 		plantBlock.getChildren().addAll(title, sciName, plantImg, desc);
 		
@@ -224,7 +241,7 @@ public class ComparePlants extends View {
 		
 		plantBlock.setAlignment(Pos.BASELINE_CENTER);
 		plantBlock.setTranslateX(PUSHX);
-		plantBlock.setPadding(new Insets(ins, ins, ins, centerThis));
+		plantBlock.setPadding(new Insets(INS, INS, INS, CENTER));
 		
 		updateCenterBottom();
 	}
@@ -310,7 +327,7 @@ public class ComparePlants extends View {
 		}
 		
 		results.setMaxWidth(screenWidth / 3);
-		results.setPadding(new Insets(ins, ins, ins, ins));
+		results.setPadding(new Insets(INS));
 		results.setSpacing(INFOSPC);
 		
 		this.mainCompare.getChildren().add(results);
@@ -349,7 +366,7 @@ public class ComparePlants extends View {
 		header.setCenter(title);
 		ImageView back = addNextButton("Back", "GardenDesign");
 		header.setLeft(back);
-		header.setPadding(new Insets(ins, ins, ins, ins));
+		header.setPadding(new Insets(INS));
 		
 		header.setStyle("-fx-background-color: #A69F98");
 		
