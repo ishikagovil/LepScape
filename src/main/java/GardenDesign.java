@@ -76,7 +76,8 @@ public class GardenDesign extends View{
 		oblist = manageView.getPlantImages();					// loading in plantImages
 		vb = addGridPane();
 		border = new BorderPane();
-		main = addCanvas();
+		main = new Pane();
+		addCanvas(main);
 		
 		border.setCenter(main);
 		main.setStyle("-fx-background-color: #F0F2EF");
@@ -145,18 +146,30 @@ public class GardenDesign extends View{
 	 * Remakes the main pane when user tries to edit a saved garden
 	 */
 	public void remakePane() {
-		border.getChildren().remove(border.getCenter());
-		this.main = addCanvas();
-		border.setCenter(main);
+//		border.getChildren().remove(border.getCenter());
+		main.getChildren().clear();
+		addCanvas(main);
+//		this.main = addCanvas();
+//		border.setCenter(main);
 		border.getChildren().remove(border.getRight());
 		makeInfoPane("Information","");
 		main.setOnMouseDragReleased(event->{
 			System.out.println("(remakePane) will read when plant enters main");
 			controller.inMain = true;
 		});
-		c.setOnMouseDragReleased(event->{
-			System.out.println("trying to remove");
-		});
+		System.out.println("compost: "+c);
+//		c.setOnMouseExited(event->{
+//			System.out.println("set on mouse exited");
+//			c.setFitHeight(NORMALCOMPOST);
+//		});
+//		c.setOnMouseEntered(event->{
+//			System.out.println("set on mouse entered");
+//			c.setFitHeight(ENTERCOMPOST);
+//			
+//		});
+//		c.setOnMouseDragReleased(event->{
+//			System.out.println("trying to remove");
+//		});
 	}
 	
 	/**
@@ -164,24 +177,24 @@ public class GardenDesign extends View{
 	 * Canvas then places inside a pane
 	 * @return the created pane
 	 */
-	public Pane addCanvas() {
+	public void addCanvas(Pane main) {
 		System.out.println("in addCanvas");
-		Pane gardenDesign = new Pane();
-		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+//		Pane gardenDesign = new Pane();
+//		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		canvas = new Canvas();
 		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		gc = canvas.getGraphicsContext2D();
-		gardenDesign.getChildren().add(canvas);
+		main.getChildren().add(canvas);
 		
-		canvas.widthProperty().bind(gardenDesign.widthProperty());
-		canvas.heightProperty().bind(gardenDesign.heightProperty());
+		canvas.widthProperty().bind(main.widthProperty());
+		canvas.heightProperty().bind(main.heightProperty());
 		
 		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
 		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
 		
 		canvas.setOnMouseClicked(controller.getHandlerForSectionClick(canvas));
 		
-		return gardenDesign;
+		//return gardenDesign;
 	}
 	
 	/**
@@ -276,6 +289,39 @@ public class GardenDesign extends View{
 		return "";	
 	}
 	
+	public void addEvents(Dragboard db2,ImageView v) {
+		String k = db2.getString();
+		v.setOnMousePressed(controller.getHandlerforPressed(k,false));
+		v.setOnMouseDragged(controller.getHandlerforDrag());
+		// returns image back to original TilePane location
+		v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
+		v.setOnDragDetected((MouseEvent event)->{
+				v.startFullDrag();
+				Dragboard db = v.startDragAndDrop(TransferMode.COPY);
+				ClipboardContent content = new ClipboardContent();
+				content.putImage(v.getImage());
+				content.putString(k);
+				db.setContent(content);
+				db.setDragView(v.getImage());
+				event.consume();
+				
+		});
+		hoverTooltip(controller.tooltipInfo(k),v);
+		String uniqueID = UUID.randomUUID().toString();
+		v.setId(uniqueID);
+		main.setOnDragOver(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(DragEvent event) {
+				System.out.println("drag over in main");
+				if(event.getGestureSource()!=main && event.getDragboard().hasImage()) {
+					event.acceptTransferModes(TransferMode.COPY);
+				}
+				
+			}
+		});
+		main.setOnDragDropped(controller.getHandlerForDragOver());
+	}
+	
 	/**
 	 * Makes the pane that holds all the ImageViews of the plants
 	 * Each of the imageView has handlers for different events
@@ -287,15 +333,21 @@ public class GardenDesign extends View{
 		tile.setStyle("-fx-background-color: #A69F98");
 		oblist.forEach((k,v)->{
 			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
-			v.setOnMouseDragged(controller.getHandlerforDrag());
-			// returns image back to original TilePane location
-			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
+//			v.setOnMouseDragged(controller.getHandlerforDrag());
+//			// returns image back to original TilePane location
+//			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
 			v.setOnDragDetected((MouseEvent event)->{
-					v.startFullDrag();
-					Dragboard db = v.startDragAndDrop(TransferMode.COPY);
+					//v.startFullDrag();
+					Dragboard db = v.startDragAndDrop(TransferMode.COPY_OR_MOVE);
 					ClipboardContent content = new ClipboardContent();
-					//content.putImage(v.getImage());
+					
+					Image im =  new  Image(getClass().getResourceAsStream("/plantimg/"+k+".png"), 100, 100, true, false);
+					//content.putImage(im);
+					
+					content.putString(k);
 					db.setContent(content);
+					db.setDragView(im);
+					//event.consume();
 					
 			});
 			hoverTooltip(controller.tooltipInfo(k),v);
@@ -308,25 +360,28 @@ public class GardenDesign extends View{
 			@Override
 			public void handle(DragEvent event) {
 				System.out.println("drag over in main");
-				if(event.getGestureSource()!=main && event.getDragboard().hasImage()) {
-					event.acceptTransferModes(TransferMode.ANY);
+				if(event.getGestureSource()!=main && event.getDragboard().hasString()) {
+					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 				}
 				
 			}
 		});
-		main.setOnDragDropped(new EventHandler<DragEvent>() {
-			@Override
-			public void handle(DragEvent event) {
-				Dragboard db = event.getDragboard();
-				if(db.hasImage()) {
-					event.setDropCompleted(true);
-				}
-				else {
-					event.setDropCompleted(false);
-				}
-			}
-			
-		});
+//		main.setOnDragOver(controller.getHandlerForDragOver());
+//		main.setOnDragDropped(new EventHandler<DragEvent>() {
+//			@Override
+//			public void handle(DragEvent event) {
+//				Dragboard db = event.getDragboard();
+//				if(db.hasImage()) {
+//					event.setDropCompleted(true);
+//				}
+//				else {
+//					event.setDropCompleted(false);
+//				}
+//				event.consume();
+//			}
+////			
+//		});
+		main.setOnDragDropped(controller.getHandlerForDragOver());
 		
 		main.setOnMouseDragReleased(event->{
 			controller.inMain = true;
@@ -424,7 +479,7 @@ public class GardenDesign extends View{
 				iv2.startFullDrag();
 			}
 		});
-		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
+		//c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
 		if (validatePlantPlacement(x, y, heightWidth)[0] > THRESHOLD && !initial) {
 			// if collided, don't add ImageView to Pane
 			System.out.println("collided!");
@@ -683,6 +738,7 @@ public class GardenDesign extends View{
 		});
 		c.setOnMouseClicked(controller.getHandlerForCompostClicked());
 		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(""));
+		//c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(""));
 		border.getChildren().add(c); 
 		
 
