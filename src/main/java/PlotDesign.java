@@ -121,6 +121,10 @@ public class PlotDesign extends View{
             	dimLine = null;
             }
            	
+           	//Restart the dimension line
+           	this.manageView.dimLen = new ArrayList<>();
+           	this.manageView.dimPixel = -1;
+           	
            	//Change border design
            	border.getChildren().remove(grid);
            	gc.drawImage(plotInstructions, 0, 0);
