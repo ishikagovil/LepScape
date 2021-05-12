@@ -993,12 +993,9 @@ public class Controller extends Application {
 	 */
 	public void drawToCanvas(Canvas canvas) {
 		ArrayList<Vector2> extrema = this.model.getGarden().getExtremes();
-		ArrayList<Vector2> points = new ArrayList<>();
 		ArrayList<Conditions> conds = this.model.getGarden().getSections();
-		points.addAll(this.model.getGarden().getOutline());
-		points.addAll(this.model.getGarden().getPolygonCorners());
 		
-		double newScale = View.drawOnCanvas(canvas, points, extrema, conds);
+		double newScale = View.drawOnCanvas(canvas, this.model.getGarden().getOutline(), this.model.getGarden().getPolygonCorners(), extrema, conds);
 		this.model.setScale(newScale);
 	}	
 	
@@ -1204,6 +1201,7 @@ public class Controller extends Application {
 		return info;
 	}
 
+	/*
 	public void isWoody(ComboBox<String> cb) {
 		//ArrayList<Integer> countPlants = new ArrayList<Integer>();
 		/*int woody = 0;
@@ -1226,7 +1224,7 @@ public class Controller extends Application {
 			
 		}
 		System.out.println("Woody vs Herb:" + countPlants);
-		return countPlants;*/
+		return countPlants;
 		
 		Summary s = (Summary) this.view.views.get("Summary");
 		//s.isWoody(model.isWoodyData());
@@ -1234,6 +1232,7 @@ public class Controller extends Application {
 		s.isWoody();
 		System.out.println("hello, im in woody");
 	}
+*/
 	/*public ArrayList<PlantSpecies> lepsSupported(ComboBox<String> cb) {
 		ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
 		if (cb.getValue().equals("Top 5 lep-supported plants")) {
@@ -1252,6 +1251,12 @@ public class Controller extends Application {
 		return leppy;
 	}
 	*/
+	
+	/**
+	 * generate an array of plants in the garden and sorting them from highest number of leps
+	 * supported to lowest number of leps
+	 * @return an arraylist of plants in the garden, sorted
+	 */
 	public ArrayList<PlantSpecies> lepsCount() {
 		ArrayList<PlantSpecies> leppy = new ArrayList<PlantSpecies>();
 		for (PlacedPlant p : model.getGarden().getPlants()) {
@@ -1268,6 +1273,12 @@ public class Controller extends Application {
 		return leppy;
 	}
 	
+	/** 
+	 * first, get the list of plants in the garden and sort it by the number of leps supported by the plants
+	 * second, from the list of plants, generate the list of leps that are being supported
+	 * by the plant
+	 * @return the list of lep names supported by the plants in the garden
+	 */
 	public ArrayList<Lep> getLepsName() {
 		Map<String, Lep> leppy = getLepInfo();
 		HashSet<String> plantToLep = new HashSet<>();
@@ -1308,12 +1319,18 @@ public class Controller extends Application {
 		System.out.println("get into the combo box");
 	}
 */
+	/*
 	public EventHandler<ActionEvent> getHandlerForSummary(ComboBox<String> cb) {
 		return (e) -> {
 			isWoody(cb);
 		};
-	}
+	}*/
 	
+	/**
+	 * get the list of colors that made up a certain condition of the garden
+	 * @param ind
+	 * @return an arraylist of RBG colors
+	 */
 	public ArrayList<Integer> conditionColor(int ind) {
 		ArrayList<Integer> c = new ArrayList<Integer>();
 		c.add((int) model.getGarden().getSections().get(ind).toColor().getRed());
@@ -1321,11 +1338,27 @@ public class Controller extends Application {
 		c.add((int) model.getGarden().getSections().get(ind).toColor().getBlue());
 		return c;
 	}
-
+	
+	/**
+	 * get a an arraylist of conditions in the current garden
+	 * @return an arraylist of conditions
+	 */
 	public ArrayList<Conditions> getConditions() {
 		return model.getGarden().getSections();
 	}
 	
+	/**
+	 * get all the plants in the garden 
+	 * @return a hashmap of plants in garden
+	 */
+	public HashMap<String, PlacedPlant> getPlacedPlants() {
+		return model.getGarden().placedPlants;
+	}
+	
+	/**
+	 * count the number of woody plants in garden
+	 * @return integer, number of plants
+	 */
 	public int countWoody()  {
 		int wood = 0;
 		for (PlacedPlant p : model.getGarden().getPlants()) {
@@ -1336,6 +1369,10 @@ public class Controller extends Application {
 		return wood;
 	}
 	
+	/**
+	 * count the number of herbaceous plants in garden
+	 * @return int, the number of plants
+	 */
 	public int countHerbaceous() {
 		int herb = 0;
 		for (PlacedPlant p : model.getGarden().getPlants()) {

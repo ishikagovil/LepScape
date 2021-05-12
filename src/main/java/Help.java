@@ -1,3 +1,4 @@
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -29,7 +30,6 @@ public class Help extends View{
 		super(stage, c,manageView);
 		
 		this.wrap = this.manageView.getScreenWidth() - 290;
-
 		border = new BorderPane();
 		border.setTop(makeTitle());
 		border.getTop().setStyle("-fx-background-color: #afd5aa");
@@ -53,7 +53,6 @@ public class Help extends View{
 	}
 	
 	public TilePane addCenterPane(){
-
 		TilePane tile = new TilePane(Orientation.VERTICAL);
 		tile.setPadding(new Insets(TOPINS, INS, INS, INS));
 		tile.setVgap(VGAP);
@@ -64,7 +63,7 @@ public class Help extends View{
 		tile.getChildren().addAll(addFirst(), addSecond(), addThird(), addFourth());
 		tile.setAlignment(Pos.BASELINE_CENTER);
 		
-		tile.setStyle("-fx-background-color: #a69f98");
+		tile.setStyle("-fx-background-color: #F0F2EF)");
 		
 		tile.setAlignment(Pos.BASELINE_CENTER);
 		
