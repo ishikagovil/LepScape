@@ -141,7 +141,7 @@ public class Summary extends View {
         			List plantList = new List(List.ORDERED);
         			List titleList = new List(List.ALIGN_MIDDLE);
         			titleList.add("Here are the plants in your garden!");
-        			titleList.add("Total cost: " + totalCost + ", Total insect species attracted: "+ totalLep);
+        			titleList.add("Total cost: " + totalCost + ", Total insects attracted: "+ totalLep);
         			doc.add(titleList);
         			for (PlacedPlant p : result.values()) {
         				plantList.add(new ListItem(p.pdfDescription()));
