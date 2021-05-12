@@ -3,11 +3,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.List;
 import com.itextpdf.text.ListItem;
@@ -154,26 +156,19 @@ public class Summary extends View {
         			Document doc = new Document(new com.itextpdf.text.Rectangle(im.getScaledWidth(), im.getScaledHeight()));
         			FileOutputStream fos = new FileOutputStream(pdfFile);
         			PdfWriter w = PdfWriter.getInstance(doc, fos);
-        			
-        			//PdfContentByte cb = w.getDirectContent();
-        			//cb.moveTo(100, 200);
-        			//cb.circle(FONTSIZE, FONTSIZE, FONTSIZE);
-        			
-        			//int ind = 0;
-        			//for (Conditions c : controller.getConditions()) {
-        				//cb.setRGBColorFillF(controller.conditionColor(ind).get(0), controller.conditionColor(ind).get(1), controller.conditionColor(ind).get(2));
-        				//ind = ind + 1;
-        			//}
         			doc.open();
-        			
-        			/*List plantList = new List(List.ORDERED);
-        			for (PlantSpecies p : controller.lepsCount()) {
-        				plantList.add(new ListItem(p.pdfDescription));
+        		
+        		    Map<String,PlacedPlant> result = controller.getPlacedPlants();
+        			List plantList = new List(List.ORDERED);
+        			plantList.add("Here are the plants in your garden!");
+        			for (PlacedPlant p : result.values()) {
+        				plantList.add(new ListItem(p.pdfDescription()));
+        				System.out.println("DOWNLOAD" + p.pdfDescription());
         			}
-        			*/
+        			
         			doc.add(im);
         			//doc.add((Element) cb);
-        			//doc.add(plantList);
+        			doc.add(plantList);
         			fos.flush();
         			doc.close();
         			fos.close();

@@ -1326,6 +1326,10 @@ public class Controller extends Application {
 		return model.getGarden().getSections();
 	}
 	
+	public HashMap<String, PlacedPlant> getPlacedPlants() {
+		return model.getGarden().placedPlants;
+	}
+	
 	public int countWoody()  {
 		int wood = 0;
 		for (PlacedPlant p : model.getGarden().getPlants()) {
