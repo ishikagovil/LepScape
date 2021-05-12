@@ -114,7 +114,7 @@ public class Summary extends View {
  */
 	public HBox addBottomHBox() {
 		HBox box = new HBox();
-        box.setStyle("-fx-background-color: #8C6057");
+        box.setStyle("-fx-background-color: #A69F98");
         box.setSpacing(15);
         box.setPadding(new Insets(HBOX_SPACING));
         box.setAlignment(Pos.CENTER_RIGHT);

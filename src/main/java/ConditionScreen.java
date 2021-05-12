@@ -54,7 +54,7 @@ public class ConditionScreen extends View {
 	public HBox addBottomPane() {
 		HBox box = new HBox();
 		box.setPadding(new Insets(largeFontSize));
-		box.setStyle("-fx-background-color: #8C6057");
+		box.setStyle("-fx-background-color: #A69F98");
 		
 		ImageView back = new ImageView(this.manageView.buttonImages.get("Back"));
 		setOnMouse(back, "Back");
