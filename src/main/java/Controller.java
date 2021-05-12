@@ -689,6 +689,7 @@ public class Controller extends Application {
 			//model.savedGardens.clear();
 			for(int i = 0; i<model.savedGardens.size();i++) {
 				Garden garden = model.savedGardens.get(i);
+				System.out.println(garden.getTitle());
 				Image im = new Image(getClass().getResourceAsStream("/"+garden.getTitle()+".png"));
 				gal.loadScreen(im,i,model.getCostforGallery(garden),model.getLepsforGallery(garden),garden.getTitle());
 			}
@@ -1018,8 +1019,10 @@ public class Controller extends Application {
 			 this.view.dimLen = new ArrayList<>();
 		 } 
 		 else if(next.equals("Restart")) {
-			 this.model.getGarden().outline = new ArrayList<Vector2>(); 
-			 this.model.getGarden().polygonCorners = new ArrayList<Vector2>();
+//			 this.model.getGarden().outline = new ArrayList<Vector2>(); 
+//			 this.model.getGarden().polygonCorners = new ArrayList<Vector2>();
+//			 this.model.getGarden().getSections().clear();
+			 this.model.restart();
 			 this.view.restartPlot();
 			 setTheStage();
 		 }

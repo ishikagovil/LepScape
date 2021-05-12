@@ -143,7 +143,7 @@ public class Gallery extends View{
                 bp.setAlignment(information, Pos.CENTER);
                 ImageView garden = new ImageView(gardenImage);
                 garden.setPreserveRatio(true);
-                garden.setFitHeight(5*GARDEN_IMAGEVIEW_HEIGHT);
+                garden.setFitHeight(3*GARDEN_IMAGEVIEW_HEIGHT);
                 bp.setCenter(garden);
                 Scene dialogScene = new Scene(bp);
                 dialog.setScene(dialogScene);
