@@ -1,5 +1,10 @@
 import java.util.Comparator;
 
+/**
+ * Comparator on plants based on decreasing lep support
+ * @author Jinay Jain
+ *
+ */
 public class SortByLeps implements Comparator<PlantSpecies>{
 	final String name = "Sort by insects supported";
 

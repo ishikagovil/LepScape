@@ -1,5 +1,9 @@
 import java.util.*;
 
+/**
+ * Model part of the MVC design pattern
+ *
+ */
 public class Model implements java.io.Serializable{
 	
 	public Garden gardenMap;

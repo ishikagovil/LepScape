@@ -18,7 +18,7 @@ import javafx.util.Duration;
 import java.util.*;
 
 /**
- * Abstract class that holds all the views and any methods that aree common among them
+ * Abstract class that holds all the views and any methods that are common among them
  */
 public abstract class View{
 	private static final int lineWidth = 3;

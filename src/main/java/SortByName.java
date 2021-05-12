@@ -1,5 +1,10 @@
 import java.util.Comparator;
 
+/**
+ * Comparator class to sort plants alphabetically
+ * @author Jinay Jain
+ *
+ */
 public class SortByName implements Comparator<PlantSpecies>{
 	final String name = "Sort by common name";
 

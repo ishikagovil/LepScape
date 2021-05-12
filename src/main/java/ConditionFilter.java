@@ -1,4 +1,9 @@
 
+/**
+ * Filters plants by the conditions they're supported in
+ * @author Jinay Jain
+ *
+ */
 public class ConditionFilter implements PlantFilter {
 	Conditions cond;
 	
