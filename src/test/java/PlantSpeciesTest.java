@@ -101,15 +101,4 @@ class PlantSpeciesTest {
 	void testCompareTo() {
 		assertEquals(0, ps.compareTo(ps2));
 	}
-	
-	@Test
-	void testPdfDescription() {
-		ps.pdfDescription();
-		ps2.pdfDescription();
-		assertTrue(
-			ps.pdfDescription.contains(ps.getSpeciesName()) &&
-			ps.pdfDescription.contains(ps.getCommonName()) &&
-			ps.pdfDescription.contains(ps.getGenusName())
-		);
-	}
 }
