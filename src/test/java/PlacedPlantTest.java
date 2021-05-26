@@ -62,5 +62,16 @@ class PlacedPlantTest {
 	void testToString() {
 		assertEquals(p1.toString(), p1.getName());
 	}
+	
+	@Test
+	void testPdfDescription() {
+		String desc = p2.pdfDescription();
+		PlantSpecies ps = p2.getSpecies();
+		assertTrue(
+			desc.contains(ps.getCommonName()) &&
+			desc.contains(ps.getGenusName()) &&
+			desc.contains(ps.getSpeciesName())
+		);
+	}
 
 }

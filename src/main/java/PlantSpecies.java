@@ -1,4 +1,11 @@
-public class PlantSpecies {
+import java.util.Comparator;
+
+/**
+ * Representative of a specific plant species.
+ * @author dharjianto
+ *
+ */
+public class PlantSpecies implements Comparable<PlantSpecies>{
 	private String speciesName;
 	private String genusName;
 	private String commonName;
@@ -20,12 +27,28 @@ public class PlantSpecies {
 
 	// for all "req" attributes, if value is -1, no specific requirements for plant
 	
+	/**
+	 * Creates a blank instance of a PlantSpecies (for testing purposes).
+	 */
 	public PlantSpecies() {
 		this.speciesName = "";
 		this.genusName = "";
 		this.commonName = "";
 	}
 	
+	/**
+	 * Creates an instance of a PlantSpecies.
+	 * @param speciesName
+	 * @param genusName
+	 * @param commonName
+	 * @param spreadRadius
+	 * @param lepsSupported
+	 * @param cost
+	 * @param isWoody
+	 * @param lightReq
+	 * @param soilReq
+	 * @param moistReq
+	 */
 	public PlantSpecies(String speciesName, String genusName, String commonName, double spreadRadius, int lepsSupported, int cost, boolean isWoody, int lightReq, int soilReq, int moistReq) {
 		this.speciesName = speciesName;
 		this.genusName = genusName;
@@ -41,6 +64,9 @@ public class PlantSpecies {
 		this.setRequirements();				// setting basic enum requirements for PlantSpecies
 	}
 	
+	/**
+	 * Sets the requirements for the PlantSpecies depending on the enum.
+	 */
 	public void setRequirements() {
 		// setting soil type
 		if (this.soilReq >= 0) {
@@ -83,18 +109,33 @@ public class PlantSpecies {
 		}
 	}
 	
+	/**
+	 * Getter method for the SoilType.
+	 * @return SoilType
+	 */
 	public SoilType getSoilType() {
 		return this.soil;
 	}
 	
+	/**
+	 * Getter method for the MoistureType
+	 * @return MoistureType
+	 */
 	public MoistureType getMoistureType() {
 		return this.moisture;
 	}
 	
+	/**
+	 * Getter method for the LightType
+	 * @return LightType
+	 */
 	public LightType getLightType() {
 		return this.light;
 	}
 
+	/**
+	 * Setter method to create the plant description to display.
+	 */
 	public void setDescription() {
 		String plantType = "";
 		if (isWoody) {
@@ -105,75 +146,148 @@ public class PlantSpecies {
 		this.description = "Also known as " + this.genusName + "-" + this.speciesName +  ".\n\nThis " +  plantType + " plant attracts a total of " + this.lepsSupported + " leps.\n\nThese cost " + this.cost + " US Dollars.";
 	}
 
+	/**
+	 * Getter method for the description.
+	 * @return String
+	 */
 	public String getDescription() {
 		return this.description;
 	}
 
+	/**
+	 * Setter method to create a custom description for the plant.
+	 * @param desc
+	 */
 	public void setDescription(String desc) {
 		this.description = desc;
 	}
 	
-//	public int compareTo(PlantSpecies other) {
-//		return 0;
-//	}
-	
+	/**
+	 * Getter method for the species name.
+	 * @return String
+	 */
 	public String getSpeciesName() {
 		return speciesName;
 	}
 
+	/**
+	 * Setter method for the species name.
+	 * @param speciesName
+	 */
 	public void setSpeciesName(String speciesName) {
 		this.speciesName = speciesName;
 	}
 
+	/**
+	 * Getter method for the genus name.
+	 * @return String
+	 */
 	public String getGenusName() {
 		return genusName;
 	}
 
+	/**
+	 * Setter method for the genus name.
+	 * @param genusName
+	 */
 	public void setGenusName(String genusName) {
 		this.genusName = genusName;
 	}
 
+	/**
+	 * Getter method for the common name.
+	 * @return String
+	 */
 	public String getCommonName() {
 		return this.commonName;
 	}
 
+	/**
+	 * Setter method for the common name.
+	 * @param commonName
+	 */
 	public void setCommonName(String commonName) {
 		this.commonName = commonName;
 	}
 
+	/**
+	 * Getter method for the spread radius.
+	 * @return double
+	 */
 	public double getSpreadRadius() {
 		return spreadRadius;
 	}
 
+	/**
+	 * Setter method for the spread radius.
+	 * @param spreadRadius
+	 */
 	public void setSpreadRadius(int spreadRadius) {
 		this.spreadRadius = spreadRadius;
 	}
 
+	/**
+	 * Getter method for the number of leps supported.
+	 * @return int
+	 */
 	public int getLepsSupported() {
 		return lepsSupported;
 	}
 
+	/**
+	 * Setter method for the number of leps supported.
+	 * @param lepsSupported
+	 */
 	public void setLepsSupported(int lepsSupported) {
 		this.lepsSupported = lepsSupported;
 	}
 
+	/**
+	 * Getter method for the cost.
+	 * @return int
+	 */
 	public int getCost() {
 		return cost;
 	}
 
+	/**
+	 * Setter method for the cost.
+	 * @param cost
+	 */
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
 
+	/**
+	 * Getter method for whether the PlantSpecies is woody.
+	 * @return boolean
+	 */
 	public boolean isWoody() {
 		return isWoody;
 	}
 
+	/**
+	 * Setter method for whether the PlantSpecies is woody.
+	 * @param isWoody
+	 */
 	public void setWoody(boolean isWoody) {
 		this.isWoody = isWoody;
 	}
 
+	/**
+	 * toString method to return out the common name of the PlantSpecies.
+	 * @return String
+	 */
 	public String toString() {
 		return this.commonName;
 	}
+
+	@Override
+	public int compareTo(PlantSpecies o) {
+		String name = this.getCommonName();
+	    String name2 = o.getCommonName();
+	    return name.compareToIgnoreCase(name2); 
+	}
+
+
 }

@@ -1,11 +1,15 @@
 import java.util.*;
 
+/**
+ * Model part of the MVC design pattern
+ *
+ */
 public class Model implements java.io.Serializable{
 	
 	public Garden gardenMap;
-	public Map<String, PlantSpecies> plantDirectory;
-	public Map<String, Lep> lepDirectory;
-	public ArrayList<Garden> savedGardens;
+	public transient Map<String, PlantSpecies> plantDirectory;
+	public transient Map<String, Lep> lepDirectory;
+	public transient ArrayList<Garden> savedGardens;
 	public double lengthPerPixel;
 	public double scale;
 	public Vector2 translate;
@@ -13,11 +17,14 @@ public class Model implements java.io.Serializable{
 	public double y;
 	public String movedPlant;
 	public HashSet<String> deleted;
-	public Boolean editGarden;
+	public boolean editGarden;
 	public int editGardenIndex;
+	public transient Comparator<PlantSpecies> sort;
+	public transient PlantFilter filter;
+	public boolean gardenDesign;
 	
 	/**
-	 * @author Ishika Govil, Kimmy Huynh
+	 * @author Ishika Govil, Kimmy Huynh, Arunima Dey
 	 */
 	public Model() {
 		this.savedGardens = new ArrayList<>();
@@ -27,7 +34,24 @@ public class Model implements java.io.Serializable{
 		this.lengthPerPixel = -1;
 		this.movedPlant = "";
 		this.deleted = new HashSet<>();
+		this.sort = new SortByLeps();
+		this.filter = new SearchFilter("");
 		editGarden = false;
+
+	}
+	
+	/**
+	 * Restartes all attributes of model except saved gardens when user starts a new garden
+	 */
+	public void restart() {
+		this.gardenMap = new Garden();
+		this.lengthPerPixel = -1;
+		this.movedPlant = "";
+		this.deleted = new HashSet<>();
+		this.sort = new SortByLeps();
+		this.filter = new SearchFilter("");
+		editGarden = false;
+		gardenDesign = false;
 
 	}
 	
@@ -76,13 +100,22 @@ public class Model implements java.io.Serializable{
 	public void setGarden(Garden garden) {
 		this.gardenMap = garden;
 	}
+	
+	/**
+	 * Setter method to set the plant directory.
+	 * @param plantdir
+	 */
 	public void setPlantDirectory(Map<String, PlantSpecies> plantdir) {
 		this.plantDirectory = plantdir;
 	}
 	
+	/**
+	 * Setter method to set the lep directory.
+	 * @param lepdir
+	 */
 	public void setLepDirectory(Map<String, Lep> lepdir) {
 		this.lepDirectory = lepdir;
-		Iterator lepIt = lepdir.entrySet().iterator();
+		/*Iterator lepIt = lepdir.entrySet().iterator();
 		Iterator plantIt = this.plantDirectory.entrySet().iterator();
 		System.out.println("created iterators for plant + lep");
 		
@@ -108,7 +141,7 @@ public class Model implements java.io.Serializable{
 			
 			System.out.println(lepObj.getThrivesIn());
 			
-		}
+		}*/
 		
 	}
 
@@ -126,9 +159,11 @@ public class Model implements java.io.Serializable{
 	 * @param y the y coordinate
 	 * @param key the name of plant
 	 * @param nodeId the node of corresponding imageView
+	 * @param initial false if this is a new plant to be added
 	 */
 	public void placePlant(double x, double y, String key, String nodeId,boolean initial) {
 		System.out.println("adding to Garden");
+		System.out.println("the key when adding to garden: "+key);
 		PlantSpecies specie = plantDirectory.get(key);
 		gardenMap.placedPlants.put(nodeId, new PlacedPlant(x,y,specie));
 		if(!initial) {
@@ -137,29 +172,59 @@ public class Model implements java.io.Serializable{
  		System.out.println("plants: "+gardenMap.placedPlants);
 	}
 	
+	/**
+	 * Gets the cost of plants for gallery's saved gardens when placed plants has not been initilized
+	 * @param garden the garden for which we need cost
+	 * @return the cost
+	 */
 	public double getCostforGallery(Garden garden) {
 		Iterator<PlacedPlant> iter = garden.plants.iterator();
 		double cost = 0;
-		while(iter.hasNext()) {
-			System.out.println(iter.next().getName());
-			System.out.println(plantDirectory.size());
-			System.out.println(plantDirectory.get("Rhus-glabra"));
-//			PlantSpecies plant = plantDirectory.get(iter.next().get);
-//			plantDirectory.get(iter.next().getName());
-//			cost+=plant.getCost();
+		for(int i = 0; i<garden.plants.size();i++) {
+			PlantSpecies plant = plantDirectory.get(garden.plants.get(i).getName());
+			cost+=plant.getCost();
 		}
+//		while(iter.hasNext()) {
+////			PlantSpecies plant = plantDirectory.get(iter.next().get);
+////			plantDirectory.get(iter.next().getName());
+////			cost+=plant.getCost();
+//		}
 		return cost;
 	}
 	
+	/**
+	 * Gets the lep count of plants for gallery's saved gardens when placed plants has not been initilized
+	 * @param garden the garden for which we need lep count
+	 * @return the lep count
+	 */
 	public int getLepsforGallery(Garden garden) {
 		Iterator<PlacedPlant> iter = garden.plants.iterator();
 		int lep = 0;
+		for(int i = 0; i<garden.plants.size();i++) {
+			PlantSpecies plant = plantDirectory.get(garden.plants.get(i).getName());
+			lep+=plant.getLepsSupported();
+		}
 //		while(iter.hasNext()) {
 //			System.out.println(iter.next());
 //			PlantSpecies plant = plantDirectory.get(iter.next().getName());
 //			lep+=plant.getLepsSupported();
 //		}
 		return lep;
+	}
+	
+	/**
+	 * Checks if a given no garden exists with same title before user can set it as the title of theeir garden
+	 * @param newTitle the title
+	 * @return the boolean to indicate whether title exits or not
+	 */
+	public boolean isTitleValid(String newTitle) {
+		Iterator<Garden> iter = savedGardens.iterator();
+		while(iter.hasNext()) {
+			if(iter.next().getTitle().equals(newTitle)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
@@ -188,6 +253,10 @@ public class Model implements java.io.Serializable{
  		System.out.println("plants: "+gardenMap.placedPlants);
  	}
 	
+	/**
+	 * Gets the lep direectory
+	 * @return the hashmap of lep name and lep object
+	 */
 	public Map<String, Lep> getLepDirectory() {
 		return this.lepDirectory;
 	}
@@ -281,6 +350,22 @@ public class Model implements java.io.Serializable{
 	}
 	
 	/**
+	 * Updates the current sorting used for the plants
+	 * @param sort the new sorting type
+	 * @return a new list of plants sorted by the sort and filter
+	 */
+	public ArrayList<String> updateSort(Comparator<PlantSpecies> sort) {
+		this.sort = sort;
+		return filterAndSortPlants();
+	}
+	
+
+	public ArrayList<String> updateFilter(PlantFilter filter) {
+		this.filter = filter;
+		return filterAndSortPlants();
+	}
+	
+	/**
 	 * Calculates the distance of a line between the two provided points
 	 * @param double x1 representing x coordinate of first point
 	 * @param double y1 representing y coordinate of first point
@@ -306,24 +391,42 @@ public class Model implements java.io.Serializable{
 		return translate;
 	}
 	
-	public ArrayList<String> getFilteredList(Conditions cond) {
+	/**
+	 * Makes the arraylist of new plant names for when user sorts and filters plants
+	 * @return the arraylist
+	 */
+	private ArrayList<String> filterAndSortPlants() {
+		ArrayList<PlantSpecies> plants = new ArrayList<>(plantDirectory.values());
 		ArrayList<String> names = new ArrayList<>();
-		plantDirectory.forEach((name, plant) -> {
-			boolean matchMoist = plant.getMoistureType() == MoistureType.ANY 
-					|| cond.getMoistureType() == MoistureType.ANY 
-					|| cond.getMoistureType() == plant.getMoistureType();
-			boolean matchDirt = plant.getSoilType() == SoilType.ANY 
-					|| cond.getSoilType() == SoilType.ANY 
-					|| cond.getSoilType() == plant.getSoilType();
-			boolean matchSun = plant.getLightType() == LightType.ANY 
-					|| cond.getSunlightType() == LightType.ANY 
-					|| cond.getSunlightType() == plant.getLightType();
-			
-			if(matchMoist && matchDirt && matchSun) {
-				names.add(name);
+
+		Collections.sort(plants, this.sort);
+		plants.forEach((plant) -> {
+			if(filter.include(plant)) {
+				names.add(plant.getGenusName() + "-" + plant.getSpeciesName());
 			}
 		});
 		
 		return names;
 	}
+	/*
+	public ArrayList<Integer> isWoodyData() {
+		ArrayList<Integer> plantCount = new ArrayList<Integer>();
+		boolean isWoody;
+		int woody = 0;
+		int herb = 0;
+		for (PlacedPlant p : this.gardenMap.getPlants()) {
+			isWoody = p.getSpecies().isWoody();
+			if (isWoody) {
+				woody = woody + 1;
+			}
+			else {
+				herb = herb + 1;
+			}
+		}
+		plantCount.add(woody, herb);
+		System.out.println("woody: " + woody);
+		System.out.println("Herb: " + herb);
+		return plantCount;
+	}
+	*/
 }

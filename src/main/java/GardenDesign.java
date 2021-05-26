@@ -3,14 +3,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.util.*;
-import javax.imageio.ImageIO;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,18 +12,20 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.embed.swing.SwingFXUtils;
-
 
 /**
  * This class sets the main screen
@@ -45,12 +40,16 @@ public class GardenDesign extends View{
 	final int ENTERCOMPOST = 85;
 	final int INFO_IV_SIZE = 50;
 	final int HBOX_SPACING = 20;
-	final int FONTSIZE = 20;
 	final int XDISPLACE = 200;
 	final int YDISPLACE = 50;
 	final int POPUPWIDTH = 100;
 	final int POPUPHEIGHT = 50;
+	final int MOVEUP = -50;
+	private final int INFOSPC = 5;
+	private final int SMALLFONT = 12;
+	private final int SMALLSPC = 10;
 	final double THRESHOLD = 0.00001;
+	final double BAR_SPACING = 8;
 	Canvas canvas;
 	Stage stage;
 	//Panes
@@ -59,6 +58,8 @@ public class GardenDesign extends View{
 	public TilePane tile = new TilePane();
 	public BorderPane comparePane = new BorderPane();
 	public StackPane info = new StackPane();
+	BorderPane bd2;
+	ScrollPane scroll;
 	Map<String,ImageView> oblist;
 	ArrayList<ImageView> placed = new ArrayList<>();
 	Image compost = new Image(getClass().getResourceAsStream("/compost.png"));
@@ -82,46 +83,99 @@ public class GardenDesign extends View{
 		oblist = manageView.getPlantImages();					// loading in plantImages
 		vb = addGridPane();
 		border = new BorderPane();
-		main = addCanvas();
+		main = new Pane();
+		addCanvas(main);
 		
 		border.setCenter(main);
+		main.setStyle("-fx-background-color: #F0F2EF");
 		
-		ScrollPane scroll = new ScrollPane();
+		border.setBottom(createBottom());
+		
+		//border.setBottom(tile);
+		//comparePane = addBorderPane();
+		
+		bd2 = new BorderPane();
+		
+		bd2.setTop(vb);
+		bd2.setStyle("-fx-background-color: #AFD5AA");
+		BorderPane.setAlignment(bd2, Pos.TOP_LEFT);
+		//bd2.setBottom(comparePane);
+		//bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
+		
+		border.setLeft(bd2);
+		showCompostBin();
+	}
+	
+	/**
+	 * Created the bottom of the screen that hold all the plant images
+	 * @return the bottom pane
+	 */
+	private Node createBottom() {
+		VBox bottom = new VBox();
+		
+		HBox filterBar = new HBox(BAR_SPACING);
+		
+		filterBar.setStyle("-fx-background-color: #8C6057");
+		filterBar.setPadding(new Insets(BAR_SPACING));
+		
+		TextField search = new TextField();
+		search.setPromptText("Search");
+		search.setOnKeyReleased((e) -> { controller.updateSearch(search.getText()); });
+		
+		ComboBox<Comparator<PlantSpecies>> filters = createFilterDropdown();
+		
+		filters.setOnAction(controller.getHandlerForSort());
+		
+		filterBar.getChildren().addAll(search, filters);
+		
+		scroll = new ScrollPane();
 		tile.setMaxWidth(this.manageView.getScreenHeight());
 		tile.setMaxHeight(2*STANDARD_IMAGEVIEW);
 		tile = addTilePane();
 		
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // horizontal scroll bar
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // vertical scroll bar
+//        scroll.setFitToHeight(true);
         scroll.setFitToWidth(true);
+        //scroll.setMaxWidth(screenWidth);
         scroll.setMaxHeight(2*STANDARD_IMAGEVIEW);						// needed to initialize a dimension for scrollpane; leave in
 		scroll.setContent(tile);
-		border.setBottom(scroll);
-		//comparePane = addBorderPane();
 		
-		BorderPane bd2= new BorderPane();
+		bottom.getChildren().addAll(filterBar, scroll);
 		
-		bd2.setTop(vb);
-		bd2.setStyle("-fx-background-color: LIGHTBLUE");
-		bd2.setAlignment(bd2, Pos.TOP_LEFT);
-		//bd2.setBottom(comparePane);
-		//bd2.setAlignment(comparePane, Pos.BOTTOM_LEFT);
+		return bottom;
+	}
+	
+	/**
+	 * Created sort by drop downs for plants
+	 * @return thee Combo box
+	 */
+	private ComboBox<Comparator<PlantSpecies>> createFilterDropdown() {
+		ComboBox<Comparator<PlantSpecies>> combo = new ComboBox<>();
 		
-		border.setLeft(bd2);
-
-		showCompostBin();
+		List<Comparator<PlantSpecies>> sorts = new ArrayList<>();
+		sorts.add(new SortByLeps());
+		sorts.add(new SortByName());
+		sorts.add(new SortByCost());
+		
+		combo.getItems().addAll(sorts);
+		combo.getSelectionModel().select(0);
+		
+		return combo;
 	}
 
-	
+	/**
+	 * Creates the popup for when user exceeds budget
+	 */
 	public void budgetExceededPopup() {
 		final Stage budgetExceeded = new Stage();
 		budgetExceeded.initModality(Modality.APPLICATION_MODAL);
 		budgetExceeded.initOwner(stage);
 		budgetExceeded.setTitle("YOU HAVE EXCEEDED YOUR BUDGET!");
 		Label text = new Label("To continue adding to your garden increase your budget");
-		text.setFont(new Font("Andale Mono", FONTSIZE));
 		text.setStyle("-fx-font-size: 16; -fx-text-fill: white");
 		Label instruction = new Label("Press enter to set new budget or the X if you are done");
+		instruction.setStyle("-fx-font-size: 16; -fx-text-fill: white");
 		TextField budgetField = new TextField("Enter new budget");
 		budgetField.setMaxWidth(STANDARD_IMAGEVIEW);
 		BorderPane border = new BorderPane();
@@ -151,18 +205,12 @@ public class GardenDesign extends View{
 	 * Remakes the main pane when user tries to edit a saved garden
 	 */
 	public void remakePane() {
-		border.getChildren().remove(border.getCenter());
-		this.main = addCanvas();
-		border.setCenter(main);
+//		border.getChildren().remove(border.getCenter());
+		main.getChildren().clear();
+		addCanvas(main);
+//		this.main = addCanvas();
+//		border.setCenter(main);
 		border.getChildren().remove(border.getRight());
-		makeInfoPane("Information","");
-		main.setOnMouseDragReleased(event->{
-			System.out.println("(remakePane) will read when plant enters main");
-			controller.inMain = true;
-		});
-		c.setOnMouseDragReleased(event->{
-			System.out.println("trying to remove");
-		});
 	}
 	
 	/**
@@ -170,24 +218,22 @@ public class GardenDesign extends View{
 	 * Canvas then places inside a pane
 	 * @return the created pane
 	 */
-	public Pane addCanvas() {
+	public void addCanvas(Pane main) {
 		System.out.println("in addCanvas");
-		Pane gardenDesign = new Pane();
-		gardenDesign.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
 		canvas = new Canvas();
-		canvas.setStyle("-fx-border-color:GREY; -fx-border-width:5px");
+		canvas.setStyle("-fx-border-color:#F0F2EF; -fx-border-width:5px");
 		gc = canvas.getGraphicsContext2D();
-		gardenDesign.getChildren().add(canvas);
+		main.getChildren().add(canvas);
 		
-		canvas.widthProperty().bind(gardenDesign.widthProperty());
-		canvas.heightProperty().bind(gardenDesign.heightProperty());
+		canvas.widthProperty().bind(main.widthProperty());
+		canvas.heightProperty().bind(main.heightProperty());
 		
 		canvas.widthProperty().addListener(e -> controller.drawToCanvas(canvas));
 		canvas.heightProperty().addListener(e -> controller.drawToCanvas(canvas));
 		
 		canvas.setOnMouseClicked(controller.getHandlerForSectionClick(canvas));
 		
-		return gardenDesign;
+		//return gardenDesign;
 	}
 	
 	/**
@@ -208,7 +254,7 @@ public class GardenDesign extends View{
 		VBox.setVgrow(list, Priority.ALWAYS);
 		plantName.setLayoutX(10);
 		plantName.setLayoutY(115);
-		plantName.setFont(Font.font("Verdana", FONTSIZE));
+		plantName.setFont(Font.font("Andale Mono", FONTSIZE));
 		ObservableList<Label> images = FXCollections.observableArrayList();
 		plant.forEach(v->{
 			System.out.println("adding plant to popUp");
@@ -288,19 +334,23 @@ public class GardenDesign extends View{
 	 * @return the created pane
 	 */
 	public TilePane addTilePane() {
+		oblist = manageView.getPlantImages();
 		plants = new HashMap<>();
 		TilePane tile = new TilePane();
-		tile.setStyle("-fx-background-color: LIGHTSTEELBLUE");
+		tile.setStyle("-fx-background-color: #A69F98");
 		oblist.forEach((k,v)->{
 			v.setOnMousePressed(controller.getHandlerforPressed(k,false));
-			v.setOnMouseDragged(controller.getHandlerforDrag());
-			// returns image back to original TilePane location
-			v.setOnMouseReleased(controller.getHandlerforReleased(k,true));
-			v.setOnDragDetected(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					v.startFullDrag();
-				}
+			v.setOnDragDetected((MouseEvent event)->{
+				//v.startFullDrag();
+				Dragboard db = v.startDragAndDrop(TransferMode.COPY_OR_MOVE);
+				ClipboardContent content = new ClipboardContent();
+				Image im =  new  Image(getClass().getResourceAsStream("/plantimg/"+k+".png"), 100, 100, true, false);
+				content.putString(k);
+				System.out.println("the key that is set for content: "+k);
+				db.setContent(content);
+				db.setDragView(im);
+				//event.consume();
+					
 			});
 			hoverTooltip(controller.tooltipInfo(k),v);
 			String uniqueID = UUID.randomUUID().toString();
@@ -308,30 +358,42 @@ public class GardenDesign extends View{
 			plants.put(uniqueID, k);
 			tile.getChildren().add(v);
 		});
-		main.setOnMouseDragReleased(event->{
-			controller.inMain = true;
+		main.setOnDragOver(new EventHandler<DragEvent>() {
+			@Override
+			public void handle(DragEvent event) {
+				if(event.getGestureSource()!=main && event.getDragboard().hasString()) {
+					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+				}
+				
+			}
 		});
+		main.setOnDragDropped(controller.getHandlerForDragOver());
 		return tile;
 	}
 	
 	/**
-	 * Everytime a plant is placed onto or removed the garden the lep count and budget is updated
+	 * Remakes the top of the border pane, that holds cost and lep count, when user places plant
+	 * @param cost the new cost
+	 * @param lepCount the leps supported
+	 * @param budget thee total budget
 	 */
 	public void updateBudgetandLep(double cost, int lepCount, double budget) {
 		Image lep = new Image(getClass().getResourceAsStream("/butterfly1.png"));
 		Image dollar = new Image(getClass().getResourceAsStream("/dollar.png"));
-		
+
 		if(border.getTop()!=null) {
 			border.getChildren().remove(border.getTop());
 		}
-		
 		BorderPane top = new BorderPane();
+		//top.setPadding(new Insets(HBOX_SPACING));
 		HBox budgetLepPane = new HBox();
+		budgetLepPane.setPadding(new Insets(HBOX_SPACING));
+		top.setStyle("-fx-background-color: #A69F98");
 		budgetLepPane.setSpacing(HBOX_SPACING);
 		ImageView lepIv= new ImageView(lep);
 		ImageView budgetIv = new ImageView(dollar);
 		
-		hoverTooltip("Leps supported", lepIv);
+		hoverTooltip("Insects supported", lepIv);
 		hoverTooltip("Cost",budgetIv);
 		
 		lepIv.setPreserveRatio(true);
@@ -339,9 +401,9 @@ public class GardenDesign extends View{
 		budgetIv.setPreserveRatio(true);
 		budgetIv.setFitHeight(INFO_IV_SIZE);
 		Label leps = new Label(""+lepCount);
-		leps.setFont(new Font("Arial", 16));
+		leps.setFont(new Font("Andale Mono", 16));
 		Label budgetCount = new Label(""+cost);
-		budgetCount.setFont(new Font("Arial", 16));
+		budgetCount.setFont(new Font("Andale Mono", 16));
 		leps.setGraphic(lepIv);
 		budgetCount.setGraphic(budgetIv);
 		budgetLepPane.getChildren().add(leps);
@@ -355,25 +417,33 @@ public class GardenDesign extends View{
 		budgetLepPane.setAlignment(Pos.CENTER);
 		top.setCenter(budgetLepPane);
 		
-		ImageView next = new ImageView(this.manageView.buttonImages.get("next"));
-		setOnMouse(next, "next");
+		ImageView next = new ImageView(this.manageView.buttonImages.get("Next"));
+		setOnMouse(next, "Next");
 		next.setOnMouseClicked(e->{
 			saveGardenImage();
 			controller.switchViews("Summary");
 			
 		});
 		
-		ImageView back = new ImageView(this.manageView.buttonImages.get("back"));
-		setOnMouse(back, "back");
+		ImageView back = new ImageView(this.manageView.buttonImages.get("Back"));
+		setOnMouse(back, "Back");
 		back.setOnMouseClicked(e->{
 			controller.switchViews("ConditionScreen");
 			
 		});
 		
 		top.setRight(next);
+		BorderPane.setAlignment(next, Pos.BOTTOM_RIGHT);
 		top.setLeft(back);
+		BorderPane.setAlignment(back, Pos.BOTTOM_LEFT);
 		
-		
+		HBox box = new HBox();
+		//box.setPadding(new Insets(HBOX_SPACING));
+		box.setStyle("-fx-background-color: #a69f98");
+//		Text title = new Text("Garden Design");
+//		title.setFont(Font.font("Andale Mono", FontWeight.BOLD, INFO_IV_SIZE));
+//		box.getChildren().add(title);
+		top.setTop(box);
 		border.setTop(top);
 	}
 	
@@ -403,11 +473,10 @@ public class GardenDesign extends View{
 				iv2.startFullDrag();
 			}
 		});
-		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
+		//c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(key));
 		if (validatePlantPlacement(x, y, heightWidth)[0] > THRESHOLD && !initial) {
 			// if collided, don't add ImageView to Pane
 			System.out.println("collided!");
-			// add pop up window to display "too big"
 			controller.showPopupMessage("Cannot place plant there!", stage);
 			return null;
 		} else {
@@ -420,6 +489,13 @@ public class GardenDesign extends View{
 		}
 	}
 	
+	/**
+	 * Determines whether the location the ImageView is being placed is a valid location.
+	 * @param x
+	 * @param y
+	 * @param heightWidth
+	 * @return double[]
+	 */
 	public double[] validatePlantPlacement(double x, double y, double heightWidth) {
 		
 		double[] returnThis = new double[5];
@@ -494,11 +570,11 @@ public class GardenDesign extends View{
 	/**
 	 * Makes the pane will display information about a given plant when it is clicked
 	 */
-	public void makeInfoPane(String name, String info) {
+	public void makeInfoPane(String sciName, String name, String info) {
 		BorderPane info1 = new BorderPane();
 		info1.setPrefWidth(this.manageView.getScreenWidth() / 6);
 		info1.setMinHeight(this.manageView.getScreenHeight()-300);
-		info1.setStyle("-fx-background-color: LIGHTBLUE");
+		info1.setStyle("-fx-background-color: #afd5aa");
 		
 		Label title = new Label(name);
 		title.setFont(new Font("Andale Mono", FONTSIZE));
@@ -521,19 +597,31 @@ public class GardenDesign extends View{
 		title.setAlignment(Pos.CENTER);
 		title.setTextAlignment(TextAlignment.CENTER);
 		top.getChildren().add(title);
+		top.setSpacing(SMALLSPC);
+		top.setPadding(new Insets(SMALLSPC));
 		
+		VBox desc = new VBox();
+		ImageView plant = new ImageView();
+		plant.setImage(this.manageView.getPlantImages().get(sciName).getImage());
+		plant.setPreserveRatio(true);
+		plant.setFitWidth(this.manageView.getScreenWidth()/7);
 		
 		Text tf = new Text();
 		tf.setText(info);
 		tf.setTextAlignment(TextAlignment.CENTER);
 		tf.setWrappingWidth(this.manageView.getScreenWidth() / 6.5);;
 		tf.setFont(new Font("Andale Mono", 14));
+		tf.setTranslateY(MOVEUP);
+		
+		desc.getChildren().addAll(plant, tf);
+		desc.setSpacing(INFOSPC);
+		desc.setPadding(new Insets(SMALLSPC));
+		desc.setAlignment(Pos.BASELINE_CENTER);
 
 		info1.setTop(top);
-		info1.setCenter(tf);
-		info1.setAlignment(tf, Pos.CENTER);
+		info1.setCenter(desc);
+		info1.setAlignment(desc, Pos.CENTER);
 		border.setRight(info1);
-		
 	}
 	
 	/**
@@ -543,20 +631,22 @@ public class GardenDesign extends View{
 	 */
 	public VBox addGridPane() {
 		VBox vb = new VBox(10);
-		vb.setStyle("-fx-background-color: LIGHTBLUE");
+		vb.setPadding(new Insets(HBOX_SPACING));
+		vb.setStyle("-fx-background-color: #afd5aa");
 		vb.setMinHeight(this.manageView.getScreenWidth()/6);
 		vb.setPrefWidth(this.manageView.getScreenHeight()/7);
 		vb.setAlignment(Pos.CENTER);
 	
-		vb.getChildren().addAll(addNextButton("learnmore", "LearnMore"), addNextButton("learnmore", "ComparePlants")); 
-		ImageView clear = new ImageView(this.manageView.buttonImages.get("clear"));
-		setOnMouse(clear, "clear");
+		vb.getChildren().addAll(addNextButton("Learn More", "LearnMore"), addNextButton("Plant Compare", "ComparePlants")); 
+		ImageView clear = new ImageView(this.manageView.buttonImages.get("Clear"));
+		setOnMouse(clear, "Clear");
 		clear.setOnMouseClicked(e->{
 			//setOnMouse(clear, "clear");
+			Node canvas = main.getChildren().get(0);
 			main.getChildren().clear();
-			controller.getHandlerForGardenClear();
-			main = addCanvas();
-			border.setCenter(main);
+			main.getChildren().add(canvas);
+			placed.clear();
+			controller.clearGarden();
 		});
 		vb.getChildren().add(clear);
 		
@@ -568,17 +658,9 @@ public class GardenDesign extends View{
 	 */
 	public void saveGardenImage() {
 		System.out.println("calling from in here");
-		this.manageView.setSavedImage(main.snapshot(null, null));
-		WritableImage wim = manageView.savedImg;
-		File f = new File("src/main/resources/gardenImage");
-		//BufferedImage b = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-		try {
-			ImageIO.write(SwingFXUtils.fromFXImage(wim,null),"png", f);
-		}
-		catch (Exception s){
-			
-		}
-		this.manageView.sp = main;
+		WritableImage wim = controller.snapshotGarden();
+		BufferedImage image = SwingFXUtils.fromFXImage(wim,null);
+		this.manageView.setSavedImage(image);
 		
 	}
 	
@@ -586,12 +668,12 @@ public class GardenDesign extends View{
 	 * Makes the compare pane where plants can be placed and compared 
 	 * @return the created pane
 	 */
-	public BorderPane addBorderPane() {
+/*	public BorderPane addBorderPane() {
 		BorderPane border = new BorderPane();
-		border.setStyle("-fx-background-color: LIGHTBLUE");
+		border.setStyle("-fx-background-color: #afd5aa");
 		border.setMinHeight(this.manageView.getScreenHeight()/3);
 		border.setMaxWidth(this.manageView.getScreenHeight()/4);
-		StackPane s1 = addStackPane("-fx-background-color: ALICEBLUE");
+		StackPane s1 = addStackPane("-fx-background-color: #5C5346");
 		StackPane s2 = addStackPane("-fx-background-color: LAVENDER");
 		Label l = new Label("Compare");
 		s2.toBack();
@@ -604,12 +686,12 @@ public class GardenDesign extends View{
 		border.toBack();
 		return border;
 	}
-	
+*/	
 	/**
 	 * makes the pane that will display information of the plants in compare pane
 	 * @return the created pane
 	 */
-	public TilePane addTile() {
+/*	public TilePane addTile() {
 		TilePane tile = new TilePane();
 		tile.setPrefColumns(2);
 		tile.setVgap(2);
@@ -622,19 +704,19 @@ public class GardenDesign extends View{
 		
 		return tile;
 	}
-	
+*/	
 	/**
 	 * Makes the pane that plants are dragged into for the comparing
 	 * @param background the background color that is to be set for the pane
 	 * @return the created pane
 	 */
-	public StackPane addStackPane(String background) {
+/*	public StackPane addStackPane(String background) {
 		StackPane stack = new StackPane();
 		stack.setStyle("-fx-border-color:GREY; -fx-border-width:1px; "+background);
 		stack.setMinWidth(this.manageView.getScreenHeight()/8);
 		return stack;
 	}
-	
+	*/
 	/**
 	 * removed the copy of the plant imageView that is dragged over compost 
 	 */
@@ -663,7 +745,8 @@ public class GardenDesign extends View{
 		});
 		c.setOnMouseClicked(controller.getHandlerForCompostClicked());
 		c.setOnMouseDragReleased(controller.getHandlerforMouseEntered(""));
-		border.getChildren().add(c); 
+		bd2.getChildren().add(c);
+		//border.getChildren().add(c); 
 		
 
 	}
@@ -673,6 +756,8 @@ public class GardenDesign extends View{
 	 * @param plantNames the plants that are placed
 	 */
 	public void updateImageList(ArrayList<String> plantNames) {
+		tile = addTilePane();
+		scroll.setContent(tile);
 		tile.getChildren().clear();
 		
 		plantNames.forEach((name) -> {

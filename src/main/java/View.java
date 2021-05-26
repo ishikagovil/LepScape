@@ -12,13 +12,17 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.util.*;
 
+/**
+ * Abstract class that holds all the views and any methods that are common among them
+ */
 public abstract class View{
 	private static final int lineWidth = 3;
+	final int FONTSIZE = 20;
 	private static final double fillThreshold = 0.95;
 	BorderPane border;
 	Stage stage;
@@ -31,11 +35,12 @@ public abstract class View{
 	ImageCursor shovelCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/shovelCursor.png"), 50,50,false,false));
 	//Image from: https://custom-cursor.com/en/collection/animals/blue-and-purple-butterfly
 	ImageCursor handCursor = new ImageCursor(new Image(getClass().getResourceAsStream("/lepCursor.png"), 40,40,false,false));
+
 	/**
 	 * View class that is the super class for all View screens
-	 * @param Stage stage
-	 * @param Controller c
-	 * @param ManageViews manageView
+	 * @param stage Stage to use from JavaFX
+	 * @param c controller instance
+	 * @param manageView ManageViews instance
 	 */
 	public View(Stage stage, Controller c, ManageViews manageView) { 
 		this.manageView = manageView;
@@ -49,8 +54,8 @@ public abstract class View{
 	
 	/**
 	 * Sets the translateX value of a node n
-	 * @param double x
-	 * @param Node n
+	 * @param x new X value
+	 * @param n node to update
 	 */
 	public void setX(double x, Node n) {
 		n.setTranslateX(x);
@@ -64,9 +69,9 @@ public abstract class View{
 	}
 
 	/**
-	 * Sets the translateX value of a node n
-	 * @param double x
-	 * @param Node n
+	 * Sets the translateY value of a node n
+	 * @param y new Y value
+	 * @param n node to set
 	 */
 	public void setY(double y, Node n) {
 		n.setTranslateY(y);
@@ -74,16 +79,17 @@ public abstract class View{
 
 	/**
 	 * Updates the cursor to the different ImageCursors
-	 * @param boolean hand
-	 * @param String key representing key for the ImageView
-	 * @param ImageView b representing the ImageView being hovered
+	 * @param hand
+	 * @param key representing key for the ImageView
+	 * @param b representing the ImageView being hovered
 	 * @author Ishika Govil
 	 */
 	public void changeCursor(boolean hand, String key, ImageView b) { //Changes cursor to either a hand if true is passed, or pointer if false
 		if(hand) {
 			stage.getScene().setCursor(this.handCursor);
 			b.setImage(this.manageView.buttonImages.get(key + "_h"));
-			hoverTooltip(key, b);
+			if(!key.equals("Back")  && !key.equals("Next")  && !key.equals("New") )
+				hoverTooltip(key, b);
 		}
 		else {
 			stage.getScene().setCursor(this.shovelCursor);
@@ -92,11 +98,13 @@ public abstract class View{
 	} 
 	/**
 	 * Adding tooltip to each ImageView that displays the text to the user and gives information about the ImageView
-	 * @param String text
-	 * @param ImageView iv
+	 * @param text
+	 * @param node
+	 * @author Ishika Govil
 	 */
 	public void hoverTooltip(String text, Node node) {
 		Tooltip tip = new Tooltip(text);
+		tip.setFont(new Font("Andale Mono", FONTSIZE));
 		tip.setShowDelay(Duration.seconds(0.5));
 		tip.setOnShowing(s->{
 			//https://stackoverflow.com/questions/24621133/javafx-how-to-set-tooltip-location-relative-to-the-mouse-cursor
@@ -110,8 +118,8 @@ public abstract class View{
 	}
 	/**
 	 * Adds a button with the correct size and actions
-	 * @param String key representing key of the Image in ManageView's buttonImages HashMap
-	 * @param String next representing the action the button performs when clicked
+	 * @param key representing key of the Image in ManageView's buttonImages HashMap
+	 * @param next representing the action the button performs when clicked
 	 * @return Button
 	 * @author Ishika Govil
 	 */
@@ -124,8 +132,8 @@ public abstract class View{
 
 	/**
 	 * Sets the MouseEntered and MouseExited handlers for ImageView
-	 * @param Button b
-	 * @param String key
+	 * @param b
+	 * @param key
 	 * @author Ishika Govil
 	 */
 	public void setOnMouse(ImageView b, String key) {
@@ -134,11 +142,11 @@ public abstract class View{
 	}
 	/**
 	 * Adds a line between (x1,y1) and (x2,y2)
-	 * @param double x1
-	 * @param double y1
-	 * @param double x2
-	 * @param double y2
-	 * @param boolean isPolygon
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param isPolygon
 	 * @author Ishika Govil
 	 */
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
@@ -162,7 +170,16 @@ public abstract class View{
 			freeLines = new ArrayList<>();
 	}
 	
-	public static double drawOnCanvas(Canvas canvas, ArrayList<Vector2> points, ArrayList<Vector2> extrema, ArrayList<Conditions> conditions) {
+	/**
+	 * Draws the user's plot onto any size canvas
+	 * @param canvas canvas to draw on
+	 * @param outline outline of the freehand
+	 * @param polygon plot polygon corners
+	 * @param extrema extrema of the points of the outline
+	 * @param conditions an arraylist of conditions to draw
+	 * @return the scale that was used to draw the plot
+	 */
+	public static double drawOnCanvas(Canvas canvas, ArrayList<Vector2> outline, ArrayList<Vector2> polygon, ArrayList<Vector2> extrema, ArrayList<Conditions> conditions) {
 		double minX = extrema.get(3).getX();
 		double maxX = extrema.get(1).getX();
 		double minY = extrema.get(0).getY();
@@ -182,18 +199,17 @@ public abstract class View{
 //		System.out.println("cw: " + canvas.getWidth());
 //		System.out.println("ch: " + canvas.getHeight());
 		
-		drawOutlines(gc, points, scale, minX, minY);
+		drawOutlines(gc, outline, scale, minX, minY, false);
+		drawOutlines(gc, polygon, scale, minX, minY, true);
 		
 		Iterator<Conditions> condIter = conditions.iterator();
 		
-		System.out.println("Drawing conditions");
 		while(condIter.hasNext()) {
 			Conditions cond = condIter.next();
 			int startX = (int) ((cond.getX() - minX) * scale);
 			int startY = (int) ((cond.getY() - minY) * scale);
 			floodFill(canvas, cond, startX, startY, (int) canvas.getWidth(), (int) canvas.getHeight());
 			gc.save();
-			System.out.println("drawing cond at " + startX + " " + startY);
 		}
 		return scale;
 	}
@@ -208,18 +224,14 @@ public abstract class View{
 		return Math.min(xScale, yScale);
 	}
 	
-	private static void drawOutlines(GraphicsContext gc, ArrayList<Vector2> points, double scale, double minX, double minY) {
-		Iterator<Vector2> pointIter = points.iterator();
-
+	private static void drawOutlines(GraphicsContext gc, ArrayList<Vector2> points, double scale, double minX, double minY, boolean closed) {
 		boolean isNewLine = true;
 		
-		while(pointIter.hasNext()) {
-
-			Vector2 point = pointIter.next();
+		for(Vector2 point : points) {
 			double x = (point.getX() - minX) * scale;
 			double y = (point.getY() - minY) * scale;
 			
-//			System.out.println("x: " + x + " y: " + y);
+			System.out.println("Point: x: " + x + " y: " + y);
 
 			if(x < 0 && y < 0) {
 				isNewLine = true;
@@ -232,6 +244,13 @@ public abstract class View{
 				gc.stroke();
 			}
 			
+		}
+		if(closed && !points.isEmpty()) {
+			Vector2 point = points.get(0);
+			double x = (point.getX() - minX) * scale;
+			double y = (point.getY() - minY) * scale;
+			gc.lineTo(x, y);
+			gc.stroke();
 		}
 		gc.closePath();
 	}

@@ -1,13 +1,11 @@
 import java.util.*;
 
 /**
+ * Class represents the Garden with its plants, boundaries, and conditions
  * @author Ishika Govil, Kimmy Huynh, Arunima Dey
  */
 public class Garden implements java.io.Serializable {
 	
-	/**
-	 * Class represents the Garden with its plants, boundaries, and conditions
-	 */
 	private static final long serialVersionUID = 1L;
 	public ArrayList<PlacedPlant> plants;
 	public ArrayList<Vector2> outline;
@@ -16,9 +14,6 @@ public class Garden implements java.io.Serializable {
 	public Map<String, Lep> leps;
 	public Set<PlantSpecies> compostBin;
 //	public ArrayList<String> plant;
-	public int width;
-	public int height;
-	public int[][] data;
 	public double lengthPerPixel;
 	public double scale;
 	public transient HashMap<String, PlacedPlant> placedPlants;
@@ -36,12 +31,7 @@ public class Garden implements java.io.Serializable {
 		this.leps = new HashMap<String, Lep>();
 		this.compostBin = new HashSet<PlantSpecies>();
 		//this.plant = new ArrayList<>();
-		this.width = 0;
-		this.height = 0;
-		this.data = new int[width][height];
 		this.placedPlants= new HashMap<>();
-		System.out.println("outline: "+ outline);
-		System.out.println("polygonCorners"+polygonCorners);
 	}
 	
 	/**
@@ -81,46 +71,6 @@ public class Garden implements java.io.Serializable {
 		return leps;
 		
 	}
-	
-	/**
-	 * Sets the width, height and data attributes
-	 * @param width
-	 * @param height
-	 * @param data
-	 * @author Arunima Dey
-	 */
-	public void setGardenImageInfo(int width, int height, int[][] data){
-		//this.image = image;
-		this.width = width;
-		this.height = height;
-		this.data = data;
-		//makeData();
-	}
-	/**
-	 * getter for data of garden
-	 * @return the data
-	 * @author Arunima Dey
-	 */
-	public int[][] getGardenData(){
-		return this.data;
-	}
-	
-	/**
-	 * Get the width of this garden
-	 * @return the width
-	 */
-	public int getWidth() {
-		return this.width;
-	}
-	
-	/**
-	 * Get the height of this garden
-	 * @return the height
-	 */
-	public int getHeight() {
-		return this.height;
-	}
-	
 	
 	/**
 	 * Get the cost of the garden
@@ -234,8 +184,6 @@ public class Garden implements java.io.Serializable {
 	 * @author Ishika Govil 
 	 */
 	public ArrayList<Vector2> getExtremes() {
-		System.out.println("outline: "+ outline);
-		System.out.println("polygon: "+ polygonCorners);
 		ArrayList<Vector2> scaledOutlines = new ArrayList<>();
 		ArrayList<Vector2> extrema = new ArrayList<>();
 		int lowestX = 0; 
@@ -244,7 +192,6 @@ public class Garden implements java.io.Serializable {
 		int highestY = 0;
 		scaledOutlines.addAll(outline);
 		scaledOutlines.addAll(polygonCorners);
-		System.out.println("scaled: " +scaledOutlines);
 		Iterator<Vector2> itr = scaledOutlines.iterator();
 		int idx = 0;
 		while(itr.hasNext()) {
@@ -266,6 +213,12 @@ public class Garden implements java.io.Serializable {
 		return extrema;
 	}
 	
+	
+	
+	/**
+	 * Adds the plant to a list of PlacedPlants.
+	 * @param plant
+	 */
 	public void addToGarden(PlacedPlant plant) {
  		System.out.println("adding to garden");
  		plants.add(plant);

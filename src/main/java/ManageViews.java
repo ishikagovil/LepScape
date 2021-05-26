@@ -1,17 +1,24 @@
 import java.util.*;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
 
+/**
+ * A class used to control the views and screens on the app
+ * @author Ishika Govil
+ */
 public class ManageViews {
 	public double dimPixel; //Used when setting the dimensions of the garden
 	public ArrayList<double[]> dimLen; //Used when setting the dimensions of the garden
@@ -25,12 +32,7 @@ public class ManageViews {
 	public Map<String, ImageView> plantImages;
 	public Map<String, ImageView> lepImages;
 	public Map<String, Image> buttonImages;
-	public Map<String, ImageView> masterPlantImages;
-	public Pane sp;
-	public WritableImage savedImg;
-	/**
-	 * @author Ishika Govil
-	 */
+	public BufferedImage savedImg;
 	
 	/**
 	 * Constuctor for the ManageViews class, which initializes the HashMap of views and other fields
@@ -47,13 +49,25 @@ public class ManageViews {
 		this.screenHeight = height;
 		this.controller = c;
 	    this.stage = stage;
-	    this.sp = new Pane();
 		importButtonImages();
 		initializeViews();
 	    this.currView = this.getView("Start");
+	    stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
+			@Override
+			public void handle(WindowEvent event) {
+				// TODO Auto-generated method stub
+				System.out.println("closing application");
+				controller.saveState();
+				Platform.exit();
+				System.exit(0);
+			}
+	    	
+	    });
 	}
 	
-	
+	/**
+	 * Imports in all the images for buttons
+	 */
 	public void importButtonImages() {
 		File[] file;
 		this.buttonImages = new HashMap<>();
@@ -65,34 +79,63 @@ public class ManageViews {
 			    }
 			}
 		} catch (URISyntaxException e) {
+			System.out.println("Button file not found");
 			e.printStackTrace();
 		}
 		
 	}
 	
+	/**
+	 * A setter method to set the plantImages attribute to a given set of images.
+	 * @param imgs
+	 */
 	public void setPlantImg(Map<String, ImageView> imgs) {
 		this.plantImages = imgs;
 	}
+	
+	/**
+	 * Makes an image out of the buffered image of garden
+	 * @return the convterted image
+	 */
+	public Image getGardenImag() {
+		Image im = SwingFXUtils.toFXImage(savedImg, null);
+		return im;
+	}
 
+	/**
+	 * Calls methods in CSVto___ to gather images from folder in assets to useable ImageViews for our program.
+	 * @param fileName
+	 * @param fileName2
+	 */
 	public void importImages(String fileName, String fileName2) {
 		plantImages = new HashMap<>();
-		System.out.println("setting plant images");
-		plantImages = CSVtoPlants.readFileForImg(fileName);
-		//masterPlantImages = new HashMap();
-		//masterPlantImages = CSVtoPlants.readFileForImg(fileName);
 		lepImages = new HashMap<>();
-		System.out.println("setting lep images");
-		lepImages = CSVtoLeps.readFileForImg(fileName2);
-	}
-	
-	public Map<String, ImageView> getMasterPlantImages() {
-		return this.masterPlantImages;
+		new Thread() {
+			public void run() {
+				System.out.println("setting plant images");
+				plantImages = CSVtoPlants.readFileForImg(fileName);
+				System.out.println("setting lep images");
+				lepImages = CSVtoLeps.readFileForImg(fileName2);
+				Platform.runLater(() -> {
+					controller.refreshImages();
+				});
+			}
+		}.start();
+		
 	}
 
+	/**
+	 * Getter method for the plant images.
+	 * @return Map<String, ImageView>
+	 */
 	public Map<String, ImageView> getPlantImages() {
 		return this.plantImages;
 	}
 	
+	/**
+	 * Getter method for the lep iamges.
+	 * @return Map<String, ImageView>
+	 */
 	public Map<String, ImageView> getLepImages() {
 		return this.lepImages;
 	}
@@ -105,6 +148,24 @@ public class ManageViews {
 		views = new HashMap<>();
 		views.put("Start", new Start(stage, controller,this));
 	    views.put("Gallery", new Gallery(stage,controller,this));  
+	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
+	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
+	    views.put("Summary", new Summary(stage,controller,this));
+	    views.put("GardenDesign", new GardenDesign(stage,controller,this));
+	    views.put("Help", new Help(stage, controller, this));
+	    views.put("ComparePlants", new ComparePlants(stage, controller, this));
+	    views.put("LearnMore", new LearnMore(stage,controller,this));
+	    views.put("Lepedia", new Lepedia(stage,controller,this));
+	}
+	
+	/**
+	 * Resets all the views when user wants to start new garden
+	 */
+	public void resetViews() {
+		Gallery g = (Gallery) views.get("Gallery");
+		views = new HashMap<>();
+		views.put("Start", new Start(stage, controller,this));
+		views.put("Gallery", g);
 	    views.put("PlotDesign", new PlotDesign(stage, controller,this));
 	    views.put("ConditionScreen", new ConditionScreen(stage,controller,this));
 	    views.put("Summary", new Summary(stage,controller,this));
@@ -144,45 +205,6 @@ public class ManageViews {
 		else
 			this.currView = this.getView(next);
 	}
-	
-	/**
-	 * Makes data for savedImg
-	 * @return the matrix of data
-	 */
-	//for the next 2 methods
-	//https://stackoverflow.com/questions/33074774/javafx-image-serialization
-	public int[][] makeData() {
-		int width = (int)savedImg.getWidth();
-		int height = (int) savedImg.getHeight();
-		int[][] data = new int[width][height];
-		PixelReader r = savedImg.getPixelReader();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                data[i][j] = r.getArgb(i, j);
-            }
-        }
-        return data;
-	}
-	
-	/**
-	 * Makes the image for given information of an image
-	 * @param width the width of image
-	 * @param height the height of image
-	 * @param data the data for image
-	 */
-	public void makeImage(int width, int height, int[][] data) {
-		System.out.println(width);
-		System.out.println(height);
-		WritableImage img = new WritableImage(width, height);
-	    PixelWriter w = img.getPixelWriter();
-	    for (int i = 0; i < width; i++) {
-	    	for (int j = 0; j < height; j++) {
-	    		w.setArgb(i, j, data[i][j]);
-	    	}
-	    }
-	    setSavedImage(img);
-	}
-	
 	
 	/** 
 	 * Returns the BorderPane associated with the current View
@@ -224,16 +246,11 @@ public class ManageViews {
 		return views.get(key);
 	}
 	
-	/** 
-	 * Writes the WritableImage field img after user saves their PlotDesign
-	 * Useful for sharing the WritableImage between View classes
-	 * @param WritableImage  
+	/**
+	 * Sets savedImg to buffered image of garden
+	 * @param img
 	 */
-	public void setImage(WritableImage img) {
-		this.img = img;
-	}
-	
-	public void setSavedImage(WritableImage img) {
+	public void setSavedImage(BufferedImage img) {
 		System.out.println("called");
 		this.savedImg = img;
 	}
@@ -259,11 +276,19 @@ public class ManageViews {
 	
 	// restart the plot, clear all lines so user can draw a new garden design
 	public void restartPlot() {
-		initializeViews();
+		resetViews();
 		this.dimLen = new ArrayList<>(); 
 		this.currView = this.views.get("PlotDesign");
 	}
 	
+	/**
+	 * Calls the drawLine method in the View class
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param isPolygon
+	 */
 	public void drawLine(double x1, double y1, double x2, double y2, boolean isPolygon) {
 		this.currView.drawLine(x1, y1, x2, y2, isPolygon);
 	}
@@ -273,26 +298,57 @@ public class ManageViews {
 			((PlotDesign) this.currView).validateSave();
 	}
 	
+	/**
+	 * Calls currView to set the y component of a given node
+	 * @param y the y coordinate
+	 * @param n the node
+	 */
 	//methods only used by garden design
 	public void setY(double y, Node n){
 		currView.setY(y, n);
 	}
 	
+	/**
+	 * Calls currView to set the x component of a given node
+	 * @param x the x coordinate
+	 * @param n the node
+	 */
 	public void setX(double x, Node n){
 		currView.setX(x, n);
 	}
 	
+	/**
+	 * Gets the boolean to indicate whether galleery was accessed from start screen or summary
+	 * @return the boolean
+	 */
 	public boolean getCalledFromStart() {
 		return ((Gallery) views.get("Gallery")).calledFromStart;
 	}
 	
+	/**
+	 * Sets the boolean to indicate whether galleery was accessed from start screen or summary
+	 * @param called the boolean
+	 */
 	public void setCalledFromStart(boolean called) {
 		((Gallery) views.get("Gallery")).calledFromStart = called;
 		((Gallery) views.get("Gallery")).setBackButton();
 	}
 	
+	/**
+	 * Updates lep and budget count when summary screen is displayed
+	 * @param cost the cost
+	 * @param lepCount the leps supported
+	 */
 	public void updateLepandCost(double cost, int lepCount) {
 		((Summary) views.get("Summary")).updateLepandCost(cost, lepCount);
+	}
+	
+	/**
+	 * Gets the map of button names and images
+	 * @return the map
+	 */
+	public Map<String, Image> getButtons() {
+		return this.buttonImages;
 	}
 	
 

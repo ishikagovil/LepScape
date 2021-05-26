@@ -1,16 +1,14 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import javafx.event.EventHandler;
+import java.util.Map.Entry;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -18,10 +16,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+/**
+ * A screen that serves to pull up two plants and compare their stats. Provides feedback as well.
+ * @author Dea Harjianto
+ *
+ */
 
 public class ComparePlants extends View {
 	
@@ -36,16 +39,25 @@ public class ComparePlants extends View {
     BorderPane rightPlant;
     Pane mainCompare;
     PlantSpecies leftSpecies;
+    ImageView leftImg;
     PlantSpecies rightSpecies;
+    ImageView rightImg;
     VBox center;
 	//public TilePane tile = new TilePane();
     
     final int INFOSPC = 20;
-    final int ins = 20;
-    final int centerThis = 100;
+    final int INS = 20;
+    final int CENTER = 100;
     final int PUSHX = 200;
+    final int MOVEUP = -50;
 		
-	public ComparePlants(Stage stage, Controller controller, ManageViews manageView) {
+	/**
+	 * Initializes a new instance of ComparePlants.
+	 * @param stage
+	 * @param controller
+	 * @param manageView
+	 */
+    public ComparePlants(Stage stage, Controller controller, ManageViews manageView) {
 		super(stage, controller, manageView);
 		
 		this.screenWidth = (int)manageView.getScreenWidth();
@@ -58,6 +70,14 @@ public class ComparePlants extends View {
 		plantPics = manageView.getPlantImages();
         
         plantSpecs = controller.getPlantInfo();
+        List<Entry<String, PlantSpecies>> sortList = new ArrayList<>(plantSpecs.entrySet());
+        sortList.sort(Entry.<String, PlantSpecies>comparingByValue());
+        		
+        Map<String, PlantSpecies> result = new LinkedHashMap<>();
+        for (Entry<String, PlantSpecies> entry : sortList) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        plantSpecs = result;
 		
 		border = new BorderPane();
 		//comparePlant = new HBox();
@@ -96,7 +116,13 @@ public class ComparePlants extends View {
 
 	}
 	
-	public Label makeInstructions() {
+
+    
+	/**
+	 * Makes the instructions blurb and returns the Label.
+	 * @return Label
+	 */
+    public Label makeInstructions() {
 		String text = "Choose from the drop down menus below to compare two plants! View their supported butterfly/moth count, cost, and more!";
 		Label insT = new Label(text);
 		
@@ -104,12 +130,16 @@ public class ComparePlants extends View {
 		insT.setMaxWidth(screenWidth / 3);
 		insT.setWrapText(true);
 		insT.setTextAlignment(TextAlignment.CENTER);
-		insT.setPadding(new Insets(ins, ins, ins, ins));;
+		insT.setPadding(new Insets(INS));
 		
 		return insT;
 	}
 	
-	public VBox makePlantBoxes() {
+	/**
+	 * Makes the drop down boxes for the plants; makes two instances.
+	 * @return VBox
+	 */
+    public VBox makePlantBoxes() {
 		VBox centerSelect = new VBox();
 		
 		Label plant1 = new Label("Plant 1:");
@@ -146,14 +176,25 @@ public class ComparePlants extends View {
 		return centerSelect;
 	}
 	
-	public void updatePlantInfo(PlantSpecies plant, boolean isFirst) {
+	/**
+	 * When a drop down box is altered, call this function to make the screen display the information.
+	 * @param plant
+	 * @param isFirst
+	 */
+    public void updatePlantInfo(PlantSpecies plant, boolean isFirst) {
 		Text title = new Text(plant.getCommonName());
 		//title.setMaxWidth(screenWidth / 3);
 		title.setFont(new Font("Andale Mono", 20));
 		Text sciName = new Text("(" + plant.getGenusName() + " " + plant.getSpeciesName() + ")");
 		//sciName.setMaxWidth(screenWidth / 3);
 		sciName.setFont(Font.font("Andale Mono", 20));
-		ImageView plantImg = plantPics.get(plant.getGenusName() + "-" + plant.getSpeciesName());
+		
+		// create a new ImageView so the original ImageView doesn't get messed up by manipulations
+		ImageView host = plantPics.get(plant.getGenusName() + "-" + plant.getSpeciesName());
+		if(host == null) return;
+		ImageView plantImg = new ImageView();
+		plantImg.setImage(host.getImage());
+		
 		int lepCount = plant.getLepsSupported();
 		int cost = plant.getCost();
 		double spread = plant.getSpreadRadius();
@@ -169,12 +210,14 @@ public class ComparePlants extends View {
 		
 		VBox plantBlock = new VBox();
 		plantBlock.setMaxWidth(screenWidth / 3);
-		plantImg.setFitWidth(screenWidth / 4);
+		plantImg.setPreserveRatio(true);
+		plantImg.setFitWidth(screenWidth / 5);
 		plantBlock.setSpacing(INFOSPC);
 		
 		title.setTextAlignment(TextAlignment.CENTER);
 		sciName.setTextAlignment(TextAlignment.CENTER);
 		desc.setTextAlignment(TextAlignment.CENTER);
+		desc.setTranslateY(MOVEUP);
 		
 		plantBlock.getChildren().addAll(title, sciName, plantImg, desc);
 		
@@ -190,16 +233,19 @@ public class ComparePlants extends View {
 		
 		plantBlock.setAlignment(Pos.BASELINE_CENTER);
 		plantBlock.setTranslateX(PUSHX);
-		plantBlock.setPadding(new Insets(ins, ins, ins, centerThis));
+		plantBlock.setPadding(new Insets(INS, INS, INS, CENTER));
 		
 		updateCenterBottom();
 	}
 	
-	public void updateCenterBottom() {
+	/**
+	 * Call this function to update the feedback given depending on what plants are displayed.
+	 */
+    public void updateCenterBottom() {
 		
 		this.mainCompare.getChildren().clear();
 		
-		Label costLabel = new Label("Best Cost:");
+		Label costLabel = new Label("Best Price:");
 		costLabel.setFont(new Font("Andale Mono", 20));
 		costLabel.setUnderline(true);
 		costLabel.setMaxWidth(screenWidth / 3);
@@ -273,7 +319,7 @@ public class ComparePlants extends View {
 		}
 		
 		results.setMaxWidth(screenWidth / 3);
-		results.setPadding(new Insets(ins, ins, ins, ins));
+		results.setPadding(new Insets(INS));
 		results.setSpacing(INFOSPC);
 		
 		this.mainCompare.getChildren().add(results);
@@ -282,7 +328,11 @@ public class ComparePlants extends View {
 	}
 
 	
-	public BorderPane makePlantInfo() {
+	/**
+	 * Makes empty component to display plant information in.
+	 * @return BorderPane
+	 */
+    public BorderPane makePlantInfo() {
 		BorderPane plant = new BorderPane();
 		
 		plant.setPrefWidth(screenWidth / 3);
@@ -296,20 +346,31 @@ public class ComparePlants extends View {
 		return plant;
 	}
 	
-	public BorderPane makeTitle() {
+	/**
+	 * Makes the title and back button to display.
+	 * @return BorderPane
+	 */
+    public BorderPane makeTitle() {
 		BorderPane header = new BorderPane();
 		Label title = new Label("Compare Plants!");
 		title.setFont(new Font("Andale Mono", 50));
 		title.setStyle("-fx-text-fill: white");
 		header.setCenter(title);
-		ImageView back = addNextButton("back", "GardenDesign");
+		ImageView back = addNextButton("Back", "GardenDesign");
 		header.setLeft(back);
-		header.setPadding(new Insets(ins, ins, ins, ins));
+		header.setPadding(new Insets(INS));
 		
 		header.setStyle("-fx-background-color: #A69F98");
 		
 		return header;
 	}
 	
+    /**
+     * Sets the new imageview directory after they are loaded in
+     * @param Map<String, ImageView> the new imageview directory
+     */
+    public void setPlantDir(Map<String, ImageView> dir) {
+    	this.plantPics = dir;
+    }
 
 }
